@@ -36,29 +36,36 @@ function [data] = initialize_data(board)
 data = struct();
 % save original board for use in undoing moves
 data.original_board = board;
+% save the size of the board for use in subroutines
+data.board_size = size(board);
 % find transports
 data.transports = get_transports(board);
 % alias the final location for use at the end
 temp = find(board == PIECE_.final);
-assert(length(temp) == 1, 'There must be exactly one final position.');
+if length(temp) ~= 1
+    error('knight:BadFinalPos', 'There must be exactly one final position, not "%i".', length(temp));
+end
 data.final_pos = temp(1);
 % calculate the costs for landing on each square
 data.costs = board_to_costs(board);
 % crudely predict all the costs
 data.pred_costs = predict_cost(board);
 % initialize best costs on first run
-data.best_costs = nan(size(board));
+data.best_costs = nan(data.board_size);
 % initialize best solution
 data.best_moves = [];
 % initialize moves array and solved status
 data.moves = [];
 data.is_solved = false;
 data.all_moves = arrayfun(@(x) zeros(1,0), 1:numel(board), 'UniformOutput', false);
-data.all_boards = nan(size(board,1), size(board,2), numel(board));
+data.all_boards = nan(data.board_size(1), data.board_size(2), numel(board));
 % initialize current cost and update in best_costs
 data.current_cost = 0;
 temp = find(board == PIECE_.start);
-assert(length(temp) == 1, 'There must be exactly one start position.');
+if length(temp) ~= 1
+    error('knight:BadStartPos', 'There must be exactly one start position, not "%i".', length(temp));
+end
+temp = temp(1); % for compiler
 data.best_costs(temp) = data.current_cost;
 % create temp board and set the current position to the start
 temp_board = board;

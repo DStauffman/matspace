@@ -1,4 +1,5 @@
-function [board, cost, is_repeat, new_pos] = update_board(board, move, costs, transports, start_pos)
+function [board, cost, is_repeat, new_pos] = update_board(board, move, costs, transports, ...
+    start_pos, board_size)
 
 % UPDATE_BOARD  updates the new board based on the desired move.
 %
@@ -8,6 +9,7 @@ function [board, cost, is_repeat, new_pos] = update_board(board, move, costs, tr
 %     costs .... : (MxN) costs for each square on the board layout
 %     transports : (1x2) list of linearized locations of the transports
 %     start_pos  : (scalar) starting linearized location of the knight
+%     board_size : (1x2) size of the board
 % 
 % Output:
 %     board .... : (MxN) updated board layout
@@ -22,7 +24,9 @@ function [board, cost, is_repeat, new_pos] = update_board(board, move, costs, tr
 %     transports = [];
 %     start_pos  = 5;
 %     board(start_pos) = PIECE_.current;
-%     [board, cost, is_repeat, new_pos] = update_board(board, move, costs, transports, start_pos);
+%     board_size = size(board);
+%     [board, cost, is_repeat, new_pos] = update_board(board, move, costs, transports, ...
+%         start_pos, board_size);
 %     assert(cost == 1);
 %     assert(is_repeat == false);
 %     print_board(board);
@@ -37,10 +41,8 @@ function [board, cost, is_repeat, new_pos] = update_board(board, move, costs, tr
 % initialize outputs
 cost      = nan;
 is_repeat = false;
-% determine the board size
-board_size = size(board);
 % determine the move type
-move_type = classify_move(board, move, transports, start_pos);
+move_type = classify_move(board, move, transports, start_pos, board_size);
 % if valid, apply the move
 if move_type >= 0
     % set the current position to visited

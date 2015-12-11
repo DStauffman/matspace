@@ -1,23 +1,24 @@
 classdef test_sort_best_moves < matlab.unittest.TestCase %#ok<*PROP>
     
     properties
-        board,
         moves,
         costs,
         transports,
         start_pos,
         sorted_moves,
+        board_size,
     end
     
     methods (TestMethodSetup)
         function initialize(self)
-            self.board        = repmat(PIECE_.null, 5, 8);
-            self.board(13)    = PIECE_.current;
-            self.board(40)    = PIECE_.final;
+            board             = repmat(PIECE_.null, 5, 8);
+            board(13)         = PIECE_.current;
+            board(40)         = PIECE_.final;
             self.moves        = get_globals('moves');
-            self.costs        = predict_cost(self.board);
+            self.costs        = predict_cost(board);
             self.transports   = [];
             self.start_pos    = 13;
+            self.board_size   = size(board);
             self.sorted_moves = [2 -3 -2 3 -4 4 -1 1];
         end
     end
@@ -25,19 +26,20 @@ classdef test_sort_best_moves < matlab.unittest.TestCase %#ok<*PROP>
     methods (Test)
         function test_nominal(self)
             % Nominal
-            sorted_moves = sort_best_moves(self.board, self.moves, self.costs, self.transports, self.start_pos);
+            sorted_moves = sort_best_moves(self.moves, self.costs, self.transports, self.start_pos, self.board_size);
             self.verifyEqual(sorted_moves, self.sorted_moves);
         end
         
         function test_small_board(self)
             % Small board
-            self.board        = zeros(2, 5);
-            self.board(1)     = PIECE_.current;
-            self.board(9)     = PIECE_.final;
-            self.costs        = predict_cost(self.board);
+            board             = zeros(2, 5);
+            board(1)          = PIECE_.current;
+            board(9)          = PIECE_.final;
+            self.costs        = predict_cost(board);
             self.start_pos    = 1;
+            self.board_size   = size(board);
             self.sorted_moves = 2;
-            sorted_moves = sort_best_moves(self.board, self.moves, self.costs, self.transports, self.start_pos);
+            sorted_moves      = sort_best_moves(self.moves, self.costs, self.transports, self.start_pos, self.board_size);
             self.verifyEqual(sorted_moves, self.sorted_moves);
         end
     end

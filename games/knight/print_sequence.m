@@ -41,6 +41,8 @@ costs = board_to_costs(board);
 transports = get_transports(board);
 % create internal board for calculations
 temp_board = board;
+% get the board size
+board_size = size(board);
 % print status
 disp('Starting position:');
 print_board(temp_board);
@@ -54,7 +56,7 @@ for i = 1:length(moves)
     % alias this move
     this_move = moves(i);
     % update board
-    [temp_board, cost, ~, pos] = update_board(temp_board, this_move, costs, transports, pos);
+    [temp_board, cost, ~, pos] = update_board(temp_board, this_move, costs, transports, pos, board_size);
     if ~isnan(cost)
         % update total costs
         total_cost = total_cost + abs(cost);

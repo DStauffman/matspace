@@ -12,11 +12,11 @@ function [data] = solve_next_move(board, data, start_pos)
 %         .TBD...
 % 
 % Prototype:
-%     board     = repmat(PIECE_.null, 2,5);
-%     board(1)  = PIECE_.start;
-%     board(9)  = PIECE_.final;
-%     data      = initialize_data(board);
-%     start_pos = 1;
+%     board      = repmat(PIECE_.null, 2,5);
+%     board(1)   = PIECE_.start;
+%     board(9)   = PIECE_.final;
+%     data       = initialize_data(board);
+%     start_pos  = 1;
 %     board(start_pos) = PIECE_.current;
 %     data = solve_next_move(board, data, start_pos);
 %     assert(all(all(isequaln(data.best_costs, [0 nan nan nan nan; nan nan 1 nan nan]))));
@@ -31,12 +31,12 @@ logging = get_globals('logging');
 % check for a start piece, in which case something is messed up
 assert(~any(any(board == PIECE_.start)), 'Empty dicts should not have a start piece and vice versa.');
 % guess the order for the best moves based on predicited costs
-sorted_moves = sort_best_moves(board, moves, data.pred_costs, data.transports, start_pos);
+sorted_moves = sort_best_moves(moves, data.pred_costs, data.transports, start_pos, data.board_size);
 % try all the next possible moves
 for this_move = sorted_moves
     % make the move
     [board, cost, is_repeat, new_pos] = update_board(board, this_move, data.costs, ...
-        data.transports, start_pos);
+        data.transports, start_pos, data.board_size);
     % optional logging for debugging
     if logging
         fprintf('this_move = %i, this_cost = %g, total moves = %i', this_move, cost, data.moves);

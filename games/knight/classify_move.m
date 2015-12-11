@@ -1,20 +1,16 @@
-function [move_type] = classify_move(board, move, transports, start_pos)
+function [move_type] = classify_move(board, move, transports, start_pos, board_size) %#codegen
 
 % CLASSIFY_MOVE  determines if the desired move is valid or not, and what type of move/cost it would have.
 % 
 % Input:
-%     board : 2D ndarray of int
-%         Board layout
-%     move : int
-%         Move to be performed
-%     transports : 2 element list of 1x2 tuples
-%         Location of the transports
-%     start_pos : int
-%         Starting linearized location of the knight
+%     board .... : (MxN) board layout
+%     move ..... : (scalar) move to be performed
+%     transports : (1x2) list of linearized locations of the transports
+%     start_pos  : (scalar) starting linearized location of the knight
+%     board_size : (1x2) size of the board
 % 
 % Output:
-%     move_type : class Move
-%         Type of move to be performed
+%     move_type  : (MOVE_) move enum
 % 
 % Prototype:
 %     board      = zeros(2,5);
@@ -22,14 +18,15 @@ function [move_type] = classify_move(board, move, transports, start_pos)
 %     transports = [];
 %     start_pos  = 5;
 %     board(start_pos) = PIECE_.current;
-%     move_type = classify_move(board, move, transports, start_pos);
+%     board_size = size(board);
+%     move_type  = classify_move(board, move, transports, start_pos, board_size);
 %     assert(move_type == MOVE_.normal);
 % 
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 
 % find the traversal for the desired move
-all_pos = get_new_position(size(board), start_pos, move, transports);
+all_pos = get_new_position(board_size, start_pos, move, transports);
 
 % check that the final and intermediate positions were all on the board
 if any(isnan(all_pos))

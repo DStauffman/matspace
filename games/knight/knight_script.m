@@ -129,3 +129,27 @@ if ismember(4, do_steps)
         print_sequence(board2, moves4);
     end
 end
+
+%% Step 5
+if ismember(5, do_steps)
+    % TODO: write this
+end
+
+%% Step 10, alternate solver for testing
+if ismember(10, do_steps)
+    disp('Step 10: solve a test board for the minimum length solution.');
+    board3 = repmat(PIECE_.null, 6, 5);
+    board3(:,3) = PIECE_.barrier;
+    board3(1,1) = PIECE_.start;
+    board3(6,4) = PIECE_.final;
+    board3(5,1) = PIECE_.transport;
+    board3(2,4) = PIECE_.transport;
+    print_board(board3);
+    fprintf('\n');
+    moves10 = solve_min_puzzle(board3);
+    is_valid10 = check_valid_sequence(board3, moves10, true);
+    disp(moves10);
+    if is_valid10
+        print_sequence(board3, moves10);
+    end
+end

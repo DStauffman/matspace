@@ -45,6 +45,8 @@ costs = board_to_costs(board);
 transports = get_transports(board);
 % create internal board for calculations
 temp_board = board;
+% get the board size
+board_size = size(board);
 % set the current position to the start
 temp_board(temp_board == PIECE_.start) = PIECE_.current;
 pos = get_current_position(temp_board);
@@ -57,7 +59,7 @@ for i = 1:length(moves)
     % alias this move
     this_move = moves(i);
     % update the board and determine the cost
-    [temp_board, cost, is_repeat, pos] = update_board(temp_board, this_move, costs, transports, pos);
+    [temp_board, cost, is_repeat, pos] = update_board(temp_board, this_move, costs, transports, pos, board_size);
     % if cost was zero, then the move was invalid
     if isnan(cost)
         is_valid = false;
