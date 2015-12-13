@@ -1,17 +1,17 @@
 function [move_type] = classify_move(board, move, transports, start_pos, board_size) %#codegen
 
 % CLASSIFY_MOVE  determines if the desired move is valid or not, and what type of move/cost it would have.
-% 
+%
 % Input:
 %     board .... : (MxN) board layout
 %     move ..... : (scalar) move to be performed
 %     transports : (1x2) list of linearized locations of the transports
 %     start_pos  : (scalar) starting linearized location of the knight
 %     board_size : (1x2) size of the board
-% 
+%
 % Output:
 %     move_type  : (MOVE_) move enum
-% 
+%
 % Prototype:
 %     board      = zeros(2,5);
 %     move       = 2; % (2 right and 1 down)
@@ -21,7 +21,7 @@ function [move_type] = classify_move(board, move, transports, start_pos, board_s
 %     board_size = size(board);
 %     move_type  = classify_move(board, move, transports, start_pos, board_size);
 %     assert(move_type == MOVE_.normal);
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

@@ -54,6 +54,7 @@ for this_iter = 1:MAX_ITERS
     % increment the minimum cost and continue
     data.current_cost = data.current_cost + 1;
 end
+
 % if the puzzle was solved, then save the relevant move list
 if data.is_solved
     data.moves = data.all_moves{data.final_pos};
@@ -61,11 +62,9 @@ else
     disp('No solution found.');
     data.moves = [];
 end
+
 % display the elapsed time
 disp(['Elapsed time : ' datestr(now - start_solver, 'HH:MM:SS')]);
+
+% store the output
 moves = data.moves; % or just 'moves = data' for debugging
-    
-    
-
-
-

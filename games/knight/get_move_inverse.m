@@ -2,7 +2,7 @@ function [inv_move] = get_move_inverse(move)
 
 % GET_MOVE_INVERSE  gets the inverse move to go back where you were:
 %     -/+1 <-> -/+3
-%     -/+2 <-> -/+4b
+%     -/+2 <-> -/+4
 %
 % Input:
 %     move : (scalar) move to be performed
@@ -23,6 +23,7 @@ function [inv_move] = get_move_inverse(move)
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 
+% check that move is valid
 if ~ismember(move, get_globals('moves'))
     error('knight:InvalidInvMove', 'Invalid move.');
 end
