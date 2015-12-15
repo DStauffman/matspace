@@ -24,5 +24,5 @@ if any(any(board == PIECE_.transport))
         error('knight:BadTransports', 'There must be 0 or exactly 2 transports.');
     end
 else
-    transports = [];
+    transports = zeros(1, 0); % for compiler
 end

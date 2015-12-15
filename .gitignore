@@ -50,6 +50,9 @@ Temporary Items
 # Compiled source #
 # =========================
 *.mex
+*.mexw64
+*.mexw32
+mex/make/codegen/*
 
 # =========================
 # Folder/Files #

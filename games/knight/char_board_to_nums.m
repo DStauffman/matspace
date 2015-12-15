@@ -23,7 +23,7 @@ chars = get_globals('chars');
 temp_board = char_board(char_board ~= ' ');
 
 % preallocate the numeric version
-num_board = zeros(size(temp_board));
+num_board = repmat(PIECE_.null, size(temp_board));
 
 % loop through and convert to numbers
 for i = 1:length(chars)

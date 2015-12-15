@@ -23,6 +23,9 @@ function [moves] = solve_min_puzzle(board)
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 
+% coder dependencies
+coder.extrinsic('now');
+
 % hard-coded values
 MAX_ITERS = 25;
 
@@ -33,7 +36,7 @@ start_solver = now;
 disp('Initializing solver.');
 
 % check that the board has a final goal
-if ~any(board == PIECE_.final)
+if ~any(any(board == PIECE_.final))
     error('knight:FinalPos', 'The board does not have a finishing location.');
 end
 

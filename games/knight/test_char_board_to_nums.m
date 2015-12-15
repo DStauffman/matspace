@@ -16,7 +16,7 @@ classdef test_char_board_to_nums < matlab.unittest.TestCase %#ok<*PROP>
         function test_nominal(self)
             % Nominal char board to nums with all values
             board = char_board_to_nums(self.char_board);
-            self.verifyEqual(board, self.board);
+            self.verifyEqual(double(board), self.board);
         end
     end
 end

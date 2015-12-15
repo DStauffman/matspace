@@ -23,7 +23,7 @@ classdef test_get_transports < matlab.unittest.TestCase %#ok<*PROP>
         function test_no_transports(self)
             % No transports
             transports = get_transports(self.board);
-            self.verifyEqual(transports, []);
+            self.verifyEqual(transports, zeros(1, 0));
         end
         
         function test_invalid_transports(self)

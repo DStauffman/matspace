@@ -57,8 +57,13 @@ new_xy(new_xy < 1) = nan;
 new_xy(new_xy(:,1) > board_size(1),1) = nan;
 new_xy(new_xy(:,2) > board_size(2),2) = nan;
 
-% convert back to linearized locations
-all_pos = sub2ind(board_size, new_xy(:,1), new_xy(:,2));
+% convert back to linearized locations (explicit isnan check necessary for compiler)
+if any(any(isnan(new_xy)))
+    all_pos = nan(3, 1);
+    return
+else
+    all_pos = sub2ind(board_size, new_xy(:,1), new_xy(:,2));
+end
 
 % handle landing on a transport
 if ~isempty(transports)

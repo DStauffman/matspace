@@ -16,7 +16,7 @@ classdef test_sort_best_moves < matlab.unittest.TestCase %#ok<*PROP>
             board(40)         = PIECE_.final;
             self.moves        = get_globals('moves');
             self.costs        = predict_cost(board);
-            self.transports   = [];
+            self.transports   = zeros(1, 0);
             self.start_pos    = 13;
             self.board_size   = size(board);
             self.sorted_moves = [2 -3 -2 3 -4 4 -1 1];

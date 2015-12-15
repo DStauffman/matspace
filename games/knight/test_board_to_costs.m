@@ -31,6 +31,7 @@ classdef test_board_to_costs < matlab.unittest.TestCase %#ok<*PROP>
         end
         function test_bad_board3(self)
             % Bad costs (undefined piece)
+            self.board = double(self.board);
             self.board(1, 1) = 1000;
             self.verifyError(@() board_to_costs(self.board), 'MATLAB:class:InvalidEnum');
         end

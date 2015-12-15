@@ -65,5 +65,6 @@ switch p3
     case PIECE_.lava
         move_type = MOVE_.lava;
     otherwise
-        error('knight:BadPieceType', 'Unexpected piece type "%s"',p3);
+        error('knight:BadPieceType', 'Unexpected piece type'); %TODO: print type that works for the compiler
+        %error('knight:BadPieceType', 'Unexpected piece type "%s.%s"', class(p3), char(p3));
 end

@@ -74,7 +74,16 @@ BOARD2 = get_globals('board2');
 
 do_steps = [-1 0 1 2 3 4 5];
 
+use_mex = true;
+
 print_seq = true;
+
+%% Set mex folders
+if use_mex
+    addpath(get_mex_dir()); %#ok<MCAP>
+else
+    rmpath(get_mex_dir()); %#ok<*UNRCH>
+end
 
 %% Step -1 (Unit tests)
 if ismember(-1, do_steps)

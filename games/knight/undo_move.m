@@ -18,7 +18,7 @@ function [board] = undo_move(board, last_move, original_board, transports, start
 %     last_move         = 2; % (2 right and 1 down)
 %     original_board    = repmat(PIECE_.null, 2, 5);
 %     original_board(5) = PIECE_.start;
-%     transports        = [];
+%     transports        = zeros(1, 0);
 %     start_pos         = 10;
 %     board(start_pos)  = PIECE_.current;
 %     print_board(board);
@@ -53,6 +53,6 @@ if ~isempty(transports)
     end
 end
 % get the new position (without traversing transports)
-all_pos = get_new_position(size(original_board), start_pos, new_move, []);
+all_pos = get_new_position(size(original_board), start_pos, new_move, zeros(1, 0));
 % set the new position to current
 board(all_pos(3)) = PIECE_.current;
