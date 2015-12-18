@@ -25,13 +25,15 @@ function [moves, data] = solve_min_puzzle(board)
 %     1.  Written by David C. Stauffer in December 2015.
 
 % coder dependencies
-coder.extrinsic('now');
+coder.extrinsic('now', 'datestr');
 
 % hard-coded values
 MAX_ITERS = 25;
 
 % start timer
-start_solver = now;
+start_solver  = 0; %#ok<NASGU> % for compiler to know type
+finish_solver = 0; %#ok<NASGU> % for compiler to know type
+start_solver  = now;
 
 % initialize the data structure for the solver
 disp('Initializing solver.');
@@ -51,7 +53,6 @@ for this_iter = 1:MAX_ITERS
         start_pos = next_moves(ix);
         % update the current board and moves for the given position
         temp_board = data.all_boards(:, :, start_pos);
-        data.moves = data.all_moves(start_pos,:);
         % call solver for this move
         data = solve_next_move(temp_board, data, start_pos);
     end
@@ -61,7 +62,7 @@ end
 
 % if the puzzle was solved, then save the relevant move list
 if data.is_solved
-    moves = data.all_moves(data.final_pos,:);
+    moves = data.all_moves(:,data.final_pos);
     moves = moves(~isnan(moves));
 else
     disp('No solution found.');
@@ -69,4 +70,5 @@ else
 end
 
 % display the elapsed time
-disp(['Elapsed time : ' datestr(now - start_solver, 'HH:MM:SS')]);
+finish_solver = now;
+disp(['Elapsed time : ',datestr(finish_solver - start_solver, 'HH:MM:SS')]);

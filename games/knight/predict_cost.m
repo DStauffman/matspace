@@ -30,8 +30,8 @@ end
 
 % build a grid of points to evaluate
 [X, Y] = meshgrid(1:m, 1:n);
-x_dist = abs(X' - x_fin);
-y_dist = abs(Y' - y_fin);
+x_dist = abs(X' - repmat(x_fin,m,n)); % explicit repmat for the compiler
+y_dist = abs(Y' - repmat(y_fin,m,n)); % explicit repmat for the compiler
 
 mask  = x_dist > y_dist;
 costs = max(x_dist/2, y_dist) .* mask + max(x_dist, y_dist/2) .* ~mask;

@@ -24,6 +24,9 @@ function [data] = solve_next_move(board, data, start_pos)
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 
+% for compiler
+coder.extrinsic('int2str');
+
 % get globals
 moves = get_globals('moves');
 logging = get_globals('logging');
@@ -33,13 +36,14 @@ assert(~any(any(board == PIECE_.start)), 'Empty dicts should not have a start pi
 % guess the order for the best moves based on predicited costs
 sorted_moves = sort_best_moves(moves, data.pred_costs, data.transports, start_pos, data.board_size);
 % try all the next possible moves
-for this_move = sorted_moves
+for i = 1:length(sorted_moves)
+    this_move = sorted_moves(i);
     % make the move
     [board, cost, is_repeat, new_pos] = update_board(board, this_move, data.costs, ...
         data.transports, start_pos, data.board_size);
     % optional logging for debugging
     if logging
-        fprintf('this_move = %i, this_cost = %g, total moves = %i', this_move, cost, data.all_moves(start_pos,:));
+        fprintf('this_move = %i, this_cost = %g, total moves = %i', this_move, cost, data.all_moves(:,start_pos));
     end
     % if the move was invalid then go to the next one
     if isnan(cost);
@@ -65,7 +69,7 @@ for this_move = sorted_moves
     if logging
         if cost < 0
             disp(' - solution');
-            disp(['Potential solution found, moves = ',mat2str(data.all_moves(start_pos,:)),' + ',num2str(this_move)]);
+            disp(['Potential solution found, moves = ',mat2str(data.all_moves(:,start_pos)),' + ',num2str(this_move)]);
         elseif is_repeat
             disp(' - better repeat');
         else
@@ -75,12 +79,12 @@ for this_move = sorted_moves
     % move is new or better, update current and best costs and append move
     assert(isnan(data.best_costs(new_pos)));
     data.best_costs(new_pos) = data.current_cost + cost;
-    this_move_num = find(isnan(data.all_moves(start_pos,:)), 1, 'first');
+    this_move_num = find(isnan(data.all_moves(:,start_pos)), 1, 'first');
     if isempty(this_move_num)
         error('knight:NumMoves','Not enough moves were preallocated.');
     end
-    data.all_moves(new_pos,:)                = data.all_moves(start_pos,:);
-    data.all_moves(new_pos,this_move_num(1)) = this_move;
+    data.all_moves(:,new_pos)                = data.all_moves(:,start_pos);
+    data.all_moves(this_move_num(1),new_pos) = this_move;
     data.all_boards(:, :, new_pos)           = board;
     if cost < 0
         disp(['Solution found for cost of: ',int2str(data.current_cost + abs(cost)),'.']);
