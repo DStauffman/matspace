@@ -12,7 +12,7 @@ classdef test_initialize_data < matlab.unittest.TestCase %#ok<*PROP>
             self.board(9) = PIECE_.final;
             self.fields   = {'all_boards'; 'all_moves'; 'best_costs'; ...
                 'best_moves'; 'board_size'; 'costs'; 'current_cost'; 'final_pos'; 'is_solved'; ...
-                'moves'; 'original_board'; 'pred_costs'; 'transports'};
+                'original_board'; 'pred_costs'; 'transports'};
         end
     end
     

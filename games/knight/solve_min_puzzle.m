@@ -1,4 +1,4 @@
-function [moves] = solve_min_puzzle(board)
+function [moves, data] = solve_min_puzzle(board)
 
 % SOLVE_MIN_PUZZLE  puzzle solver.  Uses a breadth first approach to solve for the minimum length solution.
 %
@@ -7,6 +7,7 @@ function [moves] = solve_min_puzzle(board)
 %
 % Output:
 %     moves : (1xA) list of moves to solve the puzzle, empty if no solution
+%     data  : (struct) data structure for more diagnostics
 %
 % Prototype:
 %     board = repmat(PIECE_.null, 2,5);
@@ -50,7 +51,7 @@ for this_iter = 1:MAX_ITERS
         start_pos = next_moves(ix);
         % update the current board and moves for the given position
         temp_board = data.all_boards(:, :, start_pos);
-        data.moves = data.all_moves{start_pos};
+        data.moves = data.all_moves(start_pos,:);
         % call solver for this move
         data = solve_next_move(temp_board, data, start_pos);
     end
@@ -60,14 +61,12 @@ end
 
 % if the puzzle was solved, then save the relevant move list
 if data.is_solved
-    data.moves = data.all_moves{data.final_pos};
+    moves = data.all_moves(data.final_pos,:);
+    moves = moves(~isnan(moves));
 else
     disp('No solution found.');
-    data.moves = [];
+    moves = [];
 end
 
 % display the elapsed time
 disp(['Elapsed time : ' datestr(now - start_solver, 'HH:MM:SS')]);
-
-% store the output
-moves = data.moves; % or just 'moves = data' for debugging

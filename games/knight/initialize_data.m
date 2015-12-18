@@ -35,6 +35,10 @@ function [data] = initialize_data(board) %#codegen
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 
+%% Hard-coded values
+% max number of moves
+max_moves = 100;
+
 %% Aliases
 % alias the board size
 board_size = size(board);
@@ -62,9 +66,8 @@ data.best_costs = nan(board_size);
 % initialize best solution
 data.best_moves = [];
 % initialize moves array and solved status
-data.moves      = [];
 data.is_solved  = false;
-data.all_moves  = cell(1, numel(board)); % TODO: must replace this for the compiler
+data.all_moves  = nan(max_moves, numel(board));
 data.all_boards = repmat(PIECE_.null, board_size(1), board_size(2), numel(board));
 % initialize current cost and update in best_costs
 data.current_cost = 0;
