@@ -38,4 +38,5 @@ for ix = 1:length(moves)
     end
 end
 [~, sorted_ix] = sort(pred_costs);
-sorted_moves = moves(~isnan(pred_costs(sorted_ix)));
+sorted_ix2     = sorted_ix(~isnan(pred_costs(sorted_ix)));
+sorted_moves   = moves(sorted_ix2);

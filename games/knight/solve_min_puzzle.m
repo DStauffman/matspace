@@ -62,7 +62,7 @@ end
 
 % if the puzzle was solved, then save the relevant move list
 if data.is_solved
-    moves = data.all_moves(:,data.final_pos);
+    moves = data.all_moves(:,data.final_pos)';
     moves = moves(~isnan(moves));
 else
     disp('No solution found.');
