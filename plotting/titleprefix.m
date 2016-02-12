@@ -53,7 +53,7 @@ function titleprefix(fig_hand,prefix)
 %% Tests
 % confirm that handles are valid figures, and that they have at least one axis child
 if any(~ishandle(fig_hand))
-    warning('utils:titleprefix','invalid figure handle specified');
+    warning('dstauffman:utils:titleprefix','invalid figure handle specified');
     return
 end
 haxs = get(fig_hand,'children');
@@ -61,7 +61,7 @@ if ~iscell(haxs)
     haxs = {haxs};
 end
 if any(cellfun(@isempty,haxs))
-    warning('utils:titleprefix','specified figure does not contain axis');
+    warning('dstauffman:utils:titleprefix','specified figure does not contain axis');
     return
 end
 
@@ -93,7 +93,7 @@ for i = 1:length(fig_hand)
                 case 'none'
                     fprefix = prefix;
                 otherwise
-                    error('Unexpected value for the title interpreter.');
+                    error('dstauffman:plotting:BadTitleInterpreterOption', 'Unexpected value for the title interpreter.');
             end
             old_title = get(htit,'string');
             if ~isempty(old_title)

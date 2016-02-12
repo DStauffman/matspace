@@ -110,7 +110,7 @@ switch player
         color   = COLOR.win_blk;
         rot_col = repmat(COLOR.rot_blk,length(x),1);
     otherwise
-        error('Unexpected value for player');
+        error('dstauffman:pentago:BadPlayer', 'Unexpected value for player.');
 end
 tie_col = COLOR.win_tie;
 tie_ix  = find(isnan(pwr));
@@ -147,7 +147,7 @@ for i = 1:length(rot_win)
         case 8 % quad 4, dir 1
             plot_rot_color(handles.button_4R,rot_col(rot_ix(i),:),half_arrow(rot_ix(i)));
         otherwise
-            error('Unexpected value for rotation');
+            error('dstauffman:pentago:BadRotation', 'Unexpected value for rotation.');
     end
 end
 
@@ -176,7 +176,7 @@ switch half
         % cut out the right half
         map_log(:,ceil(x1/2):end) = false;
     otherwise
-        error('Unexpected value for half');
+        error('dstauffman:pentago:BadHalfValue', 'Unexpected value for half.');
 end
 % convert logical array to index numbers
 map = find(map_log);

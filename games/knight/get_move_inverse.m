@@ -25,7 +25,7 @@ function [inv_move] = get_move_inverse(move)
 
 % check that move is valid
 if ~ismember(move, get_globals('moves'))
-    error('knight:InvalidInvMove', 'Invalid move.');
+    error('dstauffman:knight:InvalidInvMove', 'Invalid move.');
 end
 
 % reverse move

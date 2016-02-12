@@ -35,5 +35,5 @@ costs(board == PIECE_.lava)      = cost_data.lava;
 % test for unexpected pieces
 if any(any(not(ismember(board, [PIECE_.null, PIECE_.start, PIECE_.final, PIECE_.water, PIECE_.rock, ...
         PIECE_.barrier, PIECE_.transport, PIECE_.lava]))));
-    error('knight:BadPiece', 'Unexpected pieces on the board.');
+    error('dstauffman:knight:BadPiece', 'Unexpected pieces on the board.');
 end

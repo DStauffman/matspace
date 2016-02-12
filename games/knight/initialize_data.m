@@ -54,7 +54,7 @@ data.transports = get_transports(board);
 % alias the final location for use at the end
 temp = find(board == PIECE_.final);
 if length(temp) ~= 1
-    error('knight:BadFinalPos', 'There must be exactly one final position, not "%i".', length(temp));
+    error('dstauffman:knight:BadFinalPos', 'There must be exactly one final position, not "%i".', length(temp));
 end
 data.final_pos  = temp(1);
 % calculate the costs for landing on each square
@@ -73,7 +73,7 @@ data.all_boards = repmat(PIECE_.null, board_size(1), board_size(2), numel(board)
 data.current_cost = 0;
 temp = find(board == PIECE_.start);
 if length(temp) ~= 1
-    error('knight:BadStartPos', 'There must be exactly one start position, not "%i".', length(temp));
+    error('dstauffman:knight:BadStartPos', 'There must be exactly one start position, not "%i".', length(temp));
 end
 temp = temp(1); % for compiler
 data.best_costs(temp) = data.current_cost;

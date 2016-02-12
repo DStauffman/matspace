@@ -23,7 +23,7 @@ switch nargin
     case 5
         % nop
     otherwise
-        error('Unexpected number of inputs');
+        error('dstauffman:pentago:UnexpectedNargin', 'Unexpected number of inputs.');
 end
 
 % theta angle to sweep out 2*pi

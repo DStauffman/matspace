@@ -40,7 +40,7 @@ disp('Initializing solver.');
 
 % check that the board has a final goal
 if ~any(any(board == PIECE_.final))
-    error('knight:FinalPos', 'The board does not have a finishing location.');
+    error('dstauffman:knight:FinalPos', 'The board does not have a finishing location.');
 end
 
 % initialize the data structure

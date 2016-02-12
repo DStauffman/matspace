@@ -106,7 +106,7 @@ for i=1:n
         elseif position(i,j) == PLAYER.black;
             plot_piece(i,j,RADIUS.piece,COLOR.black);
         else
-            error('Bad board position');
+            error('dstauffman:pentago:BadBoardPos', 'Bad board position.');
         end
     end
 end

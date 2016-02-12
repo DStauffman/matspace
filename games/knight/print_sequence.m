@@ -65,6 +65,6 @@ for i = 1:length(moves)
         % print new board
         print_board(temp_board);
     else
-        error('knight:BadSequence', 'Bad sequence.');
+        error('dstauffman:knight:BadSequence', 'Bad sequence.');
     end
 end

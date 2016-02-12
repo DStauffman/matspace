@@ -44,9 +44,9 @@ switch move
     case 4
         delta = [ 0 -1;  0 -2; -1 -2];
     case {-5, 5, -6, 6, -7, 7, -8, 8}
-        error('knight:BadExtendedMoves', 'Extended moves are not yet implemented.');
+        error('dstauffman:knight:BadExtendedMoves', 'Extended moves are not yet implemented.');
     otherwise
-        error('knight:InvalidMoveValue', 'Invalid move of "%i"', move);
+        error('dstauffman:knight:InvalidMoveValue', 'Invalid move of "%i".', move);
 end
 
 % update X & Y locations
@@ -68,7 +68,7 @@ end
 % handle landing on a transport
 if ~isempty(transports)
     if length(transports) ~= 2
-        error('knight:NumTransports','There must be exactly 0 or 2 transports, not %i.',length(transports));
+        error('dstauffman:knight:NumTransports','There must be exactly 0 or 2 transports, not %i.',length(transports));
     end
     if ismember(all_pos(3),transports)
         if all_pos(3) == transports(1)

@@ -81,7 +81,7 @@ for i = 1:length(sorted_moves)
     data.best_costs(new_pos) = data.current_cost + cost;
     this_move_num = find(isnan(data.all_moves(:,start_pos)), 1, 'first');
     if isempty(this_move_num)
-        error('knight:NumMoves','Not enough moves were preallocated.');
+        error('dstauffman:knight:NumMoves','Not enough moves were preallocated.');
     end
     data.all_moves(:,new_pos)                = data.all_moves(:,start_pos);
     data.all_moves(this_move_num(1),new_pos) = this_move;

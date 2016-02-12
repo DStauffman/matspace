@@ -26,9 +26,9 @@ num_current = length(pos);
 if num_current ~= 1
     print_board(board);
     if num_current == 0
-        error('knight:NoCurrent', 'No current position was found.');
+        error('dstauffman:knight:NoCurrent', 'No current position was found.');
     else
-        error('knight:TooManyCurrent', 'Only exactly one current position may be found, not %i.', length(pos));
+        error('dstauffman:knight:TooManyCurrent', 'Only exactly one current position may be found, not %i.', length(pos));
     end
 end
 

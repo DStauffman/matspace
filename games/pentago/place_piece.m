@@ -95,7 +95,7 @@ else
             case PLAYER.black
                 move_cir = plot_piece(x,y,RADIUS.piece,COLOR.next_blk);
             otherwise
-                error('Unexpected player to move next');
+                error('dstauffman:pentago:BadNextMove', 'Unexpected player to move next.');
         end
     else
         % delete a previously placed piece

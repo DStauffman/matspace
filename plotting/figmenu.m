@@ -130,6 +130,6 @@ else
             figure(prev);
         end
     else
-        error('invalid option!')
+        error('dstauffman:plotting:figMenuInvalidOpiton', 'Invalid option!');
     end
 end

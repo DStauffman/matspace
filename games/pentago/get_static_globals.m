@@ -132,6 +132,7 @@ switch nargin
         assignin('base','RADIUS',RADIUS);
         assignin('base','WIN',WIN);
     case 1
+        varargout = cell(1,length(list));
         for i=1:length(list)
             switch list{i}
                 case 'COLOR'
@@ -143,9 +144,9 @@ switch nargin
                 case 'WIN'
                     varargout{i} = WIN;
                 otherwise
-                    error(['Unexpected value of ''',list{i},'''to return']);
+                    error('dstauffman:pentago:BadGlobal', 'Unexpected value of "%s" to return.', list{i});
             end
         end
     otherwise
-        error('Unexpected number of inputs');
+        error('dstauffman:pentago:UnexpectedNargin', 'Unexpected number of inputs.');
 end

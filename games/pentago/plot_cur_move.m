@@ -66,5 +66,5 @@ switch move
     case PLAYER.none
         % nop
     otherwise
-        error('Unexpected player');
+        error('dstauffman:pentago:BadPlayer', 'Unexpected value for player.');
 end

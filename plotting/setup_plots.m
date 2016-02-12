@@ -61,7 +61,8 @@ switch nargin
     case 3
         %nop
     otherwise
-        error(['Unexpected number of arguments expecting 2 or 3 rather than: ' num2str(nargin)]);
+        error('dstauffman:UnexpectedNargin', ['Unexpected number of arguments expecting 2 or 3', ...
+            'rather than: "%i".'], nargin);
 end
 % check for empty input
 if isempty(fig_hand)
@@ -96,7 +97,7 @@ if any(strcmp(form,{'time','time_no_y_scale'}))
     %             case 'day'
     %                 mult = 86400;
     %             otherwise
-    %                 error('Unexpected value for OPTS.time_unit');
+    %                 error('dstauffman:plotting:BadOptsTimeUnit', 'Unexpected value for "OPTS.time_unit".');
     %         end
     %     else
     %         mult = 1;

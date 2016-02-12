@@ -32,7 +32,7 @@ if r == 6 && c == 6
         case 4
             old_sub = old_pos([22 28 34; 23 29 35; 24 30 36]);
         otherwise
-            error('Unexpected value for quad');
+            error('dstauffman:pentago:BadQuad', 'Unexpected value for quad');
     end
     
     % rotate quad
@@ -42,7 +42,7 @@ if r == 6 && c == 6
         case 1
             new_sub = rotate_right(old_sub);
         otherwise
-            error('Unexpected value for dir');
+            error('dstauffman:pentago:BadDir', 'Unexpected value for dir');
     end
     
     % place rotated quad
@@ -69,7 +69,7 @@ elseif r == 36
         case 4
             ix_old = [22 23 24 28 29 30 34 35 36];
         otherwise
-            error('Unexpected value for quad');
+            error('dstauffman:pentago:BadQuad', 'Unexpected value for quad');
     end
     % rotate quad
     switch dir
@@ -78,13 +78,13 @@ elseif r == 36
         case 1
             ix_new = ix_old([3 6 9 2 5 8 1 4 7]);
         otherwise
-            error('Unexpected value for dir');
+            error('dstauffman:pentago:BadDir', 'Unexpected value for dir');
     end
     % update placements
     new_pos = old_pos;
     new_pos(ix_old,:) = old_pos(ix_new,:);
 else
-    error('Unexpected size of board');
+    error('dstauffman:pentago:BadBoardSize', 'Unexpected value for board size.');
 end
 
 

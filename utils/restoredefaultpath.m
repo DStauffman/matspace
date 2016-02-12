@@ -19,7 +19,7 @@ switch version('-release')
     case '2015b'
         run('C:\Program Files\MATLAB\R2015b\toolbox\local\restoredefaultpath.m');
     otherwise
-        error('Unsupported MATLAB version, update to personal restoredefaultpath is needed.');
+        error('dstauffman:utils:RestorePathVersions', 'Unsupported MATLAB version, update to personal restoredefaultpath is needed.');
 end
 
 % add user customized paths
@@ -34,5 +34,5 @@ end
 if RESTOREDEFAULTPATH_EXECUTED
     disp('MATLAB default paths restored.')
 else
-    error('utils:RestorePath', 'There was a problem restoring the default MATLAB paths.');
+    error('dstauffman:utils:RestorePath', 'There was a problem restoring the default MATLAB paths.');
 end

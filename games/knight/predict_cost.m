@@ -24,7 +24,7 @@ function [costs] = predict_cost(board)
 % find the final position
 temp = find(board == PIECE_.final);
 if length(temp) ~= 1
-    error('knight:FinalPos', 'There must be only exactly one final position.');
+    error('dstauffman:knight:FinalPos', 'There must be only exactly one final position.');
 end
 [x_fin, y_fin] = ind2sub([m, n], temp);
 

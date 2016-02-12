@@ -113,7 +113,8 @@ if exist('saved_game.mat','file')
                     load_previous = false;
             end
         otherwise
-            error('Unexpected value for of ''"%s"'' for ''OPTIONS.load_previous_game''',OPTIONS.load_previous_game);
+            error('dstauffman:pentago:BadPreviousGameFile', ['Unexpected value for of "%s" for ', ...
+                '"OPTIONS.load_previous_game"'], OPTIONS.load_previous_game);
     end
 else
     load_previous = false;

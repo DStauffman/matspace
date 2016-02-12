@@ -32,7 +32,7 @@ switch nargin
     case 4
         % nop
     otherwise
-        error('knight:Nargin', 'Unexpected number of inputs: "%s"', nargin);
+        error('dstauffman:knight:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
 end
 
 % initialize output
@@ -52,7 +52,7 @@ temp_board(temp_board == PIECE_.start) = PIECE_.current;
 pos = get_current_position(temp_board);
 % check that the board has a final goal
 if ~any(temp_board == PIECE_.final)
-    error('knight:FinalPos','The board does not have a finishing location.');
+    error('dstauffman:knight:FinalPos','The board does not have a finishing location.');
 end
 % loop through moves
 for i = 1:length(moves)
@@ -77,7 +77,7 @@ for i = 1:length(moves)
     if cost < 0
         is_done = true;
         if i < length(moves)
-            error('knight:FinishedPlus', 'Sequence finished, but then kept going.');
+            error('dstauffman:knight:FinishedPlus', 'Sequence finished, but then kept going.');
         end
     end
 end

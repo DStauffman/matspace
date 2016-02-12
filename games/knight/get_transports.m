@@ -21,7 +21,7 @@ function [transports] = get_transports(board)
 if any(any(board == PIECE_.transport))
     transports = find(board == PIECE_.transport)';
     if length(transports) ~= 2
-        error('knight:BadTransports', 'There must be 0 or exactly 2 transports.');
+        error('dstauffman:knight:BadTransports', 'There must be 0 or exactly 2 transports.');
     end
 else
     transports = zeros(1, 0); % for compiler

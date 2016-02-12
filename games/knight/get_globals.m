@@ -71,5 +71,5 @@ switch value
     case 'logging'
         out = false;
     otherwise
-        error('knight:BadGlobal', 'Unexpected value to ask for: "%s"',value);
+        error('dstauffman:knight:BadGlobal', 'Unexpected value to ask for: "%s".',value);
 end

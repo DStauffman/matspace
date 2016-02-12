@@ -1,4 +1,4 @@
-function storefig(fig_hand,path,format)
+function storefig(fig_hand,path,format) %#ok<*MCPRT>
 
 % STOREFIG  store figures to directory in specified format.
 %
@@ -50,12 +50,12 @@ function storefig(fig_hand,path,format)
 for f = fig_hand
     hfig = f;
     if ~ishandle(hfig)
-        warning('utils:storeFig',['Invalid figure handle specified: "',num2str(hfig),'".']);
+        warning('dstauffman:utils:storeFig', 'Invalid figure handle specified: "%i".',hfig);
         return
     end
     haxs = get(hfig,'children');
     if isempty(haxs)
-        warning('utils:storeFig',['Specified figure "',num2str(hfig),'" does not contain axis.']);
+        warning('dstauffman:utils:storeFig','Specified figure "%i" does not contain axis.', hfig);
         return
     end
 end
@@ -67,7 +67,7 @@ end
 
 % confirm whether storage directory exists
 if ~exist(path,'dir')
-    warning('utils:storeFig',['Specified storage path not found: "',path,'".']);
+    warning('dstauffman:utils:storeFig','Specified storage path not found: "%s".', path);
     return
 end
 
@@ -96,7 +96,7 @@ for i = 1:length(bad_chars)
     end
 end
 if is_bad_chars
-    warning('utils:illegalChars','There were illegal characters in the figure name.');
+    warning('dstauffman:utils:illegalChars','There were illegal characters in the figure name.');
 end
 
 % save plots
@@ -112,7 +112,7 @@ for f = 1:length(fig_hand)
             case 'jpg'
                 print(fig_hand(f),'-djpeg',[path,fig_name{f},'.jpg']);
             otherwise
-                warning('utils:storeFig',['Unexpected extension type "',format{i},'".']);
+                warning('dstauffman:utils:storeFig','Unexpected extension type "%s".', format{i});
         end
     end
 end

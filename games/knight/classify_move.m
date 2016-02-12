@@ -41,7 +41,7 @@ p3 = board(all_pos(3));
 
 % check for error conditions
 if p3 == PIECE_.start || p3 == PIECE_.current
-    error('knight:InvalidLocation', 'The piece should never be able to move to it''s current or starting position.');
+    error('dstauffman:knight:InvalidLocation', 'The piece should never be able to move to it''s current or starting position.');
 end
 
 % check for blocked conditions
@@ -65,6 +65,6 @@ switch p3
     case PIECE_.lava
         move_type = MOVE_.lava;
     otherwise
-        error('knight:BadPieceType', 'Unexpected piece type'); %TODO: print type that works for the compiler
-        %error('knight:BadPieceType', 'Unexpected piece type "%s.%s"', class(p3), char(p3));
+        error('dstauffman:knight:BadPieceType', 'Unexpected piece type.'); %TODO: print type that works for the compiler
+        %error('dstauffman:knight:BadPieceType', 'Unexpected piece type "%s.%s".', class(p3), char(p3));
 end
