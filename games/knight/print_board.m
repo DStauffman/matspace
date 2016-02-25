@@ -10,14 +10,14 @@ function [] = print_board(board)
 %
 % Prototype:
 %     board = zeros(3,5);
-% 	  board(1,3) = PIECE_.current;
-% 	  print_board(board);
+%     board(1,3) = PIECE_.current;
+%     print_board(board);
 %
 %     % Gives:
 %     . . K . .
 %     . . . . .
 %     . . . . .
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 
