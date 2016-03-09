@@ -27,7 +27,7 @@ function [fig_hand] = plot_correlation_matrix(data,labels,OPTS,varargin)
 %     data   = [0.1 -0.2 0.3; -0.6 -0.5 0];
 %     labels = {{'X1','X2','X3'},{'Y1','Y2'}};
 %     plot_correlation_matrix(data,labels);
-% 
+%
 %     plot_correlation_matrix(data,{},[],'MatrixName','Covariance Matrix');
 %
 % See Also:
@@ -160,7 +160,7 @@ end
 for i = 1:m
     for j = 1:n
         if ~plot_lower_only || i <= j
-            patch(i+box_size*[-1 -1 0 0],j+box_size*[-1 0 0 -1],abs(data(j,i)), 'edgecolor', border_color);
+            patch(i+box_size*[-1 -1 0 0], j+box_size*[-1 0 0 -1], data(j,i), 'edgecolor', border_color);
         end
         if label_values
             text(box_size*i - box_size/2, box_size*j - box_size/2, num2str(data(j,i),'%.2g'), 'Units', 'data', ...
@@ -190,7 +190,9 @@ text(b,repmat(n+1/5*box_size,length(b),1),a,'HorizontalAlignment','left','rotati
 
 %% Setup plots
 % Make this step optional, so that this function can exist outside the whole dstauffman library
-if exist('setup_plots', 'file') && exist('figmenu', 'file')
+if exist('setup_plots', 'file')
     setup_plots(fig_hand,OPTS,'dist');
+end
+if exist('figmenu', 'file')
     figmenu;
 end
