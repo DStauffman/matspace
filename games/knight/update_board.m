@@ -10,13 +10,13 @@ function [board, cost, is_repeat, new_pos] = update_board(board, move, costs, tr
 %     transports : (1x2) list of linearized locations of the transports
 %     start_pos  : (scalar) starting linearized location of the knight
 %     board_size : (1x2) size of the board
-% 
+%
 % Output:
 %     board .... : (MxN) updated board layout
 %     cost ..... : (scalar) cost of the specified move type
 %     is_repeat  : (scalar) boolean flag for whether the last move was a repeated visit or not
 %     new_pos .. : (scalar) new linearized location of the knight
-% 
+%
 % Prototype:
 %     board      = zeros(2, 5);
 %     move       = 2; % (2 right and 1 down)
@@ -34,7 +34,7 @@ function [board, cost, is_repeat, new_pos] = update_board(board, move, costs, tr
 %     % Gives:
 %     . . x . .
 %     . . . . K
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

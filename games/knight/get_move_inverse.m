@@ -6,10 +6,10 @@ function [inv_move] = get_move_inverse(move)
 %
 % Input:
 %     move : (scalar) move to be performed
-% 
+%
 % Output:
 %     inv_move : (scalar) move that will undo the last one
-% 
+%
 % Prototype:
 %     inv_move = get_move_inverse(-1);
 %     assert(inv_move == -3);
@@ -19,7 +19,7 @@ function [inv_move] = get_move_inverse(move)
 %     assert(inv_move == 4);
 %     inv_move = get_move_inverse(4);
 %     assert(inv_move == 2);
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

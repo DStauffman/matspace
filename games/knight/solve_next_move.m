@@ -1,16 +1,16 @@
 function [data] = solve_next_move(board, data, start_pos)
 
 % SOLVE_NEXT_MOVE  solves the puzzle using a breadth first approach.
-% 
+%
 % Input:
 %     board ... : (MxN) board layout
 %     data .... : (struct) Internal data structure for storing information throughout solver calls, see initialize_data
 %     start_pos : (scalar) starting linearized location
-% 
+%
 % Output:
 %     data .... : (struct) Internal data structure with the following fields updated:
 %         .TBD...
-% 
+%
 % Prototype:
 %     board      = repmat(PIECE_.null, 2,5);
 %     board(1)   = PIECE_.start;
@@ -20,7 +20,7 @@ function [data] = solve_next_move(board, data, start_pos)
 %     board(start_pos) = PIECE_.current;
 %     data = solve_next_move(board, data, start_pos);
 %     assert(all(all(isequaln(data.best_costs, [0 nan nan nan nan; nan nan 1 nan nan]))));
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

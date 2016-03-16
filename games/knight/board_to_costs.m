@@ -1,13 +1,13 @@
 function [costs] = board_to_costs(board)
 
 % BOARD_TO_COSTS  translates a board to the associated costs for landing on any square within the board.
-% 
+%
 % Input:
 %     board : (MxN) board layout
-% 
+%
 % Output:
 %     costs : (MxN) costs for each square on the board layout
-% 
+%
 % Prototype:
 %     board = repmat(PIECE_.null, 3, 3);
 %     board(1, 1) = PIECE_.water;
@@ -15,7 +15,7 @@ function [costs] = board_to_costs(board)
 %     board(3, 3) = PIECE_.barrier;
 %     costs = board_to_costs(board);
 %     assert(all(all(isequaln(costs,[2 1 1; 1 0 1; 1 1 nan]))));
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

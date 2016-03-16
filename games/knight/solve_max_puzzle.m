@@ -15,12 +15,12 @@ function [moves] = solve_max_puzzle(board)
 %     board[0, 4] = PIECE_.final;
 %     moves = solve_min_puzzle(board);
 %     % assert(all(moves == [2 -2]))); % TODO: update this
-% 
+%
 %     % Gives:
 %     Initializing solver.
 %     Solution found for cost of: 8.
 %     Elapsed time : ...
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 
@@ -39,8 +39,3 @@ end
 disp(['Elapsed time : ' datestr(now - start_solver, 'HH:MM:SS')]);
 
 moves = []; % TODO: for now output an empty list
-    
-    
-
-
-

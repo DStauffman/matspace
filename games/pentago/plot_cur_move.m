@@ -59,7 +59,7 @@ axis off;
 
 % draw piece
 switch move
-    case PLAYER.white        
+    case PLAYER.white
         plot_piece(0,0,RADIUS.piece,COLOR.white);
     case PLAYER.black
         plot_piece(0,0,RADIUS.piece,COLOR.black);

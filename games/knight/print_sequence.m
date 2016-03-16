@@ -8,7 +8,7 @@ function [] = print_sequence(board, moves)
 %
 % Output:
 %     None
-% 
+%
 % Prototype:
 %     board = zeros(3, 5);
 %     board(1, 1) = PIECE_.start;
@@ -26,12 +26,12 @@ function [] = print_sequence(board, moves)
 %     x . . . .
 %     . . K . .
 %     . . . . E
-%   
+%
 %     After move 2, cost: 2
 %     x . . . .
 %     . . x . .
 %     . . . . K
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

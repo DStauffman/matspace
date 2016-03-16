@@ -1,20 +1,20 @@
 function [x, y] = get_current_position(board)
-    
+
 % GET_CURRENT_POSITION  gets the current position of the knight.
 %
 % Input:
 %     board : (MxN) board layout
-% 
+%
 % Output:
 %     x : (scalar) current X position
 %     y : (scalar) current Y position
-% 
+%
 % Prototype:
 %     board = zeros(5,5);
 %     board(2,5) = PIECE_.current;
 %     [x, y] = get_current_position(board);
 %     assert(x == 2 & y == 5);
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

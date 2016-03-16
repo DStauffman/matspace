@@ -14,7 +14,7 @@ function [transports] = get_transports(board)
 %     board(3, 3) = PIECE_.transport;
 %     transports  = get_transports(board);
 %     assert(all(transports == [4 9]));
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

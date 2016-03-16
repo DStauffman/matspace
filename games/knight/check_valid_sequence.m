@@ -7,10 +7,10 @@ function [is_valid] = check_valid_sequence(board, moves, print_status, allow_rep
 %     moves ....... : (1xA) list of moves to be performed
 %     print_status  : |opt| (scalar) boolean flag for whether to print the board after each move is made, default is false
 %     allow_repeats : |opt| (scalar) boolean flag for whether to allow repeat visits to the same square, default is false
-% 
+%
 % Output:
 %     is_valid : (scalar) boolean flag for whether the sequence is valid or not
-% 
+%
 % Prototype:
 %     board = zeros(3, 5);
 %     board(1, 1) = PIECE_.start;
@@ -18,7 +18,7 @@ function [is_valid] = check_valid_sequence(board, moves, print_status, allow_rep
 %     moves = [2 2];
 %     is_valid = check_valid_sequence(board, moves);
 %     assert(is_valid);
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

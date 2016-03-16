@@ -1,8 +1,8 @@
 % The "knight" file solves the Knight Board puzzle given to Matt Beck during a job interview.
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015 based on Python version.
-% 
+%
 % [Knight Board]
 % The knight board can be represented in x,y coordinates.  The upper left position
 % is (0,0) and the bottom right is (7,7).  Assume there is a single knight chess

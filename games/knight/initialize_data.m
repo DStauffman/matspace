@@ -1,10 +1,10 @@
 function [data] = initialize_data(board) %#codegen
 
 % INITIALIZE_DATA  initializes the internal data structure for use in the solver.
-% 
+%
 % Input:
 %     board : (MxN) board layout
-% 
+%
 % Output:
 %     data : (struct) internal data structure for use in the solver. Contains the following fields:
 %         .all_boards
@@ -19,7 +19,7 @@ function [data] = initialize_data(board) %#codegen
 %         .original_board
 %         .pred_costs
 %         .transports
-% 
+%
 % Prototype:
 %     board    = repmat(PIECE_.null, 2, 5);
 %     board(1) = PIECE_.start;
@@ -31,7 +31,7 @@ function [data] = initialize_data(board) %#codegen
 %
 % Notes:
 %     1.  To support compilation, all the fields must be initialized before data can be used.
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

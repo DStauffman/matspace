@@ -15,12 +15,12 @@ function [moves, data] = solve_min_puzzle(board)
 %     board[0, 4] = PIECE_.final;
 %     moves = solve_min_puzzle(board);
 %     assert(all(moves == [2 -2])));
-% 
+%
 %     % Gives:
 %     Initializing solver.
 %     Solution found for cost of: 2.
 %     Elapsed time : ...
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

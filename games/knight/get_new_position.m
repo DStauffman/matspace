@@ -18,7 +18,7 @@ function [all_pos] = get_new_position(board_size, pos, move, transports)
 %     transports = [];
 %     all_pos    = get_new_position(board_size, pos, move, transports);
 %     assert(all(all_pos == [17; 22; 23]));
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

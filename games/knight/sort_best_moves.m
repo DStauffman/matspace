@@ -8,10 +8,10 @@ function [sorted_moves] = sort_best_moves(moves, costs, transports, start_pos, b
 %     transports : (1x2) or (empty) location of the transports
 %     start_pos  : (scalar) starting linearized location of the knight
 %     board_size : (1x2) size of the board
-% 
+%
 % Output:
 %     sorted_moves : (1xB) valid moves sorted by most likely first
-% 
+%
 % Prototype:
 %     board        = repmat(PIECE_.null, 5, 8);
 %     board(13)    = PIECE_.current;
@@ -23,7 +23,7 @@ function [sorted_moves] = sort_best_moves(moves, costs, transports, start_pos, b
 %     board_size   = size(board);
 %     sorted_moves = sort_best_moves(moves, costs, transports, start_pos, board_size);
 %     assert(all(sorted_moves == [-3, 2]));
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 

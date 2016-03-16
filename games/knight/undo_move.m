@@ -29,7 +29,7 @@ function [board] = undo_move(board, last_move, original_board, transports, start
 %     print_board(board);
 %     . . K . .
 %     . . . . .
-% 
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015.
 
