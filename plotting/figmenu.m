@@ -26,7 +26,13 @@ use_action = exist('action','var');
 %% build lists
 if ~use_action
     % list of figures
-    figlist = sort(findobj('type','figure'));
+    temp = findobj('type','figure');
+    if isnumeric(temp)
+        figlist = sort(temp); % for older Matlab versions before Figure Handles were classes
+    else
+        [~, sort_ix] = sort(arrayfun(@(x) x.Number, temp));
+        figlist = temp(sort_ix);
+    end
     if isempty(figlist)
         disp([mfilename,': no figs found.'])
         return
