@@ -26,8 +26,12 @@ function plot_rms_lines(x,y)
 hold_state = ishold;
 hold on;
 
-plot([x(1) x(1)],y,'LineStyle','--','Color',[   1 0.75 0],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Start Time');
-plot([x(2) x(2)],y,'LineStyle','--','Color',[0.75 0.75 1],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Stop Time');
+% Current bug in Matlab when using MarkerEdgeColor and the plotbrowser:
+% plot([x(1) x(1)],y,'LineStyle','--','Color',[   1 0.75 0],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Start Time');
+% plot([x(2) x(2)],y,'LineStyle','--','Color',[0.75 0.75 1],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Stop Time');
+
+plot([x(1) x(1)],y,'LineStyle','--','Color',[   1 0.75 0],'Marker','+','MarkerSize',10,'DisplayName','RMS Start Time');
+plot([x(2) x(2)],y,'LineStyle','--','Color',[0.75 0.75 1],'Marker','+','MarkerSize',10,'DisplayName','RMS Stop Time');
 
 % reset hold state if it wasn't previously set
 if ~hold_state
