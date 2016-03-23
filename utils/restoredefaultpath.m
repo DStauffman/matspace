@@ -1,10 +1,12 @@
-function status = restoredefaultpath()
+function status = restoredefaultpath() %#ok<*MCAP>
 
 % RESTOREDEFAULTPATH  provides a customize default path based on the built in version.
 
+% warnings to disable
+% warning('off','MATLAB:dispatcher:nameConflict');
+% warning('off','MATLAB:dispatcher:pathWarning');
+
 % run built-in version
-warning('off','MATLAB:dispatcher:nameConflict');
-warning('off','MATLAB:dispatcher:pathWarning');
 switch version('-release')
     case '2010b'
         run('C:\Program Files\MATLAB\R2010b\toolbox\local\restoredefaultpath.m');
@@ -23,7 +25,11 @@ switch version('-release')
 end
 
 % add user customized paths
-addpath('C:\Users\DStauffman\Documents\GitHub\matlab\utils'); %#ok<MCAP>
+username = getenv('username');
+temp_path = fullfile('C:','Users',username,'Documents','GitHub','matlab');
+addpath(genpath(temp_path));
+temp_path = fullfile('C:','Users',username,'Documents','MATLAB');
+addpath(temp_path);
 
 % output status
 if nargout == 1
