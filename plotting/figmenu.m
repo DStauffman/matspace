@@ -26,12 +26,7 @@ use_action = exist('action','var');
 %% build lists
 if ~use_action
     % list of figures
-    figlist = sort(findobj('type','figure'));
-    if ~isnumeric(figlist)
-        % fix bug in sorting for newer matlab.ui.Figure classes that aren't just numeric
-        [~, sort_ix] = sort([figlist.Number]);
-        figlist = figlist(sort_ix);
-    end
+    figlist = sortfigs(findobj('type','figure'));
     if isempty(figlist)
         disp([mfilename,': no figs found.'])
         return
@@ -72,11 +67,6 @@ if ~use_action
     %% add NEXT, PREV, and FIGURES menus
     for i = 1:nfigs
         f = figlist(i);
-        if isa(f,'matlab.ui.Figure')
-            use_new = true;
-        else
-            use_new = false;
-        end
         % if you add a menu item, don't forget to delete it (above)
         % whenever figmenu is run again, otherwise Matlab will crash,
         % because you'll keep adding menu items until you run out of
@@ -94,47 +84,76 @@ if ~use_action
             f = figlist(j);
             n = char(fignames(j));
             eval(sprintf('item%i = uimenu(menu1);',j))
-            if ~use_new
-                eval(sprintf('set(item%i,''Label'',''&%i: %s'')',j,f,n));
-                eval(sprintf('set(item%i,''Callback'',''figure(%i)'')',j,f));
-            else
-                eval(sprintf('set(item%i,''Label'',''&%i: %s'')',j,f.Number,n));
-                eval(sprintf('set(item%i,''Callback'',''figure(%i)'')',j,f.Number));
-            end
+            eval(sprintf('set(item%i,''Label'',''&%s: %s'')',j,fignum_to_str(f),n));
+            eval(sprintf('set(item%i,''Callback'',''figure(%s)'')',j,fignum_to_str(f)));
         end
     end
 else
     
     %% execute callbacks for >> and << menubuttons
-    if strcmp(action,'next')
-        fh = sort(get(0,'Children'));
-        % if only one figure, simply exit
-        if length(fh) == 1
-            return
-        end
-        i = find(fh>gcf);
-        if ~isempty(i)
-            next = fh(i(1));
+    % get sorted list of figures
+    figs = sortfigs(get(0,'Children'));
+    % if only one figure, simply exit
+    if length(figs) == 1
+        return
+    end
+    % find the next or prev figure, and set it as the active one
+    switch action
+        case 'next'
+            next = find_fig(figs, true);
             figure(next);
-        else
-            next = fh(1);
-            figure(next);
-        end
-    elseif strcmp(action,'prev')
-        fh = sort(get(0,'Children'));
-        % if only one figure, simply exit
-        if length(fh) == 1
-            return
-        end
-        i = find(fh<gcf);
-        if ~isempty(i)
-            prev = fh(i(end));
+        case 'prev'
+            prev = find_fig(figs, false);
             figure(prev);
-        else
-            prev = fh(end);
-            figure(prev);
-        end
+        otherwise
+            error('dstauffman:plotting:figMenuInvalidOpiton', 'Invalid option!');
+    end
+end
+
+%% Subfunctions - sortfigs
+function [figs] = sortfigs(figs)
+% Stores the given figure handles for old and new versions of Matlab.
+if ~isnumeric(figs)
+    % fix bug in sorting for newer matlab.ui.Figure classes that aren't just numeric
+    [~, sort_ix] = sort([figs.Number]);
+    figs = figs(sort_ix);
+else
+    figs = sort(figs);
+end
+
+%% Subfunctions - fignum_to_str
+function [text] = fignum_to_str(fig)
+% Converts a figure number to text for old and new versions of Matlab.
+if isa(fig, 'matlab.ui.Figure')
+    text = int2str(fig.Number);
+else
+    text = int2str(fig);
+end
+
+%% Subfunctions - find_fig
+function [fig] = find_fig(figs, next)
+% Finds the next or previous figure
+this_fig = gcf;
+if next
+    if isa(this_fig, 'matlab.ui.Figure')
+        ix = find([figs.Number] > this_fig.Number, 1, 'first');
     else
-        error('dstauffman:plotting:figMenuInvalidOpiton', 'Invalid option!');
+        ix = find(figs > gcf, 1, 'first');
+    end
+    if ~isempty(ix)
+        fig = figs(ix(1));
+    else
+        fig = figs(1);
+    end
+else
+    if isa(this_fig, 'matlab.ui.Figure')
+        ix = find([figs.Number] < this_fig.Number, 1, 'last');
+    else
+        ix = find(figs < gcf, 1, 'last');
+    end
+    if ~isempty(ix)
+        fig = figs(ix(1));
+    else
+        fig = figs(end);
     end
 end
