@@ -1,4 +1,4 @@
-function [inc_cost, inc_qaly, icer_out, order] = icer(cost, qaly)
+function [inc_cost, inc_qaly, icer_out, order, data] = icer(cost, qaly, names, baseline, make_plot, OPTS)
 
 % ICER  calculates the incremental cost effectiveness ratios with steps to throw out dominated strategies.
 %
@@ -9,20 +9,28 @@ function [inc_cost, inc_qaly, icer_out, order] = icer(cost, qaly)
 %     and finally returns the incremental cost, qaly and ratios for the remaining "frontier" options
 %     along with an order variable to map them back to the inputs.
 %
+%     It optionally recalculates the ICERs based on a given baseline or standard of care case, and
+%     also saves all the information to a Matlab table and displays a plot.
+%
 % Input:
-%     cost : (Mx1) cost of each strategy [dollars]
-%     qaly : (Mx1) quality adjusted life years (QALY) gained by each strategy [life years]
+%     cost .... : (Mx1) cost of each strategy [dollars]
+%     qaly .... : (Mx1) quality adjusted life years (QALY) gained by each strategy [life years]
+%     names ... : {Mx1} names of the different strategies
+%     baseline  : (scalar) index of baseline strategy to use for cost comparisons, if not nan [num]
+%     make_plot : (scalar) true/false flag for whether to plot the data [bool]
+%     OPTS .... : (struct) plotting options, see get_full_opts.m for details
 %
 % Output:
-%     inc_cost : (Nx1) incremental costs [dollars] - see note 1
-%     inc_qaly : (Nx1) incremental QALYs gained [life years]
-%     icer_out : (Nx1) incremental cost effectiveness ratios [ndim]
-%     order    : (Mx1) order mapping to the original inputs, with NaNs for dominated strategies [num]
+%     inc_cost  : (Nx1) incremental costs [dollars] - see note 1
+%     inc_qaly  : (Nx1) incremental QALYs gained [life years]
+%     icer_out  : (Nx1) incremental cost effectiveness ratios [ndim]
+%     order ... : (Mx1) order mapping to the original inputs, with NaNs for dominated strategies [num]
+%     data .... : (Mx7 table) data output as a Matlab table [num]
 %
 % Prototype:
 %     cost = [250e3; 750e3; 2.25e6; 3.75e6];
 %     qaly = [20; 30; 40; 80];
-%     [inc_cost, inc_qaly, icer_out, order] = icer(cost, qaly);
+%     [inc_cost, inc_qaly, icer_out, order, data] = icer(cost, qaly);
 %     % test results
 %     assert(isequal(inc_cost, [250e3; 500e3; 3e6]));
 %     assert(isequal(inc_qaly, [20; 10; 50]));
@@ -35,8 +43,32 @@ function [inc_cost, inc_qaly, icer_out, order] = icer(cost, qaly)
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in February 2016.
+%     2.  Updated by David C. Stauffer in May 2016 to allow a specified baseline, and to optionally
+%         make a plot.
 
-% check inputs
+%% check for optional inputs
+switch nargin
+    case 2
+        names     = [];
+        baseline  = nan;
+        make_plot = false;
+        OPTS      = [];
+    case 3
+        baseline  = nan;
+        make_plot = false;
+        OPTS      = [];
+    case 4
+        make_plot = false;
+        OPTS      = [];
+    case 5
+        OPTS      = [];
+    case 6
+        % nop
+    otherwise
+        error('dstauffman:UnexpectedNargin','Unexpected number of inputs.');
+end
+
+%% check inputs
 assert(all(cost > 0), 'Costs must be positive.');
 assert(all(qaly > 0), 'Qalys must be positive.');
 
@@ -46,6 +78,7 @@ qaly = qaly(:);
 assert(length(cost) == length(qaly), 'Cost and Qalys must have same size.');
 assert(~isempty(cost), 'Costs and Qalys cannot be empty.');
 
+%% Solve ICERs
 % build an index order variable to keep track of strategies
 keep = 1:length(cost);
 
@@ -95,3 +128,74 @@ end
 % save the final ordering
 order = nan(size(cost));
 order(keep) = ix_sort;
+
+% build an index to pull data out
+temp = find(~isnan(order));
+ix   = temp(order(~isnan(order)));
+
+%% recalculate based on given baseline
+if ~isnan(baseline)
+    inc_cost = diff([cost(baseline); cost(ix)]);
+    inc_qaly = diff([qaly(baseline); qaly(ix)]);
+    icer_out = inc_cost ./ inc_qaly;
+end
+
+%% Output as table
+if nargout > 4
+    % get number of strategies
+    num = length(cost);
+    % build a name list if not given
+    if isempty(names)
+        names = arrayfun(@(x) ['Strategy ',int2str(x)], 1:num, 'UniformOutput', false)';
+    end
+    % preallocate some variables
+    full_inc_costs     = nan(num, 1);
+    full_inc_qalys     = nan(num, 1);
+    full_icers         = nan(num, 1);
+    % fill the calculations in where applicable
+    full_inc_costs(ix) = inc_cost;
+    full_inc_qalys(ix) = inc_qaly;
+    full_icers(ix)     = icer_out;
+    % more explicit column names (than simply using the variable names)
+    cols = {'Strategy','Cost', 'QALYs', 'Increment_Costs', 'Incremental_QALYs', 'ICER', 'Order'};
+    % make the whole data set into a table
+    data = table(names, cost, qaly, full_inc_costs, full_inc_qalys, full_icers, order, ...
+        'VariableNames', cols);
+end
+
+%% Make a plot
+if make_plot
+    % create a figure and axis
+    fig = figure('name', 'Cost Benefit Frontier');
+    ax = axes;
+    % plot the data
+    plot(ax, qaly, cost, 'ko', 'DisplayName', 'strategies');
+    hold on;
+    plot(qaly(ix), cost(ix), 'r.', 'MarkerSize', 20, 'DisplayName', 'frontier');
+    % get axis limits before (0,0) point is added
+    lim = axis;
+    % add ICER lines
+    if isnan(baseline)
+        plot([0; qaly(ix)], [0; cost(ix)], 'r-', 'DisplayName', 'ICERs');
+    else
+        plot([0; qaly(ix(1))], [0; cost(ix(1))],'r:', 'HandleVisibility','off');
+        plot([qaly(baseline); qaly(ix)], [cost(baseline); cost(ix)], 'r-', 'DisplayName', 'ICERs');
+    end
+    % Label each point
+    dy = (lim(4) - lim(3)) / 100;
+    for i = 1:length(names)
+        text(qaly(i), cost(i)+dy, names{i}, 'Units', 'data', 'HorizontalAlignment', 'center', ...
+            'VerticalAlignment', 'bottom', 'FontSize', 12, 'interpreter', 'none');
+    end
+    % add some labels and such
+    title(get(fig, 'name'), 'interpreter', 'none');
+    xlabel('Benefits');
+    ylabel('Costs');
+    legend('show', 'location', 'NorthWest');
+    grid on;
+    % reset limits with including (0,0) point in case it skews everything too much
+    axis(lim);
+    % add standard plotting features
+    figmenu;
+    setup_plots(fig, OPTS, 'dist_no_yscale');
+end
