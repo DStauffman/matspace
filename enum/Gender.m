@@ -18,7 +18,7 @@ classdef(Enumeration) Gender < int32
 %     class(Gender.female)  % returns 'Gender' as a character string
 %
 % Change Log:
-%     1.  Written by David Stauffer in June 2013.
+%     1.  Written by David C. Stauffer in June 2013.
 %     2.  Added to DStauffman MATLAB library in December 2015.
 
     enumeration
