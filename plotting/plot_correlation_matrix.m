@@ -143,11 +143,11 @@ end
 
 %% Create plots
 % create figure;
-fig_hand = figure('name',matrix_name);
+fig_hand = figure('name', matrix_name);
 % get handle to axes for use later
-ax = axes('color','none');
+ax = axes('color', 'none');
 % set title
-title(get(fig_hand,'name'));
+title(get(fig_hand, 'name'));
 % set hold on, since doing lots of patches
 hold on;
 % get border color
@@ -163,30 +163,32 @@ for i = 1:m
             patch(i+box_size*[-1 -1 0 0], j+box_size*[-1 0 0 -1], data(j,i), 'edgecolor', border_color);
         end
         if label_values
-            text(box_size*i - box_size/2, box_size*j - box_size/2, num2str(data(j,i),'%.2g'), 'Units', 'data', ...
-                'HorizontalAlignment', 'center', 'FontSize', 12, 'interpreter', 'none');
+            text(box_size*i - box_size/2, box_size*j - box_size/2, num2str(data(j,i),'%.2g'), ...
+                'Units', 'data', 'HorizontalAlignment', 'center', 'FontSize', 12, 'interpreter', 'none');
         end
     end
 end
 % set color limits and colormap and display colorbar
 caxis([cmin cmax]);
 colormap(color_map);
-colorbar('location','EastOutside');
+colorbar('location', 'EastOutside');
 % make square
 axis equal;
 % set limits and tick labels
 xlim([0 m]);
 ylim([0 n]);
-set(ax,'XTick',(1:m)-box_size/2);
-set(ax,'YTick',(1:n)-box_size/2);
-set(ax,'XTickLabel',xlab);
-set(ax,'YTickLabel',ylab);
-set(ax,'YDir','reverse');
+set(ax, 'XTick', (1:m)-box_size/2);
+set(ax, 'YTick', (1:n)-box_size/2);
+set(ax, 'TickLabelInterpreter', 'none');
+set(ax, 'XTickLabel', xlab);
+set(ax, 'YTickLabel', ylab);
+set(ax, 'YDir', 'reverse');
 % rotate x tick labels
-a = get(ax,'XTickLabel');
-set(ax,'XTickLabel',[]);
-b = get(ax,'XTick');
-text(b,repmat(n+1/5*box_size,length(b),1),a,'HorizontalAlignment','left','rotation',-90,'interpreter','none');
+a = get(ax, 'XTickLabel');
+set(ax, 'XTickLabel', []);
+b = get(ax, 'XTick');
+text(b, repmat(n+1/5*box_size, length(b), 1), a, 'HorizontalAlignment', 'left', 'rotation', -90, ...
+    'interpreter', 'none');
 
 %% Setup plots
 % Make this step optional, so that this function can exist outside the whole dstauffman library
