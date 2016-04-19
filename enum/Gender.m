@@ -17,13 +17,30 @@ classdef(Enumeration) Gender < int32
 %     char(Gender.female)   % returns 'female' as a character string
 %     class(Gender.female)  % returns 'Gender' as a character string
 %
+% Methods:
+%     is_female : returns a boolean for whether the person is female or not.
+%     is_male   : returns a boolean for whether the person is male or not.
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in June 2013.
 %     2.  Added to DStauffman MATLAB library in December 2015.
+%     3.  Updated by David C. Stauffer in April 2016 to include methods for determing male/female.
 
     enumeration
         null(0)
         female(1)
         male(2)
+        uncirc_male(3)
+        circ_male(4)
+    end
+
+    methods
+        function out = is_female(obj)
+            out = obj == Gender.female;
+        end
+        function out = is_male(obj)
+            out = obj == Gender.male | obj == Gender.uncirc_male | obj == Gender.circ_male; % more explicit
+            % out = obj > 0 & obj ~= 1; % slightly faster option
+        end
     end
 end
