@@ -56,8 +56,7 @@ label_values    = false;
 n = nargin;
 switch n
     case 0
-        error('dstauffman:UnexpectedNargin', ['Expecting at least one argument', ...
-            'rather than: "%i".'], nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
     case 1
         labels = {};
         OPTS   = [];

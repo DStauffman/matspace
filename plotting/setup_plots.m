@@ -61,8 +61,7 @@ switch nargin
     case 3
         %nop
     otherwise
-        error('dstauffman:UnexpectedNargin', ['Unexpected number of arguments expecting 2 or 3', ...
-            'rather than: "%i".'], nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
 end
 % check for empty input
 if isempty(fig_hand)

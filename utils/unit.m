@@ -29,7 +29,7 @@ switch nargin
     case 2
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs.');
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
 end
 
 % calculate unit vector
