@@ -13,16 +13,16 @@ classdef(Enumeration) Gender < int32
 %         uncirc_male = 3 : Uncircumcised male
 %         circ_male   = 4 : Circumcised male
 %
+% Methods:
+%     is_female : returns a boolean for whether the person is female or not.
+%     is_male   : returns a boolean for whether the person is male or not.
+%
 % Prototype:
 %     Gender.female           % returns female as an enumeratod Gender type
 %     double(Gender.female)   % returns 1, which is the enumerated value of Gender.female
 %     char(Gender.female)     % returns 'female' as a character string
 %     class(Gender.female)    % returns 'Gender' as a character string
 %     Gender.female.is_female % return 1 (or true), as this is a female
-%
-% Methods:
-%     is_female : returns a boolean for whether the person is female or not.
-%     is_male   : returns a boolean for whether the person is male or not.
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in June 2013.
