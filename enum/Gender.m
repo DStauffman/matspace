@@ -7,15 +7,18 @@ classdef(Enumeration) Gender < int32
 %
 % Output:
 %     Gender ....... : (enum) possible values
-%         null   = 0 : not a valid setting, used to preallocate
-%         female = 1 : female
-%         male   = 2 : male
+%         null        = 0 : Not a valid setting, used to preallocate
+%         female      = 1 : Female
+%         male        = 2 : Male
+%         uncirc_male = 3 : Uncircumcised male
+%         circ_male   = 4 : Circumcised male
 %
 % Prototype:
-%     Gender.female         % returns female as an enumeratod Gender type
-%     double(Gender.female) % returns 1, which is the enumerated value of Gender.female
-%     char(Gender.female)   % returns 'female' as a character string
-%     class(Gender.female)  % returns 'Gender' as a character string
+%     Gender.female           % returns female as an enumeratod Gender type
+%     double(Gender.female)   % returns 1, which is the enumerated value of Gender.female
+%     char(Gender.female)     % returns 'female' as a character string
+%     class(Gender.female)    % returns 'Gender' as a character string
+%     Gender.female.is_female % return 1 (or true), as this is a female
 %
 % Methods:
 %     is_female : returns a boolean for whether the person is female or not.
@@ -39,8 +42,7 @@ classdef(Enumeration) Gender < int32
             out = obj == Gender.female;
         end
         function out = is_male(obj)
-            out = obj == Gender.male | obj == Gender.uncirc_male | obj == Gender.circ_male; % more explicit
-            % out = obj > 0 & obj ~= 1; % slightly faster option
+            out = obj == Gender.male | obj == Gender.uncirc_male | obj == Gender.circ_male;
         end
     end
 end
