@@ -62,6 +62,7 @@ else
         mkdir(directory);
         disp(['Created directory "',directory,'"']);
     catch exception
-        error('dstauffman:utils:DirCreation', '"%s" could not be created because: "%s".', directory, exception.message);
+        error('dstauffman:utils:DirCreation', '"%s" could not be created because: "%s".', ...
+            directory, exception.message);
     end
 end

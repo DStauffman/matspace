@@ -8,7 +8,7 @@ function [] = set_random_seed(is_repeatable,seed,num_cycles,cycle)
 %
 % Input:
 %     is_repeatable : (scalar) true/false flag for whether the sequence is repeatable [bool]
-%     seed          : (scalar) number to be used as seed for the repeatable sequence [ndim]
+%     seed          : (1xN)    number to be used as seed for the repeatable sequence [ndim]
 %     num_cycles    : (scalar) number of independent cycles to generate [ndim]
 %     cycle         : (scalar) number of the stream to be used for non-repeatable sequences [ndim]
 %
