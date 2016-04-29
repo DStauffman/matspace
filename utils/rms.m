@@ -26,20 +26,12 @@ function y = rms(x,dim)
 %
 % Change Log:
 %     1.  Added to DStauffman's library from GARSE in Sept 2013.
+%     2.  Updated to match simpler code that is part of Matlab R2016A, but maintained to avoid
+%         limitation of needing the signal_toolbox.
 
-% check for simple cases, or when no specified dimension
-if nargin == 1
-    if isvector(x)
-        % simple calculation for vector case
-        y   = norm(x)/sqrt(length(x));
-        return
-    else
-        % find dimension to process
-        dim = find(size(x)~=1,1,'first');
-        if isempty(dim)
-            dim = 1;
-        end
-    end
+% use with or without dim command
+if nargin==1
+  y = sqrt(mean(x .* conj(x)));
+else
+  y = sqrt(mean(x .* conj(x), dim));
 end
-% general case, once dimension is specified
-y = realsqrt(sum(x.*conj(x),dim)/size(x,dim));
