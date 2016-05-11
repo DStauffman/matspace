@@ -7,7 +7,7 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %
 % Input:
 %      fig_hand       : (1xN) figure handles [num]
-%      OPTS           : (struct) optional plot settings
+%      OPTS           : (class) optional plot settings
 %          .case_name
 %          .disp_xmin
 %          .disp_xmax

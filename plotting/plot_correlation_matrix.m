@@ -5,7 +5,7 @@ function [fig_hand] = plot_correlation_matrix(data,labels,OPTS,varargin)
 % Input:
 %     data ...... : (NxN) correlation matrix [any]
 %     labels .... : {Nx1} of char labels to put on plot
-%     OPTS ...... : (struct) optional plotting commands, see opts_master_list for more information
+%     OPTS ...... : (class) optional plotting commands, see Opts.m for more information
 %     varargin .. : (char, value) pairs for other options, from:
 %                       'CMin'        : minimum numeric value for the colormap, default is 0
 %                       'CMax'        : maximum numeric value for the colormap, default is 1
@@ -36,6 +36,8 @@ function [fig_hand] = plot_correlation_matrix(data,labels,OPTS,varargin)
 % Notes:
 %     1.  For square symmetric matrices, only the lower half of diagonal is plotted, depending on
 %         the current settings.
+%     2.  This function is designed to run outside of the DStauffman library by not requiring
+%         Opts.m, setup_plots.m, or figmenu.m to exist.
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in June 2014.
@@ -59,9 +61,17 @@ switch n
         error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
     case 1
         labels = {};
-        OPTS   = [];
+        try
+            OPTS = Opts();
+        catch %#ok<CTCH>
+            OPTS = [];
+        end
     case 2
-        OPTS = [];
+        try
+            OPTS = Opts();
+        catch %#ok<CTCH>
+            OPTS = [];
+        end
     otherwise
         % nop
 end

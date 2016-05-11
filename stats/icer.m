@@ -18,7 +18,7 @@ function [inc_cost, inc_qaly, icer_out, order, data] = icer(cost, qaly, names, b
 %     names ... : {Mx1} names of the different strategies
 %     baseline  : (scalar) index of baseline strategy to use for cost comparisons, if not nan [num]
 %     make_plot : (scalar) true/false flag for whether to plot the data [bool]
-%     OPTS .... : (struct) plotting options, see get_full_opts.m for details
+%     OPTS .... : (class) plotting options, see Opts.m for details
 %
 % Output:
 %     inc_cost  : (Nx1) incremental costs [dollars] - see note 1
@@ -52,16 +52,16 @@ switch nargin
         names     = [];
         baseline  = nan;
         make_plot = false;
-        OPTS      = [];
+        OPTS      = Opts();
     case 3
         baseline  = nan;
         make_plot = false;
-        OPTS      = [];
+        OPTS      = Opts();
     case 4
         make_plot = false;
-        OPTS      = [];
+        OPTS      = Opts();
     case 5
-        OPTS      = [];
+        OPTS      = Opts();
     case 6
         % nop
     otherwise
