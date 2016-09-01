@@ -18,7 +18,6 @@ classdef Opts
     %         .rms_xmax  : (scalar) maximum time from which to end RMS calculations [months]
     %         .name_one  : (row) string specifying the name of the first data structure to be plotted [char]
     %         .name_two  : (row) string specifying the name of the second data structure to be plotted [char]
-    %         .plot_true : (row) string specifying which truth data to plot [char]
     %
     % Prototype:
     %     OPTS = Opts();
@@ -38,8 +37,7 @@ classdef Opts
         rms_xmin,
         rms_xmax,
         name_one,
-        name_two,
-        plot_true
+        name_two
     end
     
     methods
@@ -56,7 +54,6 @@ classdef Opts
             OPTS.rms_xmax  = inf;
             OPTS.name_one  = '';
             OPTS.name_two  = '';
-            OPTS.plot_true = 'none';
             
             % break out early if no fields in overrides to process
             if nargin == 0 || ~isstruct(overrides) || ~isa(overrides, 'OPTS')
