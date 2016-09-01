@@ -20,15 +20,17 @@ switch version('-release')
         run('C:\Program Files\MATLAB\R2014b\toolbox\local\restoredefaultpath.m');
     case '2015b'
         run('C:\Program Files\MATLAB\R2015b\toolbox\local\restoredefaultpath.m');
+    case '2016a'
+        run('C:\Program Files\MATLAB\R2016a\toolbox\local\restoredefaultpath.m');
     otherwise
         error('dstauffman:utils:RestorePathVersions', 'Unsupported MATLAB version, update to personal restoredefaultpath is needed.');
 end
 
 % add user customized paths
 username = getenv('username');
-temp_path = fullfile('C:','Users',username,'Documents','GitHub','matlab');
-addpath(genpath(temp_path));
-temp_path = fullfile('C:','Users',username,'Documents','MATLAB');
+temp_path = fullfile('C:', 'Users', username, 'Documents', 'GitHub', 'matlab', 'add_me_to_path.m');
+run(temp_path)
+temp_path = fullfile('C:', 'Users', username, 'Documents', 'MATLAB');
 addpath(temp_path);
 
 % output status

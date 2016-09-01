@@ -23,9 +23,9 @@ try
     disp(['Added HESAT (',temp_path,') to path.']);
     addpath(genpath(temp_path));
     % DStauffman Matlab library
-    temp_path = fullfile('C:','Users',username,'Documents','GitHub','matlab');
+    temp_path = fullfile('C:', 'Users', username, 'Documents', 'GitHub', 'matlab');
     disp(['Added DStauffman Matlab Library (',temp_path,') to path.']);
-    addpath(genpath(temp_path));
+    run(fullfile(temp_path, 'add_me_to_path.m'));
     % User's MATLAB folder
     temp_path = fullfile('C:','Users',username,'Documents','MATLAB');
     disp(['Added User MATLAB (',temp_path,') to path.']);
