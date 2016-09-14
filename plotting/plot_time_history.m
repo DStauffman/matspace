@@ -1,4 +1,4 @@
-function [fig_hand] = plot_time_history(time1, data1, OPTS, varargin)
+function [fig_hand] = plot_time_history(time1, data1, varargin)
 
 % PLOT_TIME_HISTORY  acts as a convenient wrapper to plotting a time history of some data.
 %
@@ -42,70 +42,55 @@ function [fig_hand] = plot_time_history(time1, data1, OPTS, varargin)
 %     1.  Written by David C. Stauffer in May 2016.
 %     2.  Updated by David C. Stauffer in Aug 2016 to include optional Truth name and enable/disable
 %         the RMS calculations.
+%     3.  Updated by David C. Stauffer in Sep 2016 to use the built-in MATLAB inputParser.
 
-%% hard-coded values and defaults
+%% hard-coded values
 std_flag    = 1;
 data_dim    = 1;
 leg_format  = '%3.3f';
 colors      = [0 0 1; 0 0.8 0; 1 0 0; 0 0.8 0.8; 0.8 0 0.8; 0.8 0.8 0; 0 1 1; 1 0 1; ...
     1 0.8 0; 0.375 0.375 0.5];
 truth_color = [0 0 0];
-% defaults, replaceable through varargin
-time2       = [];
-data2       = [];
-description = '';
-type        = 'unity';
-truth_time  = [];
-truth_data  = [];
-truth_name  = 'Truth';
-show_rms    = true;
 
-%% Check for optional inputs
-n = nargin;
-switch n
-    case {0, 1}
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
-    case 2
-        OPTS = Opts();
-    otherwise
-        % nop
-end
-if isempty(OPTS)
-    OPTS = Opts();
-end
+%% Parse Inputs
+% create parser
+p = inputParser;
+% create some validation functions
+fun_is_opts = @(x) isa(x, 'Opts') || isempty(x);
+fun_is_time = @(x) isnumeric(x) && isvector(x);
+% set options
+addRequired(p, 'Time1', fun_is_time);
+addRequired(p, 'Data1', @isnumeric);
+addOptional(p, 'OPTS', Opts, fun_is_opts);
+addParameter(p, 'Time2', [], fun_is_time);
+addParameter(p, 'Data2', [], @isnumeric);
+addParameter(p, 'Description', '', @ischar);
+addParameter(p, 'Type', 'unity', @ischar);
+addParameter(p, 'TruthTime', [], fun_is_time);
+addParameter(p, 'TruthData', [], @isnumeric);
+addParameter(p, 'TruthName', 'Truth', @ischar);
+addParameter(p, 'ShowRms', true, @islogical);
+% do parse
+parse(p, time1, data1, varargin{:});
+% create some convenient aliases
+type        = p.Results.Type;
+description = p.Results.Description;
+truth_name  = p.Results.TruthName;
+show_rms    = p.Results.ShowRms;
+% create data channel aliases
+time2       = p.Results.Time2;
+data2       = p.Results.Data2;
+truth_time  = p.Results.TruthTime;
+truth_data  = p.Results.TruthData;
 
-%% Parse varargin
-if n > 3
-    if mod(n, 2) ~= 1
-        error('dstauffman:UnexpectedNameValuePair', 'Expecting an even set of Name-Value pairs.');
-    end
-    for i = 1:2:length(varargin)
-        this_name  = varargin{i};
-        this_value = varargin{i+1};
-        switch lower(this_name)
-            case 'time2'
-                time2       = this_value;
-            case 'data2'
-                data2       = this_value;
-            case 'description'
-                description = this_value;
-            case 'type'
-                type        = this_value;
-            case 'truthtime'
-                truth_time  = this_value;
-            case 'truthdata'
-                truth_data  = this_value;
-            case 'truthname'
-                truth_name  = this_value;
-            case 'showrms'
-                show_rms    = this_value;
-            otherwise
-                error('dstauffman:UnexpectedNameValuePair', 'Unexpected Name of "%s".', this_name);
-        end
-    end
-end
+%% Process inputs
 if ~iscell(truth_name)
     truth_name = {truth_name};
+end
+if isempty(p.Results.OPTS)
+    OPTS = Opts();
+else
+    OPTS = p.Results.OPTS;
 end
 
 %% determine units based on type of data
@@ -237,6 +222,7 @@ else
         end
     end
 end
+% plot second channel
 if size(data2, data_dim) == 1
     h2        = plot(ax1, time2, scale*data2, '.-', 'Color', [0 0.8 0]);
     if show_rms
