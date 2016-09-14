@@ -20,25 +20,29 @@ plot_time_history(time, data);
 plot_time_history(time, data, OPTS);
 
 % with description
-plot_time_history(time, data, [], 'Description', description);
-plot_time_history(time, data, [], 'Description', 'LaTeX \delta_a^2');
+plot_time_history(time, data, 'Description', description);
+plot_time_history(time, data, 'Description', 'LaTeX \delta_a^2');
 
 % with second data set
+plot_time_history(time, data, 'Time2', time2, 'Data2', data2);
+
+% with empty OPTS
 plot_time_history(time, data, [], 'Time2', time2, 'Data2', data2);
 
 % with type
-plot_time_history(time, data, [], 'Type', 'unity');
-plot_time_history(time, data, [], 'Type', 'population');
-plot_time_history(time, data, [], 'Type', 'percentage');
-plot_time_history(time, data, [], 'Type', 'per 100K');
-plot_time_history(time, data, [], 'Type', 'cost');
+plot_time_history(time, data, 'Type', 'unity');
+plot_time_history(time, data, 'Type', 'population');
+plot_time_history(time, data, 'Type', 'percentage');
+plot_time_history(time, data, 'Type', 'per 100K');
+plot_time_history(time, data, 'Type', 'cost');
 
 % with truth
-plot_time_history(time, data, [], 'TruthTime', truth_time, 'TruthData', truth_data);
-plot_time_history(time, data, [], 'TruthTime', truth_time, 'TruthData', truth_data, 'Description', 'HIV Prevalence');
+plot_time_history(time, data, 'TruthTime', truth_time, 'TruthData', truth_data);
+plot_time_history(time, data, 'TruthTime', truth_time, 'TruthData', truth_data, 'Description', 'HIV Prevalence');
+plot_time_history(time, data, 'TruthTime', [], 'TruthData', []);
 
 % with no RMS
-plot_time_history(time, data, [], 'ShowRms', show_rms);
+plot_time_history(time, data, 'ShowRms', show_rms);
 
 % with everything
 plot_time_history(time, data, OPTS, 'Type', 'percentage', 'Time2', time2, 'Data2', data2, ...

@@ -57,7 +57,7 @@ truth_color = [0 0 0];
 p = inputParser;
 % create some validation functions
 fun_is_opts = @(x) isa(x, 'Opts') || isempty(x);
-fun_is_time = @(x) isnumeric(x) && isvector(x);
+fun_is_time = @(x) isnumeric(x) && (isempty(x) || isvector(x));
 % set options
 addRequired(p, 'Time1', fun_is_time);
 addRequired(p, 'Data1', @isnumeric);
