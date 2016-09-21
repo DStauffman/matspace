@@ -44,9 +44,9 @@ global gamestat
 [PLAYER] = get_static_globals({'PLAYER'});
 
 results    = gamestat(:,2);
-white_wins = sum(results == PLAYER.white);
-black_wins = sum(results == PLAYER.black);
-tied_games = sum(results == PLAYER.draw);
+white_wins = nnz(results == PLAYER.white);
+black_wins = nnz(results == PLAYER.black);
+tied_games = nnz(results == PLAYER.draw);
 
 set(handles.text_white_win_num,'String',num2str(white_wins,'%i'));
 set(handles.text_black_win_num,'String',num2str(black_wins,'%i'));
