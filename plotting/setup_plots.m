@@ -71,13 +71,13 @@ end
 fig_hand = fig_hand(:)';
 
 %% append case name to plots
-if isfield(OPTS,'case_name')
+if ~isempty(OPTS.case_name)
     titleprefix(fig_hand,[OPTS.case_name,' - ']);
 end
 
 if any(strcmp(form,{'time','time_no_y_scale'}))
     %% Change x-axis scale
-    % if isfield(OPTS,'time_unit')
+    % if isfield(OPTS,'time_unit') % TODO: can't use isfield on class anymore
     %     xscale_plots(fig_hand,'[sec]',['[',OPTS.time_unit,']']);
     % end
     
@@ -125,21 +125,14 @@ end
 % plot_classification(fig_hand,classification);
 
 %% Save Plots
-if isfield(OPTS,'save_plot')
-    if OPTS.save_plot
-        if isfield(OPTS,'save_path')
-            save_path = OPTS.save_path;
-        else
-            save_path = pwd;
-        end
-        if isfield(OPTS,'plot_type')
-            plot_type = OPTS.plot_type;
-        else
-            plot_type = 'png';
-        end
-        storefig(fig_hand,save_path,plot_type);
-        if isfield(OPTS,'show_link') && OPTS.show_link && ~isempty(fig_hand)
-            fprintf('Plots saved to: <a href="matlab: web(''%s'',''-browser'');">%s</a>\n',save_path,save_path);
-        end
+if OPTS.save_plot
+    if ~isempty(OPTS.save_path)
+        save_path = OPTS.save_path;
+    else
+        save_path = pwd;
+    end
+    storefig(fig_hand, save_path, OPTS.plot_type);
+    if isfield(OPTS,'show_link') && OPTS.show_link && ~isempty(fig_hand)
+        fprintf('Plots saved to: <a href="matlab: web(''%s'',''-browser'');">%s</a>\n',save_path,save_path);
     end
 end
