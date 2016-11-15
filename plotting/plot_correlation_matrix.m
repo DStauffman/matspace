@@ -201,7 +201,7 @@ text(b, repmat(n+1/5*box_size, length(b), 1), a, 'HorizontalAlignment', 'left', 
 
 %% Setup plots
 % Make this step optional, so that this function can exist outside the whole dstauffman library
-if exist('setup_plots', 'file')
+if exist('setup_plots', 'file') && isa(OPTS, 'Opts')
     setup_plots(fig_hand,OPTS,'dist');
 end
 if exist('figmenu', 'file')
