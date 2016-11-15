@@ -24,7 +24,7 @@ root_dir  = path_name(1:ix(end));
 % process based on options
 switch lower(options)
     case {'normal', ''}
-        sub_folders = {'classes', 'enum', 'plotting', 'stats', 'tests', 'utils'};
+        sub_folders = {'classes', 'enum', 'plotting', 'stats', 'tests', 'units', 'utils'};
         for i = 1:length(sub_folders)
             this_subfolder = sub_folders{i};
             %disp(['Add: ', fullfile(root_dir, this_subfolder)]);
