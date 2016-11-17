@@ -147,6 +147,8 @@ else
                             RMS_difference = realsqrt(sum_squared_elements)/numel(numerical_difference);
                             % display RMS difference
                             disp(['RMS difference = ',num2str(RMS_difference)]);
+                        elseif isstruct(field_1) && isstruct(field_2)
+                            compare_two_structures(field_1,field_2,suppress_output,{[struct_name1,'.',this_field],[struct_name2,'.',this_field]});
                         else
                             disp('But cannot compute RMS because a field is not a float');
                         end
