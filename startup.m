@@ -5,8 +5,12 @@
 format long g;
 format compact;
 
-% get the user name
-username = getenv('username');
+% get directory information
+if ispc
+    root = fullfile([getenv('homedrive'), getenv('homepath')], 'Documents');
+elseif isunix
+    root = fullfile(filesep, 'home', getenv('user'), 'Documents'); % TODO: update at home on Unix system
+end
 
 %% Set system properties
 % system_dependent('DirChangeHandleWarn','Never');
@@ -16,28 +20,20 @@ username = getenv('username');
 % warning('off','MATLAB:dispatcher:nameConflict');
 % warning('off','MATLAB:dispatcher:pathWarning');
 
-%% Add folders to path (most important ones last)
-try
-    % HESAT
-    temp_path = fullfile('C:','Users',username,'Documents','GitHub','hesat','code');
-    disp(['Added HESAT (',temp_path,') to path.']);
-    addpath(genpath(temp_path));
-    % DStauffman Matlab library
-    temp_path = fullfile('C:', 'Users', username, 'Documents', 'GitHub', 'matlab');
-    disp(['Added DStauffman Matlab Library (',temp_path,') to path.']);
-    run(fullfile(temp_path, 'add_me_to_path.m'));
-    % User's MATLAB folder
-    temp_path = fullfile('C:','Users',username,'Documents','MATLAB');
-    disp(['Added User MATLAB (',temp_path,') to path.']);
-    addpath(temp_path);
-catch exception
-    % potentially could check for specific errors, just rethrow for now.
-    rethrow(exception);
+%% Add folders to path (ones added last have higher precidence)
+addpath(fullfile(root, 'MATLAB'));
+disp('PATHSET:')
+disp(['    ''', fullfile(root, 'MATLAB'),'''']);
+% DStauffman Matlab library
+run(fullfile(root, 'GitHub', 'matlab', 'pathset.m'));
+% HESAT
+if false
+    pathset(fullfile(root, 'GitHub', 'hesat', 'code'));
 end
 
 %% Go to a useful starting folder
 try
-    temp_path = fullfile('C:','Users',username,'Documents','GitHub','matlab');
+    temp_path = fullfile(root, 'GitHub', 'matlab');
     cd(temp_path);
 catch exception
     % potentially could check for specific exceptions, just rethrow for now.

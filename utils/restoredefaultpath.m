@@ -3,35 +3,35 @@ function status = restoredefaultpath() %#ok<*MCAP>
 % RESTOREDEFAULTPATH  provides a customize default path based on the built in version.
 
 % warnings to disable
-% warning('off','MATLAB:dispatcher:nameConflict');
-% warning('off','MATLAB:dispatcher:pathWarning');
+warning('off','MATLAB:dispatcher:nameConflict');
+warning('off','MATLAB:dispatcher:pathWarning');
 
 % run built-in version
 switch version('-release')
-    case '2010b'
-        run('C:\Program Files\MATLAB\R2010b\toolbox\local\restoredefaultpath.m');
-    case '2011b'
-        run('C:\Program Files\MATLAB\R2011b\toolbox\local\restoredefaultpath.m');
-    case '2012b'
-        run('C:\Program Files\MATLAB\R2012b\toolbox\local\restoredefaultpath.m');
-    case '2013b'
-        run('C:\Program Files\MATLAB\R2013b\toolbox\local\restoredefaultpath.m');
-    case '2014b'
-        run('C:\Program Files\MATLAB\R2014b\toolbox\local\restoredefaultpath.m');
     case '2015b'
         run('C:\Program Files\MATLAB\R2015b\toolbox\local\restoredefaultpath.m');
     case '2016a'
         run('C:\Program Files\MATLAB\R2016a\toolbox\local\restoredefaultpath.m');
+    case '2016b'
+        run('C:\Program Files\MATLAB\R2016b\toolbox\local\restoredefaultpath.m');
     otherwise
-        error('dstauffman:utils:RestorePathVersions', 'Unsupported MATLAB version, update to personal restoredefaultpath is needed.');
+        error('dstauffman:utils:RestorePathVersions', ...
+            'Unsupported MATLAB version, update to personal restoredefaultpath is needed.');
+end
+
+% get directory information
+if ispc
+    root = fullfile([getenv('homedrive'), getenv('homepath')], 'Documents');
+elseif isunix
+    root = fullfile(filesep, 'home', getenv('user'), 'Documents'); % TODO: update at home on Unix system
 end
 
 % add user customized paths
-username = getenv('username');
-temp_path = fullfile('C:', 'Users', username, 'Documents', 'GitHub', 'matlab', 'add_me_to_path.m');
-run(temp_path)
-temp_path = fullfile('C:', 'Users', username, 'Documents', 'MATLAB');
-addpath(temp_path);
+addpath(fullfile(root, 'MATLAB'));
+disp('PATHSET:')
+disp(['    ''', fullfile(root, 'MATLAB'),'''']);
+% DStauffman Matlab library
+run(fullfile(root, 'GitHub', 'matlab', 'pathset.m'));
 
 % output status
 if nargout == 1
