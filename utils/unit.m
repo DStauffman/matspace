@@ -33,4 +33,4 @@ switch nargin
 end
 
 % calculate unit vector
-y = bsxfun(@rdivide,x,realsqrt(sum(x.^2,dim)));
+y = bsxfun(@rdivide,x,realsqrt(sum(x.*conj(x),dim)));

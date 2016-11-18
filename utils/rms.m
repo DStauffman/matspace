@@ -1,4 +1,4 @@
-function y = rms(x,dim)
+function y = rms(x, dim)
 
 % RMS  calculates the real or imaginary Root Mean Square.
 %
@@ -30,8 +30,8 @@ function y = rms(x,dim)
 %         limitation of needing the signal_toolbox.
 
 % use with or without dim command
-if nargin==1
-  y = sqrt(mean(x .* conj(x)));
+if nargin == 1
+    y = sqrt(mean(x .* conj(x)));
 else
-  y = sqrt(mean(x .* conj(x), dim));
+    y = sqrt(mean(x .* conj(x), dim));
 end
