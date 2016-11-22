@@ -1,4 +1,4 @@
-function y = rms(x, dim)
+function y = rms(x, dim) %#codegen
 
 % RMS  calculates the real or imaginary Root Mean Square.
 %
