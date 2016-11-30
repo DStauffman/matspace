@@ -1,1 +1,0 @@
-mcc -ev bac_gui.m -a bac_gui.fig -a calculate_bac.m -a calculate_bmi.m -a display_error.m -a GuiSettings.m -a plot_bac.m -a update_gui.m

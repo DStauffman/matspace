@@ -57,10 +57,6 @@ mex/make/codegen/*
 # =========================
 # Folder/Files #
 # =========================
-apps/bac_gui/*.mat
-apps/bac_gui/*.png
 output/*
 results/*
-scripts/case_*
-scripts/script_*
 temp/*

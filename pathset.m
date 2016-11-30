@@ -33,9 +33,7 @@ function [] = pathset(location,ex)
 %     5.  Incorporated by David C. Stauffer into DStauffman library in November 2016.
 
 %% hard-coded exclusions
-exclusions1 = {'\.git', '\.svn', '\mex\make'};
-% TODO: put these in a wrapper function?
-exclusions2 = {'apps', 'archery', 'data', 'games', 'new', 'tricks'};
+exclusions = {'\.git', '\.svn', '\mex\make'};
 
 %% use specified path, or path of function itself
 switch nargin
@@ -43,12 +41,11 @@ switch nargin
         mloc       = mfilename('fullpath');
         ix         = strfind(mloc,filesep);
         location   = mloc(1:ix(end));
-        exclusions = [exclusions1, exclusions2];
     case 1
-        exclusions = [exclusions1, exclusions2];
+        % nop
     case 2
         ex = cellstr(ex);
-        exclusions = [exclusions1, ex];
+        exclusions = [exclusions, ex];
     otherwise
         error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
 end
@@ -65,7 +62,7 @@ paths = genpath(location);
 ix      = [0, strfind(paths,pathsep)];
 folders = cell(length(ix)-1,1);
 % chop into folder names keying off the pathsep character
-for i = 1:length(ix)-1;
+for i = 1:length(ix)-1
     folders{i,1} = paths(ix(i)+1:ix(i+1)-1);
 end
 
