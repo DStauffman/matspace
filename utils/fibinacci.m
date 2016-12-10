@@ -9,6 +9,12 @@ function [f,fib] = fibinacci(x)
 %     f   : Desired fibinacci number [num]
 %     fib : (1xN) Series of the fibinacci numbers up to the one specified [num]
 %
+% Prototype:
+%     [f, fib] = fibinacci(10);
+%
+% See Also:
+%     sum, cumsum
+%
 % Notes:
 %     1.  This implementation is non-recursive, and instead uses a built-in for loop.
 %

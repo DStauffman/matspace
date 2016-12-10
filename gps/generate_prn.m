@@ -12,6 +12,9 @@ function [prn] = generate_prn(sat,len)
 % Prototype:
 %     prn = generate_prn(1);
 %
+% See Also:
+%     cor_prn, get_prn_bits
+%
 % Change Log:
 %     1.  Written by David C. Stauffer in Jan 2009.
 %     2.  Moved to gps subfolder in Feb 2009.

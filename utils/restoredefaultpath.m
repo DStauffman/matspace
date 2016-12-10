@@ -1,6 +1,22 @@
 function status = restoredefaultpath() %#ok<*MCAP>
 
 % RESTOREDEFAULTPATH  provides a customize default path based on the built in version.
+%
+% Input:
+%     None
+%
+% Output:
+%     status : (scalar) true/false flag for whether the restoration was completed [bool]
+%
+% Prototype:
+%     restoredefaultpath;
+%     startup;
+%
+% See Also:
+%     pathset
+%
+% Change Log:
+%     1.  Written by David C. Stauffer circa 2006.
 
 % warnings to disable
 warning('off','MATLAB:dispatcher:nameConflict');

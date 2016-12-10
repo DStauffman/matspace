@@ -18,11 +18,11 @@ function [bins] = discretize2(x, edges) %#codegen
 %     bins2 = discretize2(x, edges);
 %     assert(all(isequaln(bins1, bins2)));
 %
-% Notes:
-%     1.  Values that don't go into any bin will return a bin of NaN.
-%
 % See Also:
 %     discretize, histcounts, histcounts2
+%
+% Notes:
+%     1.  Values that don't go into any bin will return a bin of NaN.
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in October 2016.

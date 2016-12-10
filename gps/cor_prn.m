@@ -16,8 +16,11 @@ function cor = cor_prn(prn1,prn2,shift,form)
 %     shift = 0:1022;
 %     cor   = cor_prn(prn,prn,shift,'zero-one');
 %
+% See Also:
+%     generate_prn, get_prn_bits
+%
 % Notes:
-%     Calling with the same PRN twice will give the auto-correlation.
+%     1.  Calling with the same PRN twice will give the auto-correlation.
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in Jan 2009.
@@ -37,7 +40,7 @@ end
 
 cor = zeros(size(shift));
 % loop through different shift values
-for i=1:length(shift);
+for i = 1:length(shift)
     % shift prn2
     prn2s = bsr(prn2,shift(i));
 

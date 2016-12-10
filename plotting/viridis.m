@@ -13,6 +13,9 @@ function map = viridis(m)
 % Output:
 %     map : (mx3) color triple
 %
+% Prototype:
+%     map = viridis();
+%
 % See Also:
 %     colormap, parula
 % 

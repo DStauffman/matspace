@@ -21,6 +21,10 @@ function [result] = maxmax(x, dim)
 %              which case the dimensions are determined by the dimensions not
 %              maximized over.
 %
+% Prototype:
+%     result = maxmax([1 2 3; 4 -100 10]);
+%     assert(result == 10);
+%
 % See Also:
 %     max, minmin
 %

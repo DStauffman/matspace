@@ -37,6 +37,9 @@ function [inc_cost, inc_qaly, icer_out, order, data] = icer(cost, qaly, names, b
 %     assert(isequal(icer_out, [12500; 50000; 60000]));
 %     assert(isequaln(order,   [1; 2; nan; 3]));
 %
+% See Also:
+%     display_icer_results
+%
 % Notes
 %     1.  N may be smaller than M due to dominated strategies being removed.  The order variable
 %         will have (M - N) values set to NaN.

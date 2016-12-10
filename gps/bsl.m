@@ -12,6 +12,10 @@ function [out] = bsl(in,shift)
 % Prototype:
 %     in  = [0 0 1 1 1];
 %     out = bsl(in);
+%     assert(all(out == [0 1 1 1 0]));
+%
+% See Also:
+%     bsr
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in Jan 2009.

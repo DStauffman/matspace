@@ -21,7 +21,11 @@ function [result] = minmin(x, dim)
 %              which case the dimensions are determined by the dimensions not
 %              minimized over.
 %
-% See also:
+% Prototype:
+%     result = minmin([1 2 3; 4 -100 10]);
+%     assert(result == -100);
+%
+% See Also:
 %     min, maxmax
 %
 % Change Log:

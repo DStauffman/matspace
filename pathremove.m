@@ -14,9 +14,9 @@ function pathremove(location)
 %     none - displays info to command window
 %
 % Prototype:
-%     % add UTILS path
+%     % add complete library to path
 %     pathset;
-%     % remove UTILS path
+%     % remove library from path
 %     pathremove;
 %
 % See Also:

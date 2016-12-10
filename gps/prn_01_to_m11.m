@@ -11,6 +11,7 @@ function out = prn_01_to_m11(in)
 % Prototype:
 %     in  = [1 1 1 0 0 1 1];
 %     out = prn_01_to_m11(in);
+%     assert(all(out == [-1 -1 -1 1 1 -1 -1]));
 % 
 % Change Log:
 %     1.  Written by David C. Stauffer for AA272C in Jan 2009.

@@ -24,6 +24,9 @@ function q = quat_from_euler(angles, seq)
 %     seq = [3 2 1];
 %     quat_from_euler([a,b],seq)
 %
+% See Also:
+%     dcm_to_quat, quat_to_euler
+%
 % Notes:
 %     1.  This function will take one angle sequence, but an arbitrary number of angles.
 %     2.  Enumerated values are some selective permutation of (1 2 3) without successive

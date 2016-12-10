@@ -11,16 +11,14 @@ function [vec] = quat_times_vector(q, v)
 %    q   : (4xn or 4x1) quaternion(s)    [ndim]
 %    v   : (3xn or 3x1) input vector(s)  [ndim]
 %
-% OUTPUT:
+% Output:
 %    vec : (3xn) product vector(s)       [ndim]
-%
-% PROTOTYPE:
-%    q     = [[0;1;0;0], [1;0;0;0]];
-%    v     = [[1;0;0], [2;0;0]];
-%    [vec] = quat_times_vector(q,v)
 % 
 % Prototype:
 %     vec = quat_times_vector([0; 0; 0; 1], [1; 1; 1]);
+%
+% See Also:
+%     quat_mult, quat_times_single_vector
 %
 % Notes:
 %     1.  If 'q' is an inertial-to-body quaternion and 'v' is the inertial-frame vector, then the
