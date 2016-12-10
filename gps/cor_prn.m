@@ -15,6 +15,8 @@ function cor = cor_prn(prn1,prn2,shift,form)
 %     prn   = generate_prn(1);
 %     shift = 0:1022;
 %     cor   = cor_prn(prn,prn,shift,'zero-one');
+%     assert(cor(1) == 1);
+%     assert(max(abs(cor(2:end))) < 0.1);
 %
 % See Also:
 %     generate_prn, get_prn_bits

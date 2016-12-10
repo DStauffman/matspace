@@ -14,10 +14,11 @@ function pathremove(location)
 %     none - displays info to command window
 %
 % Prototype:
-%     % add complete library to path
-%     pathset;
 %     % remove library from path
 %     pathremove;
+%
+%     % clean up by restoring path for continuing use
+%     pathset;
 %
 % See Also:
 %     pathset

@@ -21,15 +21,15 @@ function [] = xscale_plots(figs, oldunit, newunit)
 % Input:
 %     figs    : (scalar) or (column) or (row) figure handles [numeric]
 %     oldunit : (row) existing xaxis unit [enumerated]
-%                     enumerated values are ('[epoch]', '[sec]', '[min]', '[hr]', '[day]')
+%                     enumerated values are ('[sec]', '[min]', '[hr]', '[day]', '[year]')
 %     newunit : (row) replacement xaxis unit [enumerated]
-%                     enumerated values are ('[epoch]', '[sec]', '[min]', '[hr]', '[day]')
+%                     enumerated values are ('[sec]', '[min]', '[hr]', '[day]', '[year]')
 %
 % Output:
 %      None
 %
 % Prototype:
-%     figure(5);
+%     f1 = figure(5);
 %     hold on;
 %     plot(linspace(0,3600), 1e-6*(0.1+randn(1,100)), 'r');
 %     plot(linspace(0,3600), 1e-6*(0.2+randn(1,100)), 'b');
@@ -40,7 +40,7 @@ function [] = xscale_plots(figs, oldunit, newunit)
 %     ylabel('something [rad]');
 %     figmenu;
 %
-%     figure(6);
+%     f2 = figure(6);
 %     hold on;
 %     plot(linspace(0,3600), 1e-6*(0.1+randn(1,100)), 'r');
 %     plot(linspace(0,3600), 1e-6*(0.2+randn(1,100)), 'b');
@@ -51,8 +51,11 @@ function [] = xscale_plots(figs, oldunit, newunit)
 %     ylabel('something [m]');
 %     figmenu;
 %
-%     xscale_plots(5:6,'[sec]','[min]');
-%     yscale_plots(5:6,'unity','micro');
+%     xscale_plots([f1 f2],'[sec]','[min]');
+%     yscale_plots([f1 f2],'unity','micro');
+%
+%     % clean up
+%     close([f1 f2]);
 %
 % See Also:
 %     figmenu, setup_plots, storefig, titleprefix, xextents, yscale_plots

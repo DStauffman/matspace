@@ -15,6 +15,9 @@ function map = viridis(m)
 %
 % Prototype:
 %     map = viridis();
+%     assert(all(size(map) == [64 3]));
+%     assert(min(min(map)) >= 0);
+%     assert(max(max(map)) <= 1);
 %
 % See Also:
 %     colormap, parula

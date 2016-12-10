@@ -17,6 +17,7 @@ function [date_gps] = gps_to_datevec(week, time)
 %     week     = [1782 1783];
 %     time     = [425916 4132];
 %     date_gps = gps_to_datevec(week,time);
+%     assert(all(all(date_gps == [2014 3 6 22 18 36; 2014 3 9 1 8 52])));
 %
 % See Also:
 %     datenum

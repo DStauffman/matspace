@@ -15,9 +15,12 @@ function plot_rms_lines(x,y)
 %     (NONE)
 %
 % Prototype:
-%     figure;
+%     f1 = figure;
 %     plot(1:10,1:10);
 %     plot_rms_lines([2 5],[1 10]);
+%
+%     % clean up
+%     close(f1);
 %
 % Change Log:
 %     1.  Added to DStauffman's MATLAB libary from GARSE in Sept 2013.

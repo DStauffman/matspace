@@ -23,7 +23,8 @@ function titleprefix(fig_hand,prefix)
 %     (NONE)
 %
 % Prototype:
-%     figure(5);hold on;
+%     f1 = figure(5);
+%     hold on;
 %     set(gcf,'name','fig5');
 %     title('somethingA');
 %     plot(linspace(0,3600),1+randn(1,100),'r');
@@ -32,7 +33,8 @@ function titleprefix(fig_hand,prefix)
 %     ylabel('something');
 %     grid on;
 %
-%     figure(6);hold on;
+%     f2 = figure(6);
+%     hold on;
 %     set(gcf,'name','fig6');
 %     title('somethingB');
 %     plot(linspace(0,3600),1+randn(1,100),'r');
@@ -42,7 +44,10 @@ function titleprefix(fig_hand,prefix)
 %     grid on;
 %     figmenu;
 %
-%     titleprefix(5:6,'pre\pre_');
+%     titleprefix([f1 f2],'pre\pre_');
+%
+%     % clean up
+%     close([f1 f2]);
 %
 % See Also:
 %     xextents    xscale_plots    storefig    setup_plots

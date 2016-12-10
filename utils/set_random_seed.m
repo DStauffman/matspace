@@ -16,7 +16,11 @@ function [] = set_random_seed(is_repeatable,seed,num_cycles,cycle)
 %    None - effects any future random calls through the RandStream object interface.
 %
 % Prototype:
-%     set_random_seed(false,0,5);
+%     is_repeatable = false;
+%     seed          = 0;
+%     num_cycles    = 5;
+%     cycle         = 1;
+%     set_random_seed(is_repeatable,seed,num_cycles,cycle);
 %
 % Change Log:
 %     1.  Written by David Stauffer in Apr 2014.

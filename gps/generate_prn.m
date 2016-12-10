@@ -11,6 +11,7 @@ function [prn] = generate_prn(sat,len)
 %
 % Prototype:
 %     prn = generate_prn(1);
+%     assert(all((prn == 0) | (prn == 1)));
 %
 % See Also:
 %     cor_prn, get_prn_bits

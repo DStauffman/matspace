@@ -22,6 +22,9 @@ function [] = plot_classification(fig_hand, classification, test)
 %     plot(0,0);
 %     plot_classification(f2,'S',1);
 %
+%     % clean up
+%     close([f1 f2]);
+%
 % See Also:
 %     setup_plots
 %

@@ -21,7 +21,7 @@ function [] = xextents(figs, xmin, xmax)
 %     None
 %
 % Prototype:
-%     figure(5);
+%     f1 = figure(5);
 %     hold on;
 %     title('something');
 %     plot(linspace(0,3600), 1+randn(1,100), 'r');
@@ -30,7 +30,7 @@ function [] = xextents(figs, xmin, xmax)
 %     ylabel('something');
 %     figmenu;
 % 
-%     figure(6);
+%     f2 = figure(6);
 %     hold on;
 %     title('something');
 %     plot(linspace(0,3600), 1+randn(1,100), 'r');
@@ -39,7 +39,10 @@ function [] = xextents(figs, xmin, xmax)
 %     ylabel('something');
 %     figmenu;
 % 
-%     xextents(5:6,-500,2000);
+%     xextents([f1 f2],-500,2000);
+%
+%     % clean up
+%     close([f1 f2]);
 %
 % See Also:
 %     figmenu, setup_plots, storefig, titleprefix, xscale_plots

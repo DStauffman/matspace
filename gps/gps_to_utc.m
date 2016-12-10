@@ -19,6 +19,7 @@ function [date_utc] = gps_to_utc(week, time, gps_to_utc_offset)
 %     week     = [1782 1783];
 %     time     = [425916 4132];
 %     date_utc = gps_to_utc(week,time);
+%     assert(all(all(date_utc == [2014 3 6 22 18 19; 2014 3 9 1 8 35])));
 %
 % See Also:
 %     datenum, gps_to_datevec

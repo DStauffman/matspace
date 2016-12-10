@@ -23,6 +23,9 @@ function [] = plot_second_yunits(fig, ax, ylab, multiplier)
 %     plot_second_yunits(fig, ax, 'deci-Units', 100);
 %     grid on;
 %
+%     % clean up
+%     close(fig);
+%
 % See Also:
 %     setup_plots
 %

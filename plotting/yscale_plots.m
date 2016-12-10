@@ -27,7 +27,7 @@ function [] = yscale_plots(figs, prefix_old, prefix_new)
 %     None
 %
 % Prototype:
-%     figure(5);
+%     f1 = figure(5);
 %     hold on;
 %     plot(linspace(0,3600), 1e-6*(0.1+randn(1,100)), 'r');
 %     plot(linspace(0,3600), 1e-6*(0.2+randn(1,100)), 'b');
@@ -38,7 +38,7 @@ function [] = yscale_plots(figs, prefix_old, prefix_new)
 %     ylabel('something [rad]');
 %     figmenu;
 %
-%     figure(6);
+%     f2 = figure(6);
 %     hold on;
 %     plot(linspace(0,3600), 1e-6*(0.1+randn(1,100)), 'r');
 %     plot(linspace(0,3600), 1e-6*(0.2+randn(1,100)), 'b');
@@ -49,8 +49,11 @@ function [] = yscale_plots(figs, prefix_old, prefix_new)
 %     ylabel('something [m]');
 %     figmenu;
 %
-%     xscale_plots(5:6,'[sec]','[min]');
-%     yscale_plots(5:6,'unity','micro');
+%     xscale_plots([f1 f2],'[sec]','[min]');
+%     yscale_plots([f1 f2],'unity','micro');
+%
+%     % clean up
+%     close([f1 f2]);
 %
 % See Also:
 %     figmenu, setup_plots, storefig, titleprefix, xextents, xscale_plots

@@ -8,15 +8,18 @@ function figmenu(action)
 %                        enumerated values are (next, prev)
 %
 % Output:
-%     (NONE)
+%     None - adds buttons to plot toolbar on figures
 %
 % Prototype:
-%     figure;
-%     figure;
+%     f1 = figure;
+%     f2 = figure;
 %     figmenu;
 %
+%     % clean up
+%     close([f1 f2]);
+%
 % See Also:
-%     (NONE)
+%     setup_plots
 %
 % Change Log:
 %     1.  Added to DStauffman's library from LM in Aug 2013.

@@ -26,9 +26,12 @@ function [fig_hand] = plot_time_history(time1, data1, varargin)
 %     fig_hand .. : (scalar) figure handles [num]
 %
 % Prototype:
-%     time   = 1:10;
-%     data   = rand(5,length(time));
-%     plot_time_history(time, data, [], 'Description', 'Random Data');
+%     time     = 1:10;
+%     data     = rand(5,length(time));
+%     fig_hand = plot_time_history(time, data, [], 'Description', 'Random Data');
+%
+%     % clean up
+%     close(fig_hand);
 %
 % See Also:
 %     figmenu, setup_dir, plot_rms_lines

@@ -19,6 +19,9 @@ function [] = link_x_axes(fig_hand)
 %     plot(2:7, ones(1,6), 'r.');
 %     link_x_axes([f1 f2]);
 %
+%     % clean up
+%     close([f1 f2]);
+%
 % See Also:
 %     linkaxes
 %

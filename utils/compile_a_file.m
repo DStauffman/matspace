@@ -20,7 +20,7 @@ function compile_a_file(mex_dir,function_name,args_ex)
 %     function_name = 'get_move_inverse';
 %     move          = 1;
 %     args_ex       = {move};
-%     compile_a_file(mex_dir, function_name, args_ex);
+%     % compile_a_file(mex_dir, function_name, args_ex);
 %
 % Change Log:
 %     1.  Originally designed by Tom Trankle for use in GARSE.

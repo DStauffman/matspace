@@ -22,13 +22,16 @@ function [fig_hand] = plot_correlation_matrix(data,labels,OPTS,varargin)
 %     data   = rand(10,10);
 %     labels = {'a','b','c','d','e','f','g','h','i','j'};
 %     data   = bsxfun(@rdivide,data,realsqrt(sum(data.^2,1)));
-%     plot_correlation_matrix(data,labels);
+%     f1     = plot_correlation_matrix(data,labels);
 %
 %     data   = [0.1 -0.2 0.3; -0.6 -0.5 0];
 %     labels = {{'X1','X2','X3'},{'Y1','Y2'}};
-%     plot_correlation_matrix(data,labels);
+%     f2     = plot_correlation_matrix(data,labels);
 %
-%     plot_correlation_matrix(data,{},[],'MatrixName','Covariance Matrix');
+%     f3     = plot_correlation_matrix(data,{},[],'MatrixName','Covariance Matrix');
+%
+%     % clean up
+%     close([f1 f2 f3]);
 %
 % See Also:
 %     (None)

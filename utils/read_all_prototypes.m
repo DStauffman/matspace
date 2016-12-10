@@ -41,9 +41,9 @@ switch nargin
     case 1
         fid       = [];
         counter   = 0;
-        recursive = false;
+        recursive = true;
     case 2
-        recursive = false;
+        recursive = true;
         counter   = 0;
     case 3
         counter   = 0;
@@ -108,7 +108,7 @@ for i = 3:length(list)
             % increment counter
             counter = counter + 1;
             % pull out prototype
-            this_prototype = cellfun(@(x) x(2:end),lines(ix1(1)+1:ix2(1)-1),'UniformOutput',false);
+            this_prototype = cellfun(@(x) x(3:end),lines(ix1(1)+1:ix2(1)-1),'UniformOutput',false);
             % write out prototype
             fprintf(fid,'%s\n',['%% ',this_name]);
             fprintf(fid,'%s\n',['function [] = function_',num2str(counter,'%04i'),'()']);
@@ -128,7 +128,7 @@ if length(dbstack) == 1
     fprintf(fid,'%s\n','    try');
     fprintf(fid,'%s\n','        eval(this_name);');
     fprintf(fid,'%s\n','    catch exception %#ok<NASGU>');
-    fprintf(fid,'%s\n','        warning(''utils:prototypeFailed'',''Failed.'')');
+    fprintf(fid,'%s\n','        warning(''utils:prototypeFailed'',''Protoype for "%s" failed.'',this_name);');
     fprintf(fid,'%s\n','    end');
     fprintf(fid,'%s','end');
     fclose(fid);

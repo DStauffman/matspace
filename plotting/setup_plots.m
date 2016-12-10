@@ -3,7 +3,7 @@ function [] = setup_plots(fig_hand,OPTS,form)
 % SETUP_PLOTS  applies each plot preference in one function.
 %
 % Summary:
-%     (NONE)
+%     None
 %
 % Input:
 %      fig_hand       : (1xN) figure handles [num]
@@ -22,7 +22,7 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %                                      'dist_no_y_scale', X-axis is not time, don't scale Y-axis
 %
 % Output:
-%     (NONE)
+%     None
 %
 % Prototype:
 %     f = figure('name','Something Plot');
@@ -37,16 +37,21 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     xlabel('something [sec]');
 %     ylabel('something [rad]');
 %     figmenu;
-%
+% 
+%     OPTS           = Opts();
 %     OPTS.case_name = 'NULL';
 %     OPTS.disp_xmin = 100;
 %     OPTS.disp_xmax = 580;
 %     OPTS.time_unit = 'min';
 %     OPTS.save_plot = true;
 %     OPTS.plot_type = 'png';
-%     OPTS.save_path = pwd;
+%     OPTS.save_path = get_root_dir();
 %     OPTS.vert_fact = 'milli';
 %     setup_plots(f,OPTS,'time');
+% 
+%     % clean up
+%     close(f);
+%     delete(fullfile(get_root_dir, 'NULL - Something Plot.png'));
 %
 % See Also:
 %     titleprefix.m, xextents.m, xscale_plots.m, storefig.m, yscale_plots.m

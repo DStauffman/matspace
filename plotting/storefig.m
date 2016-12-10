@@ -16,7 +16,8 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 %                       saved as extension type specified by "format"
 %
 % Prototype:
-%     figure(5);hold on;
+%     f1 = figure(5);
+%     hold on;
 %     set(gcf,'name','fig5');
 %     title('somethingA');
 %     plot(linspace(0,3600),1+randn(1,100),'r');
@@ -25,7 +26,8 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 %     ylabel('something');
 %     figmenu;
 %
-%     figure(6);hold on;
+%     f2 = figure(6);
+%     hold on;
 %     set(gcf,'name','fig6');
 %     title('somethingB');
 %     plot(linspace(0,3600),1+randn(1,100),'r');
@@ -34,8 +36,13 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 %     ylabel('something');
 %     figmenu;
 %
-%     mkdir('C:\tst\');
-%     storefig(5:6,'C:\tst\','png');
+%     folder = get_root_dir();
+%     storefig([f1 f2],folder,'png');
+%
+%     % clean up
+%     close([f1 f2]);
+%     delete(fullfile(folder, 'fig5.png'));
+%     delete(fullfile(folder, 'fig6.png'));
 %
 % See Also:
 %     titleprefix    xextents    xscale_plots    setup_plots

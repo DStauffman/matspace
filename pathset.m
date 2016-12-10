@@ -19,8 +19,6 @@ function [] = pathset(location,ex)
 % Prototype:
 %     % add complete library to path
 %     pathset;
-%     % remove library from path
-%     pathremove;
 %
 % See Also:
 %     pathremove

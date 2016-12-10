@@ -11,6 +11,8 @@ function [b1,b2] = get_prn_bits(sat)
 %
 % Prototype:
 %     [b1,b2] = get_prn_bits(19);
+%     assert(b1 == 3);
+%     assert(b2 == 6);
 %
 % See Also:
 %     cor_prn, generate_prn

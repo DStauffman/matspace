@@ -20,7 +20,7 @@ function generic_bin_cat(savename,location,filenums)
 %                              'output' file name is specified by savename
 %
 % Prototype:
-%     %make input files
+%     % make input files
 %     fid1 = fopen('input_001.bin','w','ieee-be');
 %     fwrite(fid1,ones(5,1),'uint32');
 %     fclose(fid1);
@@ -30,17 +30,26 @@ function generic_bin_cat(savename,location,filenums)
 %     fid3 = fopen('input_003.bin','w','ieee-be');
 %     fwrite(fid1,ones(5,1)*3,'uint32');
 %     fclose(fid3);
+%
 %     % setup args
 %     savename = 'catbin.bin';
 %     location = [pwd,filesep,'input_'];
 %     filenums = 1:3;
+%
 %     % execute concatenation
 %     generic_bin_cat(savename,location,filenums)
+%
 %     % confirm execution
 %     fid4 = fopen(savename,'r','ieee-be');
 %     catdata = fread(fid4,inf,'uint32');
 %     fclose(fid4);
 %     disp(catdata);
+%
+%     % clean up files
+%     delete('input_001.bin');
+%     delete('input_002.bin');
+%     delete('input_003.bin');
+%     delete('catbin.bin');
 %
 % Change Log:
 %     1.  Written by Matt Beck in April 2010.
