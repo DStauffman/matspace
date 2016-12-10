@@ -18,6 +18,10 @@ classdef Opts
     %         .rms_xmax  : (scalar) maximum time from which to end RMS calculations [months]
     %         .name_one  : (row) string specifying the name of the first data structure to be plotted [char]
     %         .name_two  : (row) string specifying the name of the second data structure to be plotted [char]
+    %         .time_unit : (row) string specifying the time unit for the x axis, from {'', 'sec', 'min', 'hr', 'day'} [char]
+    %         .vert_fact : (row) string specifying the vertical factor to apply to the Y axis, [char]
+    %             from: 'yotta','zetta','exa','peta','tera','giga','mega','kilo','hecto','deca',
+    %             'unity','deci','centi','milli', 'micro','nano','pico','femto','atto','zepto','yocto'
     %
     % Prototype:
     %     OPTS = Opts();
@@ -37,7 +41,9 @@ classdef Opts
         rms_xmin,
         rms_xmax,
         name_one,
-        name_two
+        name_two,
+        time_unit,
+        vert_fact,
     end
     
     methods
@@ -54,6 +60,8 @@ classdef Opts
             OPTS.rms_xmax  = inf;
             OPTS.name_one  = '';
             OPTS.name_two  = '';
+            OPTS.time_unit = '';
+            OPTS.vert_fact = '';
             
             % break out early if no fields in overrides to process
             if nargin == 0 || ~isstruct(overrides) || ~isa(overrides, 'OPTS')

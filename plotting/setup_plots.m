@@ -106,11 +106,11 @@ if any(strcmp(form,{'time','time_no_y_scale'}))
 end
 
 %% Scale the y-axis
-% if any(strcmp(form,{'time','dist'}))
-%     if isfield(OPTS,'vert_fact')
-%         yscale_plots(fig_hand,'unity',OPTS.vert_fact);
-%     end
-% end
+if any(strcmp(form,{'time','dist'}))
+    if ~isempty(OPTS.vert_fact)
+        yscale_plots(fig_hand,'unity',OPTS.vert_fact);
+    end
+end
 
 %% Label plot classification
 % % determine classification (hard-coded to false for now)
