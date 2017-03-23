@@ -20,7 +20,7 @@ function q = qrot(k,a)
 %     quat_mult, rot
 %
 % Reference:
-%     1.  Wertz, James R. (editor), Equations 12.11 in “Parameterization of the Attitude,”
+%     1.  Wertz, James R. (editor), Equations 12.11 in "Parameterization of the Attitude",
 %         Section 12.1, Spacecraft Attitude Determination and Control,
 %         Kluwer Academic Publishers, 1978.
 %

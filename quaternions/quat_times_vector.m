@@ -6,14 +6,14 @@ function [vec] = quat_times_vector(q, v)
 %     Method
 %         1.  qv = q(1:3) x v
 %         2.  vec = v + 2*[ -( q(4) * qv ) + (q(1:3) x qv) ]
-% 
+%
 % Input:
 %    q   : (4xn or 4x1) quaternion(s)    [ndim]
 %    v   : (3xn or 3x1) input vector(s)  [ndim]
 %
 % Output:
 %    vec : (3xn) product vector(s)       [ndim]
-% 
+%
 % Prototype:
 %     vec = quat_times_vector([0; 0; 0; 1], [1; 1; 1]);
 %
@@ -25,7 +25,7 @@ function [vec] = quat_times_vector(q, v)
 %         result will be the body-frame vector.
 %     2.  This function is redundant with quat_times_single_vector.  Maybe keep just this one?
 %     3.  Would really like to have only one branch that handles all three cases relatively quickly.
-% 
+%
 % Change Log:
 %     1.  Originally written by Bruce Romney.
 %     2.  Added to DStauffman's Library in March 2008.

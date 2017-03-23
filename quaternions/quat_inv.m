@@ -1,20 +1,20 @@
 function [q_inv] = quat_inv(q) %#codegen
 
 % QUAT_INV  finds the inverse of a normalized quaternion.
-% 
+%
 % Input:
 %     q     : (4xN) quaternion
-% 
+%
 % Output:
 %     q_inv : (4xN) inverse quaternion
-% 
+%
 % Prototype:
 %     q = [0;0;0;1];
 %     q_inv = quat_inv(q);
 %
 % See Also:
 %     quat_mult, quat_norm
-% 
+%
 % Change Log.
 %     1.  Added to DStauffman's library in March 2008.
 

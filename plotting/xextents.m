@@ -29,7 +29,7 @@ function [] = xextents(figs, xmin, xmax)
 %     xlabel('something [sec]');
 %     ylabel('something');
 %     figmenu;
-% 
+%
 %     f2 = figure(6);
 %     hold on;
 %     title('something');
@@ -38,7 +38,7 @@ function [] = xextents(figs, xmin, xmax)
 %     xlabel('something [sec]');
 %     ylabel('something');
 %     figmenu;
-% 
+%
 %     xextents([f1 f2],-500,2000);
 %
 %     % clean up

@@ -30,7 +30,7 @@ function [n,u,s] = combine_sets(n1,u1,s1,n2,u2,s2)
 %     u2 = 2;
 %     s2 = 0.25;
 %     [n,u,s] = combine_sets(n1,u1,s1,n2,u2,s2);
-% 
+%
 % See Also:
 %     mean, std
 %

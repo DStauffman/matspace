@@ -1,14 +1,14 @@
 function [out] = bsr(in,shift)
 
 % BSR  bit shifts right.
-% 
+%
 % Input:
 %     in    : input bit stream as a matrix
 %     shift : number of bits to shift
-% 
+%
 % Output:
 %     out : output bit stream as a matrix
-% 
+%
 % Prototype:
 %     in = [0 0 1 1 1];
 %     out = bsr(in);

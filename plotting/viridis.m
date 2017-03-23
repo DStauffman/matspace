@@ -21,7 +21,7 @@ function map = viridis(m)
 %
 % See Also:
 %     colormap, parula
-% 
+%
 % Notes:
 %     1.  Viridis is the new default colormap for the matplotlib library in Python.
 %
@@ -30,12 +30,12 @@ function map = viridis(m)
 %         chart found online for viridis.
 
 if nargin < 1
-   f = get(groot,'CurrentFigure');
-   if isempty(f)
-      m = size(get(groot,'DefaultFigureColormap'),1);
-   else
-      m = size(f.Colormap,1);
-   end
+    f = get(groot,'CurrentFigure');
+    if isempty(f)
+        m = size(get(groot,'DefaultFigureColormap'),1);
+    else
+        m = size(f.Colormap,1);
+    end
 end
 
 viridi = [

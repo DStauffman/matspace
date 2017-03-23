@@ -37,7 +37,7 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     xlabel('something [sec]');
 %     ylabel('something [rad]');
 %     figmenu;
-% 
+%
 %     OPTS           = Opts();
 %     OPTS.case_name = 'NULL';
 %     OPTS.disp_xmin = 100;
@@ -48,7 +48,7 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     OPTS.save_path = get_root_dir();
 %     OPTS.vert_fact = 'milli';
 %     setup_plots(f,OPTS,'time');
-% 
+%
 %     % clean up
 %     close(f);
 %     delete(fullfile(get_root_dir, 'NULL - Something Plot.png'));

@@ -37,7 +37,7 @@ function [fig_hand] = plot_time_history(time1, data1, varargin)
 %     figmenu, setup_dir, plot_rms_lines
 %
 % Notes:
-%     1.  If OPTS.name_one is a cell array, then you can name all the individual channels in data1, 
+%     1.  If OPTS.name_one is a cell array, then you can name all the individual channels in data1,
 %         and similarily for OPTS.name_two and data2.  Likewise, if TruthName is a cell array, you
 %         can name multiple truth channels for the rows in TruthData.
 %
