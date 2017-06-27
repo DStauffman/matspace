@@ -1,4 +1,4 @@
-function [fig_hand] = plot_bar_breakdown(time, data, label, OPTS, legend)
+function [fig_hand] = plot_bar_breakdown(time, data, label, OPTS, names)
 
 % PLOT_BAR_BREAKDOWN  plots the pie chart like breakdown by percentage in each category over time.
 %
@@ -6,7 +6,8 @@ function [fig_hand] = plot_bar_breakdown(time, data, label, OPTS, legend)
 %     time  : (1xN) time history
 %     data  : (MxN) data for corresponding time history
 %     label : (char) Name to label on the plots
-%     opts  : (class) plotting options
+%     OPTS  : (class) plotting options
+%     names : |opt| {1xN} of char, names to put on legend
 %
 % Output:
 %     fig_hand : (obj) figure handle
@@ -26,9 +27,9 @@ function [fig_hand] = plot_bar_breakdown(time, data, label, OPTS, legend)
 switch nargin
     case 3
         OPTS   = [];
-        legend = {};
+        names = {};
     case 4
-        legend = {};
+        names = {};
     case 5
         % nop
     otherwise
@@ -37,10 +38,10 @@ end
 if isempty(OPTS)
     OPTS = Opts();
 end
-if ~isempty(legend)
-    assert(length(legend) == size(data,1), 'Number of data channels does not match the legend.');
+if ~isempty(names)
+    assert(length(names) == size(data,1), 'Number of data channels does not match the legend.');
 else
-    legend = arrayfun(@(x) ['Series ', num2str(x)], 1:size(data,1), 'UniformOutput', false);
+    names = arrayfun(@(x) ['Series ', num2str(x)], 1:size(data,1), 'UniformOutput', false);
 end
 
 %% hard-coded values
@@ -55,13 +56,14 @@ ax = axes;
 b = bar(ax, time, scale*data', 1.0, 'stack', 'EdgeColor', 'none');
 color_order = hsv(length(b));
 for i = 1:length(b)
-    set(b(i), 'DisplayName', legend{i}, 'FaceColor', color_order(i,:));
+    set(b(i), 'DisplayName', names{i}, 'FaceColor', color_order(i,:));
 end
 xlabel('Time [year]');
 ylabel([label, unit_text]);
 %ylim([0, 100]); % TODO: put this in once the data is cleaned up
 grid('on');
 title(this_title);
+legend('show');
 
 %% create figure controls
 figmenu;
