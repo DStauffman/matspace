@@ -69,7 +69,8 @@ if abs(scale * data_max - 100) < 1e-8
 end
 grid('on');
 title(this_title);
-legend('show');
+leg = legend('show');
+set(leg, 'interpreter', 'none');
 
 %% create figure controls
 figmenu;
