@@ -209,8 +209,8 @@ else
         % plot different cycles
         plot(ax1, time1, scale*data1, '-', 'Color', [0.7 0.7 0.7]);
         % plot the error bars
-        temp      = scale*mean(data1, data_dim);
-        errorbar(ax1, time1, temp, scale*std(data1, std_flag, data_dim), 'c.-');
+        temp      = scale*mean(data1, data_dim, 'omitnan');
+        errorbar(ax1, time1, temp, scale*std(data1, std_flag, data_dim, 'omitnan'), 'c.-');
         % plot the mean results
         h1        = plot(ax1, time1, temp, 'b.-', 'LineWidth', 2);
         % calculate RMS for legend
@@ -233,8 +233,8 @@ if size(data2, data_dim) == 1
     end
 else
     plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.7 0.7]);
-    temp      = scale*mean(data2, data_dim);
-    errorbar(time2, temp, scale*std(data2, std_flag, data_dim), 'g.-');
+    temp      = scale*mean(data2, data_dim, 'omitnan');
+    errorbar(time2, temp, scale*std(data2, std_flag, data_dim, 'omitnan'), 'g.-');
     h2        = plot(ax1, time2, temp, '.-', 'Color', [0 0.8 0], 'LineWidth', 2);
     if show_rms
         rms_data2 = rms(temp);
