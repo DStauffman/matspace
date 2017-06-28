@@ -50,6 +50,9 @@ scale      = 100;
 units      = '%';
 unit_text  = [' [', units, ']'];
 
+%% Calculations
+data_max = max(max(data));
+
 %% plot breakdown
 fig_hand = figure('name', this_title);
 ax = axes;
@@ -60,7 +63,10 @@ for i = 1:length(b)
 end
 xlabel('Time [year]');
 ylabel([label, unit_text]);
-%ylim([0, 100]); % TODO: put this in once the data is cleaned up
+% set limits for data that sums to 100%
+if abs(scale * data_max - 100) < 1e-8
+    ylim([0, 100]);
+end
 grid('on');
 title(this_title);
 legend('show');
