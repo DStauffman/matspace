@@ -97,26 +97,7 @@ else
 end
 
 %% determine units based on type of data
-% TODO: functionalize this?
-switch type
-    case 'unity'
-        scale = 1;
-        units = '';
-    case 'population'
-        scale = 1;
-        units = '#';
-    case 'percentage'
-        scale = 100;
-        units = '%';
-    case 'per 100K'
-        scale = 100000;
-        units = 'per 100,000';
-    case 'cost'
-        scale = 1e-3;
-        units = '$K''s';
-    otherwise
-        error('hesat:badPlottingType', 'Unknown data type for plot: "%s".', type);
-end
+[scale, units] = get_scale_and_units(type);
 
 %% Process for comparisons and alias OPTS information
 % check for multiple comparisons mode and alias some OPTS information
