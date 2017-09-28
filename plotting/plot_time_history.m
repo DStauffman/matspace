@@ -20,7 +20,6 @@ function [fig_hand] = plot_time_history(time1, data1, varargin)
 %         'TruthData'   : (DxC) data points for truth data, default is empty
 %         'TruthName'   : (char) or {Dx1} of (char) name for truth data on the legend, if empty
 %                              don't include, default is 'Truth'
-%         'ShowRMS'     : (bool) flag for showing RMS on plot and in legend, default is true
 %
 % Output:
 %     fig_hand .. : (scalar) figure handles [num]
@@ -72,14 +71,12 @@ addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 addParameter(p, 'TruthName', 'Truth', @ischar);
-addParameter(p, 'ShowRms', true, @islogical);
 % do parse
 parse(p, time1, data1, varargin{:});
 % create some convenient aliases
 type        = p.Results.Type;
 description = p.Results.Description;
 truth_name  = p.Results.TruthName;
-show_rms    = p.Results.ShowRms;
 % create data channel aliases
 time2       = p.Results.Time2;
 data2       = p.Results.Data2;
@@ -117,6 +114,7 @@ end
 % determine if creating a difference plot and/or using subplots
 non_deg       = ~isempty(data1) && ~isempty(data2);
 use_sub_plots = OPTS.sub_plots && non_deg;
+show_rms      = OPTS.show_rms;
 
 %% calculate RMS indices
 if show_rms
@@ -150,7 +148,7 @@ if non_deg
     if isempty(ix_rms_xmax_nondeg)
         ix_rms_xmax_nondeg = length(nondeg_time);
     end
-    nondeg_rms             = scale*rms(nondeg_data(:,ix_rms_xmin_nondeg:ix_rms_xmax_nondeg));
+    nondeg_rms             = scale*nanrms(nondeg_data(:,ix_rms_xmin_nondeg:ix_rms_xmax_nondeg));
     if use_sub_plots
         fig_hand           = 0;
     else
@@ -183,7 +181,7 @@ if size(data1, data_dim) == 1
     h1        = plot(ax1, time1, scale*data1, 'b.-');
     % calculate RMS for legend
     if show_rms
-        rms_data1 = scale*rms(data1(:,ix_rms_xmin1:ix_rms_xmax1));
+        rms_data1 = scale*nanrms(data1(:,ix_rms_xmin1:ix_rms_xmax1));
     end
 else
     if ~mult_comp_mode
@@ -196,13 +194,13 @@ else
         h1        = plot(ax1, time1, temp, 'b.-', 'LineWidth', 2);
         % calculate RMS for legend
         if show_rms
-            rms_data1 = rms(temp);
+            rms_data1 = nanrms(temp);
         end
     else
         h1        = plot(ax1, time1, scale*data1, '.-');
         % calculate RMS for legend
         if show_rms
-            rms_data1 = rms(scale*data1, 2);
+            rms_data1 = nanrms(scale*data1, 2);
         end
     end
 end
@@ -210,7 +208,7 @@ end
 if size(data2, data_dim) == 1
     h2        = plot(ax1, time2, scale*data2, '.-', 'Color', [0 0.8 0]);
     if show_rms
-        rms_data2 = scale*rms(data2(:,ix_rms_xmin2:ix_rms_xmax2));
+        rms_data2 = scale*nanrms(data2(:,ix_rms_xmin2:ix_rms_xmax2));
     end
 else
     plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.7 0.7]);
@@ -218,7 +216,7 @@ else
     errorbar(time2, temp, scale*std(data2, std_flag, data_dim, 'omitnan'), 'g.-');
     h2        = plot(ax1, time2, temp, '.-', 'Color', [0 0.8 0], 'LineWidth', 2);
     if show_rms
-        rms_data2 = rms(temp);
+        rms_data2 = nanrms(temp);
     end
 end
 
@@ -237,7 +235,7 @@ if isfinite(OPTS.disp_xmax)
 end
 xlim(xl);
 
-% optionally plot truth for HIV prevalence
+% optionally plot truth
 if ~isempty(truth_time) && ~isempty(truth_data) && ~all(all(isnan(truth_data)))
     h3 = plot(truth_time, scale*truth_data, '.-', 'Color', truth_color, 'MarkerFaceColor', ...
         truth_color, 'LineWidth', 2);

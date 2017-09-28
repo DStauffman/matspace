@@ -40,8 +40,12 @@ classdef Opts
         disp_xmax,
         rms_xmin,
         rms_xmax,
+        colormap,
+        show_rms,
+        show_zero,
         name_one,
         name_two,
+        names,
         time_unit,
         vert_fact,
     end
@@ -58,8 +62,12 @@ classdef Opts
             OPTS.disp_xmax = inf;
             OPTS.rms_xmin  = -inf;
             OPTS.rms_xmax  = inf;
-            OPTS.name_one  = '';
+            OPTS.colormap  = '';
+            OPTS.show_rms  = true;
+            OPTS.show_zero = true;
+            OPTS.name_one  = ''; % TODO: remove these and use 'names' instead
             OPTS.name_two  = '';
+            OPTS.names     = {};
             OPTS.time_unit = '';
             OPTS.vert_fact = '';
             
