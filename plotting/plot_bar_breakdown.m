@@ -51,7 +51,12 @@ units      = '%';
 unit_text  = [' [', units, ']'];
 
 %% Calculations
-data_max = max(max(data));
+data_max = max(sum(data, 1));
+if abs(1 - data_max) < 1e-8
+    is_normalized = true;
+else
+    is_normalized = false;
+end
 
 %% plot breakdown
 fig_hand = figure('name', this_title);
@@ -64,7 +69,7 @@ end
 xlabel('Time [year]');
 ylabel([label, unit_text]);
 % set limits for data that sums to 100%
-if abs(scale * data_max - 100) < 1e-8
+if is_normalized
     ylim([0, 100]);
 end
 grid('on');
