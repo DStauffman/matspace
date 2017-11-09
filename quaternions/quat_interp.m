@@ -48,7 +48,7 @@ switch nargin
     case 4
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 %% Scalar case

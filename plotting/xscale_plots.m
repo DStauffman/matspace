@@ -82,7 +82,7 @@ cnt = 1;
 for hfig = figs
     % check if this is a valid figure handle
     if ~ishandle(hfig)
-        warning('dstauffman:XScaleFig', 'Invalid figure handle specified: "%s".', hfig);
+        warning('dstauffman:XScaleFig', 'Invalid figure handle specified: "%g".', hfig);
         return
     end
     % check that the figure has a valid axis child

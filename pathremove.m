@@ -41,7 +41,7 @@ switch nargin
             location = location(1:end-1);
         end
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % find the established paths

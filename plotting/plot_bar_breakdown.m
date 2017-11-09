@@ -33,7 +33,7 @@ switch nargin
     case 5
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 if isempty(OPTS)
     OPTS = Opts();

@@ -77,7 +77,7 @@ switch nargin
     case 3
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % GPS start week

@@ -56,18 +56,18 @@ function [] = xextents(figs, xmin, xmax)
 if xmin > xmax
     % TODO: should this be an error instead?
     warning('dstauffman:XExtentsXValues', ...
-        'Argument xmin (%s) must be less than argument xmax(%s)', xmin, xmax);
+        'Argument xmin (%g) must be less than argument xmax(%g)', xmin, xmax);
 end
 
 % confirm figures
 for hfig = figs
     if ~ishandle(hfig)
-        warning('dstauffman:XExtentsBadFigure', 'Invalid figure handle specified: "%s".', hfig);
+        warning('dstauffman:XExtentsBadFigure', 'Invalid figure handle specified: "%g".', hfig);
         return
     end
     haxs = get(hfig, 'children');
     if isempty(haxs)
-        warning('dstauffman:XExtentsBadAxes', 'Specified figure (%s) does not contain axis.', hfig);
+        warning('dstauffman:XExtentsBadAxes', 'Specified figure (%g) does not contain axis.', hfig);
         return
     end
 end

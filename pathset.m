@@ -45,7 +45,7 @@ switch nargin
         ex = cellstr(ex);
         exclusions = [exclusions, ex];
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 %% add a filesep at the end if not there already

@@ -46,7 +46,7 @@ switch nargin
     case 2
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % execute algorithm

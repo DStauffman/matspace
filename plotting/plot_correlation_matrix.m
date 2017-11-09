@@ -61,7 +61,7 @@ label_values    = false;
 n = nargin;
 switch n
     case 0
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%s"', nargin);
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
     case 1
         labels = {};
         try
