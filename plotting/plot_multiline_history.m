@@ -120,7 +120,7 @@ if show_rms
 end
 
 % label plot
-title(get(fig_hand, 'name'));
+title(get(fig_hand, 'name'), 'interpreter', 'none');
 xlabel('Time [year]');
 ylabel([description,' [',units,']']);
 

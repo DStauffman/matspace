@@ -221,7 +221,7 @@ else
 end
 
 % label plot
-title(get(fig_hand(1), 'name'));
+title(get(fig_hand(1), 'name'), 'interpreter', 'none');
 xlabel('Time [year]');
 ylabel([description,' [',units,']']);
 
@@ -279,12 +279,12 @@ if non_deg
     if use_sub_plots
         ax2 = subplot(2, 1, 2);
         hold on;
-        title(title_name);
+        title(title_name, 'interpreter', 'none');
     else
         fig_hand(2) = figure('name', title_name);
         ax2 = axes;
         hold on;
-        title(title_name);
+        title(title_name, 'interpreter', 'none');
     end
     h3 = plot(ax2, nondeg_time, scale*nondeg_data, 'r.-');
 

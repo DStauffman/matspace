@@ -73,7 +73,7 @@ if is_normalized
     ylim([0, 100]);
 end
 grid('on');
-title(this_title);
+title(this_title, 'interpreter', 'none');
 leg = legend('show');
 set(leg, 'interpreter', 'none');
 
