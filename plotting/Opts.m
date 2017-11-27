@@ -16,12 +16,15 @@ classdef Opts
     %         .disp_xmax : (scalar) maximum time to display on plot [months]
     %         .rms_xmin  : (scalar) minimum time from which to begin RMS calculations [months]
     %         .rms_xmax  : (scalar) maximum time from which to end RMS calculations [months]
+    %         .colormap  : (row) string specifying the name of the colormap to use [char]
+    %         .show_rms  : (scalar) true/false flag for whether to show the RMS in the legend [bool]
+    %         .show_zero : (scalar) true/false flag for whether to show Y=0 on the plot axis [bool]
     %         .name_one  : (row) string specifying the name of the first data structure to be plotted [char]
     %         .name_two  : (row) string specifying the name of the second data structure to be plotted [char]
     %         .time_unit : (row) string specifying the time unit for the x axis, from {'', 'sec', 'min', 'hr', 'day'} [char]
     %         .vert_fact : (row) string specifying the vertical factor to apply to the Y axis, [char]
-    %             from: 'yotta','zetta','exa','peta','tera','giga','mega','kilo','hecto','deca',
-    %             'unity','deci','centi','milli', 'micro','nano','pico','femto','atto','zepto','yocto'
+    %             from: {'yotta','zetta','exa','peta','tera','giga','mega','kilo','hecto','deca',
+    %             'unity','deci','centi','milli', 'micro','nano','pico','femto','atto','zepto','yocto'}
     %
     % Prototype:
     %     OPTS = Opts();
@@ -45,7 +48,6 @@ classdef Opts
         show_zero,
         name_one,
         name_two,
-        names,
         time_unit,
         vert_fact,
     end
@@ -55,7 +57,7 @@ classdef Opts
             % store OPTS defaults
             OPTS.case_name = '';
             OPTS.plot_type = 'png';
-            OPTS.save_path = [pwd filesep];
+            OPTS.save_path = pwd;
             OPTS.save_plot = false;
             OPTS.sub_plots = true;
             OPTS.disp_xmin = -inf;
@@ -67,7 +69,6 @@ classdef Opts
             OPTS.show_zero = true;
             OPTS.name_one  = ''; % TODO: remove these and use 'names' instead
             OPTS.name_two  = '';
-            OPTS.names     = {};
             OPTS.time_unit = '';
             OPTS.vert_fact = '';
             
