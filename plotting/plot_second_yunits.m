@@ -1,14 +1,13 @@
-function [] = plot_second_yunits(fig, ax, ylab, multiplier)
+function [] = plot_second_yunits(ax, ylab, multiplier)
 
 % PLOT_SECOND_YUNITS  plots a second y axis on the right in different units.
 %
 % Summary:
-%     This function creates a second axes, but hides everything except the ylabel
-%     which is put on the right side of the plot.
+%     This function creates a second axes and adds a ylabel or the right side of the plot, while
+%     making sure that zoom and pan functionality updates both axes.
 %
 % Input:
-%     fig        : (scalar) figure handle [num]
-%     ax         : (scalar) axis handle [num]
+%     ax         : (object) axis handle
 %     ylab       : (row) string specifying the ylabel on the new axis [char]
 %     multiplier : (scalar) multiplier between the two units
 %
@@ -23,56 +22,64 @@ function [] = plot_second_yunits(fig, ax, ylab, multiplier)
 %     plot_second_yunits(fig, ax, 'deci-Units', 100);
 %     grid on;
 %
+%     % test interactive pan and zoom for full functionality
+%
 %     % clean up
 %     close(fig);
 %
 % See Also:
-%     setup_plots
-%
-% Notes:
-%     1.  The pan and zoom is currently broken for the Y-axis, and  I don't know how to fix it.
+%     plot_time_history
 %
 % Change Log:
 %     1.  Written by David Stauffer Stauffer in Aug 2011.
 %     2.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     3.  Re-written by David C. Stauffer in December 2017 to use new yyaxis built-in.
 
-% create second axis
-ax2 = axes('HandleVisibility', 'callback');
-% make clear and put y axis on right side
-set(ax2, 'Position', get(ax, 'Position'), 'YAxisLocation', 'right', 'Color', 'none');
+% get the original bounds
+orig_bounds = ax.YLim;
+orig_color  = ax.YColor;
+
+% store the multiplier for use later when panning or zooming
+ax.UserData.multiplier = multiplier;
+
+% turn existing plot into two axis version and put original on left axes
+yyaxis(ax, 'left');
+
+% create second axis on the right and set it as active
+yyaxis(ax, 'right');
+
 % set the new limits for the right side
-set(ax2, 'YLim', multiplier*get(ax, 'YLim'));
-% adjust the ticks to match the original axes
-set(ax2, 'YTick', get(ax, 'YTick')*multiplier);
-% set the ylabel
-ylabel(ax2, ylab);
-% link the x axes
-linkaxes([ax ax2], 'x');
-% set the original axes to the current one
-set(fig, 'CurrentAxes', ax);
+ax.YLim = multiplier*orig_bounds;
 
+% update the color to match the original
+ax.YColor = orig_color;
+
+% set the new ylabel
+ylabel(ax, ylab);
+
+% restore the original axes as active
+yyaxis(ax, 'left');
+
+% update the pan and zoom callbacks to effect both axes
 % set pan and zoom callbacks
 z1 = zoom;
 p1 = pan;
-set(z1, 'ActionPreCallback' , {@myprecallback,  [ax ax2]});
-set(z1, 'ActionPostCallback', {@mypostcallback, [ax ax2], multiplier});
-set(p1, 'ActionPreCallback' , {@myprecallback,  [ax ax2]});
-set(p1, 'ActionPostCallback', {@mypostcallback, [ax ax2], multiplier});
+z1.ActionPostCallback = @mypostcallback;
+p1.ActionPostCallback = @mypostcallback;
 
-function myprecallback(hObject, eventdata, ax) %#ok<INUSL>
-% pre-callback to make sure the main axes is always active.
-set(hObject, 'CurrentAxes', ax(1))
 
-function mypostcallback(hObject, eventdata, ax, multiplier) %#ok<INUSL>
-% post callback to make sure the axes stay sync'd after panning or zooming.
-switch get(hObject, 'CurrentAxes')
-    case ax(1)
-        set(ax(2), 'YLim', multiplier*get(ax(1), 'YLim'));
-        set(ax(2), 'YTick', get(ax(1), 'YTick')*multiplier);
-    case ax(2)
-        set(ax(1), 'YLim', 1/multiplier*get(ax(2), 'YLim'));
-        set(ax(1), 'YTick', get(ax(2), 'YTick')/multiplier);
-    otherwise
-        error('dstauffman:BadAxesHandle', 'Unexpected axis handle.');
-end
-set(hObject, 'CurrentAxes', ax(1));
+%% Subfunctions
+function mypostcallback(~, event)
+
+% get axes object
+axes = event.Axes;
+% get new x and y limits and apply to second axes
+new_xlim = axes.XLim;
+new_ylim = axes.YLim;
+% make second axes active
+yyaxis(axes, 'right');
+% update to appropriate limits
+axes.XLim = new_xlim;
+axes.YLim = axes.UserData.multiplier * new_ylim;
+% restore original axes as active
+yyaxis(axes, 'left');
