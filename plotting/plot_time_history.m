@@ -73,6 +73,7 @@ addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 addParameter(p, 'TruthName', 'Truth', @ischar);
 addParameter(p, 'SecondYScale', nan, @isnumeric);
+addParameter(p, 'PlotSigmas', 1, @isnumeric);
 % do parse
 parse(p, time1, data1, varargin{:});
 % create some convenient aliases
@@ -182,7 +183,7 @@ hold on;
 % plot data
 if size(data1, data_dim) == 1
     % plot data
-    h1        = plot(ax1, time1, scale*data1, 'b.-');
+    h1 = plot(ax1, time1, scale*data1, 'b.-');
     % calculate RMS for legend
     if show_rms
         rms_data1 = scale*nanrms(data1(:,ix_rms_xmin1:ix_rms_xmax1));
@@ -190,18 +191,23 @@ if size(data1, data_dim) == 1
 else
     if ~mult_comp_mode
         % plot different cycles
-        plot(ax1, time1, scale*data1, '-', 'Color', [0.7 0.7 0.7]);
-        % plot the error bars
-        temp      = scale*mean(data1, data_dim, 'omitnan');
-        errorbar(ax1, time1, temp, scale*std(data1, std_flag, data_dim, 'omitnan'), 'c.-');
+        plot(ax1, time1, scale*data1, '-', 'Color', [0.7 0.7 0.7], 'DisplayName', [name1,'Individuals Runs']);
+        % create the mean result
+        temp_mean = scale*mean(data1, data_dim, 'omitnan');
+        % plot the sigmas
+        if ~isnan(plot_sigmas) && plot_sigmas > 0
+            temp_std = std(data1, std_flag, data_dim, 'omitnan');
+            plot(ax1, time1, temp_mean + scale*temp_std, 'c.-', 'DisplayName',[name1,'+',num2str(plot_sigmas),'\sigma']);
+            plot(ax1, time1, temp_mean - scale*temp_std, 'c.-', 'DisplayName',[name1,'-',num2str(plot_sigmas),'\sigma']);
+        end 
         % plot the mean results
-        h1        = plot(ax1, time1, temp, 'b.-', 'LineWidth', 2);
+        h1 = plot(ax1, time1, temp_mean, 'b.-', 'LineWidth', 2);
         % calculate RMS for legend
         if show_rms
-            rms_data1 = nanrms(temp);
+            rms_data1 = nanrms(temp_mean);
         end
     else
-        h1        = plot(ax1, time1, scale*data1, '.-');
+        h1 = plot(ax1, time1, scale*data1, '.-');
         % calculate RMS for legend
         if show_rms
             rms_data1 = nanrms(scale*data1, 2);
@@ -210,17 +216,21 @@ else
 end
 % plot second channel
 if size(data2, data_dim) == 1
-    h2        = plot(ax1, time2, scale*data2, '.-', 'Color', [0 0.8 0]);
+    h2 = plot(ax1, time2, scale*data2, '.-', 'Color', [0 0.8 0]);
     if show_rms
         rms_data2 = scale*nanrms(data2(:,ix_rms_xmin2:ix_rms_xmax2));
     end
 else
-    plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.7 0.7]);
-    temp      = scale*mean(data2, data_dim, 'omitnan');
-    errorbar(time2, temp, scale*std(data2, std_flag, data_dim, 'omitnan'), 'g.-');
-    h2        = plot(ax1, time2, temp, '.-', 'Color', [0 0.8 0], 'LineWidth', 2);
+    plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.7 0.7], 'DisplayName', [name2,'Individuals Runs']);
+    temp_mean = scale*mean(data2, data_dim, 'omitnan');
+    if ~isnan(plot_sigmas) && plot_sigmas > 0
+        temp_std = scale*std(data2, std_flag, data_dim, 'omitnan');
+        plot(ax1, time2, temp_mean + scale*temp_std, 'g.-', 'DisplayName', [name2,'+',num2str(plot_sigmas),'\sigma']);
+        plot(ax1, time2, temp_mean - scale*temp_std, 'g.-', 'DisplayName', [name2,'-',num2str(plot_sigmas),'\sigma']);
+    end
+    h2 = plot(ax1, time2, temp_mean, '.-', 'Color', [0 0.8 0], 'LineWidth', 2);
     if show_rms
-        rms_data2 = nanrms(temp);
+        rms_data2 = nanrms(temp_mean);
     end
 end
 
