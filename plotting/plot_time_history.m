@@ -20,6 +20,7 @@ function [fig_hand] = plot_time_history(time1, data1, varargin)
 %         'TruthData'   : (DxC) data points for truth data, default is empty
 %         'TruthName'   : (char) or {Dx1} of (char) name for truth data on the legend, if empty
 %                              don't include, default is 'Truth'
+%         'SecondYScale' : (scalar) Multiplication scale factor to use to display on a secondary Y axis
 %
 % Output:
 %     fig_hand .. : (scalar) figure handles [num]
@@ -71,12 +72,15 @@ addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 addParameter(p, 'TruthName', 'Truth', @ischar);
+addParameter(p, 'SecondYScale', nan, @isnumeric);
 % do parse
 parse(p, time1, data1, varargin{:});
 % create some convenient aliases
-type        = p.Results.Type;
-description = p.Results.Description;
-truth_name  = p.Results.TruthName;
+type           = p.Results.Type;
+description    = p.Results.Description;
+truth_name     = p.Results.TruthName;
+second_y_scale = p.Results.SecondYScale;
+plot_sigmas    = p.Results.PlotSigmas;
 % create data channel aliases
 time2       = p.Results.Time2;
 data2       = p.Results.Data2;
@@ -273,6 +277,16 @@ if show_rms
     plot_rms_lines(time1([ix_rms_xmin1 ix_rms_xmax1]), ylim);
 end
 
+% create second Y axis
+if ~isnan(second_y_scale) && second_y_scale ~= 0
+    if strcmp(type, 'population')
+        new_y_label = 'Actual Population [#]';
+    else
+        new_y_label = '';
+    end
+    plot_second_yunits(ax1, new_y_label, second_y_scale);
+end
+
 % create differences plot
 if non_deg
     title_name = [description,' Differences vs. Time'];
@@ -303,6 +317,16 @@ if non_deg
     % plot RMS lines
     if show_rms
         plot_rms_lines(time1([ix_rms_xmin1 ix_rms_xmax1]), ylim);
+    end
+    
+    % Second Y axis
+    if ~use_sub_plots && ~isnan(second_y_scale) && second_y_scale ~= 0
+        if strcmp(type, 'population')
+            new_y_label = 'Actual Population [#]';
+        else
+            new_y_label = '';
+        end
+        plot_second_yunits(ax2, new_y_label, second_y_scale);
     end
 
     % link to earlier plot
