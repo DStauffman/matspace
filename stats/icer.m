@@ -72,8 +72,8 @@ switch nargin
 end
 
 %% check inputs
-assert(all(cost > 0), 'Costs must be positive.');
-assert(all(qaly > 0), 'Qalys must be positive.');
+assert(all(cost > 0), 'Costs must be positive (and not NaNs).');
+assert(all(qaly > 0), 'Qalys must be positive (and not NaNs).');
 
 % force to be column vectors
 cost = cost(:);
