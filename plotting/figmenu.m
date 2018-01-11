@@ -25,6 +25,11 @@ function figmenu(action)
 %     1.  Added to DStauffman's library from LM in Aug 2013.
 
 use_action = exist('action','var');
+if verLessThan('matlab','9.3')
+    text_field = 'Label'; % TODO: support for R2016B and earlier, R2017A (9.2) is untested
+else
+    text_field = 'Text';
+end
 
 %% build lists
 if ~use_action
@@ -52,8 +57,8 @@ if ~use_action
                     if ~isempty(figchch)
                         if strcmp(figchch.Type,'uimenu')
                             for k = 1:length(figchch)
-                                l = figchch(k).Label;
-                                switch l
+                                label = figchch(k).(text_field);
+                                switch label
                                     case {'Figures','<<','>>','Close All'}
                                         delete(figch(j));
                                     otherwise
@@ -75,19 +80,19 @@ if ~use_action
         % because you'll keep adding menu items until you run out of
         % memory...
         menu1 = uimenu(f);
-        set(menu1,'Label','Figures');
+        set(menu1,text_field,'Figures');
         menu2 = uimenu(f);
-        set(menu2,'Label','<<','Callback',[mfilename,'(''prev'')']);
+        set(menu2,text_field,'<<','Callback',[mfilename,'(''prev'')']);
         menu3 = uimenu(f);
-        set(menu3,'Label','>>','Callback',[mfilename,'(''next'')']);
+        set(menu3,text_field,'>>','Callback',[mfilename,'(''next'')']);
         menu4 = uimenu(f);
-        set(menu4,'Label','Close All','Callback','close all');
+        set(menu4,text_field,'Close All','Callback','close all');
         % create a menu item for each figure
         for j = 1:nfigs
             f = figlist(j);
             n = char(fignames(j));
             eval(sprintf('item%i = uimenu(menu1);',j))
-            eval(sprintf('set(item%i,''Label'',''&%s: %s'')',j,fignum_to_str(f),n));
+            eval(sprintf('set(item%i,''%s'',''&%s: %s'')',j,text_field,fignum_to_str(f),n));
             eval(sprintf('set(item%i,''Callback'',''figure(%s)'')',j,fignum_to_str(f)));
         end
     end
