@@ -19,8 +19,7 @@ classdef Opts
     %         .colormap  : (row) string specifying the name of the colormap to use [char]
     %         .show_rms  : (scalar) true/false flag for whether to show the RMS in the legend [bool]
     %         .show_zero : (scalar) true/false flag for whether to show Y=0 on the plot axis [bool]
-    %         .name_one  : (row) string specifying the name of the first data structure to be plotted [char]
-    %         .name_two  : (row) string specifying the name of the second data structure to be plotted [char]
+    %         .names     : (1xN) of (string) specifying the name of the data structures to be plotted [char]
     %         .time_unit : (row) string specifying the time unit for the x axis, from {'', 'sec', 'min', 'hr', 'day'} [char]
     %         .vert_fact : (row) string specifying the vertical factor to apply to the Y axis, [char]
     %             from: {'yotta','zetta','exa','peta','tera','giga','mega','kilo','hecto','deca',
@@ -32,6 +31,7 @@ classdef Opts
     % Change Log:
     %     1.  Written by David C. Stauffer in September 2013.
     %     2.  Added to DStauffman MATLAB library in December 2015.
+    %     3.  Updated by David C. Stauffer in January 2018 to use string array for names.
     
     properties
         case_name,
@@ -46,8 +46,7 @@ classdef Opts
         colormap,
         show_rms,
         show_zero,
-        name_one,
-        name_two,
+        names,
         time_unit,
         vert_fact,
     end
@@ -67,14 +66,20 @@ classdef Opts
             OPTS.colormap  = '';
             OPTS.show_rms  = true;
             OPTS.show_zero = true;
-            OPTS.name_one  = ''; % TODO: remove these and use 'names' instead
-            OPTS.name_two  = '';
+            OPTS.names     = "";
             OPTS.time_unit = '';
             OPTS.vert_fact = '';
             
             % break out early if no fields in overrides to process
-            if nargin == 0 || ~isstruct(overrides) || ~isa(overrides, 'OPTS')
-                return
+            switch nargin
+                case 0
+                    return
+                case 1
+                    if ~isstruct(overrides) || ~isa(overrides, 'Opts')
+                        error('dstauffman:UnexpectedType', 'Unexpected input type.');
+                    end
+                otherwise
+                    error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
             end
 
             % get the fields from the overrides and store them to OPTS

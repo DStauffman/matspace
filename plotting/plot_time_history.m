@@ -18,8 +18,8 @@ function [fig_hand] = plot_time_history(time1, data1, varargin)
 %         'Type'        : (char) type of data to use when converting axis scale, default is 'unity'
 %         'TruthTime'   : (1xC) time points for truth data, default is empty
 %         'TruthData'   : (DxC) data points for truth data, default is empty
-%         'TruthName'   : (char) or {Dx1} of (char) name for truth data on the legend, if empty
-%                              don't include, default is 'Truth'
+%         'TruthName'   : (string 1xD) name for truth data channel on the legend, if empty
+%                              don't include, default is "Truth"
 %         'SecondYScale' : (scalar) Multiplication scale factor to use to display on a secondary Y axis
 %
 % Output:
@@ -36,24 +36,23 @@ function [fig_hand] = plot_time_history(time1, data1, varargin)
 % See Also:
 %     figmenu, setup_dir, plot_rms_lines
 %
-% Notes:
-%     1.  If OPTS.name_one is a cell array, then you can name all the individual channels in data1,
-%         and similarily for OPTS.name_two and data2.  Likewise, if TruthName is a cell array, you
-%         can name multiple truth channels for the rows in TruthData.
-%
 % Change Log:
 %     1.  Written by David C. Stauffer in May 2016.
 %     2.  Updated by David C. Stauffer in Aug 2016 to include optional Truth name and enable/disable
 %         the RMS calculations.
 %     3.  Updated by David C. Stauffer in Sep 2016 to use the built-in MATLAB inputParser.
+%     4.  Updated by David C. Stauffer in Jan 2018 to better set legends and use string arrays for names.
 
 %% hard-coded values
-std_flag    = 1;
-data_dim    = 1;
-leg_format  = '%3.3f';
-colors      = [0 0 1; 0 0.8 0; 1 0 0; 0 0.8 0.8; 0.8 0 0.8; 0.8 0.8 0; 0 1 1; 1 0 1; ...
+std_flag      = 1;
+data_dim      = 1;
+leg_format    = '%3.3f';
+colors        = [0 0 1; 0 0.8 0; 1 0 0; 0 0.8 0.8; 0.8 0 0.8; 0.8 0.8 0; 0 1 1; 1 0 1; ...
     1 0.8 0; 0.375 0.375 0.5];
-truth_color = [0 0 0];
+truth_color   = [0 0 0];
+truth_color2  = [0.4 0.4 0.4];
+modes         = struct('single', 1, 'nondeg', 2, 'multi', 3);
+leg_rms_lines = false;
 
 %% Parse Inputs
 % create parser
@@ -71,7 +70,7 @@ addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
-addParameter(p, 'TruthName', 'Truth', @ischar);
+addParameter(p, 'TruthName', "Truth", @isstring);
 addParameter(p, 'SecondYScale', nan, @isnumeric);
 addParameter(p, 'PlotSigmas', 1, @isnumeric);
 % do parse
@@ -88,10 +87,7 @@ data2       = p.Results.Data2;
 truth_time  = p.Results.TruthTime;
 truth_data  = p.Results.TruthData;
 
-%% Process inputs
-if ~iscell(truth_name)
-    truth_name = {truth_name};
-end
+%% Process OPTS
 if isempty(p.Results.OPTS)
     OPTS = Opts();
 else
@@ -103,56 +99,44 @@ end
 
 %% Process for comparisons and alias OPTS information
 % check for multiple comparisons mode and alias some OPTS information
-name1 = OPTS.name_one;
-name2 = OPTS.name_two;
-if iscell(OPTS.name_one)
-    mult_comp_mode = true;
+names = OPTS.names;
+if length(names) > 1
+    if length(names) == 2
+        comp_mode = modes.nondeg;
+        assert(~isempty(data1) && ~isempty(data2));
+    else
+        comp_mode = modes.multi;
+        assert(size(data1, 1) == length(names), 'Badly sized data.');
+    end
 else
-    mult_comp_mode = false;
-    if ~isempty(name1)
-        name1 = [name1,': '];
-    end
-    if ~isempty(name2)
-        name2 = [name2,': '];
-    end
+    comp_mode = modes.single;
 end
 % determine if creating a difference plot and/or using subplots
-non_deg       = ~isempty(data1) && ~isempty(data2);
-use_sub_plots = OPTS.sub_plots && non_deg;
+use_sub_plots = OPTS.sub_plots && comp_mode == modes.nondeg;
 show_rms      = OPTS.show_rms;
+name1         = '';
+name2         = '';
+if length(names) >= 1 && ~isempty(names{1})
+    name1 = [names{1}, ': '];
+end
+if length(names) >= 2 && ~isempty(names{2})
+    name2 = [names{2}, ': '];
+end
 
 %% calculate RMS indices
 if show_rms
-    ix_rms_xmin1 = find(time1 >= OPTS.rms_xmin,1,'first');
-    if isempty(ix_rms_xmin1)
-        ix_rms_xmin1 = 1;
-    end
-    ix_rms_xmax1 = find(time1 <= OPTS.rms_xmax,1,'last');
-    if isempty(ix_rms_xmax1)
-        ix_rms_xmax1 = length(time1);
-    end
-    ix_rms_xmin2 = find(time2 >= OPTS.rms_xmin,1,'first');
-    if isempty(ix_rms_xmin2)
-        ix_rms_xmin2 = 1;
-    end
-    ix_rms_xmax2 = find(time2 <= OPTS.rms_xmax,1,'last');
-    if isempty(ix_rms_xmax2)
-        ix_rms_xmax2 = length(time2);
-    end
+    ix_rms_xmin1 = finde(time1 >= OPTS.rms_xmin,1,'first');
+    ix_rms_xmax1 = finde(time1 <= OPTS.rms_xmax,1,'last');
+    ix_rms_xmin2 = finde(time2 >= OPTS.rms_xmin,1,'first');
+    ix_rms_xmax2 = finde(time2 <= OPTS.rms_xmax,1,'last');
 end
 
 %% process non-deg data before trying to create any plots
-if non_deg
+if comp_mode == modes.nondeg
     [nondeg_time,ix1,ix2]  = intersect(time1,time2);
     nondeg_data            = mean(data2(:,ix2),1) - mean(data1(:,ix1),1);
-    ix_rms_xmin_nondeg     = find(nondeg_time >= OPTS.rms_xmin,1,'first');
-    if isempty(ix_rms_xmin_nondeg)
-        ix_rms_xmin_nondeg = 1;
-    end
-    ix_rms_xmax_nondeg     = find(nondeg_time <= OPTS.rms_xmax,1,'last');
-    if isempty(ix_rms_xmax_nondeg)
-        ix_rms_xmax_nondeg = length(nondeg_time);
-    end
+    ix_rms_xmin_nondeg     = finde(nondeg_time >= OPTS.rms_xmin,1,'first');
+    ix_rms_xmax_nondeg     = finde(nondeg_time <= OPTS.rms_xmax,1,'last');
     nondeg_rms             = scale*nanrms(nondeg_data(:,ix_rms_xmin_nondeg:ix_rms_xmax_nondeg));
     if use_sub_plots
         fig_hand           = 0;
@@ -181,56 +165,90 @@ end
 hold on;
 
 % plot data
-if size(data1, data_dim) == 1
-    % plot data
-    h1 = plot(ax1, time1, scale*data1, 'b.-');
-    % calculate RMS for legend
-    if show_rms
-        rms_data1 = scale*nanrms(data1(:,ix_rms_xmin1:ix_rms_xmax1));
-    end
-else
-    if ~mult_comp_mode
+if comp_mode ~= modes.multi
+    % if only one cycle, then just plot it
+    if size(data1, data_dim) == 1
+        % calculate RMS for legend
+        if show_rms
+            rms_data1 = scale*nanrms(data1(:,ix_rms_xmin1:ix_rms_xmax1));
+            this_name = [name1,'Mean (RMS: ',num2str(rms_data1,leg_format),')'];
+        else
+            this_name = [name1,'Mean'];
+        end
+        % plot data
+        plot(ax1, time1, scale*data1, 'b.-', 'DisplayName', this_name);
+    else
         % plot different cycles
-        plot(ax1, time1, scale*data1, '-', 'Color', [0.7 0.7 0.7], 'DisplayName', [name1,'Individuals Runs']);
+        p1 = plot(ax1, time1, scale*data1, '-', 'Color', [0.7 0.7 0.7]);
+        indiv_group = hggroup('DisplayName', [name1, 'Individual Runs']);
+        set(p1, 'Parent', indiv_group);
+        set(get(get(indiv_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
         % create the mean result
         temp_mean = scale*mean(data1, data_dim, 'omitnan');
         % plot the sigmas
         if ~isnan(plot_sigmas) && plot_sigmas > 0
             temp_std = std(data1, std_flag, data_dim, 'omitnan');
-            plot(ax1, time1, temp_mean + scale*temp_std, 'c.-', 'DisplayName',[name1,'+',num2str(plot_sigmas),'\sigma']);
-            plot(ax1, time1, temp_mean - scale*temp_std, 'c.-', 'DisplayName',[name1,'-',num2str(plot_sigmas),'\sigma']);
-        end 
+            p2 = plot(ax1, time1, temp_mean + scale*temp_std, 'c.-');
+            p3 = plot(ax1, time1, temp_mean - scale*temp_std, 'c.-');
+            sigmas_group = hggroup('DisplayName', [name1, '\pm', num2str(plot_sigmas), '\sigma']);
+            set([p2 p3], 'Parent', sigmas_group);
+            set(get(get(sigmas_group,'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
+        end
         % plot the mean results
-        h1 = plot(ax1, time1, temp_mean, 'b.-', 'LineWidth', 2);
-        % calculate RMS for legend
         if show_rms
             rms_data1 = nanrms(temp_mean);
+            this_name = [name1,'Mean (RMS: ',num2str(rms_data1,leg_format),')'];
+        else
+            this_name = [name1,'Mean'];
         end
-    else
-        h1 = plot(ax1, time1, scale*data1, '.-');
-        % calculate RMS for legend
+        plot(ax1, time1, temp_mean, 'b.-', 'LineWidth', 2, 'DisplayName', this_name);
+    end
+else
+    % In multi-mode, calculate RMS if necessary
+    if show_rms
+        rms_data1 = nanrms(scale*data1, 2);
+    end
+    % plot all the channels
+    p1 = plot(ax1, time1, scale*data1, '.-');
+    for i = 1:length(p1)
         if show_rms
-            rms_data1 = nanrms(scale*data1, 2);
+            set(p1(i), 'DisplayName', names(i) + ' (RMS: ' + num2str(rms_data1(i)));
+        else
+            set(p1(i), 'DisplayName', names(i));
         end
     end
 end
 % plot second channel
-if size(data2, data_dim) == 1
-    h2 = plot(ax1, time2, scale*data2, '.-', 'Color', [0 0.8 0]);
-    if show_rms
-        rms_data2 = scale*nanrms(data2(:,ix_rms_xmin2:ix_rms_xmax2));
-    end
-else
-    plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.7 0.7], 'DisplayName', [name2,'Individuals Runs']);
-    temp_mean = scale*mean(data2, data_dim, 'omitnan');
-    if ~isnan(plot_sigmas) && plot_sigmas > 0
-        temp_std = scale*std(data2, std_flag, data_dim, 'omitnan');
-        plot(ax1, time2, temp_mean + scale*temp_std, 'g.-', 'DisplayName', [name2,'+',num2str(plot_sigmas),'\sigma']);
-        plot(ax1, time2, temp_mean - scale*temp_std, 'g.-', 'DisplayName', [name2,'-',num2str(plot_sigmas),'\sigma']);
-    end
-    h2 = plot(ax1, time2, temp_mean, '.-', 'Color', [0 0.8 0], 'LineWidth', 2);
-    if show_rms
-        rms_data2 = nanrms(temp_mean);
+if comp_mode == modes.nondeg
+    if size(data2, data_dim) == 1
+        if show_rms
+            rms_data2 = scale*nanrms(data2(:,ix_rms_xmin2:ix_rms_xmax2));
+            this_name = [name2,'Mean (RMS: ',num2str(rms_data2,leg_format),')'];
+        else
+            this_name = [name2,'Mean'];
+        end
+        plot(ax1, time2, scale*data2, '.-', 'Color', [0 0.8 0], 'DisplayName', this_name);
+    else
+        p1 = plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.7 0.7]);
+        indiv_group = hggroup('DisplayName', [name2, 'Individual Runs']);
+        set(p1, 'Parent', indiv_group);
+        set(get(get(indiv_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
+        temp_mean = scale*mean(data2, data_dim, 'omitnan');
+        if ~isnan(plot_sigmas) && plot_sigmas > 0
+            temp_std = scale*std(data2, std_flag, data_dim, 'omitnan');
+            p2 = plot(ax1, time2, temp_mean + scale*temp_std, 'g.-');
+            p3 = plot(ax1, time2, temp_mean - scale*temp_std, 'g.-');
+            sigmas_group = hggroup('DisplayName', [name2, '\pm', num2str(plot_sigmas), '\sigma']);
+            set([p2 p3], 'Parent', sigmas_group);
+            set(get(get(sigmas_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
+        end
+        if show_rms
+            rms_data2 = nanrms(temp_mean);
+            this_name = [name2,'Mean (RMS: ',num2str(rms_data2,leg_format),')'];
+        else
+            this_name = [name2,'Mean'];
+        end
+        plot(ax1, time2, temp_mean, '.-', 'Color', [0 0.8 0], 'LineWidth', 2, 'DisplayName', this_name);
     end
 end
 
@@ -251,41 +269,30 @@ xlim(xl);
 
 % optionally plot truth
 if ~isempty(truth_time) && ~isempty(truth_data) && ~all(all(isnan(truth_data)))
-    h3 = plot(truth_time, scale*truth_data, '.-', 'Color', truth_color, 'MarkerFaceColor', ...
+    p4 = plot(truth_time, scale*truth_data, '.-', 'Color', truth_color, 'MarkerFaceColor', ...
         truth_color, 'LineWidth', 2);
-else
-    h3 = [];
+    if length(truth_name) > 1
+        for i = 1:length(p4)
+            set(p4(i), 'DisplayName', truth_name{i});
+        end
+    else
+        truth_group = hggroup('DisplayName', truth_name);
+        set(p4, 'Parent', truth_group);
+        set(get(get(truth_group,'Annotation'),'LegendInformation'),'IconDisplayStyle','on');
+        for i = 2:length(p4)
+            set(p4(i), 'Color', truth_color2);
+        end
+    end
+end
+
+% plot RMS lines
+if show_rms
+    plot_rms_lines(time1([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
 end
 
 % turn on grid/legend
 grid on;
-if ~mult_comp_mode
-    plot_handles = [h1(:); h2(:); h3(:)]';
-    if show_rms
-        legend_names = [{[name1,description,' (RMS: ',num2str(rms_data1,leg_format),')'],...
-            [name2,description,' (RMS: ',num2str(rms_data2,leg_format),')']},truth_name];
-    else
-        legend_names = [{[name1,description], [name2,description]}, truth_name];
-    end
-    used_ix = logical([ones(1,length(h1)), zeros(1, isempty(h1)), ones(1,length(h2)), ...
-        zeros(1, isempty(h2)), ones(1, min(length(h3), length(truth_name))), zeros(1, isempty(h3))]);
-else
-    plot_handles = [h1(:); h3(:)]';
-    used_ix = logical([ones(1,length(h1)), zeros(1, isempty(h1)), ones(1, min(length(h3), ...
-        length(truth_name))), zeros(1, isempty(h3))]);
-    if show_rms
-        legend_names = [cellfun(@(x,y) [x,' (RMS: ',num2str(y,leg_format),')'], OPTS.name_one,...
-            num2cell(rms_data1(:)'),'UniformOutput',false), truth_name];
-    else
-        legend_names = [OPTS.name_one, truth_name];
-    end
-end
-legend(plot_handles, legend_names(used_ix), 'interpreter', 'none');
-
-% plot RMS lines
-if show_rms
-    plot_rms_lines(time1([ix_rms_xmin1 ix_rms_xmax1]), ylim);
-end
+legend('show');
 
 % create second Y axis
 if ~isnan(second_y_scale) && second_y_scale ~= 0
@@ -298,7 +305,7 @@ if ~isnan(second_y_scale) && second_y_scale ~= 0
 end
 
 % create differences plot
-if non_deg
+if comp_mode == modes.nondeg
     title_name = [description,' Differences vs. Time'];
     if use_sub_plots
         ax2 = subplot(2, 1, 2);
@@ -310,7 +317,7 @@ if non_deg
         hold on;
         title(title_name, 'interpreter', 'none');
     end
-    h3 = plot(ax2, nondeg_time, scale*nondeg_data, 'r.-');
+    p5 = plot(ax2, nondeg_time, scale*nondeg_data, 'r.-');
 
     % label plot
     xlabel('Time [year]');
@@ -318,17 +325,17 @@ if non_deg
 
     % turn on grid/legend
     if show_rms
-        legend(h3, [description,' Difference (RMS: ',num2str(nondeg_rms,leg_format),')']);
+        legend(p5, [description,' Difference (RMS: ',num2str(nondeg_rms,leg_format),')']);
     else
-        legend(h3, description);
+        legend(p5, description);
     end
     grid on;
 
     % plot RMS lines
     if show_rms
-        plot_rms_lines(time1([ix_rms_xmin1 ix_rms_xmax1]), ylim);
+        plot_rms_lines(time1([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
     end
-    
+
     % Second Y axis
     if ~use_sub_plots && ~isnan(second_y_scale) && second_y_scale ~= 0
         if strcmp(type, 'population')
@@ -348,3 +355,24 @@ figmenu;
 
 % setup plots
 setup_plots(fig_hand, OPTS, 'time');
+
+
+%% Subfunctions
+function [ix] = finde(x, n, direction)
+
+% FINDE  calls the built-in find function, but always returns a value.  This value is the first or
+%        last element of the array depending on the given direction.
+
+ix = find(x, n, direction);
+
+if isempty(ix)
+    switch direction
+        case 'first'
+            ix = 1;
+        case 'last'
+            ix = length(x);
+        otherwise
+            % Should be impossible to get here, as it should error in the find function call
+            error('dstauffman:UnexpectedDirection', 'Unexpected direction for find function: "%s"', direction);
+    end
+end
