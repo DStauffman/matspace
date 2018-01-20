@@ -66,7 +66,7 @@ classdef Opts
             OPTS.colormap  = '';
             OPTS.show_rms  = true;
             OPTS.show_zero = true;
-            OPTS.names     = "";
+            OPTS.names     = string(''); % just "" in R2017B, but doesn't work in R2016B
             OPTS.time_unit = '';
             OPTS.vert_fact = '';
             

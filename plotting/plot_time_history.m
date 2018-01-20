@@ -70,7 +70,7 @@ addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
-addParameter(p, 'TruthName', "Truth", @isstring);
+addParameter(p, 'TruthName', string('Truth'), @isstring);
 addParameter(p, 'SecondYScale', nan, @isnumeric);
 addParameter(p, 'PlotSigmas', 1, @isnumeric);
 % do parse
@@ -276,7 +276,7 @@ if ~isempty(truth_time) && ~isempty(truth_data) && ~all(all(isnan(truth_data)))
             set(p4(i), 'DisplayName', truth_name{i});
         end
     else
-        truth_group = hggroup('DisplayName', truth_name);
+        truth_group = hggroup('DisplayName', truth_name{1});
         set(p4, 'Parent', truth_group);
         set(get(get(truth_group,'Annotation'),'LegendInformation'),'IconDisplayStyle','on');
         for i = 2:length(p4)
