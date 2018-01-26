@@ -82,8 +82,21 @@ assert(length(cost) == length(qaly), 'Cost and Qalys must have same size.');
 assert(~isempty(cost), 'Costs and Qalys cannot be empty.');
 
 %% Solve ICERs
-% build an index order variable to keep track of strategies
-keep = 1:length(cost);
+
+% check for identical qalys, and drop the higher cost (or keep the first if costs are the same)
+unique_qalys = unique(qaly);
+if length(unique_qalys) < length(qaly)
+    keep = nan(1, length(unique_qalys));
+    for i = 1:length(unique_qalys)
+        this_qaly = unique_qalys(i);
+        this_ix = find(ismember(qaly, this_qaly));
+        [~, temp_ix] = min(cost(this_ix));
+        keep(i) = this_ix(temp_ix);
+    end
+else
+    % build an index order variable to keep track of strategies
+    keep = 1:length(cost);
+end
 
 % enter processing loop
 while true
@@ -149,8 +162,9 @@ if nargout > 4
     num = length(cost);
     % build a name list if not given
     if isempty(names)
-        names = arrayfun(@(x) ['Strategy ',int2str(x)], 1:num, 'UniformOutput', false)';
+        names = string('Strategy ') + string(1:num);
     end
+    names = names(:);
     % preallocate some variables
     full_inc_costs     = nan(num, 1);
     full_inc_qalys     = nan(num, 1);
