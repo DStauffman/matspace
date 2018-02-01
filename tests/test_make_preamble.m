@@ -23,38 +23,38 @@ classdef test_make_preamble < matlab.unittest.TestCase %#ok<*PROP>
     methods(Test)
         function test_nominal(self)
             out = make_preamble(self.caption, self.label, self.cols);
-            self.assertIn('    \\caption{This caption}%', out);
-            self.assertIn('    \\label{tab:this_label}', out);
-            self.assertIn('    \\begin{tabular}{lcc}', out);
-            self.assertIn('    \\small', out);
+            self.verifyTrue(any(strcmp(out,'    \\caption{This caption}%')));
+            self.verifyTrue(any(strcmp(out,'    \\label{tab:this_label}')));
+            self.verifyTrue(any(strcmp(out,'    \\begin{tabular}{lcc}')));
+            self.verifyTrue(any(strcmp(out,'    \\small')));
         end
 
         function test_size(self)
-        out = make_preamble(self.caption, self.label, self.cols, size='\\footnotesize')
-        self.assertIn('    \\footnotesize', out)
-        self.assertNotIn('    \\small', out)
+            out = make_preamble(self.caption, self.label, self.cols, 'Size', '\\footnotesize');
+            self.verifyTrue(any(strcmp(out,'    \\footnotesize')));
+            self.verifyFalse(any(strcmp(out,'    \\small')));
         end
 
         function test_minipage(self)
-        out = make_preamble(self.caption, self.label, self.cols, use_mini=True)
-        self.assertIn('    \\begin{minipage}{\\linewidth}', out)
-        self.assertIn('        \\begin{tabular}{lcc}', out)
+            out = make_preamble(self.caption, self.label, self.cols, 'UseMini', true);
+            self.verifyTrue(any(strcmp(out,'    \\begin{minipage}{\\linewidth}')));
+            self.verifyTrue(any(strcmp(out,'        \\begin{tabular}{lcc}')));
         end
 
         function test_short_cap(self)
-        out = make_preamble(self.caption, self.label, self.cols, short_cap='Short cap')
-        self.assertIn('    \caption[Short cap]{This caption}%', out)
-        self.assertNotIn('    \caption{This caption}%', out)
+            out = make_preamble(self.caption, self.label, self.cols, 'ShortCap', 'Short cap');
+            self.verifyTrue(any(strcmp(out,'    \\caption[Short cap]{This caption}%')));
+            self.verifyFalse(any(strcmp(out,'    \\caption{This caption}%')));
         end
 
         function test_numbered_false1(self)
-        out = make_preamble(self.caption, self.label, self.cols, numbered=False)
-        self.assertIn('    \\caption*{This caption}%', out)
+            out = make_preamble(self.caption, self.label, self.cols, 'Numbered', false);
+            self.verifyTrue(any(strcmp(out,'    \\caption*{This caption}%')));
         end
 
         function test_numbered_false2(self)
-        with self.assertRaises(AssertionError):
-            make_preamble(self.caption, self.label, self.cols, short_cap='Short cap', numbered=False)
+            self.verifyError(@() make_preamble(self.caption, self.label, self.cols, 'ShortCap', ...
+                'Short cap', 'Numbered', false), '', 'Only numbered captions can have short versions.');
         end
     end
 end

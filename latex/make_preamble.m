@@ -1,4 +1,4 @@
-function [out] = make_preamble(caption, label, cols, size, use_mini, short_cap, numbered)
+function [out] = make_preamble(caption, label, cols, varargin)
 
 % MAKE_PREAMBLE  writes the table header and preamble.
 %
@@ -23,22 +23,29 @@ function [out] = make_preamble(caption, label, cols, size, use_mini, short_cap, 
 % Change Log
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 
-% parse inputs
-switch nargin
-    case 3
-        size = '\\small';
-        use_mini = false;
-        short_cap = '';
-        numbered = true;
-    case 7
-        % nop
-    otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
+%% Parse Inputs
+% create parser
+p = inputParser;
+% create some validation functions
+func_size_is_valid = @(x) any(strcmp(x, {'\\tiny', '\\scriptsize', '\\footnotesize', '\\small', '\\normalsize',...
+    '\\large', '\\Large', '\\LARGE', '\\huge', '\\Huge'}));
+% set options
+addRequired(p, 'Caption', @ischar);
+addRequired(p, 'Label', @ischar);
+addRequired(p, 'Cols', @ischar);
+addParameter(p, 'Size', '\\small', func_size_is_valid);
+addParameter(p, 'UseMini', false, @islogical);
+addParameter(p, 'ShortCap', '', @ischar);
+addParameter(p, 'Numbered', true, @islogical);
+% do parse
+parse(p, caption, label, cols, varargin{:});
+% create some convenient aliases
+size      = p.Results.Size;
+use_mini  = p.Results.UseMini;
+short_cap = p.Results.ShortCap;
+numbered  = p.Results.Numbered;
 
-% check that size is valid
-assert(any(strcmp(size, {'\\tiny', '\\scriptsize', '\\footnotesize', '\\small', '\\normalsize',...
-    '\\large', '\\Large', '\\LARGE', '\\huge', '\\Huge'})));
+%% Process
 % create caption string
 if isempty(short_cap)
     if numbered
@@ -53,9 +60,9 @@ end
 % build table based on minipage or not
 if ~use_mini
     out = string({'\\begin{table}[H]', ['    ',size], '    \\centering', cap_str, ...
-        ['    \\label{', label, '}'], ['    \begin{tabular}{', cols, '}'], '        \toprule'});
+        ['    \\label{', label, '}'], ['    \\begin{tabular}{', cols, '}'], '        \\toprule'});
 else
-    out = string({'\begin{table}[H]', ['    ',size], '    \centering', cap_str, ...
-        ['    \label{', label, '}'], '    \begin{minipage}{\linewidth}', '        \centering', ...
-        ['        \begin{tabular}{', cols, '}'], '            \toprule'});
+    out = string({'\\begin{table}[H]', ['    ',size], '    \\centering', cap_str, ...
+        ['    \\label{', label, '}'], '    \\begin{minipage}{\\linewidth}', '        \\centering', ...
+        ['        \\begin{tabular}{', cols, '}'], '            \\toprule'});
 end

@@ -43,7 +43,7 @@ for r = 1:length(bins)-1
     % alias the left boundary
     left = bins(r);
     % check for string values and just pass them through
-    if ischar(left)
+    if ~isnumeric(left)
         out(end+1) = left; %#ok<AGROW>
         continue
     end

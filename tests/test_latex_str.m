@@ -43,7 +43,7 @@ classdef test_latex_str < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_digits_all(self)
             value_str = latex_str(self.value);
-            self.verifyEqual(value_str, '101.666666666666');
+            self.verifyEqual(value_str, '101.6667');
         end
 
         function test_digits0(self)

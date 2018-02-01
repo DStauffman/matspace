@@ -34,7 +34,7 @@ classdef test_bins_to_str_ranges < matlab.unittest.TestCase %#ok<*PROP>
         end
         
         function test_no_cutoff(self)
-            out = bins_to_str_ranges(self.bins, 1e6);
+            out = bins_to_str_ranges(self.bins, 1, 1e6);
             self.verifyEqual(out, string({'0-19', '20-39', '40-59', '60-9999'}));
         end
     
@@ -44,7 +44,7 @@ classdef test_bins_to_str_ranges < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_cutoff(self)
-            out = bins_to_str_ranges(self.bins, 30);
+            out = bins_to_str_ranges(self.bins, 1, 30);
             self.verifyEqual(out, string({'0-19', '20+', '40+', '60+'}));
         end
 
