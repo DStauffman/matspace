@@ -22,14 +22,23 @@ function status = restoredefaultpath() %#ok<*MCAP>
 warning('off','MATLAB:dispatcher:nameConflict');
 warning('off','MATLAB:dispatcher:pathWarning');
 
+% hard-coded exceptions for PCOR8
+if ispc && strcmp(getenv('computername'), 'PCOR8')
+    is_pcor = true;
+    drive_letter = 'D:';
+else
+    is_pcor = false;
+    drive_letter = getenv('homedrive');
+end
+
 % run built-in version
 switch version('-release')
     case '2015b'
-        run('C:\Program Files\MATLAB\R2015b\toolbox\local\restoredefaultpath.m');
+        run([drive_letter, '\Program Files\MATLAB\R2015b\toolbox\local\restoredefaultpath.m']);
     case '2016a'
-        run('C:\Program Files\MATLAB\R2016a\toolbox\local\restoredefaultpath.m');
+        run([drive_letter, '\Program Files\MATLAB\R2016a\toolbox\local\restoredefaultpath.m']);
     case '2016b'
-        run('C:\Program Files\MATLAB\R2016b\toolbox\local\restoredefaultpath.m');
+        run([drive_letter, '\Program Files\MATLAB\R2016b\toolbox\local\restoredefaultpath.m']);
     otherwise
         error('dstauffman:utils:RestorePathVersions', ...
             'Unsupported MATLAB version, update to personal restoredefaultpath is needed.');
@@ -37,7 +46,7 @@ end
 
 % get directory information
 if ispc
-    root = fullfile([getenv('homedrive'), getenv('homepath')], 'Documents');
+    root = fullfile([drive_letter, getenv('homepath')], 'Documents');
 elseif isunix
     root = fullfile(filesep, 'home', getenv('user'), 'Documents'); % TODO: update at home on Unix system
 end
@@ -47,7 +56,11 @@ addpath(fullfile(root, 'MATLAB'));
 disp('PATHSET:')
 disp(['    ''', fullfile(root, 'MATLAB'),'''']);
 % DStauffman Matlab library
-run(fullfile(root, 'GitHub', 'matlab', 'pathset.m'));
+if is_pcor
+    run('D:\Dcstauff\GitHub\matlab\pathset.m');
+else
+    run(fullfile(root, 'GitHub', 'matlab', 'pathset.m'));
+end
 
 % output status
 if nargout == 1
