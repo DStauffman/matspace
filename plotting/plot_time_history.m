@@ -212,9 +212,9 @@ else
     p1 = plot(ax1, time1, scale*data1, '.-');
     for i = 1:length(p1)
         if show_rms
-            set(p1(i), 'DisplayName', names(i) + ' (RMS: ' + num2str(rms_data1(i)));
+            set(p1(i), 'DisplayName', [names{i}, ' (RMS: ', num2str(rms_data1(i))]);
         else
-            set(p1(i), 'DisplayName', names(i));
+            set(p1(i), 'DisplayName', names{i});
         end
     end
 end
