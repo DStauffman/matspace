@@ -8,6 +8,7 @@ function [] = setup_dir(directory, wipe)
 %
 % Input:
 %     directory : (str) directory [char]
+%     wipe : |opt| (scalar) whether to wipe the existing contents, default is true [bool]
 %
 % Output:
 %     None
