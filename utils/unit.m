@@ -1,4 +1,4 @@
-function [y] = unit(x,dim)
+function [y] = unit(x, dim)
 
 % UNIT  creates a unit vector along the specified dimension.
 %
@@ -11,7 +11,7 @@ function [y] = unit(x,dim)
 %
 % Prototype:
 %     x = [1 1 1 1; 2 3 2 3; 4 5 6 7];
-%     y = unit(x,2);
+%     y = unit(x, 2);
 %
 % See Also:
 %     rms
@@ -33,4 +33,4 @@ switch nargin
 end
 
 % calculate unit vector
-y = bsxfun(@rdivide,x,realsqrt(sum(x.*conj(x),dim)));
+y = x ./ realsqrt(sum(x.*conj(x),dim));
