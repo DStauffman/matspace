@@ -1,6 +1,7 @@
-function [bins] = discretize2(x, edges) %#codegen
+function [bins] = discretize2(x, edges, checks) %#codegen
 
-% DISCRETIZE2  is a compilable version of the built-in discretize function.
+% DISCRETIZE2  is a compilable version of the built-in discretize function plus an option for
+%              checking valid bounds.
 %
 % Input:
 %     x     : (Nx1) array of values to be discretized into bins
@@ -27,9 +28,23 @@ function [bins] = discretize2(x, edges) %#codegen
 % Change Log:
 %     1.  Written by David C. Stauffer in October 2016.
 
+switch nargin
+    case 2
+        checks = false;
+    case 3
+        % nop
+    otherwise
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+end
+
 % count the number of bins that are greater than the current value and sum across.
 bins = sum(bsxfun(@ge,x(:),edges(:)'),2);
 
 % take care of values that fall outside the bins.
 bins(bins < 1) = nan;
 bins(bins >= length(edges)) = nan;
+
+% optionally make sure nothing was excluded
+if checks && any(isnan(bins))
+    error('dstauffman:BadDiscretization', 'Some values fell outside the bins.');
+end
