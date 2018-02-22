@@ -11,7 +11,8 @@ if ischar(text)
     fprintf(fid, '%s', text);
 else
     % if cell or string array, then write line by line
-    for i = 1:length(text)
+    for i = 1:length(text)-1
         fprintf(fid, '%s\n', text{i});
     end
+    fprintf(fid, '%s', text{end});
 end
