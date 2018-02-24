@@ -12,7 +12,7 @@ function [out] = make_conclusion(use_mini)
 % Prototype:
 %     out = make_conclusion();
 %     disp(out)
-%     % gives: "        \\bottomrule"    "    \\end{tabular}"    "\\end{table}"    ""
+%     % gives: "        \bottomrule"    "    \end{tabular}"    "\end{table}"    ""
 %
 % Change Log
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
@@ -29,7 +29,7 @@ end
 
 % create output
 if ~use_mini
-    out = string({'        \\bottomrule', '    \\end{tabular}', '\\end{table}', ''});
+    out = string({'        \bottomrule'; '    \end{tabular}'; '\end{table}'; ''});
 else
-    out = string({'            \\bottomrule', '        \\end{tabular}', '    \\end{minipage}', '\\end{table}', ''});
+    out = string({'            \bottomrule'; '        \end{tabular}'; '    \end{minipage}'; '\end{table}'; ''});
 end
