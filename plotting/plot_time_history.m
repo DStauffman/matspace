@@ -292,7 +292,8 @@ end
 
 % turn on grid/legend
 grid on;
-legend('show');
+lg = legend('show');
+set(lg, 'Location', 'best');
 
 % create second Y axis
 if ~isnan(second_y_scale) && second_y_scale ~= 0
@@ -325,10 +326,11 @@ if comp_mode == modes.nondeg
 
     % turn on grid/legend
     if show_rms
-        legend(p5, [description,' Difference (RMS: ',num2str(nondeg_rms,leg_format),')']);
+        lg = legend(p5, [description,' Difference (RMS: ',num2str(nondeg_rms,leg_format),')']);
     else
-        legend(p5, description);
+        lg = legend(p5, description);
     end
+    set(lg, 'Location', 'best');
     grid on;
 
     % plot RMS lines
