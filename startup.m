@@ -21,9 +21,10 @@ end
 % system_dependent('DirChangeHandleWarn','Never');
 
 %% Turn off expected warnings
-% warning('off','MATLAB:UIW_DOSUNC');
-% warning('off','MATLAB:dispatcher:nameConflict');
-% warning('off','MATLAB:dispatcher:pathWarning');
+% warning('off', 'MATLAB:UIW_DOSUNC');
+% warning('off', 'MATLAB:dispatcher:nameConflict');
+% warning('off', 'MATLAB:dispatcher:pathWarning');
+% warning('off', 'MATLAB:ClassInstanceExists');
 
 %% Add folders to path (ones added last have higher precidence)
 addpath(fullfile(root_matlab, 'MATLAB'));
