@@ -179,7 +179,7 @@ if comp_mode ~= modes.multi
         plot(ax1, time1, scale*data1, 'b.-', 'DisplayName', this_name);
     else
         % plot different cycles
-        p1 = plot(ax1, time1, scale*data1, '-', 'Color', [0.7 0.7 0.7]);
+        p1 = plot(ax1, time1, scale*data1, '-', 'Color', [0.7 0.7 0.8]);
         indiv_group = hggroup('DisplayName', [name1, 'Individual Runs']);
         set(p1, 'Parent', indiv_group);
         set(get(get(indiv_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
@@ -229,13 +229,13 @@ if comp_mode == modes.nondeg
         end
         plot(ax1, time2, scale*data2, '.-', 'Color', [0 0.8 0], 'DisplayName', this_name);
     else
-        p1 = plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.7 0.7]);
+        p1 = plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.8 0.7]);
         indiv_group = hggroup('DisplayName', [name2, 'Individual Runs']);
         set(p1, 'Parent', indiv_group);
         set(get(get(indiv_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
         temp_mean = scale*mean(data2, data_dim, 'omitnan');
         if ~isnan(plot_sigmas) && plot_sigmas > 0
-            temp_std = scale*std(data2, std_flag, data_dim, 'omitnan');
+            temp_std = std(data2, std_flag, data_dim, 'omitnan');
             p2 = plot(ax1, time2, temp_mean + scale*temp_std, 'g.-');
             p3 = plot(ax1, time2, temp_mean - scale*temp_std, 'g.-');
             sigmas_group = hggroup('DisplayName', [name2, '\pm', num2str(plot_sigmas), '\sigma']);
