@@ -18,56 +18,71 @@ function status = restoredefaultpath() %#ok<*MCAP>
 % Change Log:
 %     1.  Written by David C. Stauffer circa 2006.
 
-% warnings to disable
+%% Turn off expected warnings
 warning('off','MATLAB:dispatcher:nameConflict');
 warning('off','MATLAB:dispatcher:pathWarning');
 
-% hard-coded exceptions for PCOR8
-if ispc && strcmp(getenv('computername'), 'PCOR8')
-    is_pcor = true;
-    drive_letter = 'D:';
-else
-    is_pcor = false;
-    drive_letter = getenv('homedrive');
-end
-
-% run built-in version
-switch version('-release')
-    case '2015b'
-        run([drive_letter, '\Program Files\MATLAB\R2015b\toolbox\local\restoredefaultpath.m']);
-    case '2016a'
-        run([drive_letter, '\Program Files\MATLAB\R2016a\toolbox\local\restoredefaultpath.m']);
-    case '2016b'
-        run([drive_letter, '\Program Files\MATLAB\R2016b\toolbox\local\restoredefaultpath.m']);
-    otherwise
-        error('dstauffman:utils:RestorePathVersions', ...
-            'Unsupported MATLAB version, update to personal restoredefaultpath is needed.');
-end
-
-% get directory information
+%% get directory information
+is_LM = strcmp(getenv('COMPUTERNAME'), 'SVLWA80620RW') || strcmp(getenv('USERNAME'), 'e182918');
+is_PCOR8 = strcmp(getenv('COMPUTERNAME'), 'PCOR8');
 if ispc
-    root = fullfile([drive_letter, getenv('homepath')], 'Documents');
+    if is_LM
+        root = 'C:'; % Don't use getenv('HOMEDRIVE') because LM maps it to a network location instead
+        docs = 'C:\Users\e182918\Documents';
+        mat_ = 'C:\Users\e182918\Documents\MATLAB';
+    else
+        if is_PCOR8
+            root = 'D:\Dcstauff';
+            docs = root;
+            mat_ = 'C:\Users\dcstauff.CHPPCOR\Documents\MATLAB';
+        else
+            % Nominal case
+            root = getenv('HOMEDRIVE');
+            docs = fullfile([root, getenv('HOMEPATH')], 'Documents');
+            mat_ = fullfile(docs, 'MATLAB');
+        end
+    end 
 elseif isunix
-    root = fullfile(filesep, 'home', getenv('user'), 'Documents'); % TODO: update at home on Unix system
+    root = getenv('HOME');
+    docs = fullfile(root, 'Documents');
+    mat_ = fullfile(docs, 'MATLAB');
 end
+git_ = fullfile(docs, 'GitHub');
+proj = fullfile(root, 'Workspaces', 'smallsat', 'CoreSimExternals', 'ProjectLoader');
 
-% add user customized paths
-addpath(fullfile(root, 'MATLAB'));
-disp('PATHSET:')
-disp(['    ''', fullfile(root, 'MATLAB'),'''']);
-% DStauffman Matlab library
-if is_pcor
-    run('D:\Dcstauff\GitHub\matlab\pathset.m');
+%% run built-in version
+built_in_restore = fullfile(matlabroot, 'toolbox', 'local', 'restoredefaultpath.m');
+if exist(built_in_restore, 'file')
+    disp('RESTORING default paths.');
+    run(built_in_restore);
 else
-    run(fullfile(root, 'GitHub', 'matlab', 'pathset.m'));
+    error('dstauffman:utils:RestorePathLocation', ...
+        'Unsupported MATLAB version, could not find built-in restoredefaultpath at "%s".', ...
+        built_in_restore);
 end
 
-% output status
+%% Add folders to path (ones added last have higher precidence)
+addpath(mat_);
+disp('PATHSET:')
+disp(['    ''', mat_,'''']);
+% DStauffman Matlab library
+run(fullfile(git_, 'matlab', 'pathset.m'));
+if is_LM
+    % Add Project Loader
+    addpath(proj);
+    disp('PATHSET:')
+    disp(['    ''', proj,'''']);
+else
+    % HESAT
+    pathset(fullfile(git_, 'hesat', 'code'));
+end
+
+%% output status
 if nargout == 1
     status = RESTOREDEFAULTPATH_EXECUTED;
 end
 
-% display results
+%% display results
 if RESTOREDEFAULTPATH_EXECUTED
     disp('MATLAB default paths restored.')
 else
