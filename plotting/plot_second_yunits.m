@@ -19,7 +19,7 @@ function [] = plot_second_yunits(ax, ylab, multiplier)
 %     ax  = axes;
 %     plot(ax, 0, 0);
 %     ylabel('Units');
-%     plot_second_yunits(fig, ax, 'deci-Units', 100);
+%     plot_second_yunits(ax, 'deci-Units', 100);
 %     grid on;
 %
 %     % test interactive pan and zoom for full functionality
@@ -31,7 +31,7 @@ function [] = plot_second_yunits(ax, ylab, multiplier)
 %     plot_time_history
 %
 % Change Log:
-%     1.  Written by David Stauffer Stauffer in Aug 2011.
+%     1.  Written by David C. Stauffer in Aug 2011.
 %     2.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
 %     3.  Re-written by David C. Stauffer in December 2017 to use new yyaxis built-in.
 

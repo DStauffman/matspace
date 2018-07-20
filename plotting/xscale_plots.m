@@ -119,7 +119,7 @@ end
 ixs = strfind(xunit, oldunit);
 arr = cellfun(@(x) ~isempty(x),ixs);
 if ~all(arr)
-    warning('dstauffman:YScaleLabel', 'invalid ''xlabel'' property ''string'' exists.');
+    warning('dstauffman:XScaleLabel', 'invalid ''xlabel'' property ''string'' exists.');
     return
 end
 
@@ -161,7 +161,7 @@ for hfig = figs
             set(xunt, 'string', newstr);
             % rescale established xaxis extents
             if strcmp(get(haxs(a), 'xlimmode'), 'manual')
-                set(haxs(a), 'xlim', [min(min(xdat_scaled)) ,max(max(xdat_scaled))]);
+                set(haxs(a), 'xlim', [min(min(xdat_scaled)), max(max(xdat_scaled))]);
             end
         end
     end
