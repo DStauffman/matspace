@@ -26,7 +26,6 @@ function [date_utc] = gps_to_utc(week, time, gps_to_utc_offset)
 %
 % Notes:
 %     1.  GPS week zero = Jan 06, 1980 at midnight.
-%     2.  The GPS leap second offset as of Jan 2017 is 18 seconds.
 %
 % Reference:
 %     Recent Leap Seconds:
@@ -42,6 +41,8 @@ function [date_utc] = gps_to_utc(week, time, gps_to_utc_offset)
 %     2.  Updated by David Stauffer in Apr 2011 to include leap seconds since J2000.
 %     3.  Updated by David C. Stauffer to be current through 2017, and incorporated into DStauffman
 %         library.
+%     4.  Updated by David C. Stauffer in July 2018, based on bug found by Chinh Tran to add leap
+%         second at GPS midnight rather than UTC midnight.
 
 % hard-coded values
 date_zero     = [1980 01 06 00 00 00];
@@ -58,22 +59,26 @@ end
 
 % check for optional inputs
 switch nargin
-    % note 9492 = datenum([2006 1 1 0 0 0]) - datenum(date_zero)
     % TODO: make a loop version of this
     case 2
-        % starting for current time (2015+)
+        % offset starting from Jan 1, 2017
         gps_to_utc_offset    = -18*ones(size(week));
         days_since_date_zero = week*days_per_week + time/one_day;
-        % GPS offset for J2000 - 1 Jan 2006
-        gps_to_utc_offset(days_since_date_zero <  9492) = -13;
+        % GPS offset for 1 Jan 1999 to 1 Jan 2006
+        % Note: 9492 = datenum([2006 1 1 0 0 0]) - datenum(date_zero)
+        gps_to_utc_offset(days_since_date_zero <  9492 + 13/one_day) = -13;
         % GPS offset for 1 Jan 2006 to 1 Jan 2009
-        gps_to_utc_offset(days_since_date_zero < 10588) = -14;
+        % Note: 10588 = datenum([2009 1 1 0 0 0]) - datenum(date_zero)
+        gps_to_utc_offset(days_since_date_zero < 10588 + 14/one_day) = -14;
         % GPS offset for 1 Jan 2009 to 1 Jul 2012
-        gps_to_utc_offset(days_since_date_zero < 11865) = -15;
+        % Note: 11865 = datenum([2012 7 1 0 0 0]) - datenum(date_zero)
+        gps_to_utc_offset(days_since_date_zero < 11865 + 15/one_day) = -15;
         % GPS offset for 1 Jul 2012 to 1 Jul 2015
-        gps_to_utc_offset(days_since_date_zero < 12960) = -16;
+        % Note: 12960 = datenum([2015 7 1 0 0 0]) - datenum(date_zero)
+        gps_to_utc_offset(days_since_date_zero < 12960 + 16/one_day) = -16;
         % GPS offset for 1 Jul 2015 to 1 Jan 2017
-        gps_to_utc_offset(days_since_date_zero < 13510) = -17;
+        % Note: 13510 = datenum([2017 1 1 0 0 0]) - datenum(date_zero)
+        gps_to_utc_offset(days_since_date_zero < 13510 + 17/one_day) = -17;
     case 3
         % nop
     otherwise
