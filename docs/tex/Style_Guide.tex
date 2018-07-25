@@ -1,0 +1,184 @@
+\documentclass[12pt]{article}
+
+% Packages
+\usepackage{kpfonts} % or \usepackage{lmodern} for different font
+\usepackage{courier} % for better monospaced fonts when desired
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{grffile}
+\graphicspath{{images/}{../images/}}
+
+\usepackage[procnames]{listings}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage[margin=1in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage{float}
+
+\usepackage[all]{nowidow}
+
+\usepackage{vhistory}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tocloft}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,external}
+% \tikzexternalize[prefix=images/] % activate external Tikz images % WTF doesn't this work!!!
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.12}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{chngcntr}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\counterwithin{equation}{section}
+
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+    {-2.5ex\@plus -1ex \@minus -.25ex}%
+    {1.25ex \@plus .25ex}%
+    {\normalfont\normalsize\bfseries}}
+\makeatother
+\setcounter{secnumdepth}{4} % how many sectioning levels to assign numbers to
+\setcounter{tocdepth}{4}    % how many sectioning levels to show in ToC
+
+\usepackage[american]{babel}
+\usepackage{csquotes}
+\usepackage[backend=biber,
+    doi=true,
+    natbib=true,
+    sorting=none,
+    style=numeric,]{biblatex}
+\addbibresource{../References.bib}
+\DeclareLanguageMapping{american}{american-apa}
+
+\usepackage[]{hyperref}
+\hypersetup{colorlinks=true,allcolors=blue}
+
+% \usepackage[margins]{../trackchanges}
+% \usepackage[finalold]{../trackchanges}
+% \usepackage[finalnew]{../trackchanges} 
+% \addeditor{DCS}
+
+% Reset some useful definitions
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+\setlength{\tabcolsep}{.2em}
+
+% Definitions for Matlab code
+\definecolor{MatlabCode}{rgb}{0,0,0}
+\definecolor{MatlabComment}{rgb}{0,0.8,0}
+\definecolor{MatlabReserved}{rgb}{0,0,1}
+\definecolor{MatlabString}{rgb}{0.8,0,0.2}
+\definecolor{MatlabGlobals}{rgb}{0,0,0.8}
+\definecolor{MatlabBackground}{rgb}{0.98,0.98,0.98}
+
+% Define PlainText and Python listings
+\lstnewenvironment{PlainText}
+    {\lstset{language=TeX,
+        basicstyle=\ttfamily\footnotesize,
+        upquote=true,
+        linewidth=6.5in,
+        frame=none, % frame=single
+        }
+    }
+{}
+
+\lstnewenvironment{Matlab}[1][]{
+    \lstset{
+        %numbers=left,
+        %numberstyle=\footnotesize,
+        %numbersep=1em,
+        framexleftmargin=4pt,
+        framextopmargin=4pt,
+        framexbottommargin=4pt,
+        showspaces=false,
+        showtabs=false,
+        showstringspaces=false,
+        frame=single,
+        framerule=0pt,
+        %rulecolor=\color{MatlabBackground},
+        tabsize=4,
+        % Basic
+        basicstyle=\ttfamily\scriptsize,
+        backgroundcolor=\color{MatlabBackground},
+        language=Matlab,
+        upquote=true,
+        % Comments
+        commentstyle=\color{MatlabComment}\slshape,
+        % Strings
+        stringstyle=\color{MatlabString},
+        % Keywords
+        morekeywords={for, end, if, case, switch, break, return, continue, ...},
+        keywordstyle=\color{MatlabReserved}\bfseries,
+        % Additional Keywoards
+        morekeywords={persistent, global},
+        keywordstyle=\color{MatlabGlobals},
+        % additional keywords
+        linewidth=6.5in
+    }
+}{}
+
+% Custom commands
+\renewcommand{\UrlFont}{\ttfamily\small}
+\newcommand{\cfootnote}[1]{\footnote{\centering #1}}
+\renewcommand{\footnoterule}{%
+    \kern -3pt
+    \hrule width \textwidth height 1pt
+    \kern 2pt
+}
+
+
+% Document
+\begin{document}
+
+\title{DStauffman's MATLAB Style Guide}
+\author{David C. Stauffer}
+\date{June 25, 2018}
+\maketitle
+
+\begin{abstract}\label{Abstract}
+This document defines the style paradigms used by DStauffman when writing MATLAB code.  Sometimes justifications are given, othertimes simple statements are made without elaboration.  This guide is strongly inspired by PEP8 for Python.
+\end{abstract}
+
+\begin{versionhistory}
+    \vhEntry{--}{2018-06-25}{DCS}{Initial Release.}
+\end{versionhistory}
+\addcontentsline{toc}{section}{Revision History}
+
+\pagebreak
+\tableofcontents
+\addcontentsline{toc}{section}{Contents}
+
+\pagebreak
+\listoffigures
+\addcontentsline{toc}{section}{List of Figures}
+\listoftables
+\addcontentsline{toc}{section}{List of Tables}
+
+\pagebreak
+\section{Why a Style Guide}\label{h1:why_style_guide}
+There are many different ways to write code that does the same thing.  There are even many different ways of writing the same code that does the same thing.  Some of these ways are easier and cleaner to understand than others.  Although code is likely executed more often than it is read, it is almost always read much more often than it is written.  Thus writing code that is easy to read, in addition to be just being correct code, is important.  This style guide attempts to give some rules and guidelines that will allow you to write more readable code.
+
+This guide is strongly inspired by \href{https://www.python.org/dev/peps/pep-0008/}{PEP 8} in \href{https://www.python.org/}{Python}.  Many of the rules come straight out of that guide, so if you are familiar with it, then that is useful.  It also has a much larger support audience, so even if you are not coding in Python, I still recommend reading it.  Sometimes I depart from the PEP due to personal preference, and will usually call those out directly.  Some additional guidelines are specific to MATLAB instead of Python and thus are not covered in that guide.
+
+\section{About This Guide}\label{h2:about_guide}
+This document is available on GitHub at:
+\newline\url{https://github.com/DStauffman/matlab/docs/Style_Guide.pdf}
+
+\section{Code lay-out}
+
+\subsection{Indentation}
+Use 4 spaces per indentation level.
+
+\subsection{Spaces, Never Tabs}
+Tabs should never exist in a MATLAB m-file.  All indentation should be done with spaces.
+
+\subsection{Maximum Line Length}
+Limit all lines to a maximum of 100 characters.  If you have only one or two lines that are just a couple characters over this limit, and would otherwise be the only thing that is wrapped, then you can exceed the limit.
+
+\end{document}

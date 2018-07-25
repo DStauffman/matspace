@@ -22,8 +22,6 @@ $RECYCLE.BIN/
 # =========================
 
 # OSX
-# =========================
-
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -53,6 +51,32 @@ Temporary Items
 *.mexw64
 *.mexw32
 mex/make/codegen/*
+
+# =========================
+# LaTeX Files #
+# =========================
+docs/tex/**/*.aux
+docs/tex/**/*.bbl
+docs/tex/**/*.bcf
+docs/tex/**/*.blg
+docs/tex/**/*.dvi
+docs/tex/**/*.gz
+docs/tex/**/*.hst
+docs/tex/**/*.lof
+docs/tex/**/*.log
+docs/tex/**/*.lot
+docs/tex/**/*.out
+docs/tex/**/*.pdf
+docs/tex/**/*.run.xml
+docs/tex/**/*.toc
+docs/tex/**/*.tcp
+docs/tex/**/*.tps
+docs/tex/**/*.ver
+
+# beamer files
+docs/tex/**/*.nav
+docs/tex/**/*.snm
+docs/tex/**/*.vrb
 
 # =========================
 # Folder/Files #
