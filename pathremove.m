@@ -29,49 +29,32 @@ function pathremove(location)
 %     3.  Updated by David Stauffer in Dec 2009 to pass PGPR_1030 and fix bug for not removing root path.
 %     4.  Incorporated by David C. Stauffer into DStauffman library in November 2016.
 
-% use specified path, or path of function itself
+%% use specified path, or path of function itself
 switch nargin
     case 0
-        mloc     = mfilename('fullpath');
-        ix       = strfind(mloc,filesep);
-        location = mloc(1:ix(end)-1);
+        location = fileparts(mfilename('fullpath'));
     case 1
-        % remove a filesep at the end to make logic work correctly
-        if strcmp(location(end),filesep)
-            location = location(1:end-1);
-        end
+        % nop
     otherwise
         error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
-% find the established paths
-established = path;
-ix = strfind(established,pathsep);
-ix = [0,ix];
-cell_established = cell(length(ix)-1,1);
-for i = 1:length(ix)-1;
-    cell_established{i,1} = established(ix(i)+1:ix(i+1)-1);
-end
+%% find the established paths
+established = string(path).split(pathsep);
 
-% find the paths to remove
-remove = genpath(location);
-ix = strfind(remove,pathsep);
-ix = [0,ix];
+%% find the paths to remove
+folders = string(genpath(location)).split(pathsep);
+% remove any empty paths (usually caused by a trailing pathsep returned from genpath
+folders(strlength(folders) == 0) = [];
+% find those to actually remove
+remove = intersect(established, folders);
 
-% check if folders are on the path
-cell_remove = cell(length(ix)-1,1);
-for i = 1:length(ix)-1;
-    cell_remove{i,1} = remove(ix(i)+1:ix(i+1)-1);
-end
-
-% remove the folders and display results
-listed = NaN(length(cell_remove),1);
-for i = 1:length(cell_remove)
-    listed(i) = any(strcmp(cell_remove(i),cell_established));
-end
-ix = find(listed);
-if ~isempty(ix)
-    rmpath(cell_remove{ix});
+%% remove the folders and display results
+if ~isempty(remove)
+    % TODO: remove loop once R2018B+
+    for i = 1:length(remove)
+        rmpath(remove{i});
+    end
     disp('DESCOPED:');
-    disp(cell_remove(ix))
+    disp(remove);
 end

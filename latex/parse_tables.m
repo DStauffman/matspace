@@ -10,11 +10,13 @@ within = false;
 for ix = 1:length(text)
     this_line = text{ix};
     if ~within
+        % start of table
         if strcmp(this_line,'\begin{table}[H]')
             this_start = ix;
             within = true;
         end
     else
+        % label tag
         temp = strfind(this_line, '\label{tab:');
         if ~isempty(temp)
             table_end = strfind(this_line, '}');
@@ -22,8 +24,8 @@ for ix = 1:length(text)
             this_name = this_line(temp+length('\label{tab:'):table_end-1);
             continue
         end
-        temp = strfind(this_line, '\end{table}');
-        if ~isempty(temp)
+        % end of table
+        if contains(this_line, '\end{table}')
             this_final = ix;
             within = false;
             this_text = text(this_start:this_final);
