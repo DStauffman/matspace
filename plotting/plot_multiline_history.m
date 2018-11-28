@@ -46,6 +46,7 @@ p = inputParser;
 fun_is_opts = @(x) isa(x, 'Opts') || isempty(x);
 fun_is_time = @(x) isnumeric(x) && (isempty(x) || isvector(x));
 fun_is_cell_char = @(x) iscell(x) && all(cellfun(@ischar, x));
+fun_is_num_or_cell = @(x) isnumeric(x) || iscell(x);
 % set options
 addRequired(p, 'Time', fun_is_time);
 addRequired(p, 'Data', @isnumeric);
@@ -56,6 +57,7 @@ addParameter(p, 'Names', {}, fun_is_cell_char);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 addParameter(p, 'TruthName', 'Truth', @ischar);
+addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
 % do parse
 parse(p, time, data, varargin{:});
 % create some convenient aliases
@@ -63,6 +65,7 @@ type        = p.Results.Type;
 description = p.Results.Description;
 names       = p.Results.Names;
 truth_name  = p.Results.TruthName;
+second_y_scale = p.Results.SecondYScale;
 % create data channel aliases
 truth_time  = p.Results.TruthTime;
 truth_data  = p.Results.TruthData;
@@ -160,6 +163,18 @@ if ~isempty(h2)
     legend_names = [legend_names, truth_name];
 end
 legend(plot_handles, legend_names, 'interpreter', 'none');
+
+% create second Y axis
+if iscell(second_y_scale)
+    plot_second_yunits(ax, second_y_scale{1}, second_y_scale{2});
+elseif ~isnan(second_y_scale) && second_y_scale ~= 0
+    if strcmp(type, 'population')
+        new_y_label = 'Actual Population [#]';
+    else
+        new_y_label = '';
+    end
+    plot_second_yunits(ax, new_y_label, second_y_scale);
+end
 
 % plot RMS lines
 if show_rms
