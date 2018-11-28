@@ -84,16 +84,21 @@ end
 [scale, units] = get_scale_and_units(type);
 
 %% Process for comparisons and alias OPTS information
-% alias some OPTS information
-show_rms = OPTS.show_rms;
+% alias OPTS information
+show_rms   = OPTS.show_rms;
+time_units = OPTS.time_base;
+rms_xmin   = OPTS.rms_xmin;
+rms_xmax   = OPTS.rms_xmax;
+disp_xmin  = OPTS.disp_xmin;
+disp_xmax  = OPTS.disp_xmax;
 
 %% calculate RMS indices
 if show_rms
-    ix_rms_xmin = find(time >= OPTS.rms_xmin,1,'first');
+    ix_rms_xmin = find(time >= rms_xmin,1,'first');
     if isempty(ix_rms_xmin)
         ix_rms_xmin = 1;
     end
-    ix_rms_xmax = find(time <= OPTS.rms_xmax,1,'last');
+    ix_rms_xmax = find(time <= rms_xmax,1,'last');
     if isempty(ix_rms_xmax)
         ix_rms_xmax = length(time1);
     end
@@ -121,16 +126,16 @@ end
 
 % label plot
 title(get(fig_hand, 'name'), 'interpreter', 'none');
-xlabel('Time [year]');
+xlabel(['Time [',time_units,']']);
 ylabel([description,' [',units,']']);
 
 % set display limits
 xl = xlim;
-if isfinite(OPTS.disp_xmin)
-    xl(1) = max([xl(1), OPTS.disp_xmin]);
+if isfinite(disp_xmin)
+    xl(1) = max([xl(1), OP.disp_xmin]);
 end
-if isfinite(OPTS.disp_xmax)
-    xl(2) = min([xl(2), OPTS.disp_xmax]);
+if isfinite(disp_xmax)
+    xl(2) = min([xl(2), disp_xmax]);
 end
 xlim(xl);
 

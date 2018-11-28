@@ -96,6 +96,7 @@ end
 
 %% determine units based on type of data
 [scale, units] = get_scale_and_units(type);
+time_units = OPTS.time_base;
 
 %% Process for comparisons and alias OPTS information
 % check for multiple comparisons mode and alias some OPTS information
@@ -254,7 +255,7 @@ end
 
 % label plot
 title(get(fig_hand(1), 'name'), 'interpreter', 'none');
-xlabel('Time [year]');
+xlabel(['Time [',time_units,']']);
 ylabel([description,' [',units,']']);
 
 % set display limits
@@ -321,7 +322,7 @@ if comp_mode == modes.nondeg
     p5 = plot(ax2, nondeg_time, scale*nondeg_data, 'r.-');
 
     % label plot
-    xlabel('Time [year]');
+    xlabel(['Time [',time_units,']']);
     ylabel([description,' [',units,']']);
 
     % turn on grid/legend
@@ -362,8 +363,9 @@ setup_plots(fig_hand, OPTS, 'time');
 %% Subfunctions
 function [ix] = finde(x, n, direction)
 
-% FINDE  calls the built-in find function, but always returns a value.  This value is the first or
-%        last element of the array depending on the given direction.
+% FINDE  calls the built-in find function, but always returns a value when find would otherwise be
+%        empty.  This value is the first or last element of the array depending on the given
+%        direction.
 
 ix = find(x, n, direction);
 
@@ -374,7 +376,7 @@ if isempty(ix)
         case 'last'
             ix = length(x);
         otherwise
-            % Should be impossible to get here, as it should error in the find function call
+            % Should be impossible to get here, as it should have errored in the find function call
             error('dstauffman:UnexpectedDirection', 'Unexpected direction for find function: "%s"', direction);
     end
 end

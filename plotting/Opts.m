@@ -49,6 +49,7 @@ classdef Opts
         names,
         time_unit,
         vert_fact,
+        time_base,
     end
     
     methods
@@ -69,6 +70,7 @@ classdef Opts
             OPTS.names     = string(''); % just "" in R2017B, but doesn't work in R2016B
             OPTS.time_unit = '';
             OPTS.vert_fact = '';
+            OPTS.time_base = 'year'; % TODO: change default to seconds?
             
             % break out early if no fields in overrides to process
             switch nargin
