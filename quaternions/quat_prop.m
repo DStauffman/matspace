@@ -1,4 +1,4 @@
-function quat_new = quat_prop(quat, delta_ang) %#codegen
+function quat_new = quat_prop(quat, delta_ang, renorm) %#codegen
 
 % QUAT_PROP  approximate propagation of a quaternion using a small delta angle.
 %
@@ -28,6 +28,15 @@ function quat_new = quat_prop(quat, delta_ang) %#codegen
 %     3.  Updated by Tom Trankle in July 2011 for #eml support.
 %     4.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
 
+switch nargin
+    case 2
+        renorm = true;
+    case 3
+        % nop
+    otherwise
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+end
+
 % compute angle rate matrix
 W = [      0         delta_ang(3)   -delta_ang(2)   delta_ang(1);...
      -delta_ang(3)        0          delta_ang(1)   delta_ang(2);...
@@ -39,3 +48,11 @@ delta_quaternion = 0.5*W*quat;
 
 % propagate over delta
 quat_new = quat + delta_quaternion;
+if quat_new(4) < 0
+    quat_new = -quat_new;
+end
+
+% optionally renormalize
+if renorm
+    quat_new = quat_norm(quat_new);
+end

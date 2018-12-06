@@ -51,6 +51,7 @@ mag2 = sum(dv.^2,1);
 
 % take square root to get sin(theta/2)
 mag = realsqrt(mag2);
+assert(all(mag <= 1), 'Magnitudes should always be less than or equal to one.');
 
 % take inverse sine to get theta/2
 theta_over_2 = asin(mag);
