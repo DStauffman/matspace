@@ -35,42 +35,44 @@ classdef Opts
     
     properties
         case_name,
-        plot_type,
-        save_path,
+        date_zero,
         save_plot,
+        save_path,
+        plot_type,
         sub_plots,
         disp_xmin,
         disp_xmax,
         rms_xmin,
         rms_xmax,
-        colormap,
         show_rms,
         show_zero,
-        names,
+        time_base,
         time_unit,
         vert_fact,
-        time_base,
+        colormap,
+        names,
     end
     
     methods
         function OPTS = Opts(overrides)
             % store OPTS defaults
             OPTS.case_name = '';
-            OPTS.plot_type = 'png';
-            OPTS.save_path = pwd;
+            OPTS.date_zero = [];
             OPTS.save_plot = false;
+            OPTS.save_path = pwd;
+            OPTS.plot_type = 'png';
             OPTS.sub_plots = true;
             OPTS.disp_xmin = -inf;
             OPTS.disp_xmax = inf;
             OPTS.rms_xmin  = -inf;
             OPTS.rms_xmax  = inf;
-            OPTS.colormap  = '';
             OPTS.show_rms  = true;
             OPTS.show_zero = true;
-            OPTS.names     = string(''); % just "" in R2017B, but doesn't work in R2016B
-            OPTS.time_unit = '';
+            OPTS.time_base = 'sec'; % Nominally seconds or years, time when no scaling done
+            OPTS.time_unit = ''; % Time unit to display plots in, potentially scaling from the base
             OPTS.vert_fact = '';
-            OPTS.time_base = 'year'; % TODO: change default to seconds?
+            OPTS.colormap  = '';
+            OPTS.names     = string(''); % just "" in R2017B, but doesn't work in R2016B
             
             % break out early if no fields in overrides to process
             switch nargin

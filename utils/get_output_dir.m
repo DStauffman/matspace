@@ -18,4 +18,4 @@ function [output_dir] = get_output_dir()
 %     1.  Written by David C. Stauffer in December 2015 for inclusion in DStauffman MATLAB library.
 
 % keep the path name up to the second to last file separator
-output_dir   = fullfile(get_root_dir,'results',filesep);
+output_dir = fullfile(get_root_dir,'results',filesep);
