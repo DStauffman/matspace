@@ -44,6 +44,9 @@ else
     names = arrayfun(@(x) ['Series ', num2str(x)], 1:size(data,1), 'UniformOutput', false);
 end
 
+%% Process OPTS
+time_units = OPTS.time_base;
+
 %% hard-coded values
 this_title = [label, ' vs. Time'];
 scale      = 100;
@@ -66,7 +69,7 @@ color_order = hsv(length(b));
 for i = 1:length(b)
     set(b(i), 'DisplayName', names{i}, 'FaceColor', color_order(i,:));
 end
-xlabel('Time [year]');
+xlabel(['Time [',time_units,']']);
 ylabel([label, unit_text]);
 % set limits for data that sums to 100%
 if is_normalized
