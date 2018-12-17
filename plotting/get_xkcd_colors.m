@@ -25,6 +25,17 @@ function [colors] = get_xkcd_colors(filename)
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2018
 
+% optional inputs
+switch nargin
+    case 0
+        filename = fullfile(get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
+    case 1
+        % nop
+    otherwise
+        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+end
+
+% check for persistents to avoid loading from file again
 persistent colors_ from_file
 if ~isempty(colors_) && strcmp(filename, from_file)
     colors = colors_;
