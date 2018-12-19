@@ -7,7 +7,7 @@ function quat_new = quat_prop(quat, delta_ang, renorm) %#codegen
 %    delta_ang   :   (3x1) delta angles in x,y,z order  [radians]
 %
 % Output:
-%    quat_new    :   (4x1) propagated quaternion, not normalized [dimensionless]
+%    quat_new    :   (4x1) propagated quaternion, optionally renormalized [dimensionless]
 %
 % Prototype:
 %    quat      = [0;0;0;1];
@@ -27,6 +27,8 @@ function quat_new = quat_prop(quat, delta_ang, renorm) %#codegen
 %     2.  Updated by Matt Beck in June 2009.
 %     3.  Updated by Tom Trankle in July 2011 for #eml support.
 %     4.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     5.  Updated by David C. Stauffer in December 2018 to enforce positive scalar component and
+%         optionally renormalize.
 
 switch nargin
     case 2

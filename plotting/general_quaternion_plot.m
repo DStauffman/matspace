@@ -128,7 +128,7 @@ if have_quat_one && have_quat_two
         ax2 = subplot(2,1,2);
         f2 = [];
     else
-        f2  = figure('description',[description,' Difference'],'DefaultAxesColorOrder',colororder3,'Visible',fig_visible);
+        f2  = figure('name',[description,' Difference'],'DefaultAxesColorOrder',colororder3,'Visible',fig_visible);
         ax2 = axes;
     end
     % plot data

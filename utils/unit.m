@@ -14,7 +14,7 @@ function [y] = unit(x, dim)
 %     y = unit(x, 2);
 %
 % See Also:
-%     rms
+%     rms, vecnorm
 %
 % Change Log:
 %     1.  Added to the DStauffman MATLAB library in December 2015.

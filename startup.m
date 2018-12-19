@@ -53,7 +53,7 @@ if is_LM
     % Add Project Loader
     addpath(proj);
     disp('PATHSET:')
-    disp(['    ''', proj,'''']);
+    disp(['    ''', proj, '''']);
 else
     % HESAT
     pathset(fullfile(git_, 'hesat', 'code'));
