@@ -1,6 +1,6 @@
-function [fig_hand] = plot_multiline_history(time, data, varargin)
+function [fig_hand] = plot_time_history(time, data, varargin)
 
-% PLOT_MULTILINE_HISTORY  plots multiple metrics over time.
+% PLOT_TIME_HISTORY  plots multiple metrics over time.
 %
 %
 % Input:
@@ -22,7 +22,7 @@ function [fig_hand] = plot_multiline_history(time, data, varargin)
 % Prototype:
 %     time     = 1:10;
 %     data     = rand(5,length(time));
-%     fig_hand = plot_multiline_history(time, data, [], 'Description', 'Random Data');
+%     fig_hand = plot_time_history(time, data, [], 'Description', 'Random Data');
 %
 %     % clean up
 %     close(fig_hand);

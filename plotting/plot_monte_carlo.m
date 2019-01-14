@@ -1,6 +1,6 @@
-function [fig_hand] = plot_time_history(time1, data1, varargin)
+function [fig_hand] = plot_monte_carlo(time1, data1, varargin)
 
-% PLOT_TIME_HISTORY  acts as a convenient wrapper to plotting a time history of some data.
+% PLOT_MONTE_CARLO  acts as a convenient wrapper to plotting a time history of some data.
 %
 % Summary:
 %     This function can take in one or two time histories, with an optional description and unit
@@ -28,7 +28,7 @@ function [fig_hand] = plot_time_history(time1, data1, varargin)
 % Prototype:
 %     time     = 1:10;
 %     data     = rand(5,length(time));
-%     fig_hand = plot_time_history(time, data, [], 'Description', 'Random Data');
+%     fig_hand = plot_monte_carlo(time, data, [], 'Description', 'Random Data');
 %
 %     % clean up
 %     close(fig_hand);
