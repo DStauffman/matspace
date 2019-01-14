@@ -214,5 +214,5 @@ if make_plot
     axis(lim);
     % add standard plotting features
     figmenu;
-    setup_plots(fig, OPTS, 'dist_no_yscale');
+    setup_plots(fig, OPTS, 'dist_no_y_scale');
 end
