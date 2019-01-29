@@ -51,7 +51,7 @@ remove = intersect(established, folders);
 
 %% remove the folders and display results
 if ~isempty(remove)
-    % TODO: remove loop once R2018B+
+    % TODO: once R2018B+: rmpath(folders.join(pathsep));
     for i = 1:length(remove)
         rmpath(remove{i});
     end
