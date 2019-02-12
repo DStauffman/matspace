@@ -45,7 +45,7 @@ p = inputParser;
 % create some validation functions
 fun_is_opts = @(x) isa(x, 'Opts') || isempty(x);
 fun_is_time = @(x) isnumeric(x) && (isempty(x) || isvector(x));
-fun_is_cell_char = @(x) iscell(x) && all(cellfun(@ischar, x));
+fun_is_cell_char_or_str = @(x) iscellstr(x) || isstring(x);
 fun_is_num_or_cell = @(x) isnumeric(x) || iscell(x);
 % set options
 addRequired(p, 'Time', fun_is_time);
@@ -53,7 +53,7 @@ addRequired(p, 'Data', @isnumeric);
 addOptional(p, 'OPTS', Opts, fun_is_opts);
 addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
-addParameter(p, 'Names', {}, fun_is_cell_char);
+addParameter(p, 'Names', {}, fun_is_cell_char_or_str);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 addParameter(p, 'TruthName', 'Truth', @ischar);
