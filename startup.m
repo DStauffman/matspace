@@ -39,10 +39,14 @@ if ~isempty(dcs_current)
     % Current project, either for work or home
     if exist(fullfile(dcs_current, 'pathset.m'), 'file')
         run(fullfile(dcs_current, 'pathset.m'));
-    elseif exist(dcs_current, 'folder')
-        addpath(genpath(dcs_current));
-        disp('PATHSET:');
-        disp('TODO: print the rest here.');
+    elseif exist(dcs_current, 'dir')
+        try
+            pathset(dcs_current);
+        catch
+            addpath(genpath(dcs_current));
+            disp('PATHSET:');
+            disp('    TODO: print folders that were added here.');
+        end
     end
 end
 if ~isempty(dcs_prj_ldr)
@@ -64,7 +68,11 @@ end
 
 %% Open primary working script
 if ~isempty(dcs_open)
-    edit(dcs_open);
+    if exist(dcs_open, 'file')
+        edit(dcs_open);
+    else
+        warning('dstauffman:startupOpen', 'Unable to open "%s".', dcs_open);
+    end
 end
 
 %% Clear temporary variables
