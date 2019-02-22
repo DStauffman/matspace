@@ -23,7 +23,10 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %
 % Output:
 %     fig_hand        : (1xN) list of figure handles [num]
-%     err             : (3x1) Quaternion differences expressed in Q1 frame [num]
+%     err             : (9x1) error outputs [num]
+%         01-03: Q1 Errors
+%         04-06: Q2 Errors
+%         07-09: (Q2 - Q1) Error Differences
 %
 % Prototype:
 %     description     = 'example';
@@ -49,9 +52,10 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 % Change Log:
 %     1.  Functionalized by David C. Stauffer in October 2011.
 %     2.  Incorporated by David C. Stauffer into DStauffman tools in December 2018.
+%     3.  Updated by David C. Stauffer in February 2019 to allow different time histories.
 
 %% calculations
-precision = 1e-12;
+precision = 0;
 [time_overlap, q1_diff_ix, q2_diff_ix] = intersect2(time_one, time_two, precision);
 rms_ix1  = time_one >= rms_xmin & time_one <= rms_xmax;
 rms_ix2  = time_two >= rms_xmin & time_two <= rms_xmax;
@@ -63,7 +67,7 @@ q2_rms   = nanrms(quat_two(:,rms_ix2),2);
 [nondeg_angle, nondeg_error] = quat_angle_diff(quat_one(:, q1_diff_ix), quat_two(:, q2_diff_ix));
 nondeg_rms = nanrms(nondeg_error(:, rms_ix3), 2);
 % output errors
-err = [q1_rms; q2_rms; nondeg_rms; nondeg_angle];
+err = [q1_rms; q2_rms; nondeg_rms];
 % get default plotting colors
 color_lists = get_color_lists();
 colororder3 = cell2mat(color_lists.vec_diff);
@@ -73,7 +77,8 @@ elements = {'X','Y','Z','S'};
 % names = {'qx','qy','qz','qs'};
 % TODO: make non-harded coded
 % unit conversion value
-rad2urad = 1e6;
+[leg_scale, prefix] = get_factors('micro');
+
 % determine if you have the quaternions
 have_quat_one = any(any(~isnan(quat_one)));
 have_quat_two = any(any(~isnan(quat_two)));
@@ -131,7 +136,7 @@ if have_quat_one && have_quat_two
         hold on;
         for i = 3:-1:1 % plot Z, Y, X so X is on top
             plot(ax2,time_overlap,nondeg_error(i,:),'^-','MarkerSize',4,'DisplayName',...
-                [elements{i},' (RMS: ',num2str(rad2urad*nondeg_rms(1),'%1.3f'),' \murad)']);
+                [elements{i},' (RMS: ',num2str(1/leg_scale*nondeg_rms(i),'%1.3f'),' ',prefix,'rad)']);
         end
         lg = legend('show','Location','North');
         % reorder to put X first in legend, but still on top of plot
@@ -142,7 +147,7 @@ if have_quat_one && have_quat_two
         %uistack(h(3),'bottom');
     else
         plot(ax2,time_overlap,nondeg_angle,'^-','MarkerSize',4,'DisplayName',...
-            ['Angle (RMS: ',num2str(rad2urad*nondeg_rms(1),'%1.3f'),' \murad)']);
+            ['Angle (RMS: ',num2str(1/leg_scale*norm(nondeg_rms),'%1.3f'),' ',prefix,'rad)']);
         legend('show','Location','North');
     end
     % format display of plot
