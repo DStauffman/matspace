@@ -34,7 +34,7 @@ color_lists.one       = {colors.red};
 color_lists.two       = {colors.red; colors.blue};
 color_lists.vec       = {colors.red; colors.green; colors.blue};
 color_lists.quat      = {colors.red; colors.green; colors.blue; colors.chocolate};
-color_lists.dbl_diff  = {colors.red; colors.blue; colors.fuchsia; colors.cyan};
-color_lists.vec_diff  = {colors.red; colors.green; colors.blue; colors.fuchsia; colors.lightgreen; colors.cyan};
-color_lists.quat_diff = {colors.red; colors.green; colors.blue; colors.chocolate; ...
-    colors.fuchsia; colors.lightgreen; colors.cyan; colors.brown};
+color_lists.dbl_diff  = {colors.fuchsia; colors.cyan; colors.red; colors.blue};
+color_lists.vec_diff  = {colors.fuchsia; colors.lightgreen; colors.cyan; colors.red; colors.green; colors.blue};
+color_lists.quat_diff = {colors.fuchsia; colors.lightgreen; colors.cyan; colors.brown;...
+    colors.red; colors.green; colors.blue; colors.chocolate};
