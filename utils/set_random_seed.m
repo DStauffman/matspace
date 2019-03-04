@@ -13,7 +13,7 @@ function [] = set_random_seed(is_repeatable,seed,num_cycles,cycle)
 %     cycle         : (scalar) number of the stream to be used for non-repeatable sequences [ndim]
 %
 % Output:
-%    None - effects any future random calls through the RandStream object interface.
+%    None - affects any future random calls through the RandStream object interface.
 %
 % Prototype:
 %     is_repeatable = false;
