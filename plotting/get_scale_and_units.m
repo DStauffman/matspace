@@ -15,7 +15,7 @@ function [scale, units] = get_scale_and_units(type)
 %     assert(strcmp(units, ''));
 %
 % See Also:
-%     plot_time_history, plot_multiline_history
+%     plot_monte_carlo, plot_time_history
 %
 % Change Log:
 %     1.  Functionalized by David C. Stauffer in September 2017.

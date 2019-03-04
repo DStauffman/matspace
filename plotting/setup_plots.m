@@ -75,6 +75,11 @@ end
 % ensure fig_hand is a row vector
 fig_hand = fig_hand(:)';
 
+%% Check valid forms
+if ~any(strcmp(form,{'time','dist','time_no_y_scale','dist_no_y_scale'}))
+    error('dstauffman:UnexpectedForm', 'Unexpected plot form of "%s".', form);
+end
+
 %% append case name to plots
 if ~isempty(OPTS.case_name)
     titleprefix(fig_hand,[OPTS.case_name,' - ']);

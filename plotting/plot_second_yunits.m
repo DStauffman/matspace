@@ -28,7 +28,7 @@ function [] = plot_second_yunits(ax, ylab, multiplier)
 %     close(fig);
 %
 % See Also:
-%     plot_time_history
+%     plot_monte_carlo
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in Aug 2011.

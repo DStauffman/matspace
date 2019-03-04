@@ -93,4 +93,4 @@ legend('show');
 figmenu;
 
 %% setup plots
-setup_plots(fig, OPTS, 'dist_no_yscale')
+setup_plots(fig, OPTS, 'dist_no_y_scale')
