@@ -4,6 +4,7 @@
 # known text extensions
 *.m text diff=matlab merge
 *.py text diff=python merge
+*.pyx text diff=python merge
 *.coveragerc text
 *.css text
 *.gitattributes text
@@ -23,15 +24,23 @@
 *.sh text eol=lf
 
 # known binary files to not modify
+*.dll binary
+*.doc binary
 *.docx binary
+*.fig binary
 *.hdf5 binary
 *.jpg binary
 *.mat binary
+*.mex binary
+*.mexw32 binary
+*.mexw64 binary
 *.pdf binary
 *.png binary
+*.ppt binary
 *.pptx binary
 *.pyc binary
 *.pyx binary
+*.xlx binary
 *.xlsx binary
 
 # files to ignore when creating zip file for download
