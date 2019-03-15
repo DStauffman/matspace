@@ -24,6 +24,7 @@
 
 # known binary files to not modify
 *.docx binary
+*.hdf5 binary
 *.jpg binary
 *.mat binary
 *.pdf binary
