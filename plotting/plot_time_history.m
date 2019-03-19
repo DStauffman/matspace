@@ -28,16 +28,12 @@ function [fig_hand] = plot_time_history(time, data, varargin)
 %     close(fig_hand);
 %
 % See Also:
-%     figmenu, setup_dir, plot_rms_lines
+%     figmenu, setup_dir, plot_rms_lines, general_difference_plot
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in September 2017.
-
-%% hard-coded values
-leg_format  = '%3.3f';
-colors      = [0 0 1; 0 0.8 0; 1 0 0; 0 0.8 0.8; 0.8 0 0.8; 0.8 0.8 0; 0 1 1; 1 0 1; ...
-    1 0.8 0; 0.375 0.375 0.5];
-truth_color = [0 0 0];
+%     2.  Updated by David C. Stauffer in March 2019 to be a wrapper to an even more generic
+%         function for plotting.
 
 %% Parse Inputs
 % create parser
@@ -54,8 +50,10 @@ addOptional(p, 'OPTS', Opts, fun_is_opts);
 addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'Names', {}, fun_is_cell_char_or_str);
+addParameter(p, 'TimeTwo', [], @isnumeric);
+addParameter(p, 'DataTwo', zeros(1,0), @isnumeric);
 addParameter(p, 'TruthTime', [], fun_is_time);
-addParameter(p, 'TruthData', [], @isnumeric);
+addParameter(p, 'TruthData', zeros(1,0), @isnumeric);
 addParameter(p, 'TruthName', 'Truth', @ischar);
 addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
 % do parse
@@ -64,9 +62,11 @@ parse(p, time, data, varargin{:});
 type        = p.Results.Type;
 description = p.Results.Description;
 names       = p.Results.Names;
-truth_name  = p.Results.TruthName;
 second_y_scale = p.Results.SecondYScale;
 % create data channel aliases
+time_two    = p.Results.TimeTwo;
+data_two    = p.Results.DataTwo;
+truth_name  = p.Results.TruthName;
 truth_time  = p.Results.TruthTime;
 truth_data  = p.Results.TruthData;
 
@@ -88,98 +88,34 @@ end
 
 %% Process for comparisons and alias OPTS information
 % alias OPTS information
-show_rms   = OPTS.show_rms;
-time_units = OPTS.time_base;
-rms_xmin   = OPTS.rms_xmin;
-rms_xmax   = OPTS.rms_xmax;
-disp_xmin  = OPTS.disp_xmin;
-disp_xmax  = OPTS.disp_xmax;
-
-%% calculate RMS indices
-if show_rms
-    ix_rms_xmin = find(time >= rms_xmin,1,'first');
-    if isempty(ix_rms_xmin)
-        ix_rms_xmin = 1;
-    end
-    ix_rms_xmax = find(time <= rms_xmax,1,'last');
-    if isempty(ix_rms_xmax)
-        ix_rms_xmax = length(time1);
-    end
+show_plot   = OPTS.show_plot;
+sub_plots   = OPTS.sub_plots;
+show_rms    = OPTS.show_rms;
+use_mean    = OPTS.use_mean;
+show_zero   = OPTS.show_zero;
+time_units  = OPTS.time_base;
+rms_xmin    = OPTS.rms_xmin;
+rms_xmax    = OPTS.rms_xmax;
+disp_xmin   = OPTS.disp_xmin;
+disp_xmax   = OPTS.disp_xmax;
+if ~isempty(OPTS.colormap)
+    colors1 = colormap(OPTS.colormap);
+else
+    colors1 = tab10();
 end
+colors2     = whitten(colors1);
 
 %% Plot data
-% create figure
-fig_hand = figure('name', [description,' vs. Time']);
-
-% set colororder
-set(fig_hand(1), 'DefaultAxesColorOrder', colors);
-
-% get axes
-ax = axes;
-
-% set hold on
-hold on;
-
-% plot data
-h1 = plot(ax, time, scale*data, '.-');
-% calculate RMS for legend
-if show_rms
-    rms_data = scale*nanrms(data(:,ix_rms_xmin:ix_rms_xmax), 2);
-end
-
-% label plot
-title(get(fig_hand, 'name'), 'interpreter', 'none');
-xlabel(['Time [',time_units,']']);
-ylabel([description,' [',units,']']);
-
-% set display limits
-xl = xlim;
-if isfinite(disp_xmin)
-    xl(1) = max([xl(1), OP.disp_xmin]);
-end
-if isfinite(disp_xmax)
-    xl(2) = min([xl(2), disp_xmax]);
-end
-xlim(xl);
-
-% optionally plot truth
-if ~isempty(truth_time) && ~isempty(truth_data) && ~all(all(isnan(truth_data)))
-    h2 = plot(truth_time, scale*truth_data, '.-', 'Color', truth_color, 'MarkerFaceColor', ...
-        truth_color, 'LineWidth', 2);
-else
-    h2 = [];
-end
-
-% turn on grid/legend
-grid on;
-plot_handles = [h1(:); h2(:)]';
-if show_rms
-    legend_names = cellfun(@(x,y) [x,' (RMS: ',num2str(y,leg_format),')'], names,...
-        num2cell(rms_data(:)'),'UniformOutput',false);
-else
-    legend_names = names;
-end
-if ~isempty(h2)
-    legend_names = [legend_names, truth_name];
-end
-legend(plot_handles, legend_names, 'interpreter', 'none');
-
-% create second Y axis
-if iscell(second_y_scale)
-    plot_second_yunits(ax, second_y_scale{1}, second_y_scale{2});
-elseif ~isnan(second_y_scale) && second_y_scale ~= 0
-    if strcmp(type, 'population')
-        new_y_label = 'Actual Population [#]';
-    else
-        new_y_label = '';
-    end
-    plot_second_yunits(ax, new_y_label, second_y_scale);
-end
-
-% plot RMS lines
-if show_rms
-    plot_rms_lines(time([ix_rms_xmin ix_rms_xmax]), ylim);
-end
+% calls lower level function
+num_labels      = length(names);
+rows            = modd(1:num_labels, size(colors1, 1));
+this_colororder = [colors1(rows,:); colors2(rows,:); colors1(rows,:)];
+fig_hand = general_difference_plot(description, time, time_two, scale*data, scale*data_two, ...
+    'Elements', names, 'Units', units, 'TimeUnits', time_units, ...
+    'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, 'DispXmin', disp_xmin, 'DispXmax', disp_xmax, ...
+    'FigVisible', show_plot, 'MakeSubplots', sub_plots, 'ColorOrder', this_colororder, ...
+    'UseMean', use_mean, 'PlotZero', show_zero, 'ShowRms', show_rms, 'SecondYScale', second_y_scale, ...
+    'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', scale*truth_data);
 
 % create figure controls
 figmenu;

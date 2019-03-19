@@ -1,6 +1,4 @@
-function [fig_hand,err] = general_difference_plot(description, time_one, time_two, data_one, data_two, ...
-    name_one, name_two, elements, units, leg_scale, start_date, rms_xmin, rms_xmax, fig_visible, ...
-    make_subplots, colororder, use_mean, plot_zero, show_rms)
+function [fig_hand,err] = general_difference_plot(description, time_one, time_two, data_one, data_two, varargin)
 
 % GENERAL_DIFFERENCE_PLOT  is a general difference comparsion plot for use in plot_los.
 %
@@ -13,20 +11,23 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %     time_two      : (1xN) time history for channel 2 [sec]
 %     data_one      : (MxN) data array [any]
 %     data_two      : (MxN) data array [any]
-%     name_one      : (row) name of data source 1 [char]
-%     name_two      : (row) name of data source 2 [char]
-%     elements      : {1xN} of (row) of names of M data elements
-%     units         : (row) name of units for plots [char]
-%     leg_scale     : (row) prefix for get_factors to use to scale RMS in legend [char]
-%     start_date    : (row) date of t(0), may be an empty string [char]
-%     rms_xmin      : (scalar) time for first point of RMS calculation [sec]
-%     rms_xmax      : (scalar) time for last point of RMS calculation [sec]
-%     fig_visible   : (row) setting value for whether figure is visible, from {'on','off'} [char]
-%     make_subplots : (scalar) true/false flag to use subplots [bool]
-%     colororder    : (3xN) color RGB triples for each channel of data [ndim]
-%     use_mean      : (scalar) true/false flag to use mean instead of rms in calculations [bool]
-%     plot_zero     : (scalar) true/false flag to always show zero on the vertical axis [bool]
-%     show_rms      : (scalar) true/false flag to show the RMS calculation in the legend [bool]
+%     varargin .... : (char, value) pairs for other options, from:
+%         'NameOne'      : (row) name of data source 1 [char]
+%         'NameTwo'      : (row) name of data source 2 [char]
+%         'Elements'     : {1xN} of (row) of names of M data elements
+%         'Units'        : (row) name of units for plots [char]
+%         'LegScale'     : (row) prefix for get_factors to use to scale RMS in legend [char]
+%         'StartDate'    : (row) date of t(0), may be an empty string [char]
+%         'RmsXmin'      : (scalar) time for first point of RMS calculation [sec]
+%         'RmsXmax'      : (scalar) time for last point of RMS calculation [sec]
+%         'DispXmin'     : (scalar) time for first point of display [sec]
+%         'DispMax'      : (scalar) time for last point of display [sec]
+%         'FigVisible'   : (row) setting value for whether figure is visible, from {'on','off'} [char]
+%         'MakeSubplots' : (scalar) true/false flag to use subplots [bool]
+%         'ColorOrder'   : (3xN) color RGB triples for each channel of data [ndim]
+%         'UseMean'      : (scalar) true/false flag to use mean instead of rms in calculations [bool]
+%         'PlotZero'     : (scalar) true/false flag to always show zero on the vertical axis [bool]
+%         'ShowRms'      : (scalar) true/false flag to show the RMS calculation in the legend [bool]
 %
 % Output:
 %     fig_hand      : (scalar or 1x2) list of figure handles [num]
@@ -49,7 +50,9 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %     start_date    = datestr(now);
 %     rms_xmin      = 1;
 %     rms_xmax      = 10;
-%     fig_visible   = 'on';
+%     disp_xmin     = -2;
+%     disp_xmax     = inf;
+%     fig_visible   = true;
 %     make_subplots = true;
 %     color_lists   = get_color_lists();
 %     colororder    = [cell2mat(color_lists.dbl_diff); cell2mat(color_lists.two)];
@@ -57,19 +60,79 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %     plot_zero     = false;
 %     show_rms      = true;
 %     [fig_hand, err] = general_difference_plot(description, time_one, time_two, data_one, data_two, ...
-%         name_one, name_two, elements, units, leg_scale, start_date, rms_xmin, rms_xmax, fig_visible, ...
-%         make_subplots, colororder, use_mean, plot_zero, show_rms);
+%         'NameOne', name_one, 'NameTwo', name_two, 'Elements', elements, 'Units', units, ...
+%         'LegendScale', leg_scale, 'StartDate', start_date, 'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, ...
+%         'FigVisible', fig_visible, 'MakeSubplots', make_subplots, 'ColorOrder', colororder, ...
+%         'UseMean', use_mean, 'PlotZero', plot_zero, 'ShowRms', show_rms, 'DispXmin', disp_xmin, ...
+%         'DispXmax', disp_xmax);
 %
 % See Also:
-%     TBD_wrapper
+%     plot_time_history
 %
 % Change Log:
 %     1.  Functionalized by David C. Stauffer in October 2011.
 %     2.  Incorporated by David C. Stauffer into DStauffman tools in February 2019.
 %     3.  Updated by David C. Stauffer in February 2019 to allow different time histories.
+%     4.  Updated by David C. Stauffer in March 2019 to use name-value pairs, and add options for
+%         truth histories, second y scales, and display limits.
+
+%% Hard-coded values
+leg_format  = '%1.3f';
+truth_color = [0 0 0];
 
 %% Parser
-% TODO: make most of the inputs optional, set defaults and use a parser.
+% Validation functions
+is_cellstr = @(x) isstring(x) || iscell(x);
+fun_is_num_or_cell = @(x) isnumeric(x) || iscell(x);
+% Argument parser
+p = inputParser;
+addParameter(p, 'NameOne','', @ischar);
+addParameter(p, 'NameTwo','', @ischar);
+addParameter(p, 'Elements',string(0), is_cellstr);
+addParameter(p, 'Units','', @ischar);
+addParameter(p, 'TimeUnits', 'sec', @ischar);
+addParameter(p, 'LegendScale','unity', @ischar);
+addParameter(p, 'StartDate','', @ischar);
+addParameter(p, 'RmsXmin',-inf, @isnumeric);
+addParameter(p, 'RmsXmax',inf, @isnumeric);
+addParameter(p, 'DispXmin',-inf, @isnumeric);
+addParameter(p, 'DispXmax',inf, @isnumeric);
+addParameter(p, 'FigVisible',true, @islogical);
+addParameter(p, 'MakeSubplots',true, @islogical);
+addParameter(p, 'ColorOrder','', @isnumeric);
+addParameter(p, 'UseMean',false, @islogical);
+addParameter(p, 'PlotZero',false, @islogical);
+addParameter(p, 'ShowRms',true, @islogical);
+addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
+addParameter(p, 'TruthName', string('Truth'), is_cellstr);
+addParameter(p, 'TruthTime', [], @isnumeric);
+addParameter(p, 'TruthData', [], @isnumeric);
+parse(p, varargin{:});
+name_one        = p.Results.NameOne;
+name_two        = p.Results.NameTwo;
+elements        = p.Results.Elements;
+units           = p.Results.Units;
+time_units      = p.Results.TimeUnits;
+leg_scale       = p.Results.LegendScale;
+start_date      = p.Results.StartDate;
+rms_xmin        = p.Results.RmsXmin;
+rms_xmax        = p.Results.RmsXmax;
+disp_xmin       = p.Results.DispXmin;
+disp_xmax       = p.Results.DispXmax;
+make_subplots   = p.Results.MakeSubplots;
+colororder      = p.Results.ColorOrder;
+use_mean        = p.Results.UseMean;
+plot_zero       = p.Results.PlotZero;
+show_rms        = p.Results.ShowRms;
+second_y_scale  = p.Results.SecondYScale;
+truth_name      = p.Results.TruthName;
+truth_time      = p.Results.TruthTime;
+truth_data      = p.Results.TruthData;
+if p.Results.FigVisible
+    fig_visible = 'on';
+else
+    fig_visible = 'off';
+end
 
 %% Calculations
 % find overlapping times
@@ -128,7 +191,7 @@ hold on;
 if have_data_one
     for i = 1:n
         if show_rms
-            this_name = [name_one,' ',elements{i},' (',func_name,': ',num2str(leg_conv*data1_func(i),'%1.3f'),' ',prefix,units,')'];
+            this_name = [name_one,' ',elements{i},' (',func_name,': ',num2str(leg_conv*data1_func(i),leg_format),' ',prefix,units,')'];
         else
             this_name = [name_one,' ',elements{i}];
         end
@@ -138,23 +201,48 @@ end
 if have_data_two
     for i = 1:n
         if show_rms
-            this_name = [name_two,' ',elements{i},' (',func_name,': ',num2str(leg_conv*data2_func(i),'%1.3f'),' ',prefix,units,')'];
+            this_name = [name_two,' ',elements{i},' (',func_name,': ',num2str(leg_conv*data2_func(i),leg_format),' ',prefix,units,')'];
         else
             this_name = [name_two,' ',elements{i}];
         end
         plot(ax1,time_two,data_two(i,:),'v:','MarkerSize',4,'Color',colororder(i+n,:),'DisplayName',this_name);
     end
 end
-% format display of plot
+% set X display limits
+xl = xlim;
+if isfinite(disp_xmin)
+    xl(1) = max([xl(1), disp_xmin]);
+end
+if isfinite(disp_xmax)
+    xl(2) = min([xl(2), disp_xmax]);
+end
+xlim(xl);
+% set Y display limits
 if plot_zero
     show_zero_ylim(ax1)
 end
-legend('show','Location','North');
-plot_rms_lines([rms_pts1,rms_pts2],ylim);
-title(description,'interpreter','none');
-xlabel(['Time [sec]',start_date]);
+% optionally plot truth
+if ~isempty(truth_time) && ~isempty(truth_data) && ~all(all(isnan(truth_data)))
+    plot(ax1, truth_time, truth_data, '.-', 'Color', truth_color, 'MarkerFaceColor', ...
+        truth_color, 'LineWidth', 2, 'DisplayName', truth_name);
+end
+% format display of plot
+legend('show', 'Location', 'North');
+title(description, 'interpreter', 'none');
+xlabel(['Time [',time_units,']',start_date]);
 ylabel([description,' [',units,']']);
 grid on;
+% create second Y axis
+if iscell(second_y_scale)
+    plot_second_yunits(ax1, second_y_scale{1}, second_y_scale{2});
+elseif ~isnan(second_y_scale) && second_y_scale ~= 0
+    new_y_label = ''; % TODO: keep this option or always make a cell?
+    plot_second_yunits(ax1, new_y_label, second_y_scale);
+end
+% plot RMS lines
+if show_rms
+    plot_rms_lines([rms_pts1,rms_pts2], ylim);
+end
 hold off;
 
 %% Difference plot
@@ -171,11 +259,11 @@ if have_data_one && have_data_two
     hold on;
     for i = 1:n
         if show_rms
-            this_name = [elements{i},' (',func_name,': ',num2str(leg_conv*nondeg_func(i),'%1.3f'),' ',prefix,units,')'];
+            this_name = [elements{i},' (',func_name,': ',num2str(leg_conv*nondeg_func(i),leg_format),' ',prefix,units,')'];
         else
             this_name = elements{i};
         end
-        plot(ax2,time_overlap,nondeg_error(i,:),'^-','MarkerSize',4,'Color',colororder(i+2*n,:),...
+        plot(ax2,time_overlap,nondeg_error(i,:),'.-','MarkerSize',4,'Color',colororder(i+2*n,:),...
             'DisplayName',this_name);
     end
     plot(ax2,time_one(d1_miss_ix),zeros(1,length(d1_miss_ix)),'kx','MarkerSize',8,'LineWidth',2,...
@@ -187,13 +275,22 @@ if have_data_one && have_data_two
     if plot_zero
         show_zero_ylim(ax2)
     end
-    plot_rms_lines([rms_pts1,rms_pts2],ylim);
     title([description,' Difference'],'interpreter','none');
-    xlabel(['Time [sec]',start_date]);
+    xlabel(['Time [',time_units,']',start_date]);
     ylabel([description,' Difference [',units,']']);
     grid on;
+    % create second Y axis
+    if iscell(second_y_scale)
+        plot_second_yunits(ax2, second_y_scale{1}, second_y_scale{2});
+    elseif ~isnan(second_y_scale) && second_y_scale ~= 0
+        new_y_label = ''; % TODO: keep this option or always make a cell?
+        plot_second_yunits(ax2, new_y_label, second_y_scale);
+    end
+    if show_rms
+        plot_rms_lines([rms_pts1,rms_pts2],ylim);
+    end
     hold off;
-    % line axes to zoom together
+    % line axes to zoom together (TODO: check that this uses old xmin limits)
     linkaxes([ax1 ax2],'x');
 else
     f2 = [];
