@@ -16,6 +16,7 @@ function compile_a_file(mex_dir,function_name,args_ex)
 %     (NONE)
 %
 % Prototype:
+%     import matspace.get_mex_dir
 %     mex_dir       = get_mex_dir();
 %     function_name = 'get_move_inverse';
 %     move          = 1;

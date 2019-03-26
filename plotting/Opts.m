@@ -37,6 +37,7 @@ classdef Opts
     %     1.  Written by David C. Stauffer in September 2013.
     %     2.  Added to DStauffman MATLAB library in December 2015.
     %     3.  Updated by David C. Stauffer in January 2018 to use string array for names.
+
     properties
         case_name,
         date_zero,
