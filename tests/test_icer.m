@@ -82,7 +82,7 @@ classdef test_icer < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyError(@() icer([], []), '');
             self.verifyError(@() icer([1 2 3], [4 5]), '');
         end
-        
+
         function test_all_dominated_by_last(self)
             cost = [10; 20; 30; 1];
             qaly = [1; 2; 3; 100];

@@ -8,7 +8,7 @@ classdef test_bins_to_str_ranges < matlab.unittest.TestCase %#ok<*PROP>
     %     Bad cut-off
     %     Single value ranges
     %     String passthrough
-    
+
     properties
         bins,
         strs
@@ -21,7 +21,7 @@ classdef test_bins_to_str_ranges < matlab.unittest.TestCase %#ok<*PROP>
             self.strs = string({'0-19', '20-39', '40-59', '60+'});
         end
     end
-    
+
     methods (Test)
         function test_nominal(self)
             out = bins_to_str_ranges(self.bins);
@@ -32,12 +32,12 @@ classdef test_bins_to_str_ranges < matlab.unittest.TestCase %#ok<*PROP>
             out = bins_to_str_ranges(self.bins, 0.1);
             self.verifyEqual(out, string({'0-19.9', '20-39.9', '40-59.9', '60+'}));
         end
-        
+
         function test_no_cutoff(self)
             out = bins_to_str_ranges(self.bins, 1, 1e6);
             self.verifyEqual(out, string({'0-19', '20-39', '40-59', '60-9999'}));
         end
-    
+
         function test_no_cutoff2(self)
             out = bins_to_str_ranges([-10, 10, 30]);
             self.verifyEqual(out, string({'-10-9', '10-29'}));

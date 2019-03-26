@@ -59,7 +59,7 @@ classdef Opts
         colormap,
         names,
     end
-    
+
     methods
         function OPTS = Opts(overrides)
             % store OPTS defaults
@@ -76,7 +76,7 @@ classdef Opts
             OPTS.rms_xmax  = inf;
             OPTS.show_rms  = true;
             OPTS.use_mean  = false;
-            OPTS.show_zero = true;
+            OPTS.show_zero = false;
             OPTS.quat_comp = false;
             OPTS.time_base = 'sec'; % Nominally seconds or years, time when no scaling done
             OPTS.time_unit = ''; % Time unit to display plots in, potentially scaling from the base

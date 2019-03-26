@@ -130,7 +130,7 @@ for i = 1:n
         otherwise
             error('dstauffman:QuatBadEulerSequence', 'Invalid axis rotation sequence: "%s".', seq_str);
     end
-    
+
     %% Compute angles
     if s1_c2 == 0 && c1_c2 == 0
         theta1 = 0;
@@ -150,7 +150,7 @@ for i = 1:n
     theta3 = atan2(s3,c3);
     c2     = c2_c3*c3 - minus_c2_s3*s3;
     theta2 = atan2(s2,c2);
-    
+
     %% Store output
     euler(:,i) = [theta1;theta2;theta3];
 end

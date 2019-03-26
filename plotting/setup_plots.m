@@ -90,7 +90,7 @@ if any(strcmp(form,{'time','time_no_y_scale'}))
     % if isfield(OPTS,'time_unit') % TODO: can't use isfield on class anymore
     %     xscale_plots(fig_hand,'[sec]',['[',OPTS.time_unit,']']);
     % end
-    
+
     %% Change x-axis extents
     % if isfield(OPTS,'disp_xmin') && isfield(OPTS,'disp_xmax')
     %     if isfield(OPTS,'time_unit')

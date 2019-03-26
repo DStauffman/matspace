@@ -1,17 +1,17 @@
 classdef test_make_preamble < matlab.unittest.TestCase %#ok<*PROP>
-    
+
     % Tests the make_preamble function with the following cases:
     %     Nominal
     %     Different size
     %     Minipage
     %     Short caption
-    
+
     properties
         caption,
         label,
         cols
     end
-    
+
     methods(TestMethodSetup)
         function initialize(self)
             self.caption = 'This caption';

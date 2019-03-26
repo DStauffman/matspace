@@ -35,7 +35,7 @@ classdef test_send2base < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(sent_vars, {'test'});
             self.verifyTrue(evalin('base', 'test == 123;'));
         end
-        
+
         function test_simple_2(self)
             test = self.test; name_one = self.name_one; name_two = self.name_two; %#ok<NASGU>
             sent_vars = send2base('name_two');
@@ -164,11 +164,11 @@ classdef test_send2base < matlab.unittest.TestCase %#ok<*PROP>
             sent_vars = send2base('*', '-exclude', '*');
             self.verifyEmpty(sent_vars);
         end
-        
+
         function test_bad_option(self)
             test = self.test; name_one = self.name_one; name_two = self.name_two; %#ok<NASGU>
             self.verifyError(@() send2base('Test', '-exclusions', 'name*'), 'dstauffman:BadSendVarsOption');
         end
-        
+
     end
 end

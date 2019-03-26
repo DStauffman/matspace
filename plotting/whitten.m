@@ -1,5 +1,5 @@
 function [new_color] = whitten(color, dt, white)
-    
+
 % WHITTEN  shifts an RGBA color towards white.
 %
 % Input:

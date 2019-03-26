@@ -46,7 +46,7 @@ if ~use_action
     is_unnamed = find(cellfun(@isempty,fignames));
     fignames(is_unnamed) = arrayfun(@(x) ['Hello Figure ',int2str(x)],is_unnamed,'UniformOutput',false);
     nfigs      = length(figlist);
-    
+
     %% delete existing NEXT, PREV, or FIGURES menus
     for i = 1:nfigs
         if ishandle(figlist(i))
@@ -71,7 +71,7 @@ if ~use_action
             end
         end
     end
-    
+
     %% add NEXT, PREV, and FIGURES menus
     for i = 1:nfigs
         f = figlist(i);
@@ -97,7 +97,7 @@ if ~use_action
         end
     end
 else
-    
+
     %% execute callbacks for >> and << menubuttons
     % get sorted list of figures
     figs = sortfigs(get(0,'Children'));

@@ -1,5 +1,5 @@
 classdef test_make_conclusion < matlab.unittest.TestCase %#ok<*PROP>
-    
+
     % Tests the make_conclusion function with the following cases:
     %     Nominal
     %     Minipage

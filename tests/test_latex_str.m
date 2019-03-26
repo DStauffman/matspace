@@ -1,5 +1,5 @@
 classdef test_latex_str < matlab.unittest.TestCase %#ok<*PROP>
-    
+
     % Tests the latex_str function with the following cases:
     %     TBD
 
@@ -7,14 +7,14 @@ classdef test_latex_str < matlab.unittest.TestCase %#ok<*PROP>
         value,
         value2
     end
-    
+
     methods (TestMethodSetup)
         function initialize(self)
             self.value = 101.666666666666;
             self.value2 = ar2mp(0.2); % 0.016528546178382508
         end
     end
-    
+
     methods (Test)
         function test_string1(self)
             value_str = latex_str('test');
