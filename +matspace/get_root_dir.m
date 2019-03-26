@@ -9,6 +9,7 @@ function [root_dir] = get_root_dir()
 %     root_dir : (str) root directory [char]
 %
 % Prototype:
+%     import matspace.get_root_dir
 %     root_dir = get_root_dir();
 %
 % See Also:
@@ -16,6 +17,7 @@ function [root_dir] = get_root_dir()
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2015 for inclusion in DStauffman MATLAB library.
+%     2.  Updated by David C. Stauffer in March 2019 to put path functions into a package.
 
 % get the fullpath name to this m file
 path_name = mfilename('fullpath');

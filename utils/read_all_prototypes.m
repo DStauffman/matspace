@@ -16,6 +16,7 @@ function [counter] = read_all_prototypes(folder,recursive,fid,counter)
 %     Also writes results to file
 %
 % Prototype:
+%     import matspace.get_root_dir
 %     folder    = get_root_dir();
 %     recursive = true;
 %     disp('This prototype rocks (and can otherwise get you in an infinite loop).');

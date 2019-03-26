@@ -38,6 +38,8 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     ylabel('something [rad]');
 %     figmenu;
 %
+%     import matspace.get_root_dir
+%
 %     OPTS           = Opts();
 %     OPTS.case_name = 'NULL';
 %     OPTS.disp_xmin = 100;

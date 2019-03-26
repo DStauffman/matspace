@@ -23,6 +23,9 @@ function [color_lists] = get_color_lists()
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2018.
 
+% Imports
+import matspace.get_root_dir
+
 % get the XKCD colors
 filename = fullfile(get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
 colors = get_xkcd_colors(filename);

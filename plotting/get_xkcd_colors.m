@@ -13,6 +13,7 @@ function [colors] = get_xkcd_colors(filename)
 %           ... Many more, about 949 total in xkcd_rgb_colors
 %
 % Prototype:
+%     import matspace.get_root_dir
 %     filename = fullfile(get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
 %     colors = get_xkcd_colors(filename);
 %
@@ -28,6 +29,7 @@ function [colors] = get_xkcd_colors(filename)
 % optional inputs
 switch nargin
     case 0
+        import matspace.get_root_dir
         filename = fullfile(get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
     case 1
         % nop

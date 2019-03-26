@@ -36,6 +36,7 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 %     ylabel('something');
 %     figmenu;
 %
+%     import matspace.get_root_dir
 %     folder = get_root_dir();
 %     storefig([f1 f2],folder,'png');
 %
