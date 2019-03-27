@@ -270,11 +270,11 @@ if have_data_one && have_data_two
         'DisplayName',[name_one,' Extra']);
     plot(ax2,time_two(d2_miss_ix),zeros(1,length(d2_miss_ix)),'go','MarkerSize',6,'LineWidth',2,...
         'DisplayName',[name_two,' Extra']);
-    legend('show','Location','North');
     % format display of plot
     if plot_zero
         show_zero_ylim(ax2)
     end
+    legend('show','Location','North');
     title([description,' Difference'],'interpreter','none');
     xlabel(['Time [',time_units,']',start_date]);
     ylabel([description,' Difference [',units,']']);

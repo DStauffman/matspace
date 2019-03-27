@@ -26,8 +26,10 @@ function figmenu(action)
 
 use_action = exist('action','var');
 if verLessThan('matlab','9.3')
-    text_field = 'Label'; % TODO: support for R2016B and earlier, R2017A (9.2) is untested
+    % support for R2016B and earlier, TODO: R2017A (9.2) is untested
+    text_field = 'Label';
 else
+    % support for R2017B and newer
     text_field = 'Text';
 end
 

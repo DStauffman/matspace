@@ -82,69 +82,79 @@ if ~any(strcmp(form,{'time','dist','time_no_y_scale','dist_no_y_scale'}))
     error('dstauffman:UnexpectedForm', 'Unexpected plot form of "%s".', form);
 end
 
+%% OPTS Aliases
+
+update_name     = ~isempty(OPTS.case_name);
+scale_xaxis     = strcmp(OPTS.time_base, 'sec') && ~strcmp(OPTS.time_unit, 'sec');
+change_xextents = ~isinf(OPTS.disp_xmin) || ~isinf(OPTS.disp_xmax);
+scale_yaxis     = any(strcmp(form, {'time', 'dist'}));
+save_plot       = OPTS.save_plot;
+have_save_path  = ~isempty(OPTS.save_path);
+show_link       = OPTS.show_link;
+move_plots      = ~strcmp(OPTS.plot_locs, 'default');
+plot_type       = OPTS.plot_type;
 %% append case name to plots
-if ~isempty(OPTS.case_name)
+if update_name
     titleprefix(fig_hand,[OPTS.case_name,' - ']);
 end
 
 if any(strcmp(form,{'time','time_no_y_scale'}))
     %% Change x-axis scale
-    % if isfield(OPTS,'time_unit') % TODO: can't use isfield on class anymore
-    %     xscale_plots(fig_hand,'[sec]',['[',OPTS.time_unit,']']);
-    % end
+    if scale_xaxis
+        xscale_plots(fig_hand,'[sec]',['[',OPTS.time_unit,']']);
+    end
 
     %% Change x-axis extents
-    % if isfield(OPTS,'disp_xmin') && isfield(OPTS,'disp_xmax')
-    %     if isfield(OPTS,'time_unit')
-    %         switch OPTS.time_unit
-    %             case 'epoch'
-    %                 mult = 1/400;
-    %             case 'sec'
-    %                 mult = 1;
-    %             case 'min'
-    %                 mult = 60;
-    %             case 'hr'
-    %                 mult = 3600;
-    %             case 'day'
-    %                 mult = 86400;
-    %             otherwise
-    %                 error('dstauffman:plotting:BadOptsTimeUnit', 'Unexpected value for "OPTS.time_unit".');
-    %         end
-    %     else
-    %         mult = 1;
-    %     end
-    %     xextents(fig_hand,OPTS.disp_xmin/mult,OPTS.disp_xmax/mult);
-    % end
-end
-
-%% Scale the y-axis
-if any(strcmp(form,{'time','dist'}))
-    if ~isempty(OPTS.vert_fact)
-        yscale_plots(fig_hand,'unity',OPTS.vert_fact);
+    if change_xextents
+        if scale_xaxis
+            switch OPTS.time_unit
+                case 'epoch'
+                    mult = 1/400;
+                case 'sec'
+                    mult = 1;
+                case 'min'
+                    mult = 60;
+                case 'hr'
+                    mult = 3600;
+                case 'day'
+                    mult = 86400;
+                otherwise
+                    error('dstauffman:plotting:BadOptsTimeUnit', 'Unexpected value for "OPTS.time_unit".');
+            end
+        else
+            mult = 1;
+        end
+        xextents(fig_hand,OPTS.disp_xmin/mult,OPTS.disp_xmax/mult);
     end
 end
 
+%% Scale the y-axis
+if scale_yaxis
+    yscale_plots(fig_hand,'unity',OPTS.vert_fact);
+end
+
 %% Label plot classification
-% % determine classification (hard-coded to false for now)
-% mloc     = mfilename('fullpath');
-% ix       = strfind(mloc,filesep);
-% location = mloc(1:ix(end));
-% if false
-%     classification = 'S';
-% else
-%     classification = 'U';
-% end
+% determine classification (hard-coded to false for now)
+mloc          = mfilename('fullpath');
+ix            = strfind(mloc,filesep);
+location      = mloc(1:ix(end));
+is_classified = false;
+if is_classified
+    classification = 'S';
+else
+    classification = 'U';
+end
 % plot_classification(fig_hand,classification);
 
 %% Save Plots
-if OPTS.save_plot
-    if ~isempty(OPTS.save_path)
+if save_plot
+    if have_save_path
         save_path = OPTS.save_path;
     else
         save_path = pwd;
     end
-    storefig(fig_hand, save_path, OPTS.plot_type);
-    if isfield(OPTS,'show_link') && OPTS.show_link && ~isempty(fig_hand)
+    storefig(fig_hand, save_path, plot_type);
+    if show_link && ~isempty(fig_hand)
         fprintf('Plots saved to: <a href="matlab: web(''%s'',''-browser'');">%s</a>\n',save_path,save_path);
     end
 end
