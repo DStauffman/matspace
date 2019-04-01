@@ -70,6 +70,10 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     4.  Updated by David C. Stauffer in March 2019 to use name-value pairs, and add options for
 %         truth histories, second y scales, and display limits.
 
+%% Hard-coded values
+leg_format  = '%1.3f';
+truth_color = [0 0 0];
+
 %% Parser
 % Validation functions
 is_cellstr = @(x) isstring(x) || iscell(x);
@@ -86,10 +90,10 @@ addParameter(p, 'DispXmin',-inf, @isnumeric);
 addParameter(p, 'DispXmax',inf, @isnumeric);
 addParameter(p, 'FigVisible',true, @islogical);
 addParameter(p, 'MakeSubplots',true, @islogical);
-addParameter(p, 'ColorOrder','', @isnumeric);
 addParameter(p, 'UseMean',false, @islogical);
 addParameter(p, 'PlotZero',false, @islogical);
 addParameter(p, 'ShowRms',true, @islogical);
+addParameter(p, 'LegendLoc','North', @ischar);
 addParameter(p, 'TruthName', "Truth", is_cellstr);
 addParameter(p, 'TruthTime', [], @isnumeric);
 addParameter(p, 'TruthData', [], @isnumeric);
@@ -107,6 +111,7 @@ make_subplots   = p.Results.MakeSubplots;
 use_mean        = p.Results.UseMean;
 plot_zero       = p.Results.PlotZero;
 show_rms        = p.Results.ShowRms;
+legend_loc      = p.Results.LegendLoc;
 truth_name      = p.Results.TruthName;
 truth_time      = p.Results.TruthTime;
 truth_data      = p.Results.TruthData;
