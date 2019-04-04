@@ -44,6 +44,7 @@ classdef Opts
         save_plot,
         save_path,
         show_plot,
+        show_link,
         plot_type,
         sub_plots,
         disp_xmin,
@@ -69,6 +70,7 @@ classdef Opts
             OPTS.save_plot = false;
             OPTS.save_path = pwd;
             OPTS.show_plot = true;
+            OPTS.show_link = false;
             OPTS.plot_type = 'png';
             OPTS.sub_plots = true;
             OPTS.disp_xmin = -inf;
@@ -81,7 +83,7 @@ classdef Opts
             OPTS.quat_comp = false;
             OPTS.time_base = 'sec'; % Nominally seconds or years, time when no scaling done
             OPTS.time_unit = ''; % Time unit to display plots in, potentially scaling from the base
-            OPTS.vert_fact = '';
+            OPTS.vert_fact = 'unity';
             OPTS.colormap  = '';
             OPTS.names     = string(''); % just "" in R2017B, but doesn't work in R2016B
 

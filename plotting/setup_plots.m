@@ -83,7 +83,6 @@ if ~any(strcmp(form,{'time','dist','time_no_y_scale','dist_no_y_scale'}))
 end
 
 %% OPTS Aliases
-
 update_name     = ~isempty(OPTS.case_name);
 scale_xaxis     = strcmp(OPTS.time_base, 'sec') && ~strcmp(OPTS.time_unit, 'sec');
 change_xextents = ~isinf(OPTS.disp_xmin) || ~isinf(OPTS.disp_xmax);
@@ -91,8 +90,8 @@ scale_yaxis     = any(strcmp(form, {'time', 'dist'}));
 save_plot       = OPTS.save_plot;
 have_save_path  = ~isempty(OPTS.save_path);
 show_link       = OPTS.show_link;
-move_plots      = ~strcmp(OPTS.plot_locs, 'default');
 plot_type       = OPTS.plot_type;
+
 %% append case name to plots
 if update_name
     titleprefix(fig_hand,[OPTS.case_name,' - ']);
