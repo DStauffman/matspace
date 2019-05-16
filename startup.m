@@ -22,6 +22,12 @@ dcs_open    = getenv('DCS_MATLAB_OPEN');
 % warning('off', 'MATLAB:dispatcher:pathWarning');
 % warning('off', 'MATLAB:ClassInstanceExists');
 
+%% Restore old style plot controls
+if ~verLessThan('matlab', '9.4')
+    set(groot, 'defaultFigureCreateFcn', @(fig, ~) addToolbarExplorationButtons(fig));
+    set(groot, 'defaultAxesCreateFcn', @(ax, ~) set(ax.Toolbar, 'Visible', 'off'));
+end
+
 %% Add folders to path (ones added last have higher precidence)
 if ~isempty(dcs_always)
     % folder to always have on my path
@@ -43,9 +49,10 @@ if ~isempty(dcs_current)
         try
             pathset(dcs_current);
         catch
-            addpath(genpath(dcs_current));
+            dcs_oldpath = addpath(genpath(dcs_current));
+            dcs_added = setxor(split(dcs_oldpath, pathsep), split(path, pathsep));
             disp('PATHSET:');
-            disp('    TODO: print folders that were added here.');
+            disp(dcs_added);
         end
     end
 end
