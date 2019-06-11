@@ -62,12 +62,18 @@ for i = 1:length(fig_hand)
         case 'U'
             color    = [0 0 0];
             text_str = 'UNCLASSIFIED';
+        case {'F', 'FOUO', 'U//FOUO'}
+            color    = [0 0 0];
+            text_str = 'UNCLASSIFIED//FOR OFFICIAL USE ONLY';
         case 'C'
             color    = [0 0 1];
             text_str = 'CONFIDENTIAL';
         case 'S'
             color    = [1 0 0];
             text_str = 'SECRET';
+        case {'NF', 'SNF', 'S//NF'}
+            color    = [1 0 0];
+            text_str = 'SECRET//NOFORN';
         case {'TS','T'}
             color    = [1 0.65 0];
             text_str = 'TOP SECRET';

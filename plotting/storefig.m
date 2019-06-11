@@ -96,14 +96,17 @@ if ispc
 else
     bad_chars = {'/'};
 end
-is_bad_chars = false;
+bad_names = false(size(fig_name));
 for i = 1:length(bad_chars)
-    if any(~cellfun(@isempty,strfind(fig_name,bad_chars{i})))
-        fig_name     = strrep(fig_name,bad_chars{i},'_');
-        is_bad_chars = true;
+    ix = ~cellfun(@isempty,strfind(fig_name,bad_chars{i}));
+    if any(ix)
+        fig_name  = strrep(fig_name,bad_chars{i},'_');
+        bad_names = bad_names & ix;
     end
 end
-if is_bad_chars
+if any(bad_names)
+    disp('Bad name(s):');
+    disp(fig_name(bad_names));
     warning('dstauffman:plotting:storeFigIllegalChars','There were illegal characters in the figure name.');
 end
 
