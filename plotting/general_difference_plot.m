@@ -189,23 +189,33 @@ end
 % plot data
 hold on;
 if have_data_one
+    if have_data_two
+        symbol = '^-';
+    else
+        symbol = '.-';
+    end
     for i = 1:n
         if show_rms
             this_name = [name_one,' ',elements{i},' (',func_name,': ',num2str(leg_conv*data1_func(i),leg_format),' ',prefix,units,')'];
         else
             this_name = [name_one,' ',elements{i}];
         end
-        plot(ax1,time_one,data_one(i,:),'^-','MarkerSize',4,'Color',colororder(i,:),'DisplayName',this_name);
+        plot(ax1,time_one,data_one(i,:),symbol,'MarkerSize',4,'Color',colororder(i,:),'DisplayName',this_name);
     end
 end
 if have_data_two
+    if have_data_one
+        symbol = 'v:';
+    else
+        symbol = '.-';
+    end
     for i = 1:n
         if show_rms
             this_name = [name_two,' ',elements{i},' (',func_name,': ',num2str(leg_conv*data2_func(i),leg_format),' ',prefix,units,')'];
         else
             this_name = [name_two,' ',elements{i}];
         end
-        plot(ax1,time_two,data_two(i,:),'v:','MarkerSize',4,'Color',colororder(i+n,:),'DisplayName',this_name);
+        plot(ax1,time_two,data_two(i,:),symbol,'MarkerSize',4,'Color',colororder(i+n,:),'DisplayName',this_name);
     end
 end
 % set X display limits

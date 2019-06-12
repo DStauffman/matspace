@@ -176,24 +176,34 @@ end
 % plot data
 hold on;
 if have_quat_one
+    if have_data_two
+        symbol = '^-';
+    else
+        symbol = '.-';
+    end
     for i = 1:4
         if show_rms
             this_name = [name_one,' ',elements{i},' (',func_name,': ',num2str(q1_func(i),'%1.3f'),')'];
         else
             this_name = [name_one,' ',elements{i}];
         end
-        plot(ax1,time_one,quat_one(i,:),'^-','MarkerSize',4,'Color',colororder8(i+4-4*have_quat_two,:),...
+        plot(ax1,time_one,quat_one(i,:),symbol,'MarkerSize',4,'Color',colororder8(i+4-4*have_quat_two,:),...
             'DisplayName',this_name);
     end
 end
 if have_quat_two
+    if have_data_one
+        symbol = 'v:';
+    else
+        symbol = '.-';
+    end
     for i = 1:4
         if show_rms
             this_name = [name_two,' ',elements{i},' (',func_name,': ',num2str(q2_func(i),'%1.3f'),')'];
         else
             this_name = [name_two,' ',elements{i}];
         end
-        plot(ax1,time_two,quat_two(i,:),'v:','MarkerSize',4,'Color',colororder8(i+4,:),...
+        plot(ax1,time_two,quat_two(i,:),symbol,'MarkerSize',4,'Color',colororder8(i+4,:),...
             'DisplayName',this_name);
     end
 end
