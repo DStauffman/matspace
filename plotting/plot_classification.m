@@ -1,4 +1,4 @@
-function [] = plot_classification(fig_hand, classification, test)
+function [] = plot_classification(fig_hand, classification, test, inside_axes)
 
 % PLOT_CLASSIFICATION  displays the classification in a box on each figure.
 %
@@ -10,6 +10,7 @@ function [] = plot_classification(fig_hand, classification, test)
 %     fig_hand       : (1xN) vector of figure handles [num]
 %     classification : (row) string specifying classification to use, from {'U','C','S','TS'} [char]
 %     test           : (true/false) flag to specify if this is a test or a real application [bool]
+%     inside_axes    : (true/false) flag to specify whether box is inside the axis, or on the figure [bool]
 %
 % Output:
 %     (NONE)
@@ -37,7 +38,10 @@ function [] = plot_classification(fig_hand, classification, test)
 switch nargin
     case 2
         test = false;
+        inside_axes = false;
     case 3
+        inside_axes = false;
+    case 4
         % nop
     otherwise
         error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
@@ -83,7 +87,14 @@ for i = 1:length(fig_hand)
     end
     w = 0.2;
     h = 0.1;
-    annotation(fig_hand(i),'textbox','Position',[pos(1)+pos(3)-w,pos(2),w,h],'String',text_str,...
-        'HorizontalAlignment','Center','VerticalAlignment','Middle',...
-        'FontSize',8,'FontWeight','Bold','Color',color,'EdgeColor',color,'LineWidth',2);
+    if inside_axes
+        annotation(fig_hand(i),'textbox','Position',[pos(1)+pos(3)-w,pos(2),w,h],'String',text_str,...
+            'HorizontalAlignment','Center','VerticalAlignment','Middle',...
+            'FontSize',8,'FontWeight','Bold','Color',color,'EdgeColor',color,'LineWidth',2);
+    else
+        annotation(fig_hand(i),'textbox','Position',[1-w,0,w,h],'String',text_str,...
+            'HorizontalAlignment','Center','VerticalAlignment','Middle',...
+            'FontSize',8,'FontWeight','Bold','Color',color,'EdgeColor',color,'LineWidth',2);
+        annotation(fig_hand(i),'rectangle','Position',[0,0,1,1],'Color','none','EdgeColor',color,'LineWidth',2);
+    end
 end
