@@ -52,6 +52,7 @@ this_title = [label, ' vs. Time'];
 scale      = 100;
 units      = '%';
 unit_text  = [' [', units, ']'];
+drop_zeros = true; % TODO: could make an OPTS option
 
 %% Calculations
 data_max = max(sum(data, 1));
@@ -65,9 +66,19 @@ end
 fig_hand = figure('name', this_title);
 ax = axes;
 b = bar(ax, time, scale*data', 1.0, 'stack', 'EdgeColor', 'none');
-color_order = hsv(length(b));
+if drop_zeros
+    used = arrayfun(@(x) any(x.YData ~= 0), b);
+else
+    used = true(size(b)); %#ok<UNRCH>
+end
+color_order = hsv(nnz(used));
+color_ix = cumsum(used);
 for i = 1:length(b)
-    set(b(i), 'DisplayName', names{i}, 'FaceColor', color_order(i,:));
+    if used(i)
+        set(b(i), 'DisplayName', names{i}, 'FaceColor', color_order(color_ix(i),:));
+    else
+        set(b(i), 'HandleVisibility', 'off');
+    end
 end
 xlabel(['Time [',time_units,']']);
 ylabel([label, unit_text]);
