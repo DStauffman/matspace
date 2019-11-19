@@ -45,6 +45,9 @@ if ~isempty(dcs_current)
     % Current project, either for work or home
     if exist(fullfile(dcs_current, 'pathset.m'), 'file')
         run(fullfile(dcs_current, 'pathset.m'));
+    elseif exist(fullfile(dcs_current, 'matlab_setup.m'), 'file')
+        disp(['Running matlab_setup.m in ', fullfile(dcs_current)]);
+        run(fullfile(dcs_current, 'matlab_setup.m'));
     elseif exist(dcs_current, 'dir')
         try
             pathset(dcs_current);
