@@ -90,6 +90,7 @@ scale_yaxis     = any(strcmp(form, {'time', 'dist'}));
 save_plot       = OPTS.save_plot;
 have_save_path  = ~isempty(OPTS.save_path);
 show_link       = OPTS.show_link;
+move_plots      = ~strcmp(OPTS.plot_locs, 'default');
 plot_type       = OPTS.plot_type;
 
 %% append case name to plots
@@ -144,6 +145,11 @@ else
     classification = 'U';
 end
 % plot_classification(fig_hand,classification);
+
+%% Move plots
+if move_plots
+    set_plot_location(fig_hand,OPTS.plot_locs);
+end
 
 %% Save Plots
 if save_plot

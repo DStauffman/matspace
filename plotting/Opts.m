@@ -47,6 +47,7 @@ classdef Opts
         show_link,
         plot_type,
         sub_plots,
+        plot_locs,
         disp_xmin,
         disp_xmax,
         rms_xmin,
@@ -73,6 +74,7 @@ classdef Opts
             OPTS.show_link = false;
             OPTS.plot_type = 'png';
             OPTS.sub_plots = true;
+            OPTS.plot_locs = 'default';
             OPTS.disp_xmin = -inf;
             OPTS.disp_xmax = inf;
             OPTS.rms_xmin  = -inf;
