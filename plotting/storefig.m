@@ -101,7 +101,7 @@ for i = 1:length(bad_chars)
     ix = ~cellfun(@isempty,strfind(fig_name,bad_chars{i}));
     if any(ix)
         fig_name  = strrep(fig_name,bad_chars{i},'_');
-        bad_names = bad_names & ix;
+        bad_names = bad_names | ix;
     end
 end
 if any(bad_names)

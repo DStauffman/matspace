@@ -36,11 +36,12 @@ end
 %% build lists
 if ~use_action
     % list of figures
-    figlist = sortfigs(findobj('type','figure'));
+    figlist = findobj('type','figure');
     if isempty(figlist)
         disp([mfilename,': no figs found.'])
         return
     end
+    figlist    = sortfigs(figlist);
     fignames   = get(figlist,'name');
     if ~iscell(fignames)
         fignames = {fignames};
