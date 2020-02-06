@@ -4,6 +4,9 @@ function [] = write_text_file(filename, text)
 
 % open file for writing
 fid = fopen(filename, 'wt');
+if fid == -1
+    error('dstauffman:BadFileOpen', 'Unable to open "%s" for writing.', filename);
+end
 
 % check or simple character array case
 if ischar(text)
