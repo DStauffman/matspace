@@ -18,6 +18,10 @@ function map = viridis(m)
 %     assert(all(size(map) == [64 3]));
 %     assert(min(min(map)) >= 0);
 %     assert(max(max(map)) <= 1);
+%     % plotting example:
+%     surf(peaks);
+%     colormap('viridis');
+%     colorbar;
 %
 % See Also:
 %     colormap, parula

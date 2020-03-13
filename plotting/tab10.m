@@ -10,6 +10,10 @@ function [colors] = tab10()
 %
 % Prototype:
 %     colors = tab10();
+%     % plotting example:
+%     surf(peaks);
+%     colormap('tab10');
+%     colorbar;
 %
 % See Also:
 %     viridis, parula, jet, hsv, colormap
