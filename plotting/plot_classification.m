@@ -1,4 +1,4 @@
-function [] = plot_classification(fig_hand, classification, test, inside_axes)
+function [] = plot_classification(fig_hand, classification, caveat, test, inside_axes)
 
 % PLOT_CLASSIFICATION  displays the classification in a box on each figure.
 %
@@ -33,18 +33,23 @@ function [] = plot_classification(fig_hand, classification, test, inside_axes)
 %     setup_plots
 %
 % Change Log:
-%     1.  Written by David Stauffer in Feb 2010.
-%     2.  Updated by David Stauffer in Sep 2011 to not be effected by panning and zooming.
+%     1.  Written by David C. Stauffer in Feb 2010.
+%     2.  Updated by David C. Stauffer in Sep 2011 to not be effected by panning and zooming.
 %     3.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     4.  Updated by David C. Stauffer in March 2020 to include optional caveats.
 
 %% check for optional inputs
 switch nargin
     case 2
-        test = false;
+        caveat      = '';
+        test        = false;
         inside_axes = false;
     case 3
+        test        = false;
         inside_axes = false;
     case 4
+        inside_axes = false;
+    case 5
         % nop
     otherwise
         error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
@@ -84,24 +89,21 @@ for i = 1:length(fig_hand)
         case 'U'
             color    = [0 0 0];
             text_str = 'UNCLASSIFIED';
-        case {'F', 'FOUO', 'U//FOUO'}
-            color    = [0 0 0];
-            text_str = 'UNCLASSIFIED//FOR OFFICIAL USE ONLY';
         case 'C'
             color    = [0 0 1];
             text_str = 'CONFIDENTIAL';
         case 'S'
             color    = [1 0 0];
             text_str = 'SECRET';
-        case {'NF', 'SNF', 'S//NF'}
-            color    = [1 0 0];
-            text_str = 'SECRET//NOFORN';
         case {'TS','T'}
             color    = [1 0.65 0];
             text_str = 'TOP SECRET';
         otherwise
             error('dstauffman:BadClassification', 'Unexpected value for classification: "%s".', ...
                 classification);
+    end
+    if ~isempty(caveat)
+        text_str = [text_str, caveat]; %#ok<AGROW>
     end
     w = 0.2;
     h = 0.1;
