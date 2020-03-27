@@ -94,5 +94,5 @@ switch prefix
         mult  = 1e-24;
         label = 'y';
     otherwise
-        error('dstauffman:plotting:InvalidPrefix', 'Unexpected value for units prefix: "%s".', prefix);
+        error('matspace:plotting:InvalidPrefix', 'Unexpected value for units prefix: "%s".', prefix);
 end

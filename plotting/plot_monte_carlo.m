@@ -377,6 +377,6 @@ if isempty(ix)
             ix = length(x);
         otherwise
             % Should be impossible to get here, as it should have errored in the find function call
-            error('dstauffman:UnexpectedDirection', 'Unexpected direction for find function: "%s"', direction);
+            error('matspace:UnexpectedDirection', 'Unexpected direction for find function: "%s"', direction);
     end
 end

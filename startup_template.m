@@ -81,7 +81,7 @@ if ~isempty(dcs_open)
     if exist(dcs_open, 'file')
         edit(dcs_open);
     else
-        warning('dstauffman:startupOpen', 'Unable to open "%s".', dcs_open);
+        warning('matspace:startupOpen', 'Unable to open "%s".', dcs_open);
     end
 end
 

@@ -51,7 +51,7 @@ elseif isstring(hexstr)
         binstr{i} = hex2bin_func(hexstr{i}, options);
     end
 else
-    error('dstauffman:bin2hex:InvalidInputClass', 'Unexpected input class.');
+    error('matspace:bin2hex:InvalidInputClass', 'Unexpected input class.');
 end
 
 %% Subfunctions - hex2bin_func
@@ -67,7 +67,7 @@ allowed_chars = temp(:);
 chars = unique(hexstr(:));
 extra = setdiff(chars, allowed_chars);
 if ~isempty(extra)
-    error('dstauffman:hex2bin:BadChars', 'The following characters are not allowed in the input "%s".', extra);
+    error('matspace:hex2bin:BadChars', 'The following characters are not allowed in the input "%s".', extra);
 end
 
 % remove any spaces
@@ -91,7 +91,7 @@ for i = 1:length(options)
         case 'pad8'
             binstr = add_pad(binstr, 8);
         otherwise
-            error('dstauffman:hex2bin:BadOption', 'Unexpected option string of "%s"', options{i});
+            error('matspace:hex2bin:BadOption', 'Unexpected option string of "%s"', options{i});
     end
 end
 

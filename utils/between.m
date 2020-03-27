@@ -41,12 +41,12 @@ switch nargin
             is_closed = [is_closed,is_closed];
         end
     otherwise
-        error('dstauffman:between:BadArgList','Unsupported number of inputs specified.');
+        error('matspace:between:BadArgList','Unsupported number of inputs specified.');
 end
 
 %% argument checks
 if numel(is_closed) ~= 2
-    error('dstauffman:between:BadBoundarySpecification',...
+    error('matspace:between:BadBoundarySpecification',...
         'Badly formatted specification of open/closed boundary conditions.');
 end
 

@@ -55,19 +55,19 @@ function [] = xextents(figs, xmin, xmax)
 % confirm extents
 if xmin > xmax
     % TODO: should this be an error instead?
-    warning('dstauffman:XExtentsXValues', ...
+    warning('matspace:XExtentsXValues', ...
         'Argument xmin (%g) must be less than argument xmax(%g)', xmin, xmax);
 end
 
 % confirm figures
 for hfig = figs
     if ~ishandle(hfig)
-        warning('dstauffman:XExtentsBadFigure', 'Invalid figure handle specified: "%g".', hfig);
+        warning('matspace:XExtentsBadFigure', 'Invalid figure handle specified: "%g".', hfig);
         return
     end
     haxs = get(hfig, 'children');
     if isempty(haxs)
-        warning('dstauffman:XExtentsBadAxes', 'Specified figure (%g) does not contain axis.', hfig);
+        warning('matspace:XExtentsBadAxes', 'Specified figure (%g) does not contain axis.', hfig);
         return
     end
 end

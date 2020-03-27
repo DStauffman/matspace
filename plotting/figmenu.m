@@ -117,7 +117,7 @@ else
             prev = find_fig(figs, false);
             figure(prev);
         otherwise
-            error('dstauffman:plotting:figMenuInvalidOpiton', 'Invalid option!');
+            error('matspace:plotting:figMenuInvalidOpiton', 'Invalid option!');
     end
 end
 

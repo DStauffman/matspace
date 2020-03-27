@@ -61,7 +61,7 @@ label_values    = false;
 n = nargin;
 switch n
     case 0
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
     case 1
         labels = {};
         try
@@ -82,7 +82,7 @@ end
 %% Parse varargin
 if n > 3
     if mod(n, 2) ~= 1
-        error('dstauffman:UnexpectedNameValuePair', 'Expecting an even set of Name-Value pairs.');
+        error('matspace:UnexpectedNameValuePair', 'Expecting an even set of Name-Value pairs.');
     end
     for i=1:2:length(varargin)
         this_name  = varargin{i};
@@ -103,7 +103,7 @@ if n > 3
             case 'labelvalues'
                 label_values    = this_value;
             otherwise
-                error('dstauffman:UnexpectedNameValuePair', 'Unexpected Name of "%s".', this_name);
+                error('matspace:UnexpectedNameValuePair', 'Unexpected Name of "%s".', this_name);
         end
     end
 end
@@ -127,7 +127,7 @@ else
 end
 % check lengths
 if length(xlab) ~= m || length(ylab) ~= n
-    error('dstauffman:BadLabelSize', 'Incorrecly sized labels.');
+    error('matspace:BadLabelSize', 'Incorrecly sized labels.');
 end
 
 %% Determine if symmetric

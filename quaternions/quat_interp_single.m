@@ -32,7 +32,7 @@ function [qout] = quat_interp_single(t, q, ti) %#codegen
 
 % check for desired times that are outside the time vector
 if ti < t(1) || ti > t(end)
-    error('dstauffman:QInterpBadTimeBounds', 'Desired time not found within input time vector.');
+    error('matspace:QInterpBadTimeBounds', 'Desired time not found within input time vector.');
 end
 
 % pull out bounding times and quaternions

@@ -48,7 +48,7 @@ switch nargin
     case 4
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 %% Scalar case
@@ -71,9 +71,9 @@ end
 ix_exclusive = ti < t(1) | ti > t(end);
 if any(ix_exclusive)
     if inclusive
-        warning('dstauffman:QuatInterpExtrap','Desired time not found within input time vector.');
+        warning('matspace:QuatInterpExtrap','Desired time not found within input time vector.');
     else
-        error('dstauffman:QuatInterpExtrap', 'Desired time not found within input time vector.');
+        error('matspace:QuatInterpExtrap', 'Desired time not found within input time vector.');
     end
 end
 

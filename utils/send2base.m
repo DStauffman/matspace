@@ -69,7 +69,7 @@ for i = 1:num_args
         continue
     end
     if strncmp(this_arg, '-', 1)
-        error('dstauffman:BadSendVarsOption', 'Unexpected option "%s".', this_arg);
+        error('matspace:BadSendVarsOption', 'Unexpected option "%s".', this_arg);
     end
 end
 
@@ -101,17 +101,8 @@ end
 % find any specified names that don't exist
 bad_names = setdiff(all_vars, variables);
 if ~isempty(bad_names)
-    % Note: string command only works on newer Matlab (R2016B+), but it's awesome!!
-    try
-        bad_names_str = join(string(bad_names), ', ');
-    catch exception
-        if strcmp(exception.identifier, 'MATLAB:UndefinedFunction')
-            bad_names_str = bad_names{i};
-        else
-            rethrow(exception);
-        end
-    end
-    error('dstauffman:BadSendVarsName', 'Variable(s) named "%s" don''t exist', bad_names_str);
+    bad_names_str = join(string(bad_names), ', ');
+    error('matspace:BadSendVarsName', 'Variable(s) named "%s" don''t exist', bad_names_str);
 end
 
 %% Exclusions

@@ -68,7 +68,7 @@ switch nargin
     case 6
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 %% check inputs
@@ -113,7 +113,7 @@ while true
         % find the first occurence (increment by one to find the one less effective than the last)
         bad = find(diff(sorted_qaly) < 0, 1, 'first') + 1;
         if isempty(bad)
-            error('dstauffman:badIcerReduction','Index should never be empty, something unexpected happened.');
+            error('matspace:badIcerReduction','Index should never be empty, something unexpected happened.');
         end
         % update the mask and continue to next pass of while loop
         keep(ix_sort(bad)) = [];
@@ -130,7 +130,7 @@ while true
         % find the first bad occurence
         bad = find(diff(icer_out) < 0, 1, 'first');
         if isempty(bad)
-            error('dstauffman:badIcerReduction','Index should never be empty, something unexpected happened.');
+            error('matspace:badIcerReduction','Index should never be empty, something unexpected happened.');
         end
         % update mask and continue to next pass
         keep(ix_sort(bad)) = [];

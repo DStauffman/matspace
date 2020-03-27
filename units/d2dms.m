@@ -24,7 +24,7 @@ function out = d2dms(in)
 
 % give error if not a row vector
 if m ~= 1
-    error('dstauffman:UnexpectedArraySize', 'd2dms expects a scalar or row vector as input');
+    error('matspace:UnexpectedArraySize', 'd2dms expects a scalar or row vector as input');
 end
 
 % initialize output

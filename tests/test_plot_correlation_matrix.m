@@ -59,19 +59,19 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_labels(self)
-            self.verifyError(@() plot_correlation_matrix(self.data, {'a'}), 'dstauffman:BadLabelSize');
+            self.verifyError(@() plot_correlation_matrix(self.data, {'a'}), 'matspace:BadLabelSize');
         end
 
         function test_bad_nargin1(self)
-            self.verifyError(@() plot_correlation_matrix(), 'dstauffman:UnexpectedNargin');
+            self.verifyError(@() plot_correlation_matrix(), 'matspace:UnexpectedNargin');
         end
 
         function test_bad_nargin2(self)
-            self.verifyError(@() plot_correlation_matrix(self.data, {}, [], 'BadPairing'), 'dstauffman:UnexpectedNameValuePair');
+            self.verifyError(@() plot_correlation_matrix(self.data, {}, [], 'BadPairing'), 'matspace:UnexpectedNameValuePair');
         end
 
         function test_bad_nargin3(self)
-            self.verifyError(@() plot_correlation_matrix(self.data, {}, [], 'BadKey', 10), 'dstauffman:UnexpectedNameValuePair');
+            self.verifyError(@() plot_correlation_matrix(self.data, {}, [], 'BadKey', 10), 'matspace:UnexpectedNameValuePair');
         end
 
         function test_nonsquare(self)

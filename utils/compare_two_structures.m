@@ -81,7 +81,7 @@ switch nargin
         struct_name1 = names{1};
         struct_name2 = names{2};
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 if isequaln(S1,S2)

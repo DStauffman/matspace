@@ -34,7 +34,7 @@ switch nargin
     case 1
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % check for persistents to avoid loading from file again
@@ -50,7 +50,7 @@ num_header_lines = 1;
 % open file
 fid = fopen(filename, 'rt');
 if fid == -1
-    error('dstauffman:xkcdColors:BadFileOpen', 'Unable to open "%s" for reading.', filename);
+    error('matspace:xkcdColors:BadFileOpen', 'Unable to open "%s" for reading.', filename);
 end
 
 % read the file
@@ -93,7 +93,7 @@ switch nargin
     case 2
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 red = 16*hex_to_num(hex(2)) + hex_to_num(hex(3));
 grn = 16*hex_to_num(hex(4)) + hex_to_num(hex(5));

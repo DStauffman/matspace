@@ -9,6 +9,7 @@ function [] = plot_classification(fig_hand, classification, caveat, test, inside
 % Input:
 %     fig_hand       : (1xN) vector of figure handles [num]
 %     classification : (row) string specifying classification to use, from {'U','C','S','TS'} [char]
+%     caveat         : (row) string specifying the extra caveats beyond the main  classification [char]
 %     test           : (true/false) flag to specify if this is a test or a real application [bool]
 %     inside_axes    : (true/false) flag to specify whether box is inside the axis, or on the figure [bool]
 %
@@ -21,10 +22,10 @@ function [] = plot_classification(fig_hand, classification, caveat, test, inside
 %     plot_classification(f1,'U');
 %     f2 = figure;
 %     plot(0,0);
-%     plot_classification(f2,'S',1,false);
+%     plot_classification(f2,'S','//MADE UP CAVEAT',true, false);
 %     f3 = figure;
 %     plot(0,0);
-%     plot_classification(f3,'C',1,true);
+%     plot_classification(f3,'C','', true, true);
 %
 %     % clean up
 %     close([f1 f2 f3]);
@@ -52,13 +53,13 @@ switch nargin
     case 5
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % force conversion to newer figure objects
 if isnumeric(fig_hand)
     convert_figs = true;
-    warning('dstauffman:Utils:OldNumericFigure', ['Figures passed to plot_classification are in old ' ...
+    warning('matspace:Utils:OldNumericFigure', ['Figures passed to plot_classification are in old ' ...
         'format, will be converted from numeric to gobject.']);
 else
     convert_figs = false;
@@ -99,13 +100,15 @@ for i = 1:length(fig_hand)
             color    = [1 0.65 0];
             text_str = 'TOP SECRET';
         otherwise
-            error('dstauffman:BadClassification', 'Unexpected value for classification: "%s".', ...
+            error('matspace:BadClassification', 'Unexpected value for classification: "%s".', ...
                 classification);
     end
     if ~isempty(caveat)
         text_str = [text_str, caveat]; %#ok<AGROW>
+        w = 0.4;
+    else
+        w = 0.2;
     end
-    w = 0.2;
     h = 0.1;
     if inside_axes
         annotation(this_fig,'textbox','Position',[pos(1)+pos(3)-w,pos(2),w,h],'String',text_str,...

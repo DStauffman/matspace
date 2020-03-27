@@ -37,7 +37,7 @@ switch form
     case 'one-one'
         % nop
     otherwise
-        error('dstauffman:GpsUnexpectedForm', 'Unexpected form: "%s"', form);
+        error('matspace:GpsUnexpectedForm', 'Unexpected form: "%s"', form);
 end
 
 cor = zeros(size(shift));

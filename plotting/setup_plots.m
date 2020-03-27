@@ -68,7 +68,7 @@ switch nargin
     case 3
         %nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 % check for empty input
 if isempty(fig_hand)
@@ -79,7 +79,7 @@ fig_hand = fig_hand(:)';
 
 %% Check valid forms
 if ~any(strcmp(form,{'time','dist','time_no_y_scale','dist_no_y_scale'}))
-    error('dstauffman:UnexpectedForm', 'Unexpected plot form of "%s".', form);
+    error('matspace:UnexpectedForm', 'Unexpected plot form of "%s".', form);
 end
 
 %% OPTS Aliases
@@ -119,7 +119,7 @@ if any(strcmp(form,{'time','time_no_y_scale'}))
                 case 'day'
                     mult = 86400;
                 otherwise
-                    error('dstauffman:plotting:BadOptsTimeUnit', 'Unexpected value for "OPTS.time_unit".');
+                    error('matspace:plotting:BadOptsTimeUnit', 'Unexpected value for "OPTS.time_unit".');
             end
         else
             mult = 1;
@@ -134,17 +134,8 @@ if scale_yaxis
 end
 
 %% Label plot classification
-% determine classification (hard-coded to false for now)
-mloc          = mfilename('fullpath');
-ix            = strfind(mloc,filesep);
-location      = mloc(1:ix(end));
-is_classified = false;
-if is_classified
-    classification = 'S';
-else
-    classification = 'U';
-end
-% plot_classification(fig_hand,classification);
+[classification, caveat] = get_classification(OPTS.classify);
+plot_classification(fig_hand,classification,caveat);
 
 %% Move plots
 if move_plots

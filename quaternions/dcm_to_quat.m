@@ -47,7 +47,7 @@ elseif n1 == 9 && n3 == 1
     num     = n2;
     two_dim = true;
 else
-    error('dstauffman:BadDcmSize', 'Unexpected dimensions for ''dcm''');
+    error('matspace:BadDcmSize', 'Unexpected dimensions for ''dcm''');
 end
 
 %% preallocate q

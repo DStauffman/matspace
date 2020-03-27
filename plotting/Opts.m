@@ -28,6 +28,7 @@ classdef Opts
     %             from: {'yotta','zetta','exa','peta','tera','giga','mega','kilo','hecto','deca',
     %             'unity','deci','centi','milli', 'micro','nano','pico','femto','atto','zepto','yocto'}
     %         .colormap  : (row) string specifying the name of the colormap to use [char]
+    %         .classify  : (row) string specifying the classification level to put on plots [char]
     %         .names     : (1xN) of (string) specifying the name of the data structures to be plotted [char]
     %
     % Prototype:
@@ -60,6 +61,7 @@ classdef Opts
         time_unit,
         vert_fact,
         colormap,
+        classify,
         names,
     end
 
@@ -87,6 +89,7 @@ classdef Opts
             OPTS.time_unit = ''; % Time unit to display plots in, potentially scaling from the base
             OPTS.vert_fact = 'unity';
             OPTS.colormap  = '';
+            OPTS.classify  = '';
             OPTS.names     = string(''); % just "" in R2017B, but doesn't work in R2016B
 
             % break out early if no fields in overrides to process
@@ -95,10 +98,10 @@ classdef Opts
                     return
                 case 1
                     if ~isstruct(overrides) && ~isa(overrides, 'Opts')
-                        error('dstauffman:UnexpectedType', 'Unexpected input type.');
+                        error('matspace:UnexpectedType', 'Unexpected input type.');
                     end
                 otherwise
-                    error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+                    error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
             end
 
             % get the fields from the overrides and store them to OPTS

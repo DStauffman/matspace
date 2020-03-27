@@ -87,13 +87,13 @@ cnt = 1;
 for hfig = figs
     % check if this is a valid figure handle
     if ~ishandle(hfig)
-        warning('dstauffman:YScaleFig', 'Invalid figure handle specified: "%s"', hfig);
+        warning('matspace:YScaleFig', 'Invalid figure handle specified: "%s"', hfig);
         return
     end
     % check that the figure has a valid axis child
     haxs = get(hfig,'children');
     if isempty(haxs)
-        warning('dstauffman:YScaleChildren', 'Specified figure does not contain axis.');
+        warning('matspace:YScaleChildren', 'Specified figure does not contain axis.');
         return
     end
     % loop through children axes
@@ -124,7 +124,7 @@ end
 ixs = strfind(yunit,['[',label_old]);
 arr = cellfun(@(x) ~isempty(x),ixs);
 if ~all(arr)
-    warning('dstauffman:YScaleLabel', 'invalid ''ylabel'' property ''string'' exists.');
+    warning('matspace:YScaleLabel', 'invalid ''ylabel'' property ''string'' exists.');
     return
 end
 

@@ -34,7 +34,7 @@ switch nargin
     case 3
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % count the number of bins that are greater than the current value and sum across.
@@ -46,5 +46,5 @@ bins(bins >= length(edges)) = nan;
 
 % optionally make sure nothing was excluded
 if checks && any(isnan(bins))
-    error('dstauffman:BadDiscretization', 'Some values fell outside the bins.');
+    error('matspace:BadDiscretization', 'Some values fell outside the bins.');
 end

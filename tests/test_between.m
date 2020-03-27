@@ -67,11 +67,11 @@ classdef test_between < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_arg_list(self)
-            self.verifyError(@() between(1,2), 'dstauffman:between:BadArgList');
+            self.verifyError(@() between(1,2), 'matspace:between:BadArgList');
         end
 
         function test_bad_boundaries(self)
-            self.verifyError(@() between(1,2,3,[1 1 1]),'dstauffman:between:BadBoundarySpecification');
+            self.verifyError(@() between(1,2,3,[1 1 1]),'matspace:between:BadBoundarySpecification');
         end
     end
 end

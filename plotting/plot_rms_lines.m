@@ -34,21 +34,16 @@ switch nargin
     case 3
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin','Unexpected number of inputs: "%i"',nargin);
+        error('matspace:UnexpectedNargin','Unexpected number of inputs: "%i"',nargin);
 end
 
 % initial figure hold state
 hold_state = ishold;
 hold on;
 
-% Bug in Matlab when using MarkerEdgeColor and the plotbrowser (for R2014A (8.3) to R2015B (8.6), fixed in R2016A (9.0)):
-if ~verLessThan('matlab', '9.0') || verLessThan('matlab','8.3')
-    h1 = plot([x(1) x(1)],y,'LineStyle','--','Color',[   1 0.75 0],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Start Time');
-    h2 = plot([x(2) x(2)],y,'LineStyle','--','Color',[0.75 0.75 1],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Stop Time');
-else
-    h1 = plot([x(1) x(1)],y,'LineStyle','--','Color',[   1 0.75 0],'Marker','+','MarkerSize',10,'DisplayName','RMS Start Time');
-    h2 = plot([x(2) x(2)],y,'LineStyle','--','Color',[0.75 0.75 1],'Marker','+','MarkerSize',10,'DisplayName','RMS Stop Time');
-end
+% draw lines
+h1 = plot([x(1) x(1)],y,'LineStyle','--','Color',[   1 0.75 0],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Start Time');
+h2 = plot([x(2) x(2)],y,'LineStyle','--','Color',[0.75 0.75 1],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Stop Time');
 
 % exclude lines from legend
 if ~show_in_legend

@@ -37,5 +37,5 @@ switch type
         scale = 1e-3;
         units = '$K''s';
     otherwise
-        error('dstauffman:badPlottingType', 'Unknown data type for plot: "%s".', type);
+        error('matspace:badPlottingType', 'Unknown data type for plot: "%s".', type);
 end

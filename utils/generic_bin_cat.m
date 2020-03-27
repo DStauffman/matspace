@@ -71,7 +71,7 @@ else
         this_file = [location,num2str(filenums(i),'%03i'),'.bin'];
         if ~exist(this_file,'file')
             % throw warning if file doesn't exist
-            warning('dstauffman:findBinFiles','\nUnable to find "%s" binary file.',this_file);
+            warning('matspace:findBinFiles','\nUnable to find "%s" binary file.',this_file);
         else
             % display progress
             fprintf([' Appending file ',num2str(filenums(i)),' ...']);
@@ -79,7 +79,7 @@ else
             tempfid = fopen(this_file,'r','ieee-be');
             if tempfid == -1
                 % throw warning if unable to open
-                warning('dstauffman:openBinFiles','\nUnable to open "%s" binary file.',this_file);
+                warning('matspace:openBinFiles','\nUnable to open "%s" binary file.',this_file);
             else
                 % read input file data
                 temp = fread(tempfid,inf,'*uint8');

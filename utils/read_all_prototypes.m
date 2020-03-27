@@ -50,7 +50,7 @@ switch nargin
     case 4
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % open file if not already specified
@@ -58,7 +58,7 @@ if isempty(fid)
     filename = fullfile(pwd,'all_prototypes.m');
     fid = fopen(filename,'wt');
     if fid == -1
-        error('dstauffman:AllPrototypesWriting','Unable to open "%s" for writing.',filename);
+        error('matspace:AllPrototypesWriting','Unable to open "%s" for writing.',filename);
     end
     fprintf(fid,'%s\n','function [] = all_prototypes() %#ok<*DEFNU>');
     fprintf(fid,'%s\n\n','    main()');
@@ -86,7 +86,7 @@ for i = 3:length(list)
             % read this m file
             temp_fid = fopen(this_name,'rt');
             if temp_fid == -1
-                error('dstauffman:AllPrototypesReading','Unable to open "%s" for reading.',this_name);
+                error('matspace:AllPrototypesReading','Unable to open "%s" for reading.',this_name);
             end
             % read file
             lines = textscan(temp_fid,'%s',inf,'Delimiter','\n');

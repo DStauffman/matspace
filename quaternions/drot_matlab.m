@@ -48,5 +48,5 @@ switch k
     case 3
         t = [-sa ca 0; -ca -sa 0; 0 0 0];
     otherwise
-        error('dstauffman:InvalidDrotAxis', 'Invalid axis: "%i"', k);
+        error('matspace:InvalidDrotAxis', 'Invalid axis: "%i"', k);
 end

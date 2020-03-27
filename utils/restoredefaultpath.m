@@ -33,7 +33,7 @@ if exist(built_in_restore, 'file')
     disp('RESTORING default paths.');
     run(built_in_restore);
 else
-    error('dstauffman:utils:RestorePathLocation', ...
+    error('matspace:utils:RestorePathLocation', ...
         'Unsupported MATLAB version, could not find built-in restoredefaultpath at "%s".', ...
         built_in_restore);
 end
@@ -55,5 +55,5 @@ end
 if RESTOREDEFAULTPATH_EXECUTED
     disp('MATLAB default paths restored.')
 else
-    error('dstauffman:utils:RestorePath', 'There was a problem restoring the default MATLAB paths.');
+    error('matspace:utils:RestorePath', 'There was a problem restoring the default MATLAB paths.');
 end

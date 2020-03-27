@@ -45,7 +45,7 @@ switch nargin
     case 2
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % initialize output
@@ -128,7 +128,7 @@ for i = 1:n
             c1_c2                     =  C(1,1);
             c2_c3                     =  C(3,3);
         otherwise
-            error('dstauffman:QuatBadEulerSequence', 'Invalid axis rotation sequence: "%s".', seq_str);
+            error('matspace:QuatBadEulerSequence', 'Invalid axis rotation sequence: "%s".', seq_str);
     end
 
     %% Compute angles

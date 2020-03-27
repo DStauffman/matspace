@@ -24,7 +24,7 @@ m = size(in,1);
 
 % give error if not a 3xN array
 if m ~= 3
-    error('dstauffman:UnexpectedArraySize', 'dms2d expects a 3xN array as input.');
+    error('matspace:UnexpectedArraySize', 'dms2d expects a 3xN array as input.');
 end
 
 % find fractional degrees by adding parts together

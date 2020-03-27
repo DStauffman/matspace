@@ -40,7 +40,7 @@ switch nargin
     case 3
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % use with or without dim command and have nanmean do the heavy lifting

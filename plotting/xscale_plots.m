@@ -82,13 +82,13 @@ cnt = 1;
 for hfig = figs
     % check if this is a valid figure handle
     if ~ishandle(hfig)
-        warning('dstauffman:XScaleFig', 'Invalid figure handle specified: "%g".', hfig);
+        warning('matspace:XScaleFig', 'Invalid figure handle specified: "%g".', hfig);
         return
     end
     % check that the figure has a valid axis child
     haxs = get(hfig,'children');
     if isempty(haxs)
-        warning('dstauffman:XScaleChildren', 'Specified figure does not contain axis.');
+        warning('matspace:XScaleChildren', 'Specified figure does not contain axis.');
         return
     end
     % loop through children axes
@@ -119,7 +119,7 @@ end
 ixs = strfind(xunit, oldunit);
 arr = cellfun(@(x) ~isempty(x),ixs);
 if ~all(arr)
-    warning('dstauffman:XScaleLabel', 'invalid ''xlabel'' property ''string'' exists.');
+    warning('matspace:XScaleLabel', 'invalid ''xlabel'' property ''string'' exists.');
     return
 end
 
@@ -191,5 +191,5 @@ switch unit
     case '[day]'
         mult = 86400;
     otherwise
-        error('dstauffman:BadPlottingUnit', 'Unexpected unit value: "%s".', unit);
+        error('matspace:BadPlottingUnit', 'Unexpected unit value: "%s".', unit);
 end

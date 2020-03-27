@@ -1,14 +1,14 @@
 function [out] = bins_to_str_ranges(bins, dt, cutoff)
 
-% BINS_TO_STR_RANGES  take a given bin vector, and returns a string representation with both boundaries.
+% BINS_TO_STR_RANGES  Takes a given bin vector, and returns a string representation with both boundaries.
 %
 % Input:
-%     bins : (1xN), Boundaries for the bins
-%     dt : (scalar), Amount to subtract from the right side boundary, default is 1
-%     cutoff : (scalar), Value at which to consider everything above it as unbounded
+%     bins   : (1xN) Boundaries for the bins
+%     dt     : (scalar) Amount to subtract from the right side boundary, default is 1
+%     cutoff : (scalar) Value at which to consider everything above it as unbounded
 %
 % Output:
-%     out : (1xN) string, text representations of the bins
+%     out    : (1xN string) text representations of the bins [char]
 %
 % Notes:
 %     1.  This function works on ages, years, CD4 bins or other similar things.
@@ -16,23 +16,22 @@ function [out] = bins_to_str_ranges(bins, dt, cutoff)
 % Prototype:
 %     age_bins = [0 20 40 60 100000];
 %     age_strs = bins_to_str_ranges(age_bins);
-%     disp(age_strs);
-%     gives: "0-19"    "20-39"    "40-59"    "60+"
+%     assert(all(cellfun(@strcmp, age_strs, {'0-19', '20-39', '40-59', '60+'})));
 %
 % Change Log
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 
-% optional inputs
+% Check for optional inputs
 switch nargin
     case 1
-        dt = 1;
+        dt     = 1;
         cutoff = 1000;
     case 2
         cutoff = 1000;
     case 3
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % preallocate output

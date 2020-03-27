@@ -33,7 +33,7 @@ function [folders] = pathset(location, exclude)
 %         function much more compact and easier to understand.
 
 %% hard-coded exclusions
-exclusions = string({'\.git', '\.svn', '\mex\make'}); %#ok<STRCLQT> for R2016A support
+exclusions = string({'\.git', '\.svn', '\mex\make', '/.git', '/.svn', '/mex/make'}); %#ok<STRCLQT> for R2016A support
 
 %% use specified path, or path of function itself
 switch nargin
@@ -44,7 +44,7 @@ switch nargin
     case 2
         exclusions = [exclusions, string(cellstr(exclude))];
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 %% generate folder paths to add

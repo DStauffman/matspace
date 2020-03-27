@@ -52,14 +52,14 @@ if any(ix_nan_B)
     q_B = q_B(:,~ix_nan_B);
 end
 if dropped_data > 0
-    warning('dstauffman:QuatAttFitNans', 'Dropped %i quaternions from fit calculations.', dropped_data);
+    warning('matspace:QuatAttFitNans', 'Dropped %i quaternions from fit calculations.', dropped_data);
 end
 
 % find number of points
 n = size(q_A,2);
 % check for consistency
 if n ~= size(q_B,2)
-    error('dstauffman:QuatAttBadSize', 'Unevely sized quaternions.');
+    error('matspace:QuatAttBadSize', 'Unevely sized quaternions.');
 end
 
 % create linear system

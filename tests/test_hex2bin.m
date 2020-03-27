@@ -102,11 +102,11 @@ classdef test_hex2bin < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_chars(self)
-            self.verifyError(@() hex2bin('01-EF'), 'ssc:hex2bin:BadChars');
+            self.verifyError(@() hex2bin('01-EF'), 'matspace:hex2bin:BadChars');
         end
 
         function test_bad_options(self)
-            self.verifyError(@() hex2bin(self.hex, 'bad_option'), 'ssc:hex2bin:BadOption');
+            self.verifyError(@() hex2bin(self.hex, 'bad_option'), 'matspace:hex2bin:BadOption');
         end
     end
 end

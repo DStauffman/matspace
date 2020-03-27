@@ -58,12 +58,12 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 for f = fig_hand
     hfig = f;
     if ~ishandle(hfig)
-        warning('dstauffman:plotting:storeFigBadHandle', 'Invalid figure handle specified: "%i".',hfig);
+        warning('matspace:plotting:storeFigBadHandle', 'Invalid figure handle specified: "%i".',hfig);
         return
     end
     haxs = get(hfig,'children');
     if isempty(haxs)
-        warning('dstauffman:plotting:storeFigBadAxes','Specified figure "%i" does not contain an axis.', hfig);
+        warning('matspace:plotting:storeFigBadAxes','Specified figure "%i" does not contain an axis.', hfig);
         return
     end
 end
@@ -75,7 +75,7 @@ end
 
 % confirm whether storage directory exists
 if ~exist(path,'dir')
-    warning('dstauffman:plotting:storeFigBadPath','Specified storage path not found: "%s".', path);
+    warning('matspace:plotting:storeFigBadPath','Specified storage path not found: "%s".', path);
     return
 end
 
@@ -107,7 +107,7 @@ end
 if any(bad_names)
     disp('Bad name(s):');
     disp(fig_name(bad_names));
-    warning('dstauffman:plotting:storeFigIllegalChars','There were illegal characters in the figure name.');
+    warning('matspace:plotting:storeFigIllegalChars','There were illegal characters in the figure name.');
 end
 
 % save plots
@@ -123,7 +123,7 @@ for f = 1:length(fig_hand)
             case 'jpg'
                 print(fig_hand(f),'-djpeg',[path,fig_name{f},'.jpg']);
             otherwise
-                warning('dstauffman:plotting:storeFigBadExt','Unexpected extension type "%s"; plot not saved.', format{i});
+                warning('matspace:plotting:storeFigBadExt','Unexpected extension type "%s"; plot not saved.', format{i});
         end
     end
 end

@@ -98,5 +98,5 @@ switch sat
     case 37
         b1 = 4;b2 = 10;
     otherwise
-        error('dstauffman:GpsUnexpectedSatellite', 'Unexpected satellite number: "%i"', sat);
+        error('matspace:GpsUnexpectedSatellite', 'Unexpected satellite number: "%i"', sat);
 end

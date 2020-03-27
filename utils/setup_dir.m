@@ -47,7 +47,7 @@ switch nargin
     case 3
         % nop
     otherwise
-        error('dstauffman:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % add filesep to end of path if necessary
@@ -83,7 +83,7 @@ else
         mkdir(directory);
         disp(['Created directory: "',directory,'"']);
     catch exception
-        error('dstauffman:utils:DirCreation', '"%s" could not be created because: "%s".', ...
+        error('matspace:utils:DirCreation', '"%s" could not be created because: "%s".', ...
             directory, exception.message);
     end
 end

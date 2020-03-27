@@ -98,7 +98,7 @@ classdef test_send2base < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_case_sensitivity_1(self)
             test = self.test; name_one = self.name_one; name_two = self.name_two; %#ok<NASGU>
-            self.verifyError(@() send2base('Test'), 'dstauffman:BadSendVarsName');
+            self.verifyError(@() send2base('Test'), 'matspace:BadSendVarsName');
         end
 
         function test_case_sensitivity_2(self)
@@ -167,7 +167,7 @@ classdef test_send2base < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_bad_option(self)
             test = self.test; name_one = self.name_one; name_two = self.name_two; %#ok<NASGU>
-            self.verifyError(@() send2base('Test', '-exclusions', 'name*'), 'dstauffman:BadSendVarsOption');
+            self.verifyError(@() send2base('Test', '-exclusions', 'name*'), 'matspace:BadSendVarsOption');
         end
 
     end
