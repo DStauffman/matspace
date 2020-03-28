@@ -53,7 +53,7 @@ function titleprefix(fig_hand,prefix)
 %     xextents    xscale_plots    storefig    setup_plots
 %
 % Change Log:
-%     1.  Added to DStauffman's MATLAB library from GARSE in Sept 2013.
+%     1.  Added to matspace library from GARSE in Sept 2013.
 
 %% Tests
 % confirm that handles are valid figures, and that they have at least one axis child

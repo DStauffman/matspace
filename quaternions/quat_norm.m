@@ -23,7 +23,7 @@ function out = quat_norm(x) %#codegen
 %     1.  lineage: HARS (Romney), CARS (Romney, Hull), GARSE (Sims, Stauffer, Beck)
 %     2.  Updated by Matt Beck in June 2009.
 %     3.  Updated by Tom Trankle in July 2011 for #eml.
-%     4.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % number of rows of x
 n = size(x,1);

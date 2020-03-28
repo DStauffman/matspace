@@ -17,7 +17,7 @@ function [y] = unit(x, dim)
 %     rms, vecnorm
 %
 % Change Log:
-%     1.  Added to the DStauffman MATLAB library in December 2015.
+%     1.  Added to the matspace library in December 2015.
 
 % check for optional inputs
 switch nargin

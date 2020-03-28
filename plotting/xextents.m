@@ -49,8 +49,8 @@ function [] = xextents(figs, xmin, xmax)
 %
 % Change Log:
 %     1.  lineage: GARSE (Sims)
-%     2.  Updated by David Stauffer in Jun 2009 to close colleague review PGPR 1006.
-%     3.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     2.  Updated by David C. Stauffer in Jun 2009 to close colleague review PGPR 1006.
+%     3.  Incorporated by David C. Stauffer into matspace library in Nov 2016.
 
 % confirm extents
 if xmin > xmax

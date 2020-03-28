@@ -30,7 +30,7 @@ function out = between(value, lower, upper, is_closed)
 % Change Log:
 %     1.  Written by Matt Beck circa 2012.
 %     2.  Updated by Keith Rogers in July 2014 for inclusion in SSC Toolbox.
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 %% check for optional inputs
 switch nargin

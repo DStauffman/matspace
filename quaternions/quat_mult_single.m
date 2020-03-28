@@ -30,7 +30,7 @@ function [c] = quat_mult_single(a,b) %#codegen
 % Change Log:
 %     1.  lineage: GARSE (Sims, Stauffer, Davis, Beck)
 %     2.  Updated by Scott Sims in Jun 2009.
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % perform multiplication
 c = [ a(4)  a(3) -a(2)  a(1); ...

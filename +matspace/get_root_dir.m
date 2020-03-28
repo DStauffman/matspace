@@ -1,6 +1,6 @@
 function [root_dir] = get_root_dir()
 
-% GET_ROOT_DIR  gets the root location of the DStauffman MATLAB library.
+% GET_ROOT_DIR  gets the root location of the matspace library.
 %
 % Input:
 %     None
@@ -16,7 +16,7 @@ function [root_dir] = get_root_dir()
 %     mfilename
 %
 % Change Log:
-%     1.  Written by David C. Stauffer in December 2015 for inclusion in DStauffman MATLAB library.
+%     1.  Written by David C. Stauffer in December 2015 for inclusion in matspace library.
 %     2.  Updated by David C. Stauffer in March 2019 to put path functions into a package.
 
 % get the fullpath name to this m file

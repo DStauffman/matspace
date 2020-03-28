@@ -26,7 +26,7 @@ function quat_new = quat_prop(quat, delta_ang, renorm) %#codegen
 %     1.  lineage: HARS (Romney), CARS (Romney, Hull), GARSE (Sims, Stauffer, Beck)
 %     2.  Updated by Matt Beck in June 2009.
 %     3.  Updated by Tom Trankle in July 2011 for #eml support.
-%     4.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     5.  Updated by David C. Stauffer in December 2018 to enforce positive scalar component and
 %         optionally renormalize.
 

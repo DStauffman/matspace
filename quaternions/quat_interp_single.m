@@ -28,7 +28,7 @@ function [qout] = quat_interp_single(t, q, ti) %#codegen
 % Change Log:
 %     1.  lineage: HARS (Romney), CARS(Romney, Hull), GARSE (Sims, Stauffer, Beck)
 %     2.  Updated per PGPR_1001 2009 June (Sims and Stauffer)
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % check for desired times that are outside the time vector
 if ti < t(1) || ti > t(end)

@@ -28,7 +28,7 @@ function [vec] = quat_times_single_vector(q, v)
 % Change Log:
 %     1.  lineage: GARSE (Sims, Stauffer, Davis, Beck)
 %     2.  Updated by Scott Sims in June 2009.
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % get number of quaternions
 num_q = size(q,2);

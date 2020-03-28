@@ -32,8 +32,8 @@ function [t] = drot_matlab(k,a) %#codegen
 % CHANGE LOG:
 %     1.  lineage: HARS (Romney), CARS(Romney, Hull), GARSE (Sims, Stauffer, Beck)
 %     2.  Updated by Tom Trankle in July 2011 for #eml.
-%     3.  Renamed by David Stauffer in June 2014 to avoid coder bug.
-%     4.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Renamed by David C. Stauffer in June 2014 to avoid coder bug.
+%     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % alias values
 ca = cos(a);

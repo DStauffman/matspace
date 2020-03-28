@@ -27,7 +27,7 @@ function [start_date_str] = get_start_date(date)
 % Change Log:
 %     1.  Written by Matt Beck May 2009.
 %     2.  Updated for PGPR 1010 by Matt Beck, June 2009.
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in December 2018.
+%     3.  Incorporated by David C. Stauffer into matspace in December 2018.
 
 % build date string
 if ~isempty(date)

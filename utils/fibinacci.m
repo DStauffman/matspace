@@ -20,7 +20,7 @@ function [f,fib] = fibinacci(x)
 %
 % Change Log:
 %     1.  Written by David C. Stauffer circa 2010.
-%     2.  Incorporated into DStauffman Matlab tools in Nov 2016.
+%     2.  Incorporated into matspace library in Nov 2016.
 
 % deal with simple special cases
 if x == 0

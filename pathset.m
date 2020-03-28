@@ -25,15 +25,15 @@ function [folders] = pathset(location, exclude)
 %
 % Change Log:
 %     1.  Written by Scott Sims in 2008, originally for EKF.
-%     2.  Duplicated and updated by David Stauffer in Feb 2009 to specify an optional argument in.
-%     3.  Moved from the GUI to just one location in UTILS by David Stauffer in Oct 2009.
-%     4.  Updated by David Stauffer in Dec 2009 to pass PGPR_1030.
-%     5.  Incorporated by David C. Stauffer into DStauffman library in November 2016.
+%     2.  Duplicated and updated by David C. Stauffer in Feb 2009 to specify an optional argument in.
+%     3.  Moved from the GUI to just one location in UTILS by David C. Stauffer in Oct 2009.
+%     4.  Updated by David C. Stauffer in Dec 2009 to pass PGPR_1030.
+%     5.  Incorporated by David C. Stauffer into matspace library in November 2016.
 %     6.  Updated by David C. Stauffer in September 2018 to use new string arrays, making the
 %         function much more compact and easier to understand.
 
 %% hard-coded exclusions
-exclusions = string({'\.git', '\.svn', '\mex\make', '/.git', '/.svn', '/mex/make'}); %#ok<STRCLQT> for R2016A support
+exclusions = string({'\.git', '\.svn', '\mex\make', '/.git', '/.svn', '/mex/make'}); %#ok<STRCLQT> for R2016B support
 
 %% use specified path, or path of function itself
 switch nargin

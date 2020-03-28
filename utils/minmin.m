@@ -30,7 +30,7 @@ function [result] = minmin(x, dim)
 %
 % Change Log:
 %     1.  Written by Keith Rogers for SSC Toolbox, last updated Feb 2012.
-%     2.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     2.  Incorporated by David C. Stauffer into matspace library in Nov 2016.
 
 % Not EML Compliant due to for loop (Dimension argument must be constant)
 

@@ -38,7 +38,7 @@ function [n,u,s] = combine_sets(n1,u1,s1,n2,u2,s2)
 %     http://en.wikipedia.org/wiki/Standard_deviation#Sample-based_statistics, on 8/7/12
 %
 % Change Log:
-%     1.  Written by David Stauffer in July 2012.
+%     1.  Written by David C. Stauffer in July 2012.
 
 % combine total number of samples
 n = n1 + n2;

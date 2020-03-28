@@ -8,7 +8,7 @@ classdef Opts
     % Output:
     %     OPTS ......... : (class) plotting options
     %         .case_name : (row) string specifying the name of the case to be plotted [char]
-    %         .date_zero : (1x6) datevec of t = 0 time [year month day hour minute second]
+    %         .date_zero : (1x6) datevec (or datetime) of t = 0 time [year month day hour minute second]
     %         .save_plot : (scalar) true/false flag for whether to save the plots [bool]
     %         .save_path : (row) string specifying the location for the plots to be saved [char]
     %         .show_plot : (scalar) true/false flag to show the plots or only save to disk [bool]
@@ -23,7 +23,7 @@ classdef Opts
     %         .show_zero : (scalar) true/false flag for whether to show Y=0 on the plot axis [bool]
     %         .quat_comp : (scalar) true/false flag to plot quaternion component differences or just the angle [bool]
     %         .time_base : (row) string specifying the base units of time, typically from {'sec', 'months'} [char]
-    %         .time_unit : (row) string specifying the time unit for the x axis, from {'', 'sec', 'min', 'hr', 'day'} [char]
+    %         .time_unit : (row) string specifying the time unit for the x axis, from {'', 'sec', 'min', 'hr', 'day', 'month', 'year'} [char]
     %         .vert_fact : (row) string specifying the vertical factor to apply to the Y axis, [char]
     %             from: {'yotta','zetta','exa','peta','tera','giga','mega','kilo','hecto','deca',
     %             'unity','deci','centi','milli', 'micro','nano','pico','femto','atto','zepto','yocto'}
@@ -36,7 +36,7 @@ classdef Opts
     %
     % Change Log:
     %     1.  Written by David C. Stauffer in September 2013.
-    %     2.  Added to DStauffman MATLAB library in December 2015.
+    %     2.  Added to matspace library in December 2015.
     %     3.  Updated by David C. Stauffer in January 2018 to use string array for names.
 
     properties

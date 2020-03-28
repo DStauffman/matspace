@@ -22,8 +22,8 @@ function [r] = betarnd2(a,b,m,n) %#codegen
 %     betarnd, rand, randg
 %
 % Change Log:
-%     1.  Written by David Stauffer in September 2013.
-%     2.  Added to DStauffman MATLAB library in December 2015.
+%     1.  Written by David C. Stauffer in September 2013.
+%     2.  Added to matspace library in December 2015.
 %
 % Notes:
 %     1.  Could be expanded to make m and n optional, plus additional size inputs or [m,n,...]

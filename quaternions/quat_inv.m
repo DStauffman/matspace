@@ -16,7 +16,7 @@ function [q_inv] = quat_inv(q) %#codegen
 %     quat_mult, quat_norm
 %
 % Change Log.
-%     1.  Added to DStauffman's library in March 2008.
+%     1.  Added to matspace library in March 2008.
 
 % initialize to original quaternion
 q_inv = q;

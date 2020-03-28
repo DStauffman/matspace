@@ -26,8 +26,8 @@ function [date_gps] = gps_to_datevec(week, time)
 %     1.  GPS week zero = Jan 06, 1980 at midnight.
 %
 % Change Log:
-%     1.  Written by David Stauffer in Apr 2011.
-%     2.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     1.  Written by David C. Stauffer in Apr 2011.
+%     2.  Incorporated by David C. Stauffer into matspace library in Nov 2016.
 
 % hard-coded values
 date_zero     = [1980 01 06 00 00 00];

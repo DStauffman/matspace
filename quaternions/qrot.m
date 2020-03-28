@@ -27,8 +27,8 @@ function q = qrot(k,a)
 % Change Log:
 %     1.  lineage: HARS (Romney), CARS(Romney, Hull), GARSE (Sims, Stauffer)
 %     2.  Updated by Scott Sims in June 2009.
-%     3.  Updated by David Stauffer in Jan 2010.
-%     4.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Updated by David C. Stauffer in Jan 2010.
+%     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % get the number of angles to process
 num = length(a);

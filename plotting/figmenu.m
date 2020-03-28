@@ -22,7 +22,7 @@ function figmenu(action)
 %     setup_plots
 %
 % Change Log:
-%     1.  Added to DStauffman's library from LM in Aug 2013.
+%     1.  Added to matspace library from LM in Aug 2013.
 
 use_action = exist('action','var');
 if verLessThan('matlab','9.3')

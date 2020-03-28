@@ -28,7 +28,7 @@ function [vec] = quat_times_vector(q, v)
 %
 % Change Log:
 %     1.  Originally written by Bruce Romney.
-%     2.  Added to DStauffman's Library in March 2008.
+%     2.  Added to matspace Library in March 2008.
 
 % Get the size of the vectors and quaternions
 num_q = size(q,2);

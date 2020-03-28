@@ -36,7 +36,7 @@ function [] = plot_classification(fig_hand, classification, caveat, test, inside
 % Change Log:
 %     1.  Written by David C. Stauffer in Feb 2010.
 %     2.  Updated by David C. Stauffer in Sep 2011 to not be effected by panning and zooming.
-%     3.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     3.  Incorporated by David C. Stauffer into matspace library in Nov 2016.
 %     4.  Updated by David C. Stauffer in March 2020 to include optional caveats.
 
 %% check for optional inputs

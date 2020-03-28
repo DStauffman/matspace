@@ -35,8 +35,8 @@ function [q] = dcm_to_quat(dcm)
 %
 % Change Log:
 %     1.  lineage: HARS (Romney), CARS(Romney, Hull), GARSE (Sims, Stauffer, Beck)
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in March 2008.
-%     2.  Updated by David Stauffer in Mar 2010 to allow vectorized inputs and outputs.
+%     3.  Incorporated by David C. Stauffer into matspace in March 2008.
+%     2.  Updated by David C. Stauffer in Mar 2010 to allow vectorized inputs and outputs.
 
 %% find number of DCMs
 [n1,n2,n3] = size(dcm);

@@ -32,8 +32,8 @@ function [] = setup_dir(directory, rec, wipe)
 %     mkdir, delete
 %
 % Change Log:
-%     1.  Added to DStauffman's library from GARSE in Sept 2013.
-%     2.  Modified to be fully recursive by David Stauffer in Sept 2013.
+%     1.  Added to matspace library from GARSE in Sept 2013.
+%     2.  Modified to be fully recursive by David C. Stauffer in Sept 2013.
 %     3.  Modified by David C. Stauffer to optionally not wipe existing directories in October 2016.
 %     4.  Modified by David C. Stauffer in January 2019 to be able to specify if recursive or not.
 

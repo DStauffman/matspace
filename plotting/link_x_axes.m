@@ -31,8 +31,8 @@ function [] = link_x_axes(fig_hand)
 %         are already linked to each other, then this function should work fine.
 %
 % Change Log:
-%     1.  Written by David Stauffer in Aug 2011.
-%     2.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     1.  Written by David C. Stauffer in Aug 2011.
+%     2.  Incorporated by David C. Stauffer into matspace library in Nov 2016.
 
 % get total number of figures
 n = length(fig_hand);

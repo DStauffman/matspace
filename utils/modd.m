@@ -19,8 +19,8 @@ function [out] = modd(x,y)
 %     mod
 %
 % Change Log:
-%     1.  Written by David Stauffer in June 2013.
-%     2.  Added to DStauffman MATLAB library in December 2015.
+%     1.  Written by David C. Stauffer in June 2013.
+%     2.  Added to matspace library in December 2015.
 
 % calculate the shifted modulus
 out = mod(x-1, y) + 1;

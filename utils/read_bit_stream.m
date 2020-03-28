@@ -21,7 +21,7 @@ function read_bit_stream(fid,nlines,reset)
 %     fclose(fid);
 %
 % Change Log:
-%     1.  Written by David Stauffer in May 2009.
+%     1.  Written by David C. Stauffer in May 2009.
 
 %% Read bit stream
 for i = 1:nlines

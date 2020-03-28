@@ -24,7 +24,7 @@ function [counter] = read_all_prototypes(folder,recursive,fid,counter)
 %
 % Change Log:
 %     1.  Written by David C. Stauffer circa 2011.
-%     2.  Incorporated by David C. Stauffer into DStauffman Matlab tools in Dec 2016.
+%     2.  Incorporated by David C. Stauffer into matspace library in Dec 2016.
 
 % hard-coded inputs
 folder_exclusions = {'new', 'tests'};

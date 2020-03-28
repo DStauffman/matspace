@@ -66,7 +66,7 @@ function is_same = compare_two_structures(S1,S2,suppress_output,names)
 % Change Log:
 %     1.  Originally created by Tom Trankle circa 2010.
 %     2.  Adapted and expanded by David C. Stauffer circa 2011.
-%     3.  Added to DStauffman library by David C. Stauffer in February 2016.
+%     3.  Added to matspace library by David C. Stauffer in February 2016.
 
 % check for optional input and get names of incoming structures
 switch nargin

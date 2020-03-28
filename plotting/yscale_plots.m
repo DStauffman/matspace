@@ -66,8 +66,8 @@ function [] = yscale_plots(figs, prefix_old, prefix_new)
 %             'micro','nano','pico','femto','atto','zepto','yocto'
 %
 % Change Log:
-%     1.  Written by David Stauffer in Nov 2012.
-%     2.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     1.  Written by David C. Stauffer in Nov 2012.
+%     2.  Incorporated by David C. Stauffer into matspace library in Nov 2016.
 %     3.  Updated by David C. Stauffer in March 2019 to handle bug where values are exactly the same
 %         for all points.
 

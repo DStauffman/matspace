@@ -37,9 +37,9 @@ function [date_utc] = gps_to_utc(week, time, gps_to_utc_offset)
 %         2017 JAN 01 = JD 2457754.5,  TAI-UTC=  37.0,  GPS-UTC = 18
 %
 % Change Log:
-%     1.  Written by David Stauffer in March 2011.
-%     2.  Updated by David Stauffer in Apr 2011 to include leap seconds since J2000.
-%     3.  Updated by David C. Stauffer to be current through 2017, and incorporated into DStauffman
+%     1.  Written by David C. Stauffer in March 2011.
+%     2.  Updated by David C. Stauffer in Apr 2011 to include leap seconds since J2000.
+%     3.  Updated by David C. Stauffer to be current through 2017, and incorporated into matspace
 %         library.
 %     4.  Updated by David C. Stauffer in July 2018, based on bug found by Chinh Tran to add leap
 %         second at GPS midnight rather than UTC midnight.

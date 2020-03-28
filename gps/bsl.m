@@ -20,7 +20,7 @@ function [out] = bsl(in,shift)
 % Change Log:
 %     1.  Written by David C. Stauffer in Jan 2009.
 %     2.  Moved to gps subfolder in Feb 2009.
-%     3.  Incorporated into DStauffman Matlab tools in Nov 2016.
+%     3.  Incorporated into matspace tools in Nov 2016.
 
 switch nargin
     case 1

@@ -29,10 +29,10 @@ function qout = quat_interp(t, q, ti, inclusive) %#codegen
 %
 % Change Log:
 %     1.  lineage: HARS (Romney), CARS(Romney, Hull), GARSE (Sims, Stauffer, Beck)
-%     2.  Updated per by Scott Sims and David Stauffer in June 2009.
-%     3.  Optimizing by David Stauffer in Oct 2013 for case where you already have
+%     2.  Updated per by Scott Sims and David C. Stauffer in June 2009.
+%     3.  Optimizing by David C. Stauffer in Oct 2013 for case where you already have
 %         most of your desired time points.
-%     4.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 %% Initializations
 % number of data points to find

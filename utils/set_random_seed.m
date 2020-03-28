@@ -23,8 +23,8 @@ function [] = set_random_seed(is_repeatable,seed,num_cycles,cycle)
 %     set_random_seed(is_repeatable,seed,num_cycles,cycle);
 %
 % Change Log:
-%     1.  Written by David Stauffer in Apr 2014.
-%     2.  Added to DStauffman MATLAB library in December 2015.
+%     1.  Written by David C. Stauffer in Apr 2014.
+%     2.  Added to matspace library in December 2015.
 
 if is_repeatable
     rndstr = RandStream.create('mrg32k3a','NumStreams',num_cycles,'StreamIndices',cycle,'Seed',seed(cycle));

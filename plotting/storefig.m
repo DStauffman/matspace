@@ -52,7 +52,7 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 %     1.  "format" can also be a cell array to save the plots as multiple different types.
 %
 % Change Log:
-%     1.  Added to DStauffman's MATLAB library in Sept 2013.
+%     1.  Added to matspace library in Sept 2013.
 
 % confirm that handles are valid figures
 for f = fig_hand

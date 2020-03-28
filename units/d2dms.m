@@ -17,7 +17,7 @@ function out = d2dms(in)
 % Change Log:
 %     1.  Written by David STauffer for AA279 on 29 Apr 2007.
 %     2.  Moved to utils/units in Feb 2009.
-%     3.  Incorporated into DStauffman library in Nov 2016.
+%     3.  Incorporated into matspace library in Nov 2016.
 
 % calculate size of array
 [m,n] = size(in);

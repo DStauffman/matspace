@@ -25,7 +25,7 @@ function compile_a_file(mex_dir,function_name,args_ex)
 %
 % Change Log:
 %     1.  Originally designed by Tom Trankle for use in GARSE.
-%     2.  Added to DStauffman's library in August 2013.
+%     2.  Added to matspace library in August 2013.
 
 % Start timer
 start = tic;

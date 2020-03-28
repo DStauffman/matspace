@@ -36,7 +36,7 @@ function [euler] = quat_to_euler(q,seq)
 % Change Log:
 %     1.  lineage: HARS (Romney), CARS (Romney, Hull), GARSE (Sims, Stauffer, Beck)
 %     2.  Updated by Matt Beck in June 2009.
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % set default euler order
 switch nargin

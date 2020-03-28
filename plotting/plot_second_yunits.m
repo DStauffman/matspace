@@ -32,7 +32,7 @@ function [] = plot_second_yunits(ax, ylab, multiplier)
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in Aug 2011.
-%     2.  Incorporated by David C. Stauffer into DStauffman library in Nov 2016.
+%     2.  Incorporated by David C. Stauffer into matspace library in Nov 2016.
 %     3.  Re-written by David C. Stauffer in December 2017 to use new yyaxis built-in.
 
 % get the original bounds

@@ -25,7 +25,7 @@ function y = rms(x, dim) %#codegen
 %     unit
 %
 % Change Log:
-%     1.  Added to DStauffman's library from GARSE in Sept 2013.
+%     1.  Added to matspace library from GARSE in Sept 2013.
 %     2.  Updated to match simpler code that is part of Matlab R2016A, but maintained to avoid
 %         limitation of needing the signal_toolbox.
 

@@ -31,10 +31,10 @@ function [q_A_B,angles,rms_err] = compute_att_fit(q_A,q_B)
 %     quat_mult
 %
 % Change Log:
-%     1.  Written by David Stauffer in Aug 2011 based on a routine from Evert Cooper.
-%     2.  Updated by David Stauffer in Apr 2012 to incorporate comments from Tom Trankle
+%     1.  Written by David C. Stauffer in Aug 2011 based on a routine from Evert Cooper.
+%     2.  Updated by David C. Stauffer in Apr 2012 to incorporate comments from Tom Trankle
 %         to clarify the order of inputs/output quaternion frames.
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % alias number of output arguments
 num_out = nargout;

@@ -59,7 +59,7 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     titleprefix.m, xextents.m, xscale_plots.m, storefig.m, yscale_plots.m
 %
 % Change Log:
-%     1.  Added to DStauffman's MATLAB library from GARSE in Sept 2013.
+%     1.  Added to matspace library from GARSE in Sept 2013.
 
 %% Initializations
 switch nargin

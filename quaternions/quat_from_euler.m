@@ -36,8 +36,8 @@ function q = quat_from_euler(angles, seq)
 % Change Log:
 %     1.  lineage: HARS (Romney), CARS (Romney, Hull), GARSE (Sims, Stauffer)
 %     2.  Updated per PGPR_1001 2009 June (Sims)
-%     3.  Updated by David Stauffer in Jan 2010 for PGPR_1036.
-%     4.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Updated by David C. Stauffer in Jan 2010 for PGPR_1036.
+%     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % set default euler order
 switch nargin

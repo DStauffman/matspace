@@ -71,7 +71,7 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %
 % Change Log:
 %     1.  Functionalized by David C. Stauffer in October 2011.
-%     2.  Incorporated by David C. Stauffer into DStauffman tools in February 2019.
+%     2.  Incorporated by David C. Stauffer into matspace in February 2019.
 %     3.  Updated by David C. Stauffer in February 2019 to allow different time histories.
 %     4.  Updated by David C. Stauffer in March 2019 to use name-value pairs, and add options for
 %         truth histories, second y scales, and display limits.

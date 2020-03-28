@@ -24,7 +24,7 @@ function plot_rms_lines(x,y,show_in_legend)
 %     close(f1);
 %
 % Change Log:
-%     1.  Added to DStauffman's MATLAB libary from GARSE in Sept 2013.
+%     1.  Added to matspace libary from GARSE in Sept 2013.
 %     2.  Updated by David C. Stauffer in January 2018 to allow to be excluded from legends.
 
 % get optional inputs

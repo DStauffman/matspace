@@ -25,9 +25,9 @@ function pathremove(location)
 %
 % Change Log:
 %     1.  Written by Scott Sims in 2008, originally for EKF.
-%     2.  Duplicated and updated by David Stauffer in Feb 2009 to specify an option argument in.
-%     3.  Updated by David Stauffer in Dec 2009 to pass PGPR_1030 and fix bug for not removing root path.
-%     4.  Incorporated by David C. Stauffer into DStauffman library in November 2016.
+%     2.  Duplicated and updated by David C. Stauffer in Feb 2009 to specify an option argument in.
+%     3.  Updated by David C. Stauffer in Dec 2009 to pass PGPR_1030 and fix bug for not removing root path.
+%     4.  Incorporated by David C. Stauffer into matspace library in November 2016.
 
 %% use specified path, or path of function itself
 switch nargin

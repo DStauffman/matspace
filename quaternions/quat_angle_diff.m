@@ -37,8 +37,8 @@ function [theta,comp] = quat_angle_diff(q1,q2)
 %            theta is the angle of rotation
 %
 % Change Log:
-%     1.  Written by David Stauffer in Feb 2010.
-%     2.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     1.  Written by David C. Stauffer in Feb 2010.
+%     2.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % calculate delta quaternion
 dq = quat_mult(q2, quat_inv(q1));

@@ -15,7 +15,7 @@ function [mask] = first_mask(bool_array)
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in Jan 2015.
-%     2.  Added by David C. Stauffer to the DStauffman MATLAB library in December 2015.
+%     2.  Added by David C. Stauffer to the matspace library in December 2015.
 
 % get the number of rows and columns
 [rows,cols] = size(bool_array);

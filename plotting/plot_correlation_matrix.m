@@ -39,7 +39,7 @@ function [fig_hand] = plot_correlation_matrix(data,labels,OPTS,varargin)
 % Notes:
 %     1.  For square symmetric matrices, only the lower half of diagonal is plotted, depending on
 %         the current settings.
-%     2.  This function is designed to run outside of the DStauffman library by not requiring
+%     2.  This function is designed to run outside of the matspace library by not requiring
 %         Opts.m, setup_plots.m, or figmenu.m to exist.
 %
 % Change Log:
@@ -203,7 +203,7 @@ text(b, repmat(n+1/5*box_size, length(b), 1), a, 'HorizontalAlignment', 'left', 
     'interpreter', 'none');
 
 %% Setup plots
-% Make this step optional, so that this function can exist outside the whole dstauffman library
+% Make this step optional, so that this function can exist outside the whole matspace library
 if exist('setup_plots', 'file') && isa(OPTS, 'Opts')
     setup_plots(fig_hand,OPTS,'dist_no_y_scale');
 end

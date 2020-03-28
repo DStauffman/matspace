@@ -53,9 +53,9 @@ function generic_bin_cat(savename,location,filenums)
 %
 % Change Log:
 %     1.  Written by Matt Beck in April 2010.
-%     2.  Updated by David Stauffer in Apr 2013 to distinguish between files it can't find and
+%     2.  Updated by David C. Stauffer in Apr 2013 to distinguish between files it can't find and
 %         files it can't read.
-%     3.  Incorporated by David C. Stauffer into DStauffman tools in Nov 2016.
+%     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 
 % display status
 disp(['Starting "', savename,'" concatenation ...']);

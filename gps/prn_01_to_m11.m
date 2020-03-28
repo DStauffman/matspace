@@ -16,6 +16,6 @@ function out = prn_01_to_m11(in)
 % Change Log:
 %     1.  Written by David C. Stauffer for AA272C in Jan 2009.
 %     2.  Moved to gps subfolder in Feb 2009.
-%     3.  Incorporated into DStauffman Matlab tools in Nov 2016.
+%     3.  Incorporated into matspace tools in Nov 2016.
 
 out = 1*(in==0) + -1*(in==1);

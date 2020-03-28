@@ -36,7 +36,7 @@ if ~isempty(dcs_always)
     disp(['    ''', dcs_always,'''']);
 end
 if ~isempty(dcs_tools)
-    % DStauffman Matlab library
+    % matspace library
     if exist(fullfile(dcs_tools, 'pathset.m'), 'file')
         run(fullfile(dcs_tools, 'pathset.m'));
     end
