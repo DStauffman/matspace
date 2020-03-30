@@ -39,8 +39,8 @@ function [fig_hand] = plot_time_history(time, data, varargin)
 % create parser
 p = inputParser;
 % create some validation functions
-fun_is_opts  = @(x) isa(x, 'Opts') || isempty(x);
-fun_is_time  = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
+fun_is_opts = @(x) isa(x, 'Opts') || isempty(x);
+fun_is_time = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
 fun_is_cell_char_or_str = @(x) iscellstr(x) || isstring(x);
 fun_is_num_or_cell      = @(x) isnumeric(x) || iscell(x);
 % set options
