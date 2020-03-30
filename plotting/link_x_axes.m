@@ -14,9 +14,9 @@ function [] = link_x_axes(fig_hand)
 %
 % Prototype:
 %     f1 = figure;
-%     plot(0:5, zeros(1,6), 'b.');
+%     plot(0:5, zeros(1, 6), 'b.');
 %     f2 = figure;
-%     plot(2:7, ones(1,6), 'r.');
+%     plot(2:7, ones(1, 6), 'r.');
 %     link_x_axes([f1 f2]);
 %
 %     % clean up
