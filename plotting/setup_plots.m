@@ -25,15 +25,15 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     None
 %
 % Prototype:
-%     f = figure('name','Something Plot');
+%     f = figure('name', 'Something Plot');
 %     hold on;
-%     plot(linspace(0,3600),0.1+randn(1,100),'r');
-%     plot(linspace(0,3600),0.2+randn(1,100),'b');
-%     plot(linspace(0,3600),0.3+ones(1,100),'g');
-%     plot([0,3600],[1.3,1.3],'ko');
-%     title(get(f,'name'),'Interpreter','none');
+%     plot(linspace(0, 3600), 0.1 + randn(1, 100), 'r');
+%     plot(linspace(0, 3600), 0.2 + randn(1, 100), 'b');
+%     plot(linspace(0, 3600), 0.3 + ones(1, 100), 'g');
+%     plot([0, 3600], [1.3, 1.3], 'ko');
+%     title(get(f, 'name'), 'Interpreter', 'none');
 %     hold off;
-%     legend('r','b','g');
+%     legend('r', 'b', 'g');
 %     xlabel('something [sec]');
 %     ylabel('something [rad]');
 %     figmenu;
@@ -49,17 +49,18 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     OPTS.plot_type = 'png';
 %     OPTS.save_path = get_root_dir();
 %     OPTS.vert_fact = 'milli';
-%     setup_plots(f,OPTS,'time');
+%     setup_plots(f, OPTS, 'time');
 %
 %     % clean up
 %     close(f);
 %     delete(fullfile(get_root_dir, 'NULL - Something Plot.png'));
 %
 % See Also:
-%     titleprefix.m, xextents.m, xscale_plots.m, storefig.m, yscale_plots.m
+%     titleprefix, xextents, xscale_plots, storefig, yscale_plots
 %
 % Change Log:
 %     1.  Added to matspace library from GARSE in Sept 2013.
+%     2.  Updated by David C. Stauffer in March 2020 to support datetime time vectors.
 
 %% Initializations
 switch nargin
@@ -84,7 +85,8 @@ end
 
 %% OPTS Aliases
 update_name     = ~isempty(OPTS.case_name);
-scale_xaxis     = strcmp(OPTS.time_base, 'sec') && ~strcmp(OPTS.time_unit, 'sec');
+scale_xaxis     = ~isempty(OPTS.time_unit) && ~strcmp(OPTS.time_unit, 'datetime') && ...
+    ~strcmp(OPTS.time_base, OPTS.time_unit);
 change_xextents = ~isinf(OPTS.disp_xmin) || ~isinf(OPTS.disp_xmax);
 scale_yaxis     = any(strcmp(form, {'time', 'dist'}));
 save_plot       = OPTS.save_plot;
@@ -101,7 +103,7 @@ end
 if any(strcmp(form,{'time','time_no_y_scale'}))
     %% Change x-axis scale
     if scale_xaxis
-        xscale_plots(fig_hand,'[sec]',['[',OPTS.time_unit,']']);
+        xscale_plots(fig_hand,['[',OPTS.time_base,']'],['[',OPTS.time_unit,']']);
     end
 
     %% Change x-axis extents
@@ -121,10 +123,10 @@ if any(strcmp(form,{'time','time_no_y_scale'}))
                 otherwise
                     error('matspace:plotting:BadOptsTimeUnit', 'Unexpected value for "OPTS.time_unit".');
             end
+            xextents(fig_hand, OPTS.disp_xmin/mult, OPTS.disp_xmax/mult);
         else
-            mult = 1;
+            xextents(fig_hand, OPTS.disp_xmin, OPTS.disp_xmax);
         end
-        xextents(fig_hand,OPTS.disp_xmin/mult,OPTS.disp_xmax/mult);
     end
 end
 

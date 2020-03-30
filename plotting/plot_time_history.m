@@ -39,10 +39,10 @@ function [fig_hand] = plot_time_history(time, data, varargin)
 % create parser
 p = inputParser;
 % create some validation functions
-fun_is_opts = @(x) isa(x, 'Opts') || isempty(x);
-fun_is_time = @(x) isnumeric(x) && (isempty(x) || isvector(x));
+fun_is_opts  = @(x) isa(x, 'Opts') || isempty(x);
+fun_is_time  = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
 fun_is_cell_char_or_str = @(x) iscellstr(x) || isstring(x);
-fun_is_num_or_cell = @(x) isnumeric(x) || iscell(x);
+fun_is_num_or_cell      = @(x) isnumeric(x) || iscell(x);
 % set options
 addRequired(p, 'Time', fun_is_time);
 addRequired(p, 'Data', @isnumeric);
@@ -50,7 +50,7 @@ addOptional(p, 'OPTS', Opts, fun_is_opts);
 addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'Names', {}, fun_is_cell_char_or_str);
-addParameter(p, 'TimeTwo', [], @isnumeric);
+addParameter(p, 'TimeTwo', [], fun_is_time);
 addParameter(p, 'DataTwo', zeros(1,0), @isnumeric);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', zeros(1,0), @isnumeric);
@@ -69,6 +69,15 @@ data_two    = p.Results.DataTwo;
 truth_name  = p.Results.TruthName;
 truth_time  = p.Results.TruthTime;
 truth_data  = p.Results.TruthData;
+% check time formats for default values
+if isdatetime(time)
+    if isempty(time_two)
+        time_two = NaT(0);
+    end
+    if isempty(truth_time)
+        truth_time = NaT(0);
+    end
+end
 
 %% Process inputs
 if isempty(names)
@@ -98,6 +107,7 @@ rms_xmin    = OPTS.rms_xmin;
 rms_xmax    = OPTS.rms_xmax;
 disp_xmin   = OPTS.disp_xmin;
 disp_xmax   = OPTS.disp_xmax;
+start_date  = get_start_date(OPTS.date_zero);
 if ~isempty(OPTS.colormap)
     colors1 = colormap(OPTS.colormap);
 else
@@ -105,13 +115,25 @@ else
 end
 colors2     = whitten(colors1);
 
+%% Potentially convert times to dates
+if strcmp(OPTS.time_unit, 'datetime')
+    date_zero  = OPTS.date_zero;
+    time       = convert_time_to_date(time,       date_zero, time_units);
+    time_two   = convert_time_to_date(time_two,   date_zero, time_units);
+    truth_time = convert_time_to_date(truth_time, date_zero, time_units);
+    disp_xmin  = convert_time_to_date(disp_xmin,  date_zero, time_units);
+    disp_xmax  = convert_time_to_date(disp_xmax,  date_zero, time_units);
+    rms_xmin   = convert_time_to_date(rms_xmin,   date_zero, time_units);
+    rms_xmax   = convert_time_to_date(rms_xmax,   date_zero, time_units);
+end
+
 %% Plot data
 % calls lower level function
 num_labels      = length(names);
 rows            = modd(1:num_labels, size(colors1, 1));
 this_colororder = [colors1(rows,:); colors2(rows,:); colors1(rows,:)];
 fig_hand = general_difference_plot(description, time, time_two, scale*data, scale*data_two, ...
-    'Elements', names, 'Units', units, 'TimeUnits', time_units, ...
+    'Elements', names, 'Units', units, 'TimeUnits', time_units, 'LegendScale', 'unity', 'StartDate', start_date, ...
     'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, 'DispXmin', disp_xmin, 'DispXmax', disp_xmax, ...
     'FigVisible', show_plot, 'MakeSubplots', sub_plots, 'ColorOrder', this_colororder, ...
     'UseMean', use_mean, 'PlotZero', show_zero, 'ShowRms', show_rms, 'SecondYScale', second_y_scale, ...

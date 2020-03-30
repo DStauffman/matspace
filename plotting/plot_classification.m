@@ -65,6 +65,11 @@ else
     convert_figs = false;
 end
 
+% simple check to exist if not using
+if isempty(classification)
+    return
+end
+
 %% loop through each figure
 for i = 1:length(fig_hand)
     % force conversion to newer figure objects
@@ -85,7 +90,7 @@ for i = 1:length(fig_hand)
             'HorizontalAlignment','Center','VerticalAlignment','Middle',...
             'FontSize',8,'FontWeight','Bold','Color','r','EdgeColor','r','LineWidth',2);
     end
-    % add classification box
+    % get classification colors and strings
     switch classification
         case 'U'
             color    = [0 0 0];
@@ -103,13 +108,19 @@ for i = 1:length(fig_hand)
             error('matspace:BadClassification', 'Unexpected value for classification: "%s".', ...
                 classification);
     end
+    % determine size of box
+    h = 0.1;
     if ~isempty(caveat)
         text_str = [text_str, caveat]; %#ok<AGROW>
-        w = 0.4;
+        w = 0.4; % TODO: could make depend on length of caveat
     else
         w = 0.2;
     end
-    h = 0.1;
+    % allow other color options for certain caveats
+    if contain(caveat, '//FAKE COLOR')
+        color = [0 0.8 0];
+    end
+    % add classification box
     if inside_axes
         annotation(this_fig,'textbox','Position',[pos(1)+pos(3)-w,pos(2),w,h],'String',text_str,...
             'HorizontalAlignment','Center','VerticalAlignment','Middle',...

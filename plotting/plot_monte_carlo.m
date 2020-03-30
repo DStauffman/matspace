@@ -1,4 +1,4 @@
-function [fig_hand] = plot_monte_carlo(time1, data1, varargin)
+function [fig_hand] = plot_monte_carlo(time_one, data_one, varargin)
 
 % PLOT_MONTE_CARLO  acts as a convenient wrapper to plotting a time history of some data.
 %
@@ -59,7 +59,7 @@ leg_rms_lines = false;
 p = inputParser;
 % create some validation functions
 fun_is_opts = @(x) isa(x, 'Opts') || isempty(x);
-fun_is_time = @(x) isnumeric(x) && (isempty(x) || isvector(x));
+fun_is_time = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
 % set options
 addRequired(p, 'Time1', fun_is_time);
 addRequired(p, 'Data1', @isnumeric);
@@ -74,7 +74,7 @@ addParameter(p, 'TruthName', string('Truth'), @isstring);
 addParameter(p, 'SecondYScale', nan, @isnumeric);
 addParameter(p, 'PlotSigmas', 1, @isnumeric);
 % do parse
-parse(p, time1, data1, varargin{:});
+parse(p, time_one, data_one, varargin{:});
 % create some convenient aliases
 type           = p.Results.Type;
 description    = p.Results.Description;
@@ -82,8 +82,8 @@ truth_name     = p.Results.TruthName;
 second_y_scale = p.Results.SecondYScale;
 plot_sigmas    = p.Results.PlotSigmas;
 % create data channel aliases
-time2       = p.Results.Time2;
-data2       = p.Results.Data2;
+time_two    = p.Results.Time2;
+data_two    = p.Results.Data2;
 truth_time  = p.Results.TruthTime;
 truth_data  = p.Results.TruthData;
 
@@ -104,10 +104,10 @@ names = OPTS.names;
 if length(names) > 1
     if length(names) == 2
         comp_mode = modes.nondeg;
-        assert(~isempty(data1) && ~isempty(data2));
+        assert(~isempty(data_one) && ~isempty(data_two));
     else
         comp_mode = modes.multi;
-        assert(size(data1, 1) == length(names), 'Badly sized data.');
+        assert(size(data_one, 1) == length(names), 'Badly sized data.');
     end
 else
     comp_mode = modes.single;
@@ -123,32 +123,51 @@ end
 if length(names) >= 2 && ~isempty(names{2})
     name2 = [names{2}, ': '];
 end
+rms_xmin    = OPTS.rms_xmin;
+rms_xmax    = OPTS.rms_xmax;
+disp_xmin   = OPTS.disp_xmin;
+disp_xmax   = OPTS.disp_xmax;
+start_date  = get_start_date(OPTS.date_zero);
+
+%% Potentially convert times to dates
+if strcmp(OPTS.time_unit, 'datetime')
+    date_zero  = OPTS.date_zero;
+    time_one   = convert_time_to_date(time_one,   date_zero, time_units);
+    time_two   = convert_time_to_date(time_two,   date_zero, time_units);
+    truth_time = convert_time_to_date(truth_time, date_zero, time_units);
+    disp_xmin  = convert_time_to_date(disp_xmin,  date_zero, time_units);
+    disp_xmax  = convert_time_to_date(disp_xmax,  date_zero, time_units);
+    rms_xmin   = convert_time_to_date(rms_xmin,   date_zero, time_units);
+    rms_xmax   = convert_time_to_date(rms_xmax,   date_zero, time_units);
+end
 
 %% calculate RMS indices
 if show_rms
-    ix_rms_xmin1 = finde(time1 >= OPTS.rms_xmin,1,'first');
-    ix_rms_xmax1 = finde(time1 <= OPTS.rms_xmax,1,'last');
-    ix_rms_xmin2 = finde(time2 >= OPTS.rms_xmin,1,'first');
-    ix_rms_xmax2 = finde(time2 <= OPTS.rms_xmax,1,'last');
+    ix_rms_xmin1 = finde(time_one >= rms_xmin,1,'first');
+    ix_rms_xmax1 = finde(time_one <= rms_xmax,1,'last');
+    ix_rms_xmin2 = finde(time_two >= rms_xmin,1,'first');
+    ix_rms_xmax2 = finde(time_two <= rms_xmax,1,'last');
 end
 
 %% process non-deg data before trying to create any plots
 if comp_mode == modes.nondeg
-    [nondeg_time,ix1,ix2]  = intersect(time1,time2);
-    nondeg_data            = mean(data2(:,ix2),1) - mean(data1(:,ix1),1);
-    ix_rms_xmin_nondeg     = finde(nondeg_time >= OPTS.rms_xmin,1,'first');
-    ix_rms_xmax_nondeg     = finde(nondeg_time <= OPTS.rms_xmax,1,'last');
+    [nondeg_time,ix1,ix2]  = intersect(time_one, time_two);
+    nondeg_data            = mean(data_two(:,ix2),1) - mean(data_one(:,ix1),1);
+    ix_rms_xmin_nondeg     = finde(nondeg_time >= rms_xmin,1,'first');
+    ix_rms_xmax_nondeg     = finde(nondeg_time <= rms_xmax,1,'last');
     nondeg_rms             = scale*nanrms(nondeg_data(:,ix_rms_xmin_nondeg:ix_rms_xmax_nondeg));
     if use_sub_plots
-        fig_hand           = 0;
+        fig_hand           = gobjects(1);
     else
-        fig_hand           = [0 0];
+        fig_hand           = gobjects(1, 2);
     end
 else
-    fig_hand               = 0;
+    fig_hand               = gobjects(1);
 end
 
 %% Plot data
+% determine if using datetimes
+use_datetime = isdatetime(time_one) || isdatetime(time_two) || isdatetime(truth_time);
 % create figure
 fig_hand(1) = figure('name', [description,' vs. Time']);
 
@@ -168,29 +187,29 @@ hold on;
 % plot data
 if comp_mode ~= modes.multi
     % if only one cycle, then just plot it
-    if size(data1, data_dim) == 1
+    if size(data_one, data_dim) == 1
         % calculate RMS for legend
         if show_rms
-            rms_data1 = scale*nanrms(data1(:,ix_rms_xmin1:ix_rms_xmax1));
+            rms_data1 = scale*nanrms(data_one(:,ix_rms_xmin1:ix_rms_xmax1));
             this_name = [name1,'Mean (RMS: ',num2str(rms_data1,leg_format),')'];
         else
             this_name = [name1,'Mean'];
         end
         % plot data
-        plot(ax1, time1, scale*data1, 'b.-', 'DisplayName', this_name);
+        plot(ax1, time_one, scale*data_one, 'b.-', 'DisplayName', this_name);
     else
         % plot different cycles
-        p1 = plot(ax1, time1, scale*data1, '-', 'Color', [0.7 0.7 0.8]);
+        p1 = plot(ax1, time_one, scale*data_one, '-', 'Color', [0.7 0.7 0.8]);
         indiv_group = hggroup('DisplayName', [name1, 'Individual Runs']);
         set(p1, 'Parent', indiv_group);
         set(get(get(indiv_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
         % create the mean result
-        temp_mean = scale*mean(data1, data_dim, 'omitnan');
+        temp_mean = scale*mean(data_one, data_dim, 'omitnan');
         % plot the sigmas
         if ~isnan(plot_sigmas) && plot_sigmas > 0
-            temp_std = std(data1, std_flag, data_dim, 'omitnan');
-            p2 = plot(ax1, time1, temp_mean + scale*temp_std, 'c.-');
-            p3 = plot(ax1, time1, temp_mean - scale*temp_std, 'c.-');
+            temp_std = std(data_one, std_flag, data_dim, 'omitnan');
+            p2 = plot(ax1, time_one, temp_mean + scale*temp_std, 'c.-');
+            p3 = plot(ax1, time_one, temp_mean - scale*temp_std, 'c.-');
             sigmas_group = hggroup('DisplayName', [name1, '\pm', num2str(plot_sigmas), '\sigma']);
             set([p2 p3], 'Parent', sigmas_group);
             set(get(get(sigmas_group,'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
@@ -202,15 +221,15 @@ if comp_mode ~= modes.multi
         else
             this_name = [name1,'Mean'];
         end
-        plot(ax1, time1, temp_mean, 'b.-', 'LineWidth', 2, 'DisplayName', this_name);
+        plot(ax1, time_one, temp_mean, 'b.-', 'LineWidth', 2, 'DisplayName', this_name);
     end
 else
     % In multi-mode, calculate RMS if necessary
     if show_rms
-        rms_data1 = nanrms(scale*data1, 2);
+        rms_data1 = nanrms(scale*data_one, 2);
     end
     % plot all the channels
-    p1 = plot(ax1, time1, scale*data1, '.-');
+    p1 = plot(ax1, time_one, scale*data_one, '.-');
     for i = 1:length(p1)
         if show_rms
             set(p1(i), 'DisplayName', [names{i}, ' (RMS: ', num2str(rms_data1(i))]);
@@ -221,24 +240,24 @@ else
 end
 % plot second channel
 if comp_mode == modes.nondeg
-    if size(data2, data_dim) == 1
+    if size(data_two, data_dim) == 1
         if show_rms
-            rms_data2 = scale*nanrms(data2(:,ix_rms_xmin2:ix_rms_xmax2));
+            rms_data2 = scale*nanrms(data_two(:,ix_rms_xmin2:ix_rms_xmax2));
             this_name = [name2,'Mean (RMS: ',num2str(rms_data2,leg_format),')'];
         else
             this_name = [name2,'Mean'];
         end
-        plot(ax1, time2, scale*data2, '.-', 'Color', [0 0.8 0], 'DisplayName', this_name);
+        plot(ax1, time_two, scale*data_two, '.-', 'Color', [0 0.8 0], 'DisplayName', this_name);
     else
-        p1 = plot(ax1, time2, scale*data2, '-', 'Color', [0.7 0.8 0.7]);
+        p1 = plot(ax1, time_two, scale*data_two, '-', 'Color', [0.7 0.8 0.7]);
         indiv_group = hggroup('DisplayName', [name2, 'Individual Runs']);
         set(p1, 'Parent', indiv_group);
         set(get(get(indiv_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
-        temp_mean = scale*mean(data2, data_dim, 'omitnan');
+        temp_mean = scale*mean(data_two, data_dim, 'omitnan');
         if ~isnan(plot_sigmas) && plot_sigmas > 0
-            temp_std = std(data2, std_flag, data_dim, 'omitnan');
-            p2 = plot(ax1, time2, temp_mean + scale*temp_std, 'g.-');
-            p3 = plot(ax1, time2, temp_mean - scale*temp_std, 'g.-');
+            temp_std = std(data_two, std_flag, data_dim, 'omitnan');
+            p2 = plot(ax1, time_two, temp_mean + scale*temp_std, 'g.-');
+            p3 = plot(ax1, time_two, temp_mean - scale*temp_std, 'g.-');
             sigmas_group = hggroup('DisplayName', [name2, '\pm', num2str(plot_sigmas), '\sigma']);
             set([p2 p3], 'Parent', sigmas_group);
             set(get(get(sigmas_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
@@ -249,22 +268,26 @@ if comp_mode == modes.nondeg
         else
             this_name = [name2,'Mean'];
         end
-        plot(ax1, time2, temp_mean, '.-', 'Color', [0 0.8 0], 'LineWidth', 2, 'DisplayName', this_name);
+        plot(ax1, time_two, temp_mean, '.-', 'Color', [0 0.8 0], 'LineWidth', 2, 'DisplayName', this_name);
     end
 end
 
 % label plot
 title(get(fig_hand(1), 'name'), 'interpreter', 'none');
-xlabel(['Time [',time_units,']']);
+if use_datetime
+    xlabel('Time');
+else
+    xlabel(['Time [',time_units,']',start_date]);
+end
 ylabel([description,' [',units,']']);
 
 % set display limits
 xl = xlim;
-if isfinite(OPTS.disp_xmin)
-    xl(1) = max([xl(1), OPTS.disp_xmin]);
+if isfinite(disp_xmin)
+    xl(1) = max([xl(1), disp_xmin]);
 end
-if isfinite(OPTS.disp_xmax)
-    xl(2) = min([xl(2), OPTS.disp_xmax]);
+if isfinite(disp_xmax)
+    xl(2) = min([xl(2), disp_xmax]);
 end
 xlim(xl);
 
@@ -288,7 +311,7 @@ end
 
 % plot RMS lines
 if show_rms
-    plot_rms_lines(time1([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
+    plot_rms_lines(time_one([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
 end
 
 % turn on grid/legend
@@ -322,7 +345,12 @@ if comp_mode == modes.nondeg
     p5 = plot(ax2, nondeg_time, scale*nondeg_data, 'r.-');
 
     % label plot
-    xlabel(['Time [',time_units,']']);
+    title(get(fig_hand(1), 'name'), 'interpreter', 'none');
+    if use_datetime
+        xlabel('Time');
+    else
+        xlabel(['Time [',time_units,']',start_date]);
+    end
     ylabel([description,' [',units,']']);
 
     % turn on grid/legend
@@ -336,7 +364,7 @@ if comp_mode == modes.nondeg
 
     % plot RMS lines
     if show_rms
-        plot_rms_lines(time1([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
+        plot_rms_lines(time_one([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
     end
 
     % Second Y axis
