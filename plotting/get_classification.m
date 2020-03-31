@@ -31,7 +31,7 @@ end
 classification = classify(1);
 assert(any(strcmp(classification, {'U', 'C', 'S', 'T'})), 'Unexpected classification of "%s" found', classification);
 
-% pull out anything past the first // as the caveats(s)
+% pull out anything past the first // as the caveat(s)
 slashes = strfind(classify, '//');
 if isempty(slashes)
     caveat = '';

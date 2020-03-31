@@ -9,7 +9,7 @@ function [] = plot_classification(fig_hand, classification, caveat, test, inside
 % Input:
 %     fig_hand       : (1xN) vector of figure handles [num]
 %     classification : (row) string specifying classification to use, from {'U','C','S','TS'} [char]
-%     caveat         : (row) string specifying the extra caveats beyond the main  classification [char]
+%     caveat         : (row) string specifying the extra caveats beyond the main classification [char]
 %     test           : (true/false) flag to specify if this is a test or a real application [bool]
 %     inside_axes    : (true/false) flag to specify whether box is inside the axis, or on the figure [bool]
 %
@@ -108,6 +108,7 @@ for i = 1:length(fig_hand)
             error('matspace:BadClassification', 'Unexpected value for classification: "%s".', ...
                 classification);
     end
+    text_color = color;
     % determine size of box
     h = 0.1;
     if ~isempty(caveat)
@@ -117,18 +118,19 @@ for i = 1:length(fig_hand)
         w = 0.2;
     end
     % allow other color options for certain caveats
-    if contain(caveat, '//FAKE COLOR')
-        color = [0 0.8 0];
+    if contains(caveat, '//FAKE COLOR')
+        color      = [0.0 0.8 0.0];
+        text_color = [0.2 0.2 0.2];
     end
     % add classification box
     if inside_axes
         annotation(this_fig,'textbox','Position',[pos(1)+pos(3)-w,pos(2),w,h],'String',text_str,...
             'HorizontalAlignment','Center','VerticalAlignment','Middle',...
-            'FontSize',8,'FontWeight','Bold','Color',color,'EdgeColor',color,'LineWidth',2);
+            'FontSize',8,'FontWeight','Bold','Color',text_color,'EdgeColor',color,'LineWidth',2);
     else
         annotation(this_fig,'textbox','Position',[1-w,0,w,h],'String',text_str,...
             'HorizontalAlignment','Center','VerticalAlignment','Middle',...
-            'FontSize',8,'FontWeight','Bold','Color',color,'EdgeColor',color,'LineWidth',2);
+            'FontSize',8,'FontWeight','Bold','Color',text_color,'EdgeColor',color,'LineWidth',2);
         annotation(this_fig,'rectangle','Position',[0,0,1,1],'Color','none','EdgeColor',color,'LineWidth',2);
     end
 end

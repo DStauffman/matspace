@@ -43,7 +43,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     quat_two        = quat_norm(rand(4,11));
 %     name_one        = 'test1';
 %     name_two        = 'test2';
-%     start_date      = datestr(now);
+%     start_date      = ['  t(0) = ', datestr(now)];
 %     rms_xmin        = 1;
 %     rms_xmax        = 10;
 %     disp_xmin       = -2;
@@ -76,26 +76,28 @@ truth_color = [0 0 0];
 
 %% Parser
 % Validation functions
-is_cellstr = @(x) isstring(x) || iscell(x);
+fun_is_cellstr = @(x) isstring(x) || iscell(x);
+fun_is_time    = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
+fun_is_bound   = @(x) (isnumeric(x) || isdatetime(x)) && isscalar(x);
 % Argument parser
 p = inputParser;
-addParameter(p, 'NameOne','', @ischar);
-addParameter(p, 'NameTwo','', @ischar);
+addParameter(p, 'NameOne', '', @ischar);
+addParameter(p, 'NameTwo', '', @ischar);
 addParameter(p, 'TimeUnits', 'sec', @ischar);
-addParameter(p, 'StartDate','', @ischar);
+addParameter(p, 'StartDate', '', @ischar);
 addParameter(p, 'PlotComp', true, @islogical);
-addParameter(p, 'RmsXmin',-inf, @isnumeric);
-addParameter(p, 'RmsXmax',inf, @isnumeric);
-addParameter(p, 'DispXmin',-inf, @isnumeric);
-addParameter(p, 'DispXmax',inf, @isnumeric);
-addParameter(p, 'FigVisible',true, @islogical);
-addParameter(p, 'MakeSubplots',true, @islogical);
-addParameter(p, 'UseMean',false, @islogical);
-addParameter(p, 'PlotZero',false, @islogical);
-addParameter(p, 'ShowRms',true, @islogical);
+addParameter(p, 'RmsXmin', -inf, fun_is_bound);
+addParameter(p, 'RmsXmax', inf, fun_is_bound);
+addParameter(p, 'DispXmin', -inf, fun_is_bound);
+addParameter(p, 'DispXmax', inf, fun_is_bound);
+addParameter(p, 'FigVisible', true, @islogical);
+addParameter(p, 'MakeSubplots', true, @islogical);
+addParameter(p, 'UseMean', false, @islogical);
+addParameter(p, 'PlotZero', false, @islogical);
+addParameter(p, 'ShowRms', true, @islogical);
 addParameter(p, 'LegendLoc','North', @ischar);
-addParameter(p, 'TruthName', "Truth", is_cellstr);
-addParameter(p, 'TruthTime', [], @isnumeric);
+addParameter(p, 'TruthName', string('Truth'), is_cellstr);
+addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 parse(p, varargin{:});
 name_one        = p.Results.NameOne;
@@ -120,6 +122,8 @@ if p.Results.FigVisible
 else
     fig_visible = 'off';
 end
+% determine if using datetimes
+use_datetime = isdatetime(time_one) || isdatetime(time_two) || isdatetime(truth_time);
 
 %% calculations
 [time_overlap, q1_diff_ix, q2_diff_ix] = intersect(time_one, time_two); % TODO: add a tolerance?
@@ -176,7 +180,7 @@ end
 % plot data
 hold on;
 if have_quat_one
-    if have_data_two
+    if have_quat_two
         symbol = '^-';
     else
         symbol = '.-';
@@ -192,7 +196,7 @@ if have_quat_one
     end
 end
 if have_quat_two
-    if have_data_one
+    if have_quat_one
         symbol = 'v:';
     else
         symbol = '.-';
@@ -231,7 +235,11 @@ end
 % format display of plot
 legend('show','Location','North');
 title([description,' Quaternion Components'],'interpreter','none');
-xlabel(['Time [',time_units,']',start_date]);
+if use_datetime
+    xlabel('Date');
+else
+    xlabel(['Time [',time_units,']',start_date]);
+end
 ylabel([description,' Quaternion Components [dimensionless]']);
 grid on;
 % plot RMS lines
@@ -277,7 +285,11 @@ if have_quat_one && have_quat_two
     end
     legend('show','Location','North');
     title([description,' Difference'],'interpreter','none');
-    xlabel(['Time [',time_units,']',start_date]);
+    if use_datetime
+        xlabel('Date');
+    else
+        xlabel(['Time [',time_units,']',start_date]);
+    end
     ylabel([description,' Difference [rad]']);
     grid on;
     if show_rms

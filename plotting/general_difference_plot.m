@@ -47,7 +47,7 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %     elements      = {'x','y'};
 %     units         = 'rad';
 %     leg_scale     = 'micro';
-%     start_date    = ['t(0) = ', datestr(now)];
+%     start_date    = ['  t(0) = ', datestr(now)];
 %     rms_xmin      = 1;
 %     rms_xmax      = 10;
 %     disp_xmin     = -2;
@@ -83,9 +83,9 @@ truth_color = [0 0 0];
 %% Parser
 % Validation functions
 fun_is_num_or_cell = @(x) isnumeric(x) || iscell(x);
-fun_is_cellstr = @(x) isstring(x) || iscell(x);
-fun_is_time    = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
-fun_is_bound   = @(x) (isnumeric(x) || isdatetime(x)) && isscalar(x);
+fun_is_cellstr     = @(x) isstring(x) || iscell(x);
+fun_is_time        = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
+fun_is_bound       = @(x) (isnumeric(x) || isdatetime(x)) && isscalar(x);
 % Argument parser
 p = inputParser;
 addParameter(p, 'NameOne', '', @ischar);
