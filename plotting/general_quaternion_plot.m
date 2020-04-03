@@ -95,7 +95,7 @@ addParameter(p, 'MakeSubplots', true, @islogical);
 addParameter(p, 'UseMean', false, @islogical);
 addParameter(p, 'PlotZero', false, @islogical);
 addParameter(p, 'ShowRms', true, @islogical);
-addParameter(p, 'LegendLoc','North', @ischar);
+addParameter(p, 'LegendLoc', 'North', @ischar);
 addParameter(p, 'TruthName', string('Truth'), is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);

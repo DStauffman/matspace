@@ -65,7 +65,7 @@ else
     convert_figs = false;
 end
 
-% simple check to exist if not using
+% simple check to exit if not using
 if isempty(classification)
     return
 end
@@ -109,7 +109,7 @@ for i = 1:length(fig_hand)
                 classification);
     end
     text_color = color;
-    % determine size of box
+    % determine size of box and append any optional caveat(s)
     h = 0.1;
     if ~isempty(caveat)
         text_str = [text_str, caveat]; %#ok<AGROW>
