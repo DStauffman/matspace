@@ -1,4 +1,4 @@
-function plot_rms_lines(x,y,show_in_legend)
+function plot_rms_lines(ax, x, y, show_in_legend)
 
 % PLOT_RMS_LINES  plots a vertical line at the RMS start and stop times.
 %
@@ -8,8 +8,9 @@ function plot_rms_lines(x,y,show_in_legend)
 %     the top and bottom.  The lines are added to the plot regardless of the figure hold state.
 %
 % Input:
-%     x : (1x2) vector of xmin and xmax values at which to draw the lines [num]
-%     y : (1x2) vector of ymin and ymax values at which to extend the lines vertically [num]
+%     ax : (gobject) Axes handle
+%     x  : (1x2) vector of xmin and xmax values at which to draw the lines [num]
+%     y  : (1x2) vector of ymin and ymax values at which to extend the lines vertically [num]
 %     show_in_legend : (scalar), optional, show the lines when a legend is turned on [bool]
 %
 % Output:
@@ -17,8 +18,9 @@ function plot_rms_lines(x,y,show_in_legend)
 %
 % Prototype:
 %     f1 = figure;
-%     plot(1:10,1:10);
-%     plot_rms_lines([2 5],[1 10]);
+%     ax = axes(f1);
+%     plot(ax, 1:10,1:10);
+%     plot_rms_lines(ax, [2 5], [1 10]);
 %
 %     % clean up
 %     close(f1);
@@ -26,32 +28,35 @@ function plot_rms_lines(x,y,show_in_legend)
 % Change Log:
 %     1.  Added to matspace libary from GARSE in Sept 2013.
 %     2.  Updated by David C. Stauffer in January 2018 to allow to be excluded from legends.
+%     3.  Updated by David C. Stauffer in April 2020 to use explicit axes that is passed in.
 
 % get optional inputs
 switch nargin
-    case 2
-        show_in_legend = true;
     case 3
+        show_in_legend = true;
+    case 4
         % nop
     otherwise
-        error('matspace:UnexpectedNargin','Unexpected number of inputs: "%i"',nargin);
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % initial figure hold state
-hold_state = ishold;
-hold on;
+hold_state = ishold(ax);
+hold(ax, 'on');
 
 % draw lines
-h1 = plot([x(1) x(1)],y,'LineStyle','--','Color',[   1 0.75 0],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Start Time');
-h2 = plot([x(2) x(2)],y,'LineStyle','--','Color',[0.75 0.75 1],'Marker','+','MarkerEdgeColor','m','MarkerSize',10,'DisplayName','RMS Stop Time');
+h1 = plot(ax, [x(1) x(1)], y, 'LineStyle', '--', 'Color', [   1 0.75 0], 'Marker', '+', ...
+    'MarkerEdgeColor', 'm', 'MarkerSize', 10, 'DisplayName', 'RMS Start Time');
+h2 = plot(ax, [x(2) x(2)] ,y, 'LineStyle', '--', 'Color', [0.75 0.75 1], 'Marker', '+', ...
+    'MarkerEdgeColor', 'm', 'MarkerSize', 10, 'DisplayName', 'RMS Stop Time');
 
 % exclude lines from legend
 if ~show_in_legend
-    set(get(get(h1,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
-    set(get(get(h2,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+    set(get(get(h1, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
+    set(get(get(h2, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
 end
 
 % reset hold state if it wasn't previously set
 if ~hold_state
-    hold off;
+    hold(ax, 'off');
 end

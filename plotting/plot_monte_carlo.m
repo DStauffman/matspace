@@ -311,7 +311,7 @@ end
 
 % plot RMS lines
 if show_rms
-    plot_rms_lines(time_one([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
+    plot_rms_lines(ax1, time_one([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
 end
 
 % turn on grid/legend
@@ -364,7 +364,7 @@ if comp_mode == modes.nondeg
 
     % plot RMS lines
     if show_rms
-        plot_rms_lines(time_one([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
+        plot_rms_lines(ax2, time_one([ix_rms_xmin1 ix_rms_xmax1]), ylim, leg_rms_lines);
     end
 
     % Second Y axis

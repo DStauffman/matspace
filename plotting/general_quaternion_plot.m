@@ -96,7 +96,7 @@ addParameter(p, 'UseMean', false, @islogical);
 addParameter(p, 'PlotZero', false, @islogical);
 addParameter(p, 'ShowRms', true, @islogical);
 addParameter(p, 'LegendLoc', 'North', @ischar);
-addParameter(p, 'TruthName', string('Truth'), is_cellstr);
+addParameter(p, 'TruthName', string('Truth'), fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 parse(p, varargin{:});
@@ -164,21 +164,18 @@ have_quat_one = any(any(~isnan(quat_one)));
 have_quat_two = any(any(~isnan(quat_two)));
 
 %% Overlay plots
-f1 = figure('Visible',fig_visible);
-% create axis
 if make_subplots
-    set(f1,'name',description);
-    if have_quat_one && have_quat_two
-        ax1 = subplot(2,1,1);
-    else
-        ax1 = axes;
-    end
+    f1 = figure('name', description, 'Visible', fig_visible);
 else
-    set(f1,'name',[description,' Quaternion Components']);
-    ax1 = axes;
+    f1 = figure('name', [description,' Quaternion Components'], 'Visible', fig_visible);
+end
+% create axis
+ax1 = axes(f1);
+if make_subplots && have_quat_one && have_quat_two
+    subplot(2, 1, 1, ax1);
 end
 % plot data
-hold on;
+hold(ax1, 'on');
 if have_quat_one
     if have_quat_two
         symbol = '^-';
@@ -187,7 +184,7 @@ if have_quat_one
     end
     for i = 1:4
         if show_rms
-            this_name = [name_one,' ',elements{i},' (',func_name,': ',num2str(q1_func(i),'%1.3f'),')'];
+            this_name = [name_one,' ',elements{i},' (',func_name,': ',num2str(q1_func(i),leg_format),')'];
         else
             this_name = [name_one,' ',elements{i}];
         end
@@ -203,7 +200,7 @@ if have_quat_two
     end
     for i = 1:4
         if show_rms
-            this_name = [name_two,' ',elements{i},' (',func_name,': ',num2str(q2_func(i),'%1.3f'),')'];
+            this_name = [name_two,' ',elements{i},' (',func_name,': ',num2str(q2_func(i),leg_format),')'];
         else
             this_name = [name_two,' ',elements{i}];
         end
@@ -212,14 +209,14 @@ if have_quat_two
     end
 end
 % set X display limits
-xl = xlim;
+xl = xlim(ax1);
 if isfinite(disp_xmin)
     xl(1) = max([xl(1), disp_xmin]);
 end
 if isfinite(disp_xmax)
     xl(2) = min([xl(2), disp_xmax]);
 end
-xlim(xl);
+xlim(ax1, xl);
 % set Y display limits
 if plot_zero
     show_zero_ylim(ax1)
@@ -233,20 +230,20 @@ if ~isempty(truth_time) && ~isempty(truth_data) && ~all(all(isnan(truth_data)))
     end
 end
 % format display of plot
-legend('show','Location','North');
-title([description,' Quaternion Components'],'interpreter','none');
+legend(ax1, 'show','Location',legend_loc);
+title(ax1, [description,' Quaternion Components'],'interpreter','none');
 if use_datetime
-    xlabel('Date');
+    xlabel(ax1, 'Date');
 else
-    xlabel(['Time [',time_units,']',start_date]);
+    xlabel(ax1, ['Time [',time_units,']',start_date]);
 end
-ylabel([description,' Quaternion Components [dimensionless]']);
-grid on;
+ylabel(ax1, [description,' Quaternion Components [dimensionless]']);
+grid(ax1, 'on');
 % plot RMS lines
 if show_rms
-    plot_rms_lines([rms_pts1,rms_pts2],ylim);
+    plot_rms_lines(ax1, [rms_pts1,rms_pts2],ylim);
 end
-hold off;
+hold(ax1, 'off');
 
 %% Difference plot
 if have_quat_one && have_quat_two
@@ -263,7 +260,7 @@ if have_quat_one && have_quat_two
         hold on;
         for i = [3 1 2]
             if show_rms
-                this_name = [elements{i},' (',func_name,': ',num2str(1/leg_scale*nondeg_func(i),'%1.3f'),' ',prefix,'rad)'];
+                this_name = [elements{i},' (',func_name,': ',num2str(1/leg_scale*nondeg_func(i),leg_format),' ',prefix,'rad)'];
             else
                 this_name = elements{i};
             end
@@ -272,7 +269,7 @@ if have_quat_one && have_quat_two
         end
     else
         if show_rms
-            this_name = ['Angle (',func_name,': ',num2str(1/leg_scale*mag_func,'%1.3f'),' ',prefix,'rad)'];
+            this_name = ['Angle (',func_name,': ',num2str(1/leg_scale*mag_func,leg_format),' ',prefix,'rad)'];
         else
             this_name = 'Angle';
         end
@@ -283,7 +280,7 @@ if have_quat_one && have_quat_two
     if plot_zero
         show_zero_ylim(ax2)
     end
-    legend('show','Location','North');
+    legend('show','Location',legend_loc);
     title([description,' Difference'],'interpreter','none');
     if use_datetime
         xlabel('Date');
@@ -293,7 +290,7 @@ if have_quat_one && have_quat_two
     ylabel([description,' Difference [rad]']);
     grid on;
     if show_rms
-        plot_rms_lines([rms_pts1,rms_pts2],ylim);
+        plot_rms_lines(ax2, [rms_pts1,rms_pts2],ylim);
     end
     hold off;
     % link axes to zoom together (TODO: check that this uses old xmin limits)

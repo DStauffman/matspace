@@ -64,7 +64,7 @@ end
 
 %% plot breakdown
 fig_hand = figure('name', this_title);
-ax = axes;
+ax = axes(fig_hand);
 b = bar(ax, time, scale*data', 1.0, 'stack', 'EdgeColor', 'none');
 if drop_zeros
     used = arrayfun(@(x) any(x.YData ~= 0), b);
@@ -80,19 +80,19 @@ for i = 1:length(b)
         set(b(i), 'HandleVisibility', 'off');
     end
 end
-xlabel(['Time [',time_units,']']);
-ylabel([label, unit_text]);
+xlabel(ax, ['Time [',time_units,']']);
+ylabel(ax, [label, unit_text]);
 % set limits for data that sums to 100%
 if is_normalized
-    ylim([0, 100]);
+    ylim(ax, [0, 100]);
 end
-grid('on');
-title(this_title, 'interpreter', 'none');
-leg = legend('show');
+grid(ax, 'on');
+title(ax, this_title, 'interpreter', 'none');
+leg = legend(ax, 'show');
 set(leg, 'interpreter', 'none');
 
 %% create figure controls
 figmenu;
 
 %% setup plots
-setup_plots(fig_hand,OPTS,'time');
+setup_plots(fig_hand, OPTS, 'time');

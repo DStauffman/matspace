@@ -15,6 +15,7 @@ classdef Opts
     %         .show_link : (scalar) true/false flag to show a link to the folder where the plots were saved [bool]
     %         .plot_type : (row) string specifying the type of plot to save to disk, from {'png','jpg','fig','emf'} [char]
     %         .sub_plots : (scalar) true/false flag specifying whether to plot as subplots or separate figures [bool]
+    %         .sing_line : (scalar) true/false flag specifying to only plot one line per axes, using subplots as necessary [bool]
     %         .plot_locs : (row) string specifying plot location, from: {'full','fullscreen','huge','left','right','top','bottom','tile'} [char]
     %         .disp_xmin : (scalar) minimum time to display on plot [sec]
     %         .disp_xmax : (scalar) maximum time to display on plot [sec]
@@ -50,6 +51,7 @@ classdef Opts
         show_link,
         plot_type,
         sub_plots,
+        sing_line,
         plot_locs,
         disp_xmin,
         disp_xmax,
@@ -78,6 +80,7 @@ classdef Opts
             OPTS.show_link = false;
             OPTS.plot_type = 'png';
             OPTS.sub_plots = true;
+            OPTS.sing_line = false;
             OPTS.plot_locs = 'default';
             OPTS.disp_xmin = -inf;
             OPTS.disp_xmax = inf;

@@ -21,12 +21,13 @@ function [] = show_zero_ylim(ax)
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in February 2019.
+%     2.  Updated by David C. Stauffer in April 2020 to fully specify which axes it is operating on.
 
 % force to show zero
 ylims = ylim(ax);
 if ylims(1) > 0
-    ylim([0 ylims(2)]);
+    ylim(ax, [0 ylims(2)]);
 end
 if ylims(2) < 0
-    ylim([ylims(1) 0]);
+    ylim(ax, [ylims(1) 0]);
 end
