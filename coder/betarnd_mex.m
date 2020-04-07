@@ -1,4 +1,4 @@
-function [r] = betarnd2(a,b,m,n) %#codegen
+function [r] = betarnd_mex(a,b,m,n) %#codegen
 
 % BETARND2  is a user version of betarnd that can be compiled.
 %
@@ -16,7 +16,7 @@ function [r] = betarnd2(a,b,m,n) %#codegen
 %     b = 1;
 %     m = 100;
 %     n = 1;
-%     r = betarnd(a,b,m,n);
+%     r = betarnd_mex(a,b,m,n);
 %
 % See Also:
 %     betarnd, rand, randg

@@ -1,6 +1,19 @@
-function [s] = int2str2(n)
+function [s] = int2str_mex(n)
 
 % Coder compatible version of int2str.
+%
+% Input:
+%     n : (scalar) integer
+%
+% Output:
+%     s : (row) string representation
+%
+% Prototype:
+%     s = int2str_mex(105);
+%     assert(strcmp(s, '105'));
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in November 2017.
 
 % initialize output
 s = '';

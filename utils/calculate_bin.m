@@ -14,4 +14,4 @@ check = true; % performs boundary checking on distribution
 cum_dist = [0, cumsum(dist(:)')];
 
 % calculate the bins
-bin = discretize2(rand(num, 1), cum_dist, check);
+bin = discretize_mex(rand(num, 1), cum_dist, check);

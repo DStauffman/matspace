@@ -1,6 +1,6 @@
-function [n] = histcounts2(x, edges) %#codegen
+function [n] = histcounts_mex(x, edges) %#codegen
 
-% HISTCOUNTS2  is a compilable version of the built-in histcounts function.
+% HISTCOUNTS_MEX  is a compilable version of the built-in histcounts function.
 %
 % Input:
 %     x     : (Nx1) array of values to be counted into bins [num]
@@ -15,11 +15,11 @@ function [n] = histcounts2(x, edges) %#codegen
 %     % built-in version
 %     [n1,edges, bin] = histcounts(x, edges);
 %     % this version
-%     n2 = histcounts2(x, edges);
+%     n2 = histcounts_mex(x, edges);
 %     assert(all(n1(:) == n2));
 %
 % See Also:
-%     histcounts, discretize, discretize2
+%     histcounts, discretize, discretize_mex
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in October 2016.

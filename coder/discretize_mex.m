@@ -1,7 +1,7 @@
-function [bins] = discretize2(x, edges, checks) %#codegen
+function [bins] = discretize_mex(x, edges, checks) %#codegen
 
-% DISCRETIZE2  is a compilable version of the built-in discretize function plus an option for
-%              checking valid bounds.
+% DISCRETIZE_MEX  is a compilable version of the built-in discretize function plus an option for
+%                 checking valid bounds.
 %
 % Input:
 %     x     : (Nx1) array of values to be discretized into bins
@@ -16,11 +16,11 @@ function [bins] = discretize2(x, edges, checks) %#codegen
 %     % built-in version
 %     bins1 = discretize(x, edges);
 %     % this version
-%     bins2 = discretize2(x, edges);
+%     bins2 = discretize_mex(x, edges);
 %     assert(all(isequaln(bins1, bins2)));
 %
 % See Also:
-%     discretize, histcounts, histcounts2
+%     discretize, histcounts, histcounts_mex
 %
 % Notes:
 %     1.  Values that don't go into any bin will return a bin of NaN.

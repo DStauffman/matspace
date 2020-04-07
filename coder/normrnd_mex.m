@@ -1,4 +1,4 @@
-function [r] = normrnd2(mu,sigma,m,n) %#codegen
+function [r] = normrnd_mex(mu,sigma,m,n) %#codegen
 
 % NORMRND2  is a user version of normrnd that can be compiled.
 %
@@ -16,7 +16,7 @@ function [r] = normrnd2(mu,sigma,m,n) %#codegen
 %     sigma = 1;
 %     m = 100;
 %     n = 1;
-%     r = normrnd(mu,sigma,m,n);
+%     r = normrnd_mex(mu,sigma,m,n);
 %
 % See Also:
 %     normrnd, randn
