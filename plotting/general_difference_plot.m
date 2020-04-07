@@ -30,6 +30,7 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %         'UseMean'      : (scalar) true/false flag to use mean instead of rms in calculations [bool]
 %         'PlotZero'     : (scalar) true/false flag to always show zero on the vertical axis [bool]
 %         'ShowRms'      : (scalar) true/false flag to show the RMS calculation in the legend [bool]
+%         'LegendLoc'    : 
 %         'SecondYScale' : 
 %         'TruthName'    :
 %         'TruthTime'    :
@@ -68,7 +69,7 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %     plot_zero      = false;
 %     show_rms       = true;
 %     second_y_scale = nan;
-%     truth_name     = "Truth";
+%     truth_name      = string({'Truth'});
 %     truth_time     = [];
 %     truth_data     = [];
 %     [fig_hand, err] = general_difference_plot(description, time_one, time_two, data_one, data_two, ...
@@ -119,6 +120,7 @@ addParameter(p, 'ColorOrder', '', @isnumeric);
 addParameter(p, 'UseMean', false, @islogical);
 addParameter(p, 'PlotZero', false, @islogical);
 addParameter(p, 'ShowRms', true, @islogical);
+addParameter(p, 'LegendLoc', 'North', @ischar);
 addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
 addParameter(p, 'TruthName', string('Truth'), fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
@@ -141,6 +143,7 @@ colororder      = p.Results.ColorOrder;
 use_mean        = p.Results.UseMean;
 plot_zero       = p.Results.PlotZero;
 show_rms        = p.Results.ShowRms;
+legend_loc      = p.Results.LegendLoc;
 second_y_scale  = p.Results.SecondYScale;
 truth_name      = p.Results.TruthName;
 truth_time      = p.Results.TruthTime;
@@ -159,7 +162,7 @@ use_datetime = isdatetime(time_one) || isdatetime(time_two) || isdatetime(truth_
 % find differences
 d1_miss_ix = setxor(1:length(time_one), d1_diff_ix);
 d2_miss_ix = setxor(1:length(time_two), d2_diff_ix);
-% build RMS indexes
+% build RMS indices
 rms_ix1  = time_one >= rms_xmin & time_one <= rms_xmax;
 rms_ix2  = time_two >= rms_xmin & time_two <= rms_xmax;
 rms_ix3  = time_overlap >= rms_xmin & time_overlap <= rms_xmax;
@@ -252,13 +255,13 @@ else
 end
 % create axes
 ax = gobjects(1, num_axes);
+% Note: indices is used to columnwise, as subplot is stupid and does row wise numbering
 indices = reshape(1:num_rows*num_cols, num_cols, num_rows)';
 for i = 1:num_figs
     for j = 1:num_cols
         for k = 1:num_rows
             temp_axes = axes(fig_hand(i)); %#ok<LAXES>
             hold(temp_axes, 'on'); % not necessary in newer Matlab
-            % TODO: change this to count columnwise, as subplot is stupid and does row wise numbering
             this_pos = indices(k, j);
             subplot(num_rows, num_cols, this_pos, temp_axes);
             ax((i-1)*num_rows*num_cols + (j-1)*num_rows + k) = temp_axes;
@@ -344,7 +347,7 @@ for i = 1:num_axes
         end
     end
     % format display of plot
-    legend(this_axes, 'show', 'Location', 'North');
+    legend(this_axes, 'show', 'Location', legend_loc);
     if i == 1
         title(this_axes, description, 'interpreter', 'none');
     elseif (single_lines && i == num_rows + 1) || (~single_lines && i == 2)
@@ -373,7 +376,7 @@ for i = 1:num_axes
     end
     hold(this_axes, 'off'); % TODO: don't due in newer Matlab?
 end
-% line axes to zoom together (TODO: check that this uses old xmin limits)
+% line axes to zoom together
 if length(ax) > 1
     linkaxes(ax, 'x');
 end
