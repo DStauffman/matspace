@@ -21,6 +21,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %         'DispMax'      : (scalar) time for last point of display [sec]
 %         'FigVisible'   : (row) setting value for whether figure is visible, from {'on','off'} [char]
 %         'MakeSubplots' : (scalar) true/false flag to use subplots [bool]
+%         'SingleLines'  : (scalar) true/false flag meaning to plot subplots by channel instead of together [bool]
 %         'ColorOrder'   : (3xN) color RGB triples for each channel of data [ndim]
 %         'UseMean'      : (scalar) true/false flag to use mean instead of rms in calculations [bool]
 %         'PlotZero'     : (scalar) true/false flag to always show zero on the vertical axis [bool]
@@ -92,6 +93,7 @@ addParameter(p, 'DispXmin', -inf, fun_is_bound);
 addParameter(p, 'DispXmax', inf, fun_is_bound);
 addParameter(p, 'FigVisible', true, @islogical);
 addParameter(p, 'MakeSubplots', true, @islogical);
+addParameter(p, 'SingleLines', false, @islogical);
 addParameter(p, 'UseMean', false, @islogical);
 addParameter(p, 'PlotZero', false, @islogical);
 addParameter(p, 'ShowRms', true, @islogical);
@@ -110,6 +112,7 @@ rms_xmax        = p.Results.RmsXmax;
 disp_xmin       = p.Results.DispXmin;
 disp_xmax       = p.Results.DispXmax;
 make_subplots   = p.Results.MakeSubplots;
+single_line     = p.Results.SingleLines; % TODO: make use of this
 use_mean        = p.Results.UseMean;
 plot_zero       = p.Results.PlotZero;
 show_rms        = p.Results.ShowRms;

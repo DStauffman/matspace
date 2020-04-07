@@ -22,6 +22,12 @@ if isdatetime(time)
     return
 end
 
+% empty times
+if isempty(time)
+    date = NaT(size(time));
+    return
+end
+
 % check infinite cases that don't need units or a date_zero
 if isscalar(time) && isinf(time)
     if time == inf

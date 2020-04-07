@@ -1,4 +1,4 @@
-function figmenu(action)
+function [] = figmenu(action)
 
 % FIGMENU   adds Prev, Next, Figs, and Close All menus to all figs
 %

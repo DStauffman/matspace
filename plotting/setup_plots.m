@@ -121,7 +121,7 @@ if any(strcmp(form,{'time','time_no_y_scale'}))
                 case 'day'
                     mult = 86400;
                 otherwise
-                    error('matspace:plotting:BadOptsTimeUnit', 'Unexpected value for "OPTS.time_unit".');
+                    error('matspace:plotting:BadOptsTimeUnit', 'Unexpected value for ''OPTS.time_unit''.');
             end
             xextents(fig_hand, OPTS.disp_xmin/mult, OPTS.disp_xmax/mult);
         else
@@ -137,7 +137,7 @@ end
 
 %% Label plot classification
 [classification, caveat] = get_classification(OPTS.classify);
-plot_classification(fig_hand,classification,caveat);
+plot_classification(fig_hand, classification, caveat);
 
 %% Move plots
 if move_plots

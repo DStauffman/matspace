@@ -44,10 +44,10 @@ end
 hold_state = ishold(ax);
 hold(ax, 'on');
 
-% draw lines
+% draw lines (Note: might not work right before R2016A (9.0))
 h1 = plot(ax, [x(1) x(1)], y, 'LineStyle', '--', 'Color', [   1 0.75 0], 'Marker', '+', ...
     'MarkerEdgeColor', 'm', 'MarkerSize', 10, 'DisplayName', 'RMS Start Time');
-h2 = plot(ax, [x(2) x(2)] ,y, 'LineStyle', '--', 'Color', [0.75 0.75 1], 'Marker', '+', ...
+h2 = plot(ax, [x(2) x(2)], y, 'LineStyle', '--', 'Color', [0.75 0.75 1], 'Marker', '+', ...
     'MarkerEdgeColor', 'm', 'MarkerSize', 10, 'DisplayName', 'RMS Stop Time');
 
 % exclude lines from legend
