@@ -16,7 +16,7 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %         'NameTwo'      : (row) name of data source 2 [char]
 %         'Elements'     : {1xN} of (row) of names of M data elements
 %         'Units'        : (row) name of units for plots [char]
-%         'TimeUnits'    : 
+%         'TimeUnits'    : (row) type of the time units, nominally 'sec' [char]
 %         'LegendScale'  : (row) prefix for get_factors to use to scale RMS in legend [char]
 %         'StartDate'    : (row) date of t(0), may be an empty string [char]
 %         'RmsXmin'      : (scalar) time for first point of RMS calculation [sec]
@@ -30,11 +30,12 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %         'UseMean'      : (scalar) true/false flag to use mean instead of rms in calculations [bool]
 %         'PlotZero'     : (scalar) true/false flag to always show zero on the vertical axis [bool]
 %         'ShowRms'      : (scalar) true/false flag to show the RMS calculation in the legend [bool]
-%         'LegendLoc'    : 
+%         'LegendLoc'    : (row) location of the legend, from {'best', 'north', etc.} see legend for more details [char]
+%         'ShowExtra'    : (scalar) true/false flag on whether to show missing data on diff plot [bool]
 %         'SecondYScale' : 
-%         'TruthName'    :
-%         'TruthTime'    :
-%         'TruthData'    : 
+%         'TruthName'    : (1xN string) names of the truth structures [char]
+%         'TruthTime'    : (1xN) time history for the truth data [sec]
+%         'TruthData'    : (1xN) truth data array [num]
 %
 % Output:
 %     fig_hand      : (scalar or 1x2) list of figure handles [num]
@@ -68,6 +69,8 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %     use_mean       = false;
 %     plot_zero      = false;
 %     show_rms       = true;
+%     legend_loc     = 'Best';
+%     show_extra     = true;
 %     second_y_scale = nan;
 %     truth_name      = string({'Truth'});
 %     truth_time     = [];
@@ -77,8 +80,8 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %         'LegendScale', leg_scale, 'StartDate', start_date, 'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, ...
 %         'DispXmin', disp_xmin, 'DispXmax', disp_xmax, 'FigVisible', fig_visible, 'MakeSubplots', make_subplots, ...
 %         'SingleLines', single_lines, 'ColorOrder', colororder, 'UseMean', use_mean, 'PlotZero', plot_zero, ...
-%         'ShowRms', show_rms, 'SecondYScale', second_y_scale, 'TruthName', truth_name, ...
-%         'TruthTime', truth_time, 'TruthData', truth_data);
+%         'ShowRms', show_rms, 'LegendLoc', legend_loc, 'ShowExtra', show_extra, 'SecondYScale', second_y_scale, ...
+%         'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data);
 %
 % See Also:
 %     plot_time_history
@@ -120,7 +123,8 @@ addParameter(p, 'ColorOrder', '', @isnumeric);
 addParameter(p, 'UseMean', false, @islogical);
 addParameter(p, 'PlotZero', false, @islogical);
 addParameter(p, 'ShowRms', true, @islogical);
-addParameter(p, 'LegendLoc', 'North', @ischar);
+addParameter(p, 'LegendLoc', 'Best', @ischar);
+addParameter(p, 'ShowExtra', true, @islogical);
 addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
 addParameter(p, 'TruthName', string('Truth'), fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
@@ -144,6 +148,7 @@ use_mean        = p.Results.UseMean;
 plot_zero       = p.Results.PlotZero;
 show_rms        = p.Results.ShowRms;
 legend_loc      = p.Results.LegendLoc;
+show_extra      = p.Results.ShowExtra;
 second_y_scale  = p.Results.SecondYScale;
 truth_name      = p.Results.TruthName;
 truth_time      = p.Results.TruthTime;
@@ -248,7 +253,7 @@ num_axes = num_figs*num_rows*num_cols;
 % create figures
 f1 = figure('name', description, 'Visible', fig_visible);
 if have_data_one && have_data_two && ~make_subplots
-    f2 = figure('name', [description,'Difference'], 'Visible', fig_visible);
+    f2 = figure('name', [description,' Difference'], 'Visible', fig_visible);
     fig_hand = [f1 f2];
 else
     fig_hand = f1;
@@ -314,10 +319,10 @@ for i = 1:num_axes
             plot(this_axes, time_overlap, nondeg_error(j,:), '.-', 'MarkerSize', 4, 'Color', colororder(j+2*num_channels,:), ...
                 'DisplayName', this_name);
         end
-        plot(this_axes, time_one(d1_miss_ix), zeros(1,length(d1_miss_ix)), 'kx', 'MarkerSize', 8, 'LineWidth', 2, ...
-            'DisplayName', [name_one,' Extra']);
-        plot(this_axes, time_two(d2_miss_ix), zeros(1,length(d2_miss_ix)), 'go', 'MarkerSize', 6, 'LineWidth', 2, ...
-            'DisplayName', [name_two,' Extra']);
+        if show_extra
+            plot(this_axes, time_one(d1_miss_ix), zeros(1,length(d1_miss_ix)), 'kx', 'MarkerSize', 8, 'LineWidth', 2, 'DisplayName', [name_one,' Extra']);
+            plot(this_axes, time_two(d2_miss_ix), zeros(1,length(d2_miss_ix)), 'go', 'MarkerSize', 6, 'LineWidth', 2, 'DisplayName', [name_two,' Extra']);
+        end
     end
     % set X display limits
     if i == 1
@@ -351,15 +356,12 @@ for i = 1:num_axes
     if i == 1
         title(this_axes, description, 'interpreter', 'none');
     elseif (single_lines && i == num_rows + 1) || (~single_lines && i == 2)
-        title(this_axes, [description,' Difference'],'interpreter','none');
+        title(this_axes, [description,' Difference'], 'interpreter', 'none');
     end
-    if ~single_lines || (i == num_rows || i == 2*num_rows)
-        % TODO: want to always label these?
-        if use_datetime
-            xlabel(this_axes, 'Date');
-        else
-            xlabel(this_axes, ['Time [',time_units,']',start_date]);
-        end
+    if use_datetime
+        xlabel(this_axes, 'Date');
+    else
+        xlabel(this_axes, ['Time [',time_units,']',start_date]);
     end
     ylabel(this_axes, [description,' [',units,']']);
     grid(this_axes, 'on');

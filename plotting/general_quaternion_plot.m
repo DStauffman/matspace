@@ -14,7 +14,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     varargin .... : (char, value) pairs for other options, from:
 %         'NameOne'      : (row) name of data source 1 [char]
 %         'NameTwo'      : (row) name of data source 2 [char]
-%         'TimeUnits'    : 
+%         'TimeUnits'    : (row) type of the time units, nominally 'sec' [char]
 %         'StartDate'    : (row) date of t(0), may be an empty string [char]
 %         'PlotComp'     : (scalar) true/false flag to plot components as opposed to angular difference [bool]
 %         'RmsXmin'      : (scalar) time for first point of RMS calculation [sec]
@@ -27,10 +27,11 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %         'UseMean'      : (scalar) true/false flag to use mean instead of rms in calculations [bool]
 %         'PlotZero'     : (scalar) true/false flag to always show zero on the vertical axis [bool]
 %         'ShowRms'      : (scalar) true/false flag to show the RMS calculation in the legend [bool]
-%         'LegendLoc'    : 
-%         'TruthName'    :
-%         'TruthTime'    :
-%         'TruthData'    : 
+%         'LegendLoc'    : (row) location of the legend, from {'best', 'north', etc.} see legend for more details [char]
+%         'ShowExtra'    : (scalar) true/false flag on whether to show missing data on diff plot [bool]
+%         'TruthName'    : (1xN string) names of the truth structures [char]
+%         'TruthTime'    : (1xN) time history for the truth data [sec]
+%         'TruthData'    : (1xN) truth data array [num]
 %
 % Output:
 %     fig_hand        : (1xN) list of figure handles [num]
@@ -50,6 +51,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     name_two        = 'test2';
 %     time_units      = 'sec';
 %     start_date      = ['  t(0) = ', datestr(now)];
+%     plot_components = true;
 %     rms_xmin        = 1;
 %     rms_xmax        = 10;
 %     disp_xmin       = -2;
@@ -57,18 +59,20 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     fig_visible     = true;
 %     make_subplots   = true;
 %     single_lines    = false;
-%     plot_components = true;
 %     use_mean        = false;
 %     plot_zero       = false;
 %     show_rms        = true;
+%     legend_loc      = 'Best';
+%     show_extra      = true;
 %     truth_name      = string({'Truth'});
 %     truth_time      = [];
 %     truth_data      = [];
 %     [fig_hand, err] = general_quaternion_plot(description, time_one, time_two, quat_one, quat_two, ...
 %         'NameOne', name_one, 'NameTwo', name_two, 'TimeUnits', time_units, 'StartDate', start_date, ...
 %         'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, 'DispXmin', disp_xmin, 'DispXmax', disp_xmax, ...
-%         'FigVisible', fig_visible, 'MakeSubplots', make_subplots, 'SingleLines', single_lines, ...
-%         'PlotComp', plot_components, 'UseMean', use_mean, 'PlotZero', plot_zero, 'ShowRms', show_rms, ...
+%         'PlotComp', plot_components, 'FigVisible', fig_visible, 'MakeSubplots', make_subplots, ...
+%         'SingleLines', single_lines, 'UseMean', use_mean, 'PlotZero', plot_zero, 'ShowRms', show_rms, ...
+%         'LegendLoc', legend_loc, 'ShowExtra', show_extra, ...
 %         'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data);
 %
 % See Also:
@@ -107,7 +111,8 @@ addParameter(p, 'SingleLines', false, @islogical);
 addParameter(p, 'UseMean', false, @islogical);
 addParameter(p, 'PlotZero', false, @islogical);
 addParameter(p, 'ShowRms', true, @islogical);
-addParameter(p, 'LegendLoc', 'North', @ischar);
+addParameter(p, 'LegendLoc', 'Best', @ischar);
+addParameter(p, 'ShowExtra', true, @islogical);
 addParameter(p, 'TruthName', string('Truth'), fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
@@ -127,6 +132,7 @@ use_mean        = p.Results.UseMean;
 plot_zero       = p.Results.PlotZero;
 show_rms        = p.Results.ShowRms;
 legend_loc      = p.Results.LegendLoc;
+show_extra      = p.Results.ShowExtra;
 truth_name      = p.Results.TruthName;
 truth_time      = p.Results.TruthTime;
 truth_data      = p.Results.TruthData;
@@ -138,7 +144,7 @@ end
 % determine if using datetimes
 use_datetime = isdatetime(time_one) || isdatetime(time_two) || isdatetime(truth_time);
 
-%% calculations
+%% Calculations
 % find overlapping times
 [time_overlap, q1_diff_ix, q2_diff_ix] = intersect(time_one, time_two); % TODO: add a tolerance?
 % find differences
@@ -150,6 +156,13 @@ rms_ix2  = time_two >= rms_xmin & time_two <= rms_xmax;
 rms_ix3  = time_overlap >= rms_xmin & time_overlap <= rms_xmax;
 rms_pts1 = max([rms_xmin min([min(time_one) min(time_two)])]);
 rms_pts2 = min([rms_xmax max([max(time_one) max(time_two)])]);
+% get default plotting colors
+color_lists = get_color_lists();
+colororder3 = cell2mat(color_lists.vec_diff);
+colororder8 = cell2mat(color_lists.quat_diff);
+% quaternion component names
+elements = {'X','Y','Z','S'};
+num_channels = length(elements);
 % calculate the differences
 [nondeg_angle, nondeg_error] = quat_angle_diff(quat_one(:, q1_diff_ix), quat_two(:, q2_diff_ix));
 % calculate the rms (or mean) values
@@ -168,13 +181,6 @@ else
 end
 % output errors
 err = struct('one', q1_func, 'two', q2_func, 'diff', nondeg_func, 'mag', mag_func);
-% get default plotting colors
-color_lists = get_color_lists();
-colororder3 = cell2mat(color_lists.vec_diff);
-colororder8 = cell2mat(color_lists.quat_diff);
-% quaternion component names
-elements = {'X','Y','Z','S'};
-num_channels = length(elements);
 % unit conversion value
 [temp, prefix] = get_factors('micro');
 leg_conv = 1/temp;
@@ -296,17 +302,18 @@ for i = 1:num_axes
         end
     else
         % difference plot
-        if plot_components
-            for j = [3 1 2] % TODO: want to only do these loops, and reorder afterwards
-                if show_rms
-                    this_name = [elements{j},' (',func_name,': ',num2str(leg_conv*nondeg_func(j),leg_format),' ',prefix,'rad)'];
-                else
-                    this_name = elements{j};
-                end
-                plot(this_axes, time_overlap, nondeg_error(j,:), '.-', 'MarkerSize', 4, 'Color', colororder3(j,:), 'DisplayName', this_name);
+        for j = [3 1 2]
+            if ~plot_components || (single_lines && mod(i, num_channels) ~= j)
+                continue
             end
-        else
-            % TODO: make this the fourth plot when plotting single lines
+            if show_rms
+                this_name = [elements{j},' (',func_name,': ',num2str(leg_conv*nondeg_func(j),leg_format),' ',prefix,'rad)'];
+            else
+                this_name = elements{j};
+            end
+            plot(this_axes, time_overlap, nondeg_error(j,:), '.-', 'MarkerSize', 4, 'Color', colororder3(j,:), 'DisplayName', this_name);
+        end
+        if ~plot_components || (single_lines && mod(i, num_channels) == 0)
             if show_rms
                 this_name = ['Angle (',func_name,': ',num2str(leg_conv*mag_func,leg_format),' ',prefix,'rad)'];
             else
@@ -314,8 +321,10 @@ for i = 1:num_axes
             end
             plot(this_axes, time_overlap, nondeg_angle, '.-', 'MarkerSize', 4, 'Color', colororder3(1,:), 'DisplayName', this_name);
         end
-        plot(this_axes, time_one(q1_miss_ix), zeros(1,length(q1_miss_ix)), 'kx', 'MarkerSize', 8, 'LineWidth', 2, 'DisplayName', [name_one,' Extra']);
-        plot(this_axes, time_two(q2_miss_ix), zeros(1,length(q2_miss_ix)), 'go', 'MarkerSize', 6, 'LineWidth', 2, 'DisplayName', [name_two,' Extra']);     
+        if show_extra
+            plot(this_axes, time_one(q1_miss_ix), zeros(1,length(q1_miss_ix)), 'kx', 'MarkerSize', 8, 'LineWidth', 2, 'DisplayName', [name_one,' Extra']);
+            plot(this_axes, time_two(q2_miss_ix), zeros(1,length(q2_miss_ix)), 'go', 'MarkerSize', 6, 'LineWidth', 2, 'DisplayName', [name_two,' Extra']);
+        end
     end
     % set X display limits
     if i == 1
@@ -364,9 +373,9 @@ for i = 1:num_axes
     grid(this_axes, 'on');
     % plot RMS lines
     if show_rms
-        plot_rms_lines(this_axes, [rms_pts1,rms_pts2],ylim);
+        plot_rms_lines(this_axes, [rms_pts1,rms_pts2], ylim(this_axes));
     end
-    hold(this_axes, 'off');
+    hold(this_axes, 'off'); % TODO: don't due in newer Matlab?
 end
 % line axes to zoom together
 if length(ax) > 1
