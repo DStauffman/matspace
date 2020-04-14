@@ -33,7 +33,7 @@ function [folders] = pathset(location, exclude)
 %         function much more compact and easier to understand.
 
 %% hard-coded exclusions
-exclusions = string({'\.git', '\.svn', '\mex\make', '/.git', '/.svn', '/mex/make'}); %#ok<STRCLQT> for R2016B support
+exclusions = ["\.git", "\.svn", "\mex\make", "/.git", "/.svn", "/mex/make"];
 
 %% use specified path, or path of function itself
 switch nargin
