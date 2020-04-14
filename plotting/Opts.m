@@ -95,7 +95,7 @@ classdef Opts
             OPTS.vert_fact = 'unity';
             OPTS.colormap  = '';
             OPTS.classify  = '';
-            OPTS.names     = string(''); % just "" in R2017B, but doesn't work in R2016B
+            OPTS.names     = "";
 
             % break out early if no fields in overrides to process
             switch nargin

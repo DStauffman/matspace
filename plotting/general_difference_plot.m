@@ -72,7 +72,7 @@ function [fig_hand,err] = general_difference_plot(description, time_one, time_tw
 %     legend_loc     = 'Best';
 %     show_extra     = true;
 %     second_y_scale = nan;
-%     truth_name      = string({'Truth'});
+%     truth_name     = "Truth";
 %     truth_time     = [];
 %     truth_data     = [];
 %     [fig_hand, err] = general_difference_plot(description, time_one, time_two, data_one, data_two, ...
@@ -126,7 +126,7 @@ addParameter(p, 'ShowRms', true, @islogical);
 addParameter(p, 'LegendLoc', 'Best', @ischar);
 addParameter(p, 'ShowExtra', true, @islogical);
 addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
-addParameter(p, 'TruthName', string('Truth'), fun_is_cellstr);
+addParameter(p, 'TruthName', "Truth", fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 parse(p, varargin{:});

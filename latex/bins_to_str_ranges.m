@@ -16,7 +16,7 @@ function [out] = bins_to_str_ranges(bins, dt, cutoff)
 % Prototype:
 %     age_bins = [0 20 40 60 100000];
 %     age_strs = bins_to_str_ranges(age_bins);
-%     assert(all(cellfun(@strcmp, age_strs, {'0-19', '20-39', '40-59', '60+'})));
+%     assert(all(age_strs == ["0-19", "20-39", "40-59", "60+"]));
 %
 % Change Log
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.

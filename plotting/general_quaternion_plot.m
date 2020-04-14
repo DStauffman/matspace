@@ -64,7 +64,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     show_rms        = true;
 %     legend_loc      = 'Best';
 %     show_extra      = true;
-%     truth_name      = string({'Truth'});
+%     truth_name      = "Truth";
 %     truth_time      = [];
 %     truth_data      = [];
 %     [fig_hand, err] = general_quaternion_plot(description, time_one, time_two, quat_one, quat_two, ...
@@ -113,7 +113,7 @@ addParameter(p, 'PlotZero', false, @islogical);
 addParameter(p, 'ShowRms', true, @islogical);
 addParameter(p, 'LegendLoc', 'Best', @ischar);
 addParameter(p, 'ShowExtra', true, @islogical);
-addParameter(p, 'TruthName', string('Truth'), fun_is_cellstr);
+addParameter(p, 'TruthName', "Truth", fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 parse(p, varargin{:});

@@ -70,7 +70,7 @@ addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
-addParameter(p, 'TruthName', string('Truth'), @isstring);
+addParameter(p, 'TruthName', "Truth", @isstring);
 addParameter(p, 'SecondYScale', nan, @isnumeric);
 addParameter(p, 'PlotSigmas', 1, @isnumeric);
 % do parse

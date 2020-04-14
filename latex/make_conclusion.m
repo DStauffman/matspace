@@ -29,7 +29,7 @@ end
 
 % create output
 if ~use_mini
-    out = string({'        \bottomrule'; '    \end{tabular}'; '\end{table}'; ''});
+    out = ["        \bottomrule"; "    \end{tabular}"; "\end{table}"; ""];
 else
-    out = string({'            \bottomrule'; '        \end{tabular}'; '    \end{minipage}'; '\end{table}'; ''});
+    out = ["            \bottomrule"; "        \end{tabular}"; "    \end{minipage}"; "\end{table}"; ""];
 end
