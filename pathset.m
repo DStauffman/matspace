@@ -55,10 +55,7 @@ folders(strlength(folders) == 0) = [];
 folders(contains(folders, exclusions)) = [];
 
 %% add the paths
-% TODO: once R2018B+: addpath(folders.join(pathsep));
-for i = 1:length(folders)
-    addpath(folders{i});
-end
+addpath(folders.join(pathsep));
 
 %% display status
 disp('PATHSET:');
