@@ -149,13 +149,16 @@ function remove_old_classifications(this_fig)
 % REMOVE_OLD_CLASSIFICATIONS  removes any pre-existing classification markings so that they can
 %                             be replaced with new ones without clashing
 
-% Return the axes that contains the annotation objects
+% Find the axes that potentially contain the annotations
 ax = findall(this_fig, 'Tag', 'scribeOverlay');
-% Find the Children with type hggroup
+% then find their children (which might be the actual annotations)
 anons = get(ax, 'Children');
-% find the ones labeled as classifications
+if iscell(anons)
+    % In R2019B this returns a cell array, where R2018B and older do not
+    anons = vertcat(anons{:});
+end
+% check the tags for any labeled with Classification and delete them
 ix = startsWith(arrayfun(@(x) x.Tag, anons, 'UniformOutput', false), 'Classification');
-% delete them
 if any(ix)
     delete(anons(ix));
 end
