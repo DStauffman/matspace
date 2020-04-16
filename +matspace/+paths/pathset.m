@@ -41,7 +41,7 @@ switch nargin
     case 0
         path_name = mfilename('fullpath');
         ix        = strfind(path_name,filesep);
-        location  = path_name(1:ix(end-2));
+        location  = path_name(1:ix(end-1)-1);
     case 1
         % nop
     case 2
@@ -50,8 +50,17 @@ switch nargin
         error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
-%% generate folder paths to add
-folders = string(genpath(location)).split(pathsep);
+%% Generate folders paths to add
+% Check for package locations
+ix = strfind(location, [filesep,'+']);
+if ~isempty(ix)
+    % if in a package, then get the parent
+    folders = string(location(1:ix(1)-1));
+    warning('matspace:pathsetPackage', 'Location: "%s" is a package, so its root of "%s" was set instead.', location, folders);
+else
+    % nominal situation, generate included paths recursively
+    folders = string(genpath(location)).split(pathsep);
+end
 % remove any empty paths (usually caused by a trailing pathsep returned from genpath
 folders(strlength(folders) == 0) = [];
 % remove any excluded folders

@@ -39,6 +39,12 @@ if ~isempty(dcs_tools)
     % matspace library
     if exist(fullfile(dcs_tools, 'pathset.m'), 'file')
         run(fullfile(dcs_tools, 'pathset.m'));
+    elseif exist(fullfile(dcs_tools, '+matspace', '+paths', 'pathset.m'), 'file')
+        % TODO: DCS: want a better way of doing this
+        cwd = pwd;
+        cd(dcs_tools);
+        run('matspace.paths.pathset.m');
+        cd(cwd);
     end
 end
 if ~isempty(dcs_current)
