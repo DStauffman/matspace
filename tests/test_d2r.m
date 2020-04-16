@@ -19,13 +19,13 @@ classdef test_d2r < matlab.unittest.TestCase %#ok<*PROP>
     methods (Test)
         function test_scalar(self)
             for i = 1:length(self.deg)
-                out = d2r(self.deg(i));
+                out = matspace.units.d2r(self.deg(i));
                 self.verifyEqual(out, self.rad(i));
             end
         end
 
         function test_nominal(self)
-            out = d2r(self.deg);
+            out = matspace.units.d2r(self.deg);
             self.verifyEqual(out, self.rad);
         end
     end

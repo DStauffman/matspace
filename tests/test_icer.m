@@ -31,7 +31,7 @@ classdef test_icer < matlab.unittest.TestCase %#ok<*PROP>
 
     methods (Test)
         function test_slide_example(self)
-            [inc_cost, inc_qaly, icer_out, order] = icer(self.cost, self.qaly);
+            [inc_cost, inc_qaly, icer_out, order] = matspace.stats.icer(self.cost, self.qaly);
             self.verifyEqual(inc_cost, self.inc_cost, 'Incremental cost mismatch.');
             self.verifyEqual(inc_qaly, self.inc_qaly, 'Incremental QALY mismatch.');
             self.verifyEqual(icer_out, self.icer_out, 'ICER mismatch.');
@@ -40,7 +40,7 @@ classdef test_icer < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_no_domination(self)
             ix = [1 2 4];
-            [inc_cost, inc_qaly, icer_out, order] = icer(self.cost(ix), self.qaly(ix));
+            [inc_cost, inc_qaly, icer_out, order] = matspace.stats.icer(self.cost(ix), self.qaly(ix));
             self.verifyEqual(inc_cost, self.inc_cost, 'Incremental cost mismatch.');
             self.verifyEqual(inc_qaly, self.inc_qaly, 'Incremental QALY mismatch.');
             self.verifyEqual(icer_out, self.icer_out, 'ICER mismatch.');
@@ -49,7 +49,7 @@ classdef test_icer < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_reverse_order(self)
             ix = [4 3 2 1];
-            [inc_cost, inc_qaly, icer_out, order] = icer(self.cost(ix), self.qaly(ix));
+            [inc_cost, inc_qaly, icer_out, order] = matspace.stats.icer(self.cost(ix), self.qaly(ix));
             self.verifyEqual(inc_cost, self.inc_cost, 'Incremental cost mismatch.');
             self.verifyEqual(inc_qaly, self.inc_qaly, 'Incremental QALY mismatch.');
             self.verifyEqual(icer_out, self.icer_out, 'ICER mismatch.');
@@ -58,7 +58,7 @@ classdef test_icer < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_single_input(self)
             ix = 1;
-            [inc_cost, inc_qaly, icer_out, order] = icer(self.cost(ix), self.qaly(ix));
+            [inc_cost, inc_qaly, icer_out, order] = matspace.stats.icer(self.cost(ix), self.qaly(ix));
             self.verifyEqual(inc_cost, self.inc_cost(ix), 'Incremental cost mismatch.');
             self.verifyEqual(inc_qaly, self.inc_qaly(ix), 'Incremental QALY mismatch.');
             self.verifyEqual(icer_out, self.icer_out(ix), 'ICER mismatch.');
@@ -66,7 +66,7 @@ classdef test_icer < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_row_vectors(self)
-            [inc_cost, inc_qaly, icer_out, order] = icer(self.cost(:)', self.qaly(:)');
+            [inc_cost, inc_qaly, icer_out, order] = matspace.stats.icer(self.cost(:)', self.qaly(:)');
             self.verifyEqual(inc_cost, self.inc_cost, 'Incremental cost mismatch.');
             self.verifyEqual(inc_qaly, self.inc_qaly, 'Incremental QALY mismatch.');
             self.verifyEqual(icer_out, self.icer_out, 'ICER mismatch.');
@@ -74,19 +74,19 @@ classdef test_icer < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_values(self)
-            self.verifyError(@() icer([1 -2 3], [4 5 6]), '');
-            self.verifyError(@() icer([1 2 3], [4 -5 6]), '');
+            self.verifyError(@() matspace.stats.icer([1 -2 3], [4 5 6]), '');
+            self.verifyError(@() matspace.stats.icer([1 2 3], [4 -5 6]), '');
         end
 
         function test_bad_input_sizes(self)
-            self.verifyError(@() icer([], []), '');
-            self.verifyError(@() icer([1 2 3], [4 5]), '');
+            self.verifyError(@() matspace.stats.icer([], []), '');
+            self.verifyError(@() matspace.stats.icer([1 2 3], [4 5]), '');
         end
 
         function test_all_dominated_by_last(self)
             cost = [10; 20; 30; 1];
             qaly = [1; 2; 3; 100];
-            [inc_cost, inc_qaly, icer_out, order] = icer(cost, qaly);
+            [inc_cost, inc_qaly, icer_out, order] = matspace.stats.icer(cost, qaly);
             self.verifyEqual(inc_cost, 1, 'Incremental cost mismatch.');
             self.verifyEqual(inc_qaly, 100, 'Incremental QALY mismatch.');
             self.verifyEqual(icer_out, 0.01, 'ICER mismatch.');

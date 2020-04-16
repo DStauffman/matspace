@@ -29,7 +29,7 @@ classdef test_fix_rollover < matlab.unittest.TestCase %#ok<*PROP>
 
     methods (Test)
         function test_nominal(self)
-            out = verifyWarning(self, @() fix_rollover(self.data, self.roll, self.log_level), 'matspace:rollover');
+            out = verifyWarning(self, @() matspace.utils.fix_rollover(self.data, self.roll, self.log_level), 'matspace:rollover');
             self.verifyEqual(out, self.exp);
         end
 
@@ -37,7 +37,7 @@ classdef test_fix_rollover < matlab.unittest.TestCase %#ok<*PROP>
             dim  = 1;
             data = [self.data; self.data];
             exp  = [self.data; self.data];
-            out  = fix_rollover(data, self.roll, self.log_level, dim);
+            out  = matspace.utils.fix_rollover(data, self.roll, self.log_level, dim);
             self.verifyEqual(out, exp);
         end
 
@@ -45,21 +45,21 @@ classdef test_fix_rollover < matlab.unittest.TestCase %#ok<*PROP>
             self.dim   = 2;
             self.data2 = [self.data; self.data];
             exp        = [self.exp; self.exp];
-            out        = verifyWarning(self, @() fix_rollover(self.data2, self.roll, self.log_level, self.dim), 'matspace:rollover');
+            out        = verifyWarning(self, @() matspace.utils.fix_rollover(self.data2, self.roll, self.log_level, self.dim), 'matspace:rollover');
             self.verifyEqual(out, exp);
         end
 
         function test_log_level(self)
             self.log_level = 1;
-            out = fix_rollover(self.data, self.roll, self.log_level);
+            out = matspace.utils.fix_rollover(self.data, self.roll, self.log_level);
             self.verifyEqual(out, self.exp);
         end
 
         function test_optional_inputs(self)
             import matlab.unittest.fixtures.SuppressedWarningsFixture
             self.applyFixture(SuppressedWarningsFixture('matspace:rollover'));
-            out = fix_rollover(self.data, self.roll);
-            % out = verifyWarning(self, @() fix_rollover(self.data, self.roll), 'matspace:rollover');
+            out = matspace.utils.fix_rollover(self.data, self.roll);
+            % out = verifyWarning(self, @() matspace.utils.fix_rollover(self.data, self.roll), 'matspace:rollover');
             self.verifyEqual(out, self.exp);
         end
     end

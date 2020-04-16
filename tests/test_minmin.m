@@ -20,73 +20,73 @@ classdef test_minmin < matlab.unittest.TestCase %#ok<*PROP>
         function test_1a(self)
             % Case 1a
             x = randn(10,1);
-            self.verifyEqual(minmin(x), min(x))
+            self.verifyEqual(matspace.utils.minmin(x), min(x))
         end
 
         function test_1b(self)
             % Case 1b
             x = randn(1,9);
-            self.verifyEqual(minmin(x), min(x))
+            self.verifyEqual(matspace.utils.minmin(x), min(x))
         end
 
         function test_1c(self)
             % Case 1c
             x = randn(3,4);
-            self.verifyEqual(minmin(x), min(min(x)))
+            self.verifyEqual(matspace.utils.minmin(x), min(min(x)))
         end
 
         function test_1d(self)
             % Case 1d
             x = randn(3,4,6);
-            self.verifyEqual(minmin(x), min(min(min(x))))
+            self.verifyEqual(matspace.utils.minmin(x), min(min(min(x))))
         end
 
         function test_1e(self)
             % Case 1e
             x = randn(3,4,2,5);
-            self.verifyEqual(minmin(x), min(min(min(min(x)))))
+            self.verifyEqual(matspace.utils.minmin(x), min(min(min(min(x)))))
         end
 
         function test_2a(self)
             % Case 2a
             x = randn(10,1);
-            self.verifyEqual(minmin(x, 1), min(x))
+            self.verifyEqual(matspace.utils.minmin(x, 1), min(x))
         end
 
         function test_2b(self)
             % Case 2b
             x = randn(10,1);
-            self.verifyEqual(minmin(x, 2), x)
+            self.verifyEqual(matspace.utils.minmin(x, 2), x)
         end
 
         function test_2c(self)
             % Case 2c
             x = randn(3,4);
-            self.verifyEqual(minmin(x, 1), min(x, [], 1))
+            self.verifyEqual(matspace.utils.minmin(x, 1), min(x, [], 1))
         end
 
         function test_2d(self)
             % Case 2d
             x = randn(3,4);
-            self.verifyEqual(minmin(x, 2), min(x, [] ,2))
+            self.verifyEqual(matspace.utils.minmin(x, 2), min(x, [] ,2))
         end
 
         function test_2e(self)
             % Case 2e
             x = randn(3,1,6);
-            self.verifyEqual(minmin(x, [1 2]), min(min(x,[],1),[],2))
+            self.verifyEqual(matspace.utils.minmin(x, [1 2]), min(min(x,[],1),[],2))
         end
 
         function test_2f(self)
             % Case 2f
             x = randn(3,1,6);
-            self.verifyEqual(minmin(x, [2 3]), min(min(x,[],2),[],3))
+            self.verifyEqual(matspace.utils.minmin(x, [2 3]), min(min(x,[],2),[],3))
         end
 
         function test_2g(self)
             % Case 2g
             x = randn(3,4,2,5);
-            self.verifyEqual(minmin(x, 2:4), min(min(min(x,[],2),[],3),[],4))
+            self.verifyEqual(matspace.utils.minmin(x, 2:4), min(min(min(x,[],2),[],3),[],4))
         end
     end
 end
