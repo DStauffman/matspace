@@ -6,12 +6,12 @@ classdef test_make_conclusion < matlab.unittest.TestCase %#ok<*PROP>
 
     methods(Test)
         function test_nominal(self)
-            out = make_conclusion();
+            out = matspace.latex.make_conclusion();
             self.verifyEqual(out, ["        \bottomrule"; "    \end{tabular}"; "\end{table}"; ""]);
         end
 
         function test_minipage(self)
-            out = make_conclusion(true);
+            out = matspace.latex.make_conclusion(true);
             self.verifyEqual(out, ["            \bottomrule"; "        \end{tabular}"; ...
                 "    \end{minipage}"; "\end{table}"; ""]);
         end

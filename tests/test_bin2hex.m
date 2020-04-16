@@ -29,34 +29,34 @@ classdef test_bin2hex < matlab.unittest.TestCase %#ok<*PROP>
 
     methods (Test)
         function test_nominal(self)
-            hex = bin2hex(self.bin);
+            hex = matspace.utils.bin2hex(self.bin);
             self.verifyEqual(hex, self.hex);
         end
 
         function test_lower(self)
-            hex = bin2hex(self.bin, 'lower');
+            hex = matspace.utils.bin2hex(self.bin, 'lower');
             self.verifyEqual(hex, lower(self.hex));
         end
 
         function test_upper(self)
-            hex = bin2hex(self.bin, 'upper');
+            hex = matspace.utils.bin2hex(self.bin, 'upper');
             self.verifyEqual(hex, upper(self.hex));
         end
 
         function test_pad4(self)
-            hex = bin2hex(self.bin, 'pad4');
+            hex = matspace.utils.bin2hex(self.bin, 'pad4');
             self.verifyEqual(hex, '0123 4567 89AB CDEF');
         end
 
         function test_pad8(self)
-            hex = bin2hex(self.bin, 'pad8');
+            hex = matspace.utils.bin2hex(self.bin, 'pad8');
             self.verifyEqual(hex, '01234567 89ABCDEF');
         end
 
         function test_short_bin1(self)
             small_bin = string(self.bin).split(' ');
             for i = 1:16
-                hex = bin2hex(char(small_bin(i)));
+                hex = matspace.utils.bin2hex(char(small_bin(i)));
                 self.verifyEqual(hex, char(self.hex(i)));
             end
         end
@@ -64,56 +64,56 @@ classdef test_bin2hex < matlab.unittest.TestCase %#ok<*PROP>
         function test_short_bin2(self)
             small_bin = string(self.bin).split(' ');
             for i = 1:16
-                hex = bin2hex(char(small_bin(i)));
+                hex = matspace.utils.bin2hex(char(small_bin(i)));
                 self.verifyEqual(hex, self.hex(i));
             end
         end
 
         function test_shorter_bin(self)
-            hex = bin2hex('111');
+            hex = matspace.utils.bin2hex('111');
             self.verifyEqual(hex, '7');
         end
 
         function test_empty_bin1(self)
-            hex = bin2hex('');
+            hex = matspace.utils.bin2hex('');
             self.verifyEqual(hex, '');
         end
 
         function test_empty_bin2(self)
-            hex = bin2hex([], 'upper');
+            hex = matspace.utils.bin2hex([], 'upper');
             self.verifyEqual(hex, '');
         end
 
         function test_multiple_options(self)
-            hex = bin2hex('00000001111111110000', 'pad4', 'lower');
+            hex = matspace.utils.bin2hex('00000001111111110000', 'pad4', 'lower');
             self.verifyEqual(hex, '0 1ff0');
         end
 
         function test_multiple_options2(self)
-            hex = bin2hex('00000001111111110000', 'pad8', 'upper');
+            hex = matspace.utils.bin2hex('00000001111111110000', 'pad8', 'upper');
             self.verifyEqual(hex, '01FF0');
         end
 
         function test_multiple_bins1(self)
-            hex = bin2hex({self.bin, '0', '11110000'});
+            hex = matspace.utils.bin2hex({self.bin, '0', '11110000'});
             self.verifyEqual(hex, {self.hex, '0', 'F0'});
         end
 
         function test_multiple_bins2(self)
-            hex = bin2hex(string({self.bin, '0', '11110000'}));
+            hex = matspace.utils.bin2hex(string({self.bin, '0', '11110000'}));
             self.verifyEqual(hex, string({self.hex, '0', 'F0'}));
         end
 
         function test_bad_input_sizes(self)
-            self.verifyError(@() bin2hex(), 'MATLAB:minrhs');
+            self.verifyError(@() matspace.utils.bin2hex(), 'MATLAB:minrhs');
         end
 
         function test_bad_chars(self)
-            self.verifyError(@() bin2hex('0000-1111'), 'matspace:bin2hex:BadChars');
+            self.verifyError(@() matspace.utils.bin2hex('0000-1111'), 'matspace:bin2hex:BadChars');
         end
 
         function test_bad_options(self)
-            self.verifyError(@() bin2hex(self.bin, 'bad_option'), 'matspace:bin2hex:BadOption');
+            self.verifyError(@() matspace.utils.bin2hex(self.bin, 'bad_option'), 'matspace:bin2hex:BadOption');
         end
     end
 end
