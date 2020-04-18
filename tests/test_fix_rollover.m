@@ -62,5 +62,13 @@ classdef test_fix_rollover < matlab.unittest.TestCase %#ok<*PROP>
             % out = verifyWarning(self, @() matspace.utils.fix_rollover(self.data, self.roll), 'matspace:rollover');
             self.verifyEqual(out, self.exp);
         end
+
+        function test_non_integer_roll(self)
+            exp  = 0:0.1:10;
+            roll = 3.35;
+            data = roll * mod(exp / roll, 1);
+            out  = matspace.utils.fix_rollover(data, roll, 1);
+            self.verifyEqual(out, exp, 'AbsTol', 1e-14);
+        end
     end
 end

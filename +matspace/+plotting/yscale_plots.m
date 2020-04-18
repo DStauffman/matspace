@@ -86,6 +86,10 @@ exclusions = {'[dimensionless]','[normalized]','[ndim]','[%]','\sigma'};
 [mult_new, label_new] = get_factors(prefix_new);
 % find the new effective multiplication factor
 mult = mult_old / mult_new;
+if mult == 1
+    % early exit if this is going to have no effect.
+    return
+end
 
 %% verify existing axis units
 cnt = 1;

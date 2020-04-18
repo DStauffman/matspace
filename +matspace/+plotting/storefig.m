@@ -64,19 +64,14 @@ for f = fig_hand
     end
     haxs = get(hfig,'children');
     if isempty(haxs)
-        warning('matspace:plotting:storeFigBadAxes','Specified figure "%i" does not contain an axis.', hfig);
+        warning('matspace:plotting:storeFigBadAxes', 'Specified figure "%i" does not contain an axis.', hfig);
         return
     end
 end
 
-% add filesep to end of path if necessary
-if ~strcmp(path(end),filesep)
-    path = [path,filesep];
-end
-
 % confirm whether storage directory exists
-if ~exist(path,'dir')
-    warning('matspace:plotting:storeFigBadPath','Specified storage path not found: "%s".', path);
+if ~exist(path, 'dir')
+    warning('matspace:plotting:storeFigBadPath', 'Specified storage path not found: "%s".', path);
     return
 end
 
@@ -91,6 +86,15 @@ if ~iscell(fig_name)
     fig_name = {fig_name};
 end
 
+% strip any leading classification text (TODO: make this optional?)
+ix = regexp(fig_name, '^\(\S*\)\s', 'end', 'once');
+strip = cellfun(@(x) ~isempty(x), ix);
+for i = 1:length(fig_name)
+    if strip(i)
+        fig_name{i} = fig_name{i}(ix(1)+1:end);
+    end
+end
+
 % check for illegal characters and replace with underscores
 if ispc
     bad_chars = {'<','>',':','"','/','\','|','?','*'};
@@ -99,16 +103,16 @@ else
 end
 bad_names = false(size(fig_name));
 for i = 1:length(bad_chars)
-    ix = ~cellfun(@isempty,strfind(fig_name,bad_chars{i}));
+    ix = ~cellfun(@isempty, strfind(fig_name, bad_chars{i}));
     if any(ix)
-        fig_name  = strrep(fig_name,bad_chars{i},'_');
+        fig_name  = strrep(fig_name, bad_chars{i}, '_');
         bad_names = bad_names | ix;
     end
 end
 if any(bad_names)
     disp('Bad name(s):');
     disp(fig_name(bad_names));
-    warning('matspace:plotting:storeFigIllegalChars','There were illegal characters in the figure name.');
+    warning('matspace:plotting:storeFigIllegalChars', 'There were illegal characters in the figure name.');
 end
 
 % save plots
@@ -116,15 +120,15 @@ for f = 1:length(fig_hand)
     for i = 1:length(format)
         switch format{i}
             case 'png'
-                print(fig_hand(f),'-dpng',[path,fig_name{f},'.png']);
+                print(fig_hand(f), '-dpng', fullfile(path, [fig_name{f},'.png']));
             case 'emf'
-                print(fig_hand(f),'-dmeta',[path,fig_name{f},'.emf']);
+                print(fig_hand(f), '-dmeta', fullfile(path, [fig_name{f},'.emf']));
             case 'fig'
-                saveas(fig_hand(f),[path,fig_name{f},'.fig']);
+                saveas(fig_hand(f), fullfile(path, [fig_name{f},'.fig']));
             case 'jpg'
-                print(fig_hand(f),'-djpeg',[path,fig_name{f},'.jpg']);
+                print(fig_hand(f), '-djpeg', fullfile(path, [fig_name{f},'.jpg']));
             otherwise
-                warning('matspace:plotting:storeFigBadExt','Unexpected extension type "%s"; plot not saved.', format{i});
+                warning('matspace:plotting:storeFigBadExt', 'Unexpected extension type "%s"; plot not saved.', format{i});
         end
     end
 end

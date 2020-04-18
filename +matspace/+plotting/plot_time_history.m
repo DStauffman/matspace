@@ -64,9 +64,9 @@ addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'Names', {}, fun_is_cell_char_or_str);
 addParameter(p, 'TimeTwo', [], fun_is_time);
-addParameter(p, 'DataTwo', zeros(1,0), @isnumeric);
+addParameter(p, 'DataTwo', zeros(1, 0, class(data)), @isnumeric);
 addParameter(p, 'TruthTime', [], fun_is_time);
-addParameter(p, 'TruthData', zeros(1,0), @isnumeric);
+addParameter(p, 'TruthData', zeros(1, 0, class(data)), @isnumeric);
 addParameter(p, 'TruthName', 'Truth', @ischar);
 addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
 % do parse
@@ -121,9 +121,14 @@ rms_xmin    = OPTS.rms_xmin;
 rms_xmax    = OPTS.rms_xmax;
 disp_xmin   = OPTS.disp_xmin;
 disp_xmax   = OPTS.disp_xmax;
+show_extra  = OPTS.show_xtra;
 start_date  = get_start_date(OPTS.date_zero);
 if ~isempty(OPTS.colormap)
-    colors1 = colormap(OPTS.colormap);
+    if isnumeric(OPTS.colormap)
+        colors1 = OPTS.colormap;
+    else
+        colors1 = feval(OPTS.colormap);
+    end
 else
     colors1 = tab10();
 end
@@ -150,7 +155,8 @@ fig_hand = general_difference_plot(description, time, time_two, scale*data, scal
     'Elements', names, 'Units', units, 'TimeUnits', time_units, 'LegendScale', 'unity', 'StartDate', start_date, ...
     'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, 'DispXmin', disp_xmin, 'DispXmax', disp_xmax, ...
     'FigVisible', show_plot, 'MakeSubplots', sub_plots, 'SingleLines', single_line, 'ColorOrder', this_colororder, ...
-    'UseMean', use_mean, 'PlotZero', show_zero, 'ShowRms', show_rms, 'SecondYScale', second_y_scale, ...
+    'UseMean', use_mean, 'PlotZero', show_zero, 'ShowRms', show_rms, 'ShowExtra', show_extra, ...
+    'SecondYScale', second_y_scale, ...
     'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', scale*truth_data);
 
 % create figure controls

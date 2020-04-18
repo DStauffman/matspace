@@ -89,7 +89,7 @@ end
 fig_hand = fig_hand(:)';
 
 %% Check valid forms
-if ~any(strcmp(form,{'time','dist','time_no_y_scale','dist_no_y_scale'}))
+if ~any(strcmp(form,{'time', 'dist', 'time_no_y_scale', 'dist_no_y_scale'}))
     error('matspace:UnexpectedForm', 'Unexpected plot form of "%s".', form);
 end
 
@@ -98,7 +98,7 @@ update_name     = ~isempty(OPTS.case_name);
 scale_xaxis     = ~isempty(OPTS.time_unit) && ~strcmp(OPTS.time_unit, 'datetime') && ...
     ~strcmp(OPTS.time_base, OPTS.time_unit);
 change_xextents = ~isinf(OPTS.disp_xmin) || ~isinf(OPTS.disp_xmax);
-scale_yaxis     = any(strcmp(form, {'time', 'dist'}));
+scale_yaxis     = any(strcmp(form, {'time', 'dist'})) && ~strcmp(OPTS.vert_fact, 'unity');
 save_plot       = OPTS.save_plot;
 have_save_path  = ~isempty(OPTS.save_path);
 show_link       = OPTS.show_link;
@@ -142,7 +142,7 @@ end
 
 %% Scale the y-axis
 if scale_yaxis
-    yscale_plots(fig_hand,'unity',OPTS.vert_fact);
+    yscale_plots(fig_hand, 'unity', OPTS.vert_fact);
 end
 
 %% Label plot classification
@@ -151,7 +151,7 @@ plot_classification(fig_hand, classification, caveat);
 
 %% Move plots
 if move_plots
-    set_plot_location(fig_hand,OPTS.plot_locs);
+    set_plot_location(fig_hand, OPTS.plot_locs);
 end
 
 %% Save Plots

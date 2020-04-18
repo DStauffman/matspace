@@ -1,4 +1,4 @@
-function [fig_hand,err] = general_difference_plot(description, time_one, time_two, data_one, data_two, varargin)
+function [fig_hand, err] = general_difference_plot(description, time_one, time_two, data_one, data_two, varargin)
 
 % GENERAL_DIFFERENCE_PLOT  is a general difference comparsion plot for use in plot_los.
 %

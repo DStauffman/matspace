@@ -25,6 +25,7 @@ classdef Opts
     %         .use_mean  : (scalar) true/false flag for using mean instead of RMS for legend calculations [bool]
     %         .show_zero : (scalar) true/false flag for whether to show Y=0 on the plot axis [bool]
     %         .quat_comp : (scalar) true/false flag to plot quaternion component differences or just the angle [bool]
+    %         .show_xtra : (scalar) true/false flag to show extra points in one vector or the other when plotting differences [bool]
     %         .time_base : (row) string specifying the base units of time, typically from {'sec', 'months'} [char]
     %         .time_unit : (row) string specifying the time unit for the x axis, from {'', 'sec', 'min', 'hr', 'day', 'month', 'year'} [char]
     %         .vert_fact : (row) string specifying the vertical factor to apply to the Y axis, [char]
@@ -62,6 +63,7 @@ classdef Opts
         use_mean,
         show_zero,
         quat_comp,
+        show_xtra,
         time_base,
         time_unit,
         vert_fact,
@@ -91,6 +93,7 @@ classdef Opts
             OPTS.use_mean  = false;
             OPTS.show_zero = false;
             OPTS.quat_comp = false;
+            OPTS.show_xtra = true;
             OPTS.time_base = 'sec'; % Nominally seconds or years, time when no scaling done
             OPTS.time_unit = ''; % Time unit to display plots in, potentially scaling from the base
             OPTS.vert_fact = 'unity';
