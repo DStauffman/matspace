@@ -52,7 +52,7 @@ classdef test_load_check < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_mismatch_args(self)
-            [~, ~] = self.verifyError(@() matspace.utils.load_check(self.filename, 'x', 'y', 'z'), 'load_check:IOMismatch');
+            self.verifyError(@() matspace.utils.load_check(self.filename, 'x', 'y', 'z'), 'load_check:IOMismatch');
         end
     end
 end
