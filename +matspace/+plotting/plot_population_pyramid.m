@@ -42,7 +42,7 @@ scale = 100;
 % create parser
 p = inputParser;
 % create some validation functions
-fun_is_opts = @(x) isa(x, 'Opts') || isempty(x);
+fun_is_opts = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
 fun_is_color = @(x) ischar || (isvector(x) && length(x) == 3);
 % set options
 addOptional(p, 'OPTS', Opts, fun_is_opts);

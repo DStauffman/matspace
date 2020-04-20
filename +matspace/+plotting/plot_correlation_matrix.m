@@ -209,7 +209,7 @@ try
     import matspace.plotting.figmenu
     import matspace.plotting.Opts
     import matspace.plotting.setup_plots
-    if isa(OPTS, 'Opts')
+    if isa(OPTS, 'matspace.plotting.Opts')
         setup_plots(fig_hand,OPTS,'dist_no_y_scale');
     end
     figmenu

@@ -106,7 +106,7 @@ classdef Opts
                 case 0
                     return
                 case 1
-                    if ~isstruct(overrides) && ~isa(overrides, 'Opts')
+                    if ~isstruct(overrides) && ~isa(overrides, 'matspace.plotting.Opts')
                         error('matspace:UnexpectedType', 'Unexpected input type.');
                     end
                 otherwise

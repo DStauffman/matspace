@@ -33,18 +33,16 @@ if ~isempty(dcs_always)
     % folder to always have on my path
     addpath(dcs_always);
     disp('PATHSET:')
-    disp(['    ''', dcs_always,'''']);
+    disp(['    "', dcs_always,'"']);
 end
 if ~isempty(dcs_tools)
     % matspace library
     if exist(fullfile(dcs_tools, 'pathset.m'), 'file')
         run(fullfile(dcs_tools, 'pathset.m'));
-    elseif exist(fullfile(dcs_tools, '+matspace', '+paths', 'pathset.m'), 'file')
-        % TODO: DCS: want a better way of doing this
-        cwd = pwd;
-        cd(dcs_tools);
-        run('matspace.paths.pathset.m');
-        cd(cwd);
+    elseif exist(dcs_tools, 'dir')
+        addpath(dcs_tools);
+        disp('PATHSET:')
+        disp(['    "', dcs_tools,'"']);
     end
 end
 if ~isempty(dcs_current)
@@ -55,21 +53,16 @@ if ~isempty(dcs_current)
         disp(['Running matlab_setup.m in ', fullfile(dcs_current)]);
         run(fullfile(dcs_current, 'matlab_setup.m'));
     elseif exist(dcs_current, 'dir')
-        try
-            pathset(dcs_current);
-        catch
-            dcs_oldpath = addpath(genpath(dcs_current));
-            dcs_added = setxor(split(dcs_oldpath, pathsep), split(path, pathsep));
-            disp('PATHSET:');
-            disp(dcs_added);
-        end
+        addpath(dcs_current);
+        disp('PATHSET:')
+        disp(['    "', dcs_current,'"']);
     end
 end
 if ~isempty(dcs_prj_ldr)
     % Add Project Loader
     addpath(dcs_prj_ldr);
     disp('PATHSET:')
-    disp(['    ''', dcs_prj_ldr, '''']);
+    disp(['    "', dcs_prj_ldr, '"']);
 end
 
 %% Go to a useful starting folder
