@@ -89,7 +89,7 @@ for i = 1:length(fig_hand)
     if test
         w = 0.6;
         h = 0.1;
-        annotation(this_fig, 'textbox' ,'Position', [pos(1)+pos(3)/2-w/2,pos(2)+pos(4)-h,w,h], ...
+        annotation(this_fig, 'textbox', 'Position', [pos(1)+pos(3)/2-w/2,pos(2)+pos(4)-h,w,h], ...
             'String', 'This plot classification is labeled for test purposes only', ...
             'HorizontalAlignment', 'Center', 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
             'FontSize', 8, 'FontWeight', 'Bold', 'Color', 'r', 'EdgeColor', 'r', 'LineWidth', 2, ...
@@ -135,19 +135,19 @@ for i = 1:length(fig_hand)
             'LineWidth', 2, 'Tag', 'ClassificationText');
     else
         annotation(this_fig, 'textbox', 'Position', [1-w,0,w,h], 'String', text_str,...
-            'HorizontalAlignment', 'Right', 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
+            'HorizontalAlignment', 'Right', 'VerticalAlignment', 'Bottom', 'FitBoxToText', 'on', ...
             'FontSize', 8, 'FontWeight', 'Bold', 'Color', text_color, 'EdgeColor', color, ...
             'LineWidth', 2, 'Tag', 'ClassificationText');
         annotation(this_fig, 'rectangle', 'Position', [0,0,1,1], 'Color', 'none', 'EdgeColor', color, ...
-            'LineWidth',2, 'Tag', 'ClassificationBorder');
+            'LineWidth', 2, 'Tag', 'ClassificationBorder');
     end
 end
 
 
-function remove_old_classifications(this_fig)
+function [] = remove_old_classifications(this_fig)
 
-% REMOVE_OLD_CLASSIFICATIONS  removes any pre-existing classification markings so that they can
-%                             be replaced with new ones without clashing
+% REMOVE_OLD_CLASSIFICATIONS  removes any pre-existing classification markings so that they can be
+%                             replaced with new ones without clashing
 
 % Find the axes that potentially contain the annotations
 ax = findall(this_fig, 'Tag', 'scribeOverlay');

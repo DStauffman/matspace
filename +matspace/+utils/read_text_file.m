@@ -1,6 +1,6 @@
 function [lines] = read_text_file(filename)
 
-% READ_TEXT_FILE  reads the given text file into a 
+% READ_TEXT_FILE  reads the given text file into a string array
 %
 % Input:
 %     filename : (string) specifying the name of the file to write [char]
