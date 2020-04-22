@@ -212,7 +212,7 @@ try
     if isa(OPTS, 'matspace.plotting.Opts')
         setup_plots(fig_hand,OPTS,'dist_no_y_scale');
     end
-    figmenu
+    figmenu;
 catch exception
     if ~strcmp(exception.identifier, 'MATLAB:class:invalidImportArguments')
         rethrow(exception)

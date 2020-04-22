@@ -32,7 +32,7 @@ function [fig_hand, err] = general_difference_plot(description, time_one, time_t
 %         'ShowRms'      : (scalar) true/false flag to show the RMS calculation in the legend [bool]
 %         'LegendLoc'    : (row) location of the legend, from {'best', 'north', etc.} see legend for more details [char]
 %         'ShowExtra'    : (scalar) true/false flag on whether to show missing data on diff plot [bool]
-%         'SecondYScale' :
+%         'SecondYScale' : (scalar or {1x2}) scale factor for second axis, if cell array, then label and scale factor [num]
 %         'TruthName'    : (1xN string) names of the truth structures [char]
 %         'TruthTime'    : (1xN) time history for the truth data [sec]
 %         'TruthData'    : (1xN) truth data array [num]
@@ -385,7 +385,7 @@ for i = 1:num_axes
     end
     hold(this_axes, 'off'); % TODO: don't due in newer Matlab?
 end
-% line axes to zoom together
+% link axes to zoom together
 if length(ax) > 1
     linkaxes(ax, 'x');
 end

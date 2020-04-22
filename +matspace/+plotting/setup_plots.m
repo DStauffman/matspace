@@ -89,7 +89,7 @@ end
 fig_hand = fig_hand(:)';
 
 %% Check valid forms
-if ~any(strcmp(form,{'time', 'dist', 'time_no_y_scale', 'dist_no_y_scale'}))
+if ~any(strcmp(form, {'time', 'dist', 'time_no_y_scale', 'dist_no_y_scale'}))
     error('matspace:UnexpectedForm', 'Unexpected plot form of "%s".', form);
 end
 
