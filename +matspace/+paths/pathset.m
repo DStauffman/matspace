@@ -71,4 +71,9 @@ addpath(folders.join(pathsep));
 
 %% display status
 disp('PATHSET:');
-disp(folders);
+if isscalar(folders)
+    % for consistency of display even if only one folder was added
+    disp(['    "',char(folders),'"']);
+else
+    disp(folders);
+end

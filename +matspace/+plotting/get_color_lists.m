@@ -42,5 +42,8 @@ color_lists.vec       = {colors.red; colors.green; colors.blue};
 color_lists.quat      = {colors.red; colors.green; colors.blue; colors.chocolate};
 color_lists.dbl_diff  = {colors.fuchsia; colors.cyan; colors.red; colors.blue};
 color_lists.vec_diff  = {colors.fuchsia; colors.lightgreen; colors.cyan; colors.red; colors.green; colors.blue};
-color_lists.quat_diff = {colors.fuchsia; colors.lightgreen; colors.cyan; colors.brown;...
+color_lists.quat_diff = {colors.fuchsia; colors.lightgreen; colors.cyan; colors.brown; ...
     colors.red; colors.green; colors.blue; colors.chocolate};
+% Matlab's newer default color list
+color_lists.default   = {[0.000 0.447 0.741]; [0.850 0.325 0.098]; [0.929 0.694 0.125]; ...
+    [0.494 0.184 0.556]; [0.466 0.674 0.188]; [0.301 0.745 0.933]; [0.635 0.078 0.184]};

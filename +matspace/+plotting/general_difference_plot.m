@@ -33,6 +33,7 @@ function [fig_hand, err] = general_difference_plot(description, time_one, time_t
 %         'LegendLoc'    : (row) location of the legend, from {'best', 'north', etc.} see legend for more details [char]
 %         'ShowExtra'    : (scalar) true/false flag on whether to show missing data on diff plot [bool]
 %         'SecondYScale' : (scalar or {1x2}) scale factor for second axis, if cell array, then label and scale factor [num]
+%         'YLabel'       : (row) label to put on Y axis [char]
 %         'TruthName'    : (1xN string) names of the truth structures [char]
 %         'TruthTime'    : (1xN) time history for the truth data [sec]
 %         'TruthData'    : (1xN) truth data array [num]
@@ -72,6 +73,7 @@ function [fig_hand, err] = general_difference_plot(description, time_one, time_t
 %     legend_loc     = 'Best';
 %     show_extra     = true;
 %     second_y_scale = nan;
+%     y_label        = 'Value [rad]';
 %     truth_name     = "Truth";
 %     truth_time     = [];
 %     truth_data     = [];
@@ -81,7 +83,7 @@ function [fig_hand, err] = general_difference_plot(description, time_one, time_t
 %         'DispXmin', disp_xmin, 'DispXmax', disp_xmax, 'FigVisible', fig_visible, 'MakeSubplots', make_subplots, ...
 %         'SingleLines', single_lines, 'ColorOrder', colororder, 'UseMean', use_mean, 'PlotZero', plot_zero, ...
 %         'ShowRms', show_rms, 'LegendLoc', legend_loc, 'ShowExtra', show_extra, 'SecondYScale', second_y_scale, ...
-%         'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data);
+%         'YLabel', y_label, 'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data);
 %
 % See Also:
 %     matspace.plotting.plot_time_history
@@ -97,6 +99,7 @@ function [fig_hand, err] = general_difference_plot(description, time_one, time_t
 %% Imports
 import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
+import matspace.plotting.plot_second_yunits
 import matspace.utils.nanmean
 import matspace.utils.nanrms
 
@@ -133,6 +136,7 @@ addParameter(p, 'ShowRms', true, @islogical);
 addParameter(p, 'LegendLoc', 'Best', @ischar);
 addParameter(p, 'ShowExtra', true, @islogical);
 addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
+addParameter(p, 'YLabel', '', @ischar);
 addParameter(p, 'TruthName', "Truth", fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
@@ -157,6 +161,7 @@ show_rms        = p.Results.ShowRms;
 legend_loc      = p.Results.LegendLoc;
 show_extra      = p.Results.ShowExtra;
 second_y_scale  = p.Results.SecondYScale;
+y_label         = p.Results.YLabel;
 truth_name      = p.Results.TruthName;
 truth_time      = p.Results.TruthTime;
 truth_data      = p.Results.TruthData;
@@ -370,7 +375,11 @@ for i = 1:num_axes
     else
         xlabel(this_axes, ['Time [',time_units,']',start_date]);
     end
-    ylabel(this_axes, [description,' [',units,']']);
+    if isempty(y_label)
+        ylabel(this_axes, [description,' [',units,']']);
+    else
+        ylabel(this_axes, y_label);
+    end
     grid(this_axes, 'on');
     % create second Y axis
     if iscell(second_y_scale)

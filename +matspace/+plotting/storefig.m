@@ -55,6 +55,22 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 %     1.  Added to matspace library in Sept 2013.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+% Imports
+import matspace.plotting.resolve_name
+
+% optional inputs
+switch nargin
+    case 1
+        path   = pwd;
+        format = 'png';
+    case 2
+        format = 'png';
+    case 3
+        % nop
+    otherwise
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+end
+
 % confirm that handles are valid figures
 for f = fig_hand
     hfig = f;
@@ -86,34 +102,8 @@ if ~iscell(fig_name)
     fig_name = {fig_name};
 end
 
-% strip any leading classification text (TODO: make this optional?)
-ix = regexp(fig_name, '^\(\S*\)\s', 'end', 'once');
-strip = cellfun(@(x) ~isempty(x), ix);
-for i = 1:length(fig_name)
-    if strip(i)
-        fig_name{i} = fig_name{i}(ix(1)+1:end);
-    end
-end
-
-% check for illegal characters and replace with underscores
-if ispc
-    bad_chars = {'<','>',':','"','/','\','|','?','*'};
-else
-    bad_chars = {'/'};
-end
-bad_names = false(size(fig_name));
-for i = 1:length(bad_chars)
-    ix = ~cellfun(@isempty, strfind(fig_name, bad_chars{i}));
-    if any(ix)
-        fig_name  = strrep(fig_name, bad_chars{i}, '_');
-        bad_names = bad_names | ix;
-    end
-end
-if any(bad_names)
-    disp('Bad name(s):');
-    disp(fig_name(bad_names));
-    warning('matspace:plotting:storeFigIllegalChars', 'There were illegal characters in the figure name.');
-end
+% resolve any name issues
+fig_name = resolve_name(fig_name);
 
 % save plots
 for f = 1:length(fig_hand)
