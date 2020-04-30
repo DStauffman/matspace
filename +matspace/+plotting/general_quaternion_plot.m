@@ -196,26 +196,23 @@ leg_conv = 1/temp;
 % determine if you have the quaternions
 have_quat_one = any(any(~isnan(quat_one)));
 have_quat_two = any(any(~isnan(quat_two)));
+have_both     = have_quat_one && have_quat_two;
 % determine which symbols to plot with
-if have_quat_one
-    if have_quat_two
-        symbol_one = '^-';
-        symbol_two = 'v:';
-    else
-        symbol_one = '.-';
-        symbol_two = ''; % not-used
-    end
+if have_both
+    symbol_one = '^-';
+    symbol_two = 'v:';
+elseif have_quat_one
+    symbol_one = '.-';
+    symbol_two = ''; % not-used
+elseif have_quat_two
+    symbol_one = ''; % not-used
+    symbol_two = '.-';
 else
-    if have_quat_two
-        symbol_one = ''; % not-used
-        symbol_two = '.-';
-    else
-        symbol_one = ''; % invalid case
-        symbol_two = ''; % invalid case
-    end
+    symbol_one = ''; % invalid case
+    symbol_two = ''; % invalid case
 end
 % pre-plan plot layout
-if have_quat_one && have_quat_two
+if have_both
     if make_subplots
         num_figs = 1;
         if single_lines
@@ -253,7 +250,7 @@ if make_subplots
 else
     f1 = figure('name', [description,' Quaternion Components'], 'Visible', fig_visible);
 end
-if have_quat_one && have_quat_two && ~make_subplots
+if have_both && ~make_subplots
     f2 = figure('name', [description,' Difference'], 'Visible', fig_visible);
     fig_hand = [f1 f2];
 else
@@ -386,7 +383,7 @@ for i = 1:num_axes
     end
     hold(this_axes, 'off'); % TODO: don't due in newer Matlab?
 end
-% line axes to zoom together
+% link axes to zoom together
 if length(ax) > 1
     linkaxes(ax, 'x');
 end

@@ -211,26 +211,23 @@ leg_conv = 1/temp;
 % determine if you have the histories
 have_data_one = any(any(~isnan(data_one)));
 have_data_two = any(any(~isnan(data_two)));
+have_both     = have_data_one && have_data_two;
 % determine which symbols to plot with
-if have_data_one
-    if have_data_two
-        symbol_one = '^-';
-        symbol_two = 'v:';
-    else
-        symbol_one = '.-';
-        symbol_two = ''; % not-used
-    end
+if have_both
+    symbol_one = '^-';
+    symbol_two = 'v:';
+elseif have_data_one
+    symbol_one = '.-';
+    symbol_two = ''; % not-used
+elseif have_data_two
+    symbol_one = ''; % not-used
+    symbol_two = '.-';
 else
-    if have_data_two
-        symbol_one = ''; % not-used
-        symbol_two = '.-';
-    else
-        symbol_one = ''; % invalid case
-        symbol_two = ''; % invalid case
-    end
+    symbol_one = ''; % invalid case
+    symbol_two = ''; % invalid case
 end
 % pre-plan plot layout
-if have_data_one && have_data_two
+if have_both
     if make_subplots
         num_figs = 1;
         if single_lines
@@ -264,7 +261,7 @@ num_axes = num_figs*num_rows*num_cols;
 %% Create plots
 % create figures
 f1 = figure('name', description, 'Visible', fig_visible);
-if have_data_one && have_data_two && ~make_subplots
+if have_both && ~make_subplots
     f2 = figure('name', [description,' Difference'], 'Visible', fig_visible);
     fig_hand = [f1 f2];
 else
@@ -323,6 +320,9 @@ for i = 1:num_axes
     else
         % difference plot
         for j = loop_counter
+            if single_lines && mod(i, num_channels) ~= j
+                continue
+            end
             if show_rms
                 this_name = [elements{j},' (',func_name,': ',num2str(leg_conv*nondeg_func(j),leg_format),' ',prefix,units,')'];
             else
@@ -355,7 +355,7 @@ for i = 1:num_axes
     if i <= num_rows && ~isempty(truth_time) && ~isempty(truth_data) && ~all(all(isnan(truth_data)))
         if single_lines
             plot(this_axes, truth_time, truth_data(i,:), '.-', 'Color', truth_color, 'MarkerFaceColor', ...
-                truth_color, 'LineWidth', 2, 'DisplayName', truth_name);
+                truth_color, 'LineWidth', 2, 'DisplayName', [truth_name,' ',elements{i}]);
         else
             if i == 1
                 plot(this_axes, truth_time, truth_data, '.-', 'Color', truth_color, 'MarkerFaceColor', ...
@@ -376,9 +376,19 @@ for i = 1:num_axes
         xlabel(this_axes, ['Time [',time_units,']',start_date]);
     end
     if isempty(y_label)
-        ylabel(this_axes, [description,' [',units,']']);
+        if is_diff_plot
+            ylabel(this_axes, [description,' Difference [',units,']']);
+        else
+            ylabel(this_axes, [description,' [',units,']']);
+        end
     else
-        ylabel(this_axes, y_label);
+        % TODO: handle single_lines case by allowing string array for y_label
+        ix = strfind(y_label, '[');
+        if is_diff_plot && ~isempty(ix)
+            ylabel(this_axes, [y_label(1:ix(1)-1),'Difference ',y_label(ix(1):end)]);
+        else
+            ylabel(this_axes, y_label);
+        end
     end
     grid(this_axes, 'on');
     % create second Y axis
