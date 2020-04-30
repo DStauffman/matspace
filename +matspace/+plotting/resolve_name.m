@@ -11,7 +11,7 @@ function [new_name] = resolve_name(old_name, strip_classification)
 %
 % Prototype:
 %     old_name = '(U//FOUO) Test file [\deg].txt';
-%     strip_classification = false;
+%     strip_classification = true;
 %     new_name = matspace.plotting.resolve_name(old_name, strip_classification);
 %     assert(xor(~ispc,strcmp(new_name, 'Test file [_deg].txt')));
 %     assert(xor( ispc,strcmp(new_name, 'Test file [\deg].txt'))); % '\' is allowed on Unix

@@ -1,4 +1,4 @@
-function [] = plot_classification(fig_hand, classification, caveat, test, inside_axes)
+function [] = plot_classification(fig_hand, classification, caveat, test, location)
 
 % PLOT_CLASSIFICATION  displays the classification in a box on each figure.
 %
@@ -11,7 +11,8 @@ function [] = plot_classification(fig_hand, classification, caveat, test, inside
 %     classification : (row) string specifying classification to use, from {'U','C','S','TS'} [char]
 %     caveat         : (row) string specifying the extra caveats beyond the main classification [char]
 %     test           : (true/false) flag to specify if this is a test or a real application [bool]
-%     inside_axes    : (true/false) flag to specify whether box is inside the axis, or on the figure [bool]
+%     location       : (true/false) string specifying where to put the label, 
+%                          from {'axis', 'figure', 'left', 'top', 'outside'} [char]
 %
 % Output:
 %     (NONE)
@@ -44,14 +45,14 @@ function [] = plot_classification(fig_hand, classification, caveat, test, inside
 %% check for optional inputs
 switch nargin
     case 2
-        caveat      = '';
-        test        = false;
-        inside_axes = false;
+        caveat   = '';
+        test     = false;
+        location = 'figure';
     case 3
-        test        = false;
-        inside_axes = false;
+        test     = false;
+        location = 'figure';
     case 4
-        inside_axes = false;
+        location = 'figure';
     case 5
         % nop
     otherwise
@@ -87,9 +88,9 @@ for i = 1:length(fig_hand)
     pos = get(ax, 'Position');
     % plot warning before trying to draw the other box
     if test
-        w = 0.6;
-        h = 0.1;
-        annotation(this_fig, 'textbox', 'Position', [pos(1)+pos(3)/2-w/2,pos(2)+pos(4)-h,w,h], ...
+        width  = 0.6;
+        height = 0.1;
+        annotation(this_fig, 'textbox', 'Position', [pos(1)+pos(3)/2-width/2, pos(2)+pos(4)-height, width, height], ...
             'String', 'This plot classification is labeled for test purposes only', ...
             'HorizontalAlignment', 'Center', 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
             'FontSize', 8, 'FontWeight', 'Bold', 'Color', 'r', 'EdgeColor', 'r', 'LineWidth', 2, ...
@@ -115,12 +116,12 @@ for i = 1:length(fig_hand)
     end
     text_color = color;
     % determine size of box and append any optional caveat(s)
-    h = 0.05;
+    height = 0.05;
     if ~isempty(caveat)
         text_str = [text_str, caveat]; %#ok<AGROW>
-        w = 0.6;
+        width = 0.6;
     else
-        w = 0.3;
+        width = 0.3;
     end
     % allow other color options for certain caveats
     if contains(caveat, '//FAKE COLOR')
@@ -128,16 +129,29 @@ for i = 1:length(fig_hand)
         text_color = [0.2 0.2 0.2];
     end
     % add classification box
-    if inside_axes
-        annotation(this_fig, 'textbox', 'Position', [pos(1)+pos(3)-w,pos(2),w,h], 'String', text_str, ...
-            'HorizontalAlignment', 'Right', 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
-            'FontSize', 8, 'FontWeight', 'Bold', 'Color', text_color, 'EdgeColor', color, ...
-            'LineWidth', 2, 'Tag', 'ClassificationText');
-    else
-        annotation(this_fig, 'textbox', 'Position', [1-w,0,w,h], 'String', text_str,...
-            'HorizontalAlignment', 'Right', 'VerticalAlignment', 'Bottom', 'FitBoxToText', 'on', ...
-            'FontSize', 8, 'FontWeight', 'Bold', 'Color', text_color, 'EdgeColor', color, ...
-            'LineWidth', 2, 'Tag', 'ClassificationText');
+    add_border = true;
+    horz_align = 'Right';
+    switch location
+        case 'axis'
+            text_pos   = [pos(1)+pos(3)-width, pos(2), width, height];
+            add_border = false;
+        case 'figure'
+            text_pos   = [1-width, 0, width, height];
+        case 'left'
+            text_pos   = [0, 0, width, height];
+        case 'top'
+            text_pos   = [0, 1-height, width, height];
+            horz_align = 'Left';
+        case 'outside'
+            text_pos   = [1-width, -height/2, width, height];
+        otherwise
+            error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+    end
+    annotation(this_fig, 'textbox', 'Position', text_pos, 'String', text_str, ...
+        'HorizontalAlignment', horz_align, 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
+        'FontSize', 8, 'FontWeight', 'Bold', 'Color', text_color, 'EdgeColor', color, ...
+        'LineWidth', 2, 'Tag', 'ClassificationText');
+    if add_border
         annotation(this_fig, 'rectangle', 'Position', [0,0,1,1], 'Color', 'none', 'EdgeColor', color, ...
             'LineWidth', 2, 'Tag', 'ClassificationBorder');
     end

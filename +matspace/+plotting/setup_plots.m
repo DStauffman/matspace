@@ -66,6 +66,7 @@ function [] = setup_plots(fig_hand,OPTS,form)
 import matspace.plotting.get_classification
 import matspace.plotting.plot_classification
 import matspace.plotting.set_plot_location
+import matspace.plotting.shift_axes_up
 import matspace.plotting.storefig
 import matspace.plotting.titleprefix
 import matspace.plotting.xextents
@@ -147,6 +148,9 @@ end
 
 %% Label plot classification
 [classification, caveat] = get_classification(OPTS.classify);
+if ~isempty(classification)
+    shift_axes_up(fig_hand, 0.08);
+end
 plot_classification(fig_hand, classification, caveat);
 
 %% Move plots
