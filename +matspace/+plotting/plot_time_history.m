@@ -10,7 +10,10 @@ function [fig_hand] = plot_time_history(time, data, varargin)
 %     varargin .. : (char, value) pairs for other options, from:
 %         'Description' : (char) text to put on the plot titles, default is empty string
 %         'Type'        : (char) type of data to use when converting axis scale, default is 'unity'
-%         'Names'       : {1xN} of (char) Names for each channel on the legend, default is empty
+%         'Elements'    : {1xN} of (char) Names for each channel on the legend, default is empty
+%         'SecondYScale' : (scalar) Multiplication scale factor to use to display on a secondary Y axis
+%         'TimeTwo'     : (1xA) time points for series two, default is empty
+%         'DataTwo'     : (BxA) data points for series two, default is empty
 %         'TruthTime'   : (1xC) time points for truth data, default is empty
 %         'TruthData'   : (DxC) data points for truth data, default is empty
 %         'TruthName'   : (char) or {Dx1} of (char) name for truth data on the legend, if empty
@@ -62,19 +65,19 @@ addRequired(p, 'Data', @isnumeric);
 addOptional(p, 'OPTS', Opts, fun_is_opts);
 addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
-addParameter(p, 'Names', {}, fun_is_cell_char_or_str);
+addParameter(p, 'Elements', {}, fun_is_cell_char_or_str);
+addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell); % TODO: put into OPTS?
 addParameter(p, 'TimeTwo', [], fun_is_time);
 addParameter(p, 'DataTwo', zeros(1, 0, class(data)), @isnumeric);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', zeros(1, 0, class(data)), @isnumeric);
 addParameter(p, 'TruthName', 'Truth', @ischar);
-addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
 % do parse
 parse(p, time, data, varargin{:});
 % create some convenient aliases
 type        = p.Results.Type;
 description = p.Results.Description;
-names       = p.Results.Names;
+elements    = p.Results.Elements;
 second_y_scale = p.Results.SecondYScale;
 % create data channel aliases
 time_two    = p.Results.TimeTwo;
@@ -93,8 +96,8 @@ if isdatetime(time)
 end
 
 %% Process inputs
-if isempty(names)
-    names = arrayfun(@(x) ['Channel: ',int2str(x)], 1:size(data,1), 'UniformOutput', false);
+if isempty(elements)
+    elements = arrayfun(@(x) ['Channel: ',int2str(x)], 1:size(data,1), 'UniformOutput', false);
 end
 if ~iscell(truth_name)
     truth_name = {truth_name};
@@ -123,6 +126,7 @@ disp_xmin   = OPTS.disp_xmin;
 disp_xmax   = OPTS.disp_xmax;
 show_extra  = OPTS.show_xtra;
 start_date  = get_start_date(OPTS.date_zero);
+legend_loc  = OPTS.leg_spot;
 if ~isempty(OPTS.colormap)
     if isnumeric(OPTS.colormap)
         colors1 = OPTS.colormap;
@@ -133,6 +137,16 @@ else
     colors1 = tab10();
 end
 colors2     = whitten(colors1);
+if length(OPTS.names) >= 1
+    name_one = OPTS.names{1};
+else
+    name_one = '';
+end
+if length(OPTS.names) >= 2
+    name_two = OPTS.names{2};
+else
+    name_two = '';
+end
 
 %% Potentially convert times to dates
 if strcmp(OPTS.time_unit, 'datetime')
@@ -148,15 +162,16 @@ end
 
 %% Plot data
 % calls lower level function
-num_labels      = length(names);
+num_labels      = length(elements);
 rows            = modd(1:num_labels, size(colors1, 1));
 this_colororder = [colors1(rows,:); colors2(rows,:); colors1(rows,:)];
 fig_hand = general_difference_plot(description, time, time_two, scale*data, scale*data_two, ...
-    'Elements', names, 'Units', units, 'TimeUnits', time_units, 'LegendScale', 'unity', 'StartDate', start_date, ...
+    'NameOne', name_one, 'NameTwo', name_two, 'Elements', elements, ...
+    'Units', units, 'TimeUnits', time_units, 'LegendScale', 'unity', 'StartDate', start_date, ...
     'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, 'DispXmin', disp_xmin, 'DispXmax', disp_xmax, ...
-    'FigVisible', show_plot, 'MakeSubplots', sub_plots, 'SingleLines', single_line, 'ColorOrder', this_colororder, ...
-    'UseMean', use_mean, 'PlotZero', show_zero, 'ShowRms', show_rms, 'ShowExtra', show_extra, ...
-    'SecondYScale', second_y_scale, ...
+    'FigVisible', show_plot, 'MakeSubplots', sub_plots, 'SingleLines', single_line, ...
+    'ColorOrder', this_colororder, 'UseMean', use_mean, 'PlotZero', show_zero, 'ShowRms', show_rms, ...
+    'LegendLoc', legend_loc, 'ShowExtra', show_extra, 'SecondYScale', second_y_scale, ...
     'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', scale*truth_data);
 
 % create figure controls

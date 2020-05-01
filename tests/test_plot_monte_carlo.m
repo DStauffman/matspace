@@ -51,11 +51,11 @@ classdef test_plot_monte_carlo < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_with_second_data_set(self)
-            self.figs(end+1) = matspace.plotting.plot_monte_carlo(self.time, self.data, 'Time2', self.time2, 'Data2', self.data2);
+            self.figs(end+1) = matspace.plotting.plot_monte_carlo(self.time, self.data, 'TimeTwo', self.time2, 'DataTwo', self.data2);
         end
 
         function test_with_empty_opts(self)
-            self.figs(end+1) = matspace.plotting.plot_monte_carlo(self.time, self.data, [], 'Time2', self.time2, 'Data2', self.data2);
+            self.figs(end+1) = matspace.plotting.plot_monte_carlo(self.time, self.data, [], 'TimeTwo', self.time2, 'DataTwo', self.data2);
         end
 
         function test_with_type(self)
@@ -81,7 +81,7 @@ classdef test_plot_monte_carlo < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_with_everything(self)
             self.figs(end+1) = matspace.plotting.plot_monte_carlo(self.time, self.data, self.OPTS, 'Type', 'percentage', ...
-                'Time2', self.time2, 'Data2', self.data2, 'TruthTime', self.truth_time, 'TruthData', self.truth_data, ...
+                'TimeTwo', self.time2, 'DataTwo', self.data2, 'TruthTime', self.truth_time, 'TruthData', self.truth_data, ...
                 'Description', 'HIV Prevalence');
         end
 

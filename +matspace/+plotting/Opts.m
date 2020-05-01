@@ -32,6 +32,10 @@ classdef Opts
     %             from: {'yotta','zetta','exa','peta','tera','giga','mega','kilo','hecto','deca',
     %             'unity','deci','centi','milli', 'micro','nano','pico','femto','atto','zepto','yocto'}
     %         .colormap  : (row) string specifying the name of the colormap to use [char]
+    %         .leg_spot  : (row) string specifying the location of the legend, from {'north', 'south', 'east', 'west',
+    %             'northeast', 'northwest', 'southeast', 'southwest', 'northoutside', 'southoutside', 'eastoutside',
+    %             'westoutside', 'northeastoutside', 'northwestoutside', 'southeastoutside', 'southwestoutside',
+    %             'best', 'bestoutside'} [char]
     %         .classify  : (row) string specifying the classification level to put on plots [char]
     %         .names     : (1xN) of (string) specifying the name of the data structures to be plotted [char]
     %
@@ -68,6 +72,7 @@ classdef Opts
         time_unit,
         vert_fact,
         colormap,
+        leg_spot,
         classify,
         names,
     end
@@ -98,6 +103,7 @@ classdef Opts
             OPTS.time_unit = ''; % Time unit to display plots in, potentially scaling from the base
             OPTS.vert_fact = 'unity';
             OPTS.colormap  = '';
+            OPTS.leg_spot  = 'best';
             OPTS.classify  = '';
             OPTS.names     = "";
 

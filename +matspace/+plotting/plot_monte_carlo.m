@@ -12,8 +12,8 @@ function [fig_hand] = plot_monte_carlo(time_one, data_one, varargin)
 %     data1 ..... : (MxN) data points [num]
 %     OPTS ...... : (class) optional plotting commands, see Opts.m for more information
 %     varargin .. : (char, value) pairs for other options, from:
-%         'Time2'       : (1xA) time points for series two, default is empty
-%         'Data2'       : (BxA) data points for series two, default is empty
+%         'TimeTwo'     : (1xA) time points for series two, default is empty
+%         'DataTwo'     : (BxA) data points for series two, default is empty
 %         'Description' : (char) text to put on the plot titles, default is empty string
 %         'Type'        : (char) type of data to use when converting axis scale, default is 'unity'
 %         'TruthTime'   : (1xC) time points for truth data, default is empty
@@ -21,6 +21,8 @@ function [fig_hand] = plot_monte_carlo(time_one, data_one, varargin)
 %         'TruthName'   : (string 1xD) name for truth data channel on the legend, if empty
 %                              don't include, default is "Truth"
 %         'SecondYScale' : (scalar) Multiplication scale factor to use to display on a secondary Y axis
+%         'PlotSigmas'   : (scalar) true/false or numeric flag for whether to plot the sigmas
+%                               if numeric, then it's that sigma value, like 1-sig or 3-sig
 %
 % Output:
 %     fig_hand .. : (scalar) figure handles [num]
@@ -77,15 +79,15 @@ fun_is_time = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x)
 addRequired(p, 'Time1', fun_is_time);
 addRequired(p, 'Data1', @isnumeric);
 addOptional(p, 'OPTS', Opts, fun_is_opts);
-addParameter(p, 'Time2', [], fun_is_time);
-addParameter(p, 'Data2', [], @isnumeric);
+addParameter(p, 'TimeTwo', [], fun_is_time);
+addParameter(p, 'DataTwo', [], @isnumeric);
 addParameter(p, 'Description', '', @ischar);
 addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 addParameter(p, 'TruthName', "Truth", @isstring);
-addParameter(p, 'SecondYScale', nan, @isnumeric);
-addParameter(p, 'PlotSigmas', 1, @isnumeric);
+addParameter(p, 'SecondYScale', nan, @isnumeric); % TODO: put into OPTS?
+addParameter(p, 'PlotSigmas', 1, @isnumeric); % TODO: put into OPTS?
 % do parse
 parse(p, time_one, data_one, varargin{:});
 % create some convenient aliases
@@ -95,8 +97,8 @@ truth_name     = p.Results.TruthName;
 second_y_scale = p.Results.SecondYScale;
 plot_sigmas    = p.Results.PlotSigmas;
 % create data channel aliases
-time_two    = p.Results.Time2;
-data_two    = p.Results.Data2;
+time_two    = p.Results.TimeTwo;
+data_two    = p.Results.DataTwo;
 truth_time  = p.Results.TruthTime;
 truth_data  = p.Results.TruthData;
 
