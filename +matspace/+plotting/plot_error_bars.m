@@ -34,7 +34,7 @@ function [fig] = plot_error_bars(description, time, data, mins, maxs, varargin)
 % Prototype:
 %     description    = 'Random Data Error Bars';
 %     time           = datetime('now') + days(1:10);
-%     data           = 10 + rand(3, length(time));
+%     data           = [3; -2; 5] + rand(3, length(time));
 %     mins           = data - 0.5 * rand(size(data));
 %     maxs           = data + 1.5 * rand(size(data));
 %     elements       = {'x', 'y', 'z'};

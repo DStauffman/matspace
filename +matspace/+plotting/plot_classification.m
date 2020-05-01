@@ -145,7 +145,7 @@ for i = 1:length(fig_hand)
         case 'outside'
             text_pos   = [1-width, -height/2, width, height];
         otherwise
-            error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+            error('matspace:BadClassLocation', 'Bad location given: "%s"', location);
     end
     annotation(this_fig, 'textbox', 'Position', text_pos, 'String', text_str, ...
         'HorizontalAlignment', horz_align, 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
