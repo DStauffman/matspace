@@ -4,7 +4,7 @@ function [] = shift_axes_up(figs, shift)
 %
 % Input:
 %     figs  : (1xN) figure handles to process
-%     shift : (scalar) Value to shift, from 0-1
+%     shift : (scalar) |opt| Value to shift, from 0-1
 %
 % Output:
 %     (None)
@@ -24,6 +24,16 @@ function [] = shift_axes_up(figs, shift)
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in April 2020.
+
+% optional inputs
+switch nargin
+    case 1
+        shift = 0.08;
+    case 2
+        % nop
+    otherwise
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+end
 
 % check shift values
 assert(shift >= 0 && shift <= 1, 'The shift should be a value between zero and one, not "%g"', shift);
@@ -61,7 +71,7 @@ for hfig = figs
         end
         % modify permitted
         if process
-            old_pos = get(haxs(a),  'Position');
+            old_pos = get(haxs(a), 'Position');
             delta   = shift * old_pos(4);
             new_pos = old_pos + [0 delta 0 -delta];
             set(haxs(a), 'Position', new_pos);

@@ -139,6 +139,7 @@ for i = 1:length(fig_hand)
             text_pos   = [1-width, 0, width, height];
         case 'left'
             text_pos   = [0, 0, width, height];
+            horz_align = 'Left';
         case 'top'
             text_pos   = [0, 1-height, width, height];
             horz_align = 'Left';
