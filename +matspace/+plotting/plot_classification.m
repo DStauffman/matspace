@@ -11,7 +11,7 @@ function [] = plot_classification(fig_hand, classification, caveat, test, locati
 %     classification : (row) string specifying classification to use, from {'U','C','S','TS'} [char]
 %     caveat         : (row) string specifying the extra caveats beyond the main classification [char]
 %     test           : (true/false) flag to specify if this is a test or a real application [bool]
-%     location       : (true/false) string specifying where to put the label, 
+%     location       : (row) string specifying where to put the label, 
 %                          from {'axis', 'figure', 'left', 'top', 'outside'} [char]
 %
 % Output:
@@ -23,10 +23,10 @@ function [] = plot_classification(fig_hand, classification, caveat, test, locati
 %     matspace.plotting.plot_classification(f1, 'U');
 %     f2 = figure;
 %     plot(0, 0);
-%     matspace.plotting.plot_classification(f2, 'S', '//MADE UP CAVEAT', true, false);
+%     matspace.plotting.plot_classification(f2, 'S', '//MADE UP CAVEAT', true, 'axis');
 %     f3 = figure;
 %     plot(0, 0);
-%     matspace.plotting.plot_classification(f3, 'C', '', true, true);
+%     matspace.plotting.plot_classification(f3, 'C', '', true, 'figure');
 %
 %     % clean up
 %     close([f1 f2 f3]);

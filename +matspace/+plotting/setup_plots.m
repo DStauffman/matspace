@@ -16,10 +16,11 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %          .plot_type
 %          .save_path
 %      form           : |opt| (row) specify form of plot [enumerated string]
-%                                      'time', X-axis is time, scale Y-axis
-%                                      'dist', X-axis is not time, scale Y-axis
-%                                      'time_no_y_scale', X-axis is time, don't scale Y-axis
-%                                      'dist_no_y_scale', X-axis is not time, don't scale Y-axis
+%                                   from:
+%                                       'time', X-axis is time, scale Y-axis
+%                                       'dist', X-axis is not time, scale Y-axis
+%                                       'time_no_y_scale', X-axis is time, don't scale Y-axis
+%                                       'dist_no_y_scale', X-axis is not time, don't scale Y-axis
 %
 % Output:
 %     None
