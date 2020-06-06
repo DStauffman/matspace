@@ -38,6 +38,9 @@ function [] = setup_dir(directory, rec, wipe)
 %     4.  Modified by David C. Stauffer in January 2019 to be able to specify if recursive or not.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+% Imports
+import matspace.utils.setup_dir
+
 % check for optional inputs
 switch nargin
     case 1
