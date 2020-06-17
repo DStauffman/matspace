@@ -90,6 +90,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 import matspace.plotting.get_color_lists
 import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
+import matspace.plotting.show_zero_ylim
 import matspace.quaternions.quat_angle_diff
 import matspace.utils.nanmean
 import matspace.utils.nanrms

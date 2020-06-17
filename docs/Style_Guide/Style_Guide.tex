@@ -8,9 +8,9 @@
 
 \usepackage{graphicx}
 \usepackage{grffile}
-\graphicspath{{images/}{../images/}}
 
-\usepackage[procnames]{listings}
+\usepackage{listings}
+\usepackage{setspace}
 \usepackage{color}
 \usepackage{textcomp}
 \usepackage[margin=1in]{geometry}
@@ -23,12 +23,6 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{tocloft}
-
-\usepackage{tikz}
-\usetikzlibrary{shapes,arrows,external}
-% \tikzexternalize[prefix=images/] % activate external Tikz images % WTF doesn't this work!!!
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.12}
 
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -57,12 +51,7 @@
 \DeclareLanguageMapping{american}{american-apa}
 
 \usepackage[]{hyperref}
-\hypersetup{colorlinks=true,allcolors=blue}
-
-% \usepackage[margins]{../trackchanges}
-% \usepackage[finalold]{../trackchanges}
-% \usepackage[finalnew]{../trackchanges} 
-% \addeditor{DCS}
+\hypersetup{colorlinks=true,allcolors=blue} %linkcolor=blue,urlcolor=blue
 
 % Reset some useful definitions
 \setlength{\parindent}{0pt}
@@ -142,7 +131,7 @@
 \maketitle
 
 \begin{abstract}\label{Abstract}
-This document defines the style paradigms used by DStauffman when writing MATLAB code.  Sometimes justifications are given, othertimes simple statements are made without elaboration.  This guide is strongly inspired by PEP8 for Python.
+This document defines the style paradigms used by DStauffman when writing MATLAB code.  Sometimes justifications are given, other times simple statements are made without elaboration.  This guide is strongly inspired by PEP8 for Python.
 \end{abstract}
 
 \begin{versionhistory}
