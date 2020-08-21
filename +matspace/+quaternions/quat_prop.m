@@ -12,7 +12,8 @@ function quat_new = quat_prop(quat, delta_ang, renorm) %#codegen
 % Prototype:
 %     quat      = [0;0;0;1];
 %     delta_ang = [0.01,0.02,0.03];
-%     quat_new  = matspace.quaternions.quat_prop(quat, delta_ang)
+%     renorm    = true;
+%     quat_new  = matspace.quaternions.quat_prop(quat, delta_ang, renorm);
 %
 % See Also:
 %     matspace.quaternions.quat_mult, matspace.quaternions.quat_inv, matspace.quaternions.quat_norm,

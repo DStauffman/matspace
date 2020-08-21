@@ -17,7 +17,7 @@ function [t] = drot_matlab(k,a) %#codegen
 %     % simple 90deg z-rotation
 %     k = 3;
 %     a = pi/2;
-%     t = matspace.quaternions.drot_matlab(k,a)
+%     t = matspace.quaternions.drot_matlab(k, a)
 %
 % See Also:
 %     matspace.quaternions.rot

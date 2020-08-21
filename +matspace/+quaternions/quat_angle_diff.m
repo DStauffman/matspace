@@ -18,11 +18,11 @@ function [theta,comp] = quat_angle_diff(q1,q2)
 %     comp  : (3xN) angle components in x,y,z frame [rad]
 %
 % Prototype:
-%     q1    = [0.5;0.5;0.5;0.5];
-%     dq1   = matspace.quaternions.qrot(1,0.001);
-%     dq2   = matspace.quaternions.qrot(2,0.05);
-%     q2    = [matspace.quaternions.quat_mult(dq1,q1),matspace.quaternions.quat_mult(dq2,q1)];
-%     theta = matspace.quaternions.quat_angle_diff(q1,q2);
+%     q1    = [0.5; 0.5; 0.5; 0.5];
+%     dq1   = matspace.quaternions.qrot(1, 0.001);
+%     dq2   = matspace.quaternions.qrot(2, 0.05);
+%     q2    = [matspace.quaternions.quat_mult(dq1, q1), matspace.quaternions.quat_mult(dq2, q1)];
+%     theta = matspace.quaternions.quat_angle_diff(q1, q2);
 %
 % See Also:
 %     matspace.quaternions.quat_mult
@@ -52,11 +52,11 @@ dq = quat_mult(q2, quat_inv(q1));
 dv = dq(1:3,:);
 
 % sum vector components to get sin(theta/2)^2
-mag2 = sum(dv.^2,1);
+mag2 = sum(dv.^2, 1);
 
 % take square root to get sin(theta/2)
 mag = realsqrt(mag2);
-assert(all(mag <= 1), 'Magnitudes should always be less than or equal to one.');
+assert(all(mag <= 1 | isnan(mag)), 'Magnitudes should always be less than or equal to one.');
 
 % take inverse sine to get theta/2
 theta_over_2 = asin(mag);
@@ -69,7 +69,7 @@ theta = 2*theta_over_2;
 mag(mag == 0) = 1;
 
 % normalize vector components
-nv = bsxfun(@rdivide,dv,mag);
+nv = bsxfun(@rdivide, dv, mag);
 
 % find angle expressed in x,y,z components based on normalized vector
-comp = bsxfun(@times,nv,theta);
+comp = bsxfun(@times, nv, theta);

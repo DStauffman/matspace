@@ -22,7 +22,7 @@ function q = quat_from_euler(angles, seq)
 %     a   = [0.01; 0.02; 0.03];
 %     b   = [0.04; 0.05; 0.06];
 %     seq = [3 2 1];
-%     matspace.quaternions.quat_from_euler([a,b],seq)
+%     matspace.quaternions.quat_from_euler([a, b], seq)
 %
 % See Also:
 %     matspace.quaternions.dcm_to_quat, matspace.quaternions.quat_to_euler

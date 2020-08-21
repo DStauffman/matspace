@@ -28,7 +28,7 @@ function out = between(value, lower, upper, is_closed)
 %     out   = matspace.utils.between(value, lower, upper);
 %
 % Change Log:
-%     1.  Written by Matt Beck circa 2012.
+%     1.  Written by Matt Beck in Jan 2013.
 %     2.  Updated by Keith Rogers in July 2014 for inclusion in SSC Toolbox.
 %     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
@@ -42,7 +42,7 @@ switch nargin
             is_closed = [is_closed,is_closed];
         end
     otherwise
-        error('matspace:between:BadArgList','Unsupported number of inputs specified.');
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 %% argument checks

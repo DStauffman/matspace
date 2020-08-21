@@ -21,23 +21,23 @@ function generic_bin_cat(savename,location,filenums)
 %
 % Prototype:
 %     % make input files
-%     fid1 = fopen('input_001.bin','w','ieee-be');
-%     fwrite(fid1,ones(5,1),'uint32');
+%     fid1 = fopen('input_001.bin', 'w', 'ieee-be');
+%     fwrite(fid1, ones(5,1), 'uint32');
 %     fclose(fid1);
-%     fid2 = fopen('input_002.bin','w','ieee-be');
-%     fwrite(fid1,ones(5,1)*2,'uint32');
+%     fid2 = fopen('input_002.bin', 'w', 'ieee-be');
+%     fwrite(fid1, ones(5, 1)*2, 'uint32');
 %     fclose(fid2);
-%     fid3 = fopen('input_003.bin','w','ieee-be');
-%     fwrite(fid1,ones(5,1)*3,'uint32');
+%     fid3 = fopen('input_003.bin', 'w', 'ieee-be');
+%     fwrite(fid1, ones(5, 1)*3, 'uint32');
 %     fclose(fid3);
 %
 %     % setup args
 %     savename = 'catbin.bin';
-%     location = [pwd,filesep,'input_'];
+%     location = [pwd, filesep, 'input_'];
 %     filenums = 1:3;
 %
 %     % execute concatenation
-%     matspace.utils.generic_bin_cat(savename,location,filenums)
+%     matspace.utils.generic_bin_cat(savename, location, filenums)
 %
 %     % confirm execution
 %     fid4 = fopen(savename,'r','ieee-be');

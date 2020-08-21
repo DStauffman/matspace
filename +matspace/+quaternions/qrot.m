@@ -14,7 +14,7 @@ function q = qrot(k,a)
 %     q   : (4x1) unit x,y,z,s quaternion [ndim]
 %
 % Prototype:
-%     q = matspace.quaternions.qrot(3,pi/2);
+%     q = matspace.quaternions.qrot(3, pi/2);
 %
 % See Also:
 %     matspace.quaternions.quat_mult, matspace.quaternions.rot

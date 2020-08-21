@@ -8,8 +8,8 @@ function [] = setup_dir(directory, rec, wipe)
 %
 % Input:
 %     directory : (str) directory [char]
-%     rec : |opt| (scalar) whether to recursively walk the directory, default is true [bool]
-%     wipe : |opt| (scalar) whether to wipe the existing contents, default is true [bool]
+%     rec       : |opt| (scalar) whether to recursively walk the directory, default is true [bool]
+%     wipe      : |opt| (scalar) whether to wipe the existing contents, default is true [bool]
 %
 % Output:
 %     None
@@ -66,12 +66,15 @@ if exist(directory,'dir')
         names    = {contents(3:end).name};
         isdir    = [contents(3:end).isdir];
         for i = 1:length(names)
+            this_item = [directory,names{i}];
             if rec && isdir(i)
                 % call recursively for subfolders
-                setup_dir([directory,names{i}], rec, wipe);
+                setup_dir(this_item, rec, wipe);
+                % now delete the empty folder
+                rmdir(this_item);
             else
                 % delete files
-                delete([directory,names{i}]);
+                delete(this_item);
             end
         end
         % display that something was removed

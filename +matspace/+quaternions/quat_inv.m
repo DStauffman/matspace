@@ -1,6 +1,6 @@
 function [q_inv] = quat_inv(q) %#codegen
 
-% QUAT_INV  finds the inverse of a normalized quaternion.
+% QUAT_INV  returns the inverses of normalized quaternions.
 %
 % Input:
 %     q     : (4xN) quaternion
@@ -19,8 +19,5 @@ function [q_inv] = quat_inv(q) %#codegen
 %     1.  Added to matspace library in March 2008.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-% initialize to original quaternion
-q_inv = q;
-
-% negate first three terms leaving scalar as before
-q_inv([1 2 3],:) = - q_inv([1 2 3],:);
+% invert the quaternions, by negating the first three terms, leaving scalar as before
+q_inv = [-q(1,:); -q(2,:); -q(3,:); q(4,:)];

@@ -4,7 +4,7 @@ function [q_A_B,angles,rms_err] = compute_att_fit(q_A,q_B)
 %
 % Summary:
 %     This function determines the best fit (based on linear least squares) delta quaternion
-%     that rotates from A to B, such that q_A = q_A_B*q_B
+%     that rotates from B to A, such that q_A = q_A_B*q_B
 %
 % Input:
 %     q_A : (4xN) quaternion in frame A [ndim]
@@ -12,7 +12,7 @@ function [q_A_B,angles,rms_err] = compute_att_fit(q_A,q_B)
 %
 % Output:
 %     q_A_B   : (4x1) best fit delta quaternion from B to A [ndim]
-%     angles  : (3x1) angle offsets of best fit delta quaternion [rad]
+%     angles  : (3x1) angle offsets (from A to B) of best fit delta quaternion. Angles correspond to conjugate of the quaternion. [rad]
 %     rms_err : (1x1) root mean square error of best fit delta quaternion [rad]
 %
 % Prototype:
@@ -20,12 +20,12 @@ function [q_A_B,angles,rms_err] = compute_att_fit(q_A,q_B)
 %     % Angle of rotation to A from B
 %     angle_true = [0.01; 0.1; -0.5];
 %     seq        = [1 2 3];
-%     q_A_B_true = matspace.quaternions.quat_from_euler(-angle_true,seq);
-%     q_A        = matspace.quaternions.quat_mult(q_A_B_true,q_B);
-%     [q_A_B_estm,angle_estm,rms_err] = matspace.quaternions.compute_att_fit(q_A,q_B)
+%     q_A_B_true = matspace.quaternions.quat_from_euler(-angle_true, seq);
+%     q_A        = matspace.quaternions.quat_mult(q_A_B_true, q_B);
+%     [q_A_B_estm, angle_estm, rms_err] = matspace.quaternions.compute_att_fit(q_A, q_B)
 %     % Compare estimated to true:
-%     [q_A_B_estm,q_A_B_true,q_A_B_estm-q_A_B_true]
-%     [angle_estm,angle_true,angle_estm-angle_true]
+%     [q_A_B_estm, q_A_B_true, q_A_B_estm-q_A_B_true]
+%     [angle_estm, angle_true, angle_estm-angle_true]
 %
 % See Also:
 %     matspace.quaternions.quat_mult
