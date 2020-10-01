@@ -153,8 +153,14 @@ for i = 1:length(fig_hand)
         'FontSize', 8, 'FontWeight', 'Bold', 'Color', text_color, 'EdgeColor', color, ...
         'LineWidth', 2, 'Tag', 'ClassificationText');
     if add_border
-        annotation(this_fig, 'rectangle', 'Position', [0,0,1,1], 'Color', 'none', 'EdgeColor', color, ...
-            'LineWidth', 2, 'Tag', 'ClassificationBorder');
+        % Note: don't use a rectangle, as Matlab draws this on a scribe layer over the top of the figure,
+        % and consequently you cannot grab and reposition things like legends after the fact.
+        %annotation(this_fig, 'rectangle', 'Position', [0,0,1,1], 'Color', 'none', 'EdgeColor', color, ...
+        %    'LineWidth', 2, 'Tag', 'ClassificationBorder');
+        annotation(this_fig, 'line', [0 0], [0 1], 'Color', color, 'LineWidth', 2, 'Tag', 'ClassificationBorder');
+        annotation(this_fig, 'line', [0 1], [1 1], 'Color', color, 'LineWidth', 2, 'Tag', 'ClassificationBorder');
+        annotation(this_fig, 'line', [1 1], [1 0], 'Color', color, 'LineWidth', 2, 'Tag', 'ClassificationBorder');
+        annotation(this_fig, 'line', [1 0], [0 0], 'Color', color, 'LineWidth', 2, 'Tag', 'ClassificationBorder');
     end
 end
 

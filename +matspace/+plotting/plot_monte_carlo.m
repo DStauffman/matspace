@@ -145,7 +145,7 @@ disp_xmax   = OPTS.disp_xmax;
 start_date  = get_start_date(OPTS.date_zero);
 
 %% Potentially convert times to dates
-if strcmp(OPTS.time_unit, 'datetime')
+if strcmp(OPTS.time_base, 'datetime')
     date_zero  = OPTS.date_zero;
     time_one   = convert_time_to_date(time_one,   date_zero, time_units);
     time_two   = convert_time_to_date(time_two,   date_zero, time_units);
