@@ -67,7 +67,7 @@ classdef test_between < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_arg_list(self)
-            self.verifyError(@() matspace.utils.between(1,2), 'matspace:between:BadArgList');
+            self.verifyError(@() matspace.utils.between(1,2), 'matspace:UnexpectedNargin');
         end
 
         function test_bad_boundaries(self)
