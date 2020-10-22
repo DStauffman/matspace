@@ -87,6 +87,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     4.  Updated by David C. Stauffer in March 2019 to use name-value pairs, and add options for
 %         truth histories, second y scales, and display limits.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     6.  Updated by David C. Stauffer in October 2020 to include a tolerance on the time comparison.
 
 %% Imports
 import matspace.plotting.get_color_lists

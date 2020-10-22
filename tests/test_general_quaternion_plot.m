@@ -82,7 +82,10 @@ classdef test_general_quaternion_plot < matlab.unittest.TestCase %#ok<*PROP>
                 'TruthName', self.truth_name, 'TruthTime', self.truth_time, 'TruthData', self.truth_data, ...
                 'Tolerance', self.tolerance);
             self.figs = [self.figs, figs];
-            % verify err?
+            self.verifyEqual(err.one, matspace.utils.nanrms(self.quat_one(:, 2:end), 2));
+            self.verifyEqual(err.two, matspace.utils.nanrms(self.quat_two(:, 1:end-2), 2));
+            [~, exp] = matspace.quaternions.quat_angle_diff(self.quat_one(:, 3:end), self.quat_two(:, 1:end-2));
+            self.verifyEqual(err.diff, matspace.utils.nanrms(exp, 2));
         end
         
         function test_minimal_args(self)

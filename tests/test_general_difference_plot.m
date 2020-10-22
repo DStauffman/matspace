@@ -61,7 +61,7 @@ classdef test_general_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.fig_visible    = true;
             self.make_subplots  = true;
             self.single_lines   = false;
-            color_lists    = matspace.plotting.get_color_lists();
+            color_lists         = matspace.plotting.get_color_lists();
             self.colororder     = [cell2mat(color_lists.dbl_diff); cell2mat(color_lists.two)];
             self.use_mean       = false;
             self.plot_zero      = false;
@@ -96,7 +96,9 @@ classdef test_general_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
                 'SecondYScale', self.second_y_scale, 'YLabel', self.y_label, 'TruthName', self.truth_name, ...
                 'TruthTime', self.truth_time, 'TruthData', self.truth_data, 'Tolerance', self.tolerance);
             self.figs = [self.figs, figs];
-            % verify err?
+            self.verifyEqual(err.one, matspace.utils.nanrms(self.data_one(:, 2:end), 2));
+            self.verifyEqual(err.two, matspace.utils.nanrms(self.data_two(:, 1:end-2), 2));
+            self.verifyEqual(err.diff, matspace.utils.nanrms(self.data_one(:, 3:end) - self.data_two(:, 1:end-2), 2));
         end
 
         function test_minimal_args(self)

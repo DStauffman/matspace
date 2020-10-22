@@ -98,6 +98,7 @@ function [fig_hand, err] = general_difference_plot(description, time_one, time_t
 %     4.  Updated by David C. Stauffer in March 2019 to use name-value pairs, and add options for
 %         truth histories, second y scales, and display limits.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     6.  Updated by David C. Stauffer in October 2020 to include a tolerance on the time comparison.
 
 %% Imports
 import matspace.plotting.get_factors
@@ -124,7 +125,7 @@ fun_is_duration    = @(x) (isnumeric(x) || isduration(x)) && isscalar(x);
 p = inputParser;
 addParameter(p, 'NameOne', '', @ischar);
 addParameter(p, 'NameTwo', '', @ischar);
-addParameter(p, 'Elements', string(0), fun_is_cellstr);
+addParameter(p, 'Elements', strings(0), fun_is_cellstr);
 addParameter(p, 'Units', '', @ischar);
 addParameter(p, 'TimeUnits', 'sec', @ischar);
 addParameter(p, 'LegendScale', 'unity', @ischar);
@@ -198,6 +199,7 @@ rms_pts2 = min([rms_xmax max([max(time_one) max(time_two)])]);
 num_channels = length(elements);
 if num_channels == 0
     num_channels = max([size(data_one,1), size(data_two,1)]);
+    elements = "Channel " + (1:num_channels);
 end
 if isempty(colororder)
     temp_colors = hsv(num_channels);
