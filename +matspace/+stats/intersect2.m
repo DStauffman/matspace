@@ -75,8 +75,16 @@ end
 
 % determine if all the inputs and integers
 all_int = isinteger(A) && isinteger(B) && isinteger(precision);
+% determine if everything in a datettime and duration
+all_dates = isdatetime(A) && isdatetime(B) && isduration(precision);
+% convert datetimes to old datenum versions for the rest of the function
+if all_dates
+    precision = datenum(precision);
+    A = datenum(A);
+    B = datenum(B);
+end
 % find larger max of A or B, must call max three times to support up to 3D matrices A and B
-maxAorB = max(max(max(abs(A))), max(max(max(abs(B)))));
+maxAorB = max(max(abs(A), [], 'all'), max(abs(B), [], 'all'));
 % check if largest component of A and B is too close to the precision floor
 if ~all_int && ((maxAorB/precision) > (0.01/eps))
     warning('matspace:intersectPrecision','This function may have problems if precision gets too small');
@@ -127,4 +135,11 @@ if ~is_stable && ~issorted(c)
     ia = ia(ix1);
     [~, ix2] = sort(B(ib));
     ib = ib(ix2);
+end
+% convert indices to always be column vectors for consistency across Matlab versions
+ia = ia(:);
+ib = ib(:);
+% convert output back to datetime if that's the way it originally came
+if all_dates
+    c = reshape(datetime(datevec(c)), size(c));
 end

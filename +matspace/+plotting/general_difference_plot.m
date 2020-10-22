@@ -37,6 +37,7 @@ function [fig_hand, err] = general_difference_plot(description, time_one, time_t
 %         'TruthName'    : (1xN string) names of the truth structures [char]
 %         'TruthTime'    : (1xN) time history for the truth data [sec]
 %         'TruthData'    : (1xN) truth data array [num]
+%         'Tolerance'    : (scalar) tolerance for comparing two time sources, nominally 'sec'
 %
 % Output:
 %     fig_hand      : (scalar or 1x2) list of figure handles [num]
@@ -77,13 +78,15 @@ function [fig_hand, err] = general_difference_plot(description, time_one, time_t
 %     truth_name     = "Truth";
 %     truth_time     = [];
 %     truth_data     = [];
+%     tolerance      = 0;
 %     [fig_hand, err] = matspace.plotting.general_difference_plot(description, time_one, time_two, data_one, data_two, ...
 %         'NameOne', name_one, 'NameTwo', name_two, 'Elements', elements, 'Units', units, 'TimeUnits', time_units, ...
 %         'LegendScale', leg_scale, 'StartDate', start_date, 'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, ...
 %         'DispXmin', disp_xmin, 'DispXmax', disp_xmax, 'FigVisible', fig_visible, 'MakeSubplots', make_subplots, ...
 %         'SingleLines', single_lines, 'ColorOrder', colororder, 'UseMean', use_mean, 'PlotZero', plot_zero, ...
 %         'ShowRms', show_rms, 'LegendLoc', legend_loc, 'ShowExtra', show_extra, 'SecondYScale', second_y_scale, ...
-%         'YLabel', y_label, 'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data);
+%         'YLabel', y_label, 'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data, ...
+%         'Tolerance', tolerance);
 %
 % See Also:
 %     matspace.plotting.plot_time_history
@@ -101,6 +104,8 @@ import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
 import matspace.plotting.show_zero_ylim
+import matspace.plotting.whitten
+import matspace.stats.intersect2
 import matspace.utils.nanmean
 import matspace.utils.nanrms
 
@@ -114,6 +119,7 @@ fun_is_num_or_cell = @(x) isnumeric(x) || iscell(x);
 fun_is_cellstr     = @(x) isstring(x) || iscell(x);
 fun_is_time        = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
 fun_is_bound       = @(x) (isnumeric(x) || isdatetime(x)) && isscalar(x);
+fun_is_duration    = @(x) (isnumeric(x) || isduration(x)) && isscalar(x);
 % Argument parser
 p = inputParser;
 addParameter(p, 'NameOne', '', @ischar);
@@ -141,6 +147,7 @@ addParameter(p, 'YLabel', '', @ischar);
 addParameter(p, 'TruthName', "Truth", fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
+addParameter(p, 'Tolerance', 0, fun_is_duration);
 parse(p, varargin{:});
 name_one        = p.Results.NameOne;
 name_two        = p.Results.NameTwo;
@@ -166,6 +173,7 @@ y_label         = p.Results.YLabel;
 truth_name      = p.Results.TruthName;
 truth_time      = p.Results.TruthTime;
 truth_data      = p.Results.TruthData;
+tolerance       = p.Results.Tolerance;
 if p.Results.FigVisible
     fig_visible = 'on';
 else
@@ -176,7 +184,7 @@ use_datetime = isdatetime(time_one) || isdatetime(time_two) || isdatetime(truth_
 
 %% Calculations
 % find overlapping times
-[time_overlap, d1_diff_ix, d2_diff_ix] = intersect(time_one, time_two); % TODO: add a tolerance?
+[time_overlap, d1_diff_ix, d2_diff_ix] = intersect2(time_one, time_two, tolerance);
 % find differences
 d1_miss_ix = setxor(1:length(time_one), d1_diff_ix);
 d2_miss_ix = setxor(1:length(time_two), d2_diff_ix);
@@ -188,6 +196,13 @@ rms_pts1 = max([rms_xmin min([min(time_one) min(time_two)])]);
 rms_pts2 = min([rms_xmax max([max(time_one) max(time_two)])]);
 % find number of elements being differenced
 num_channels = length(elements);
+if num_channels == 0
+    num_channels = max([size(data_one,1), size(data_two,1)]);
+end
+if isempty(colororder)
+    temp_colors = hsv(num_channels);
+    colororder = [temp_colors; whitten(temp_colors); temp_colors];
+end
 assert(size(colororder, 1) >= 3*num_channels, ['The colororder must be at least 3 times the number of channels, ',...
     'so that you can do data_one, data_two, and their diffs.']);
 % calculate the differences

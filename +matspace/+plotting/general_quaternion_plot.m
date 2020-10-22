@@ -32,6 +32,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %         'TruthName'    : (1xN string) names of the truth structures [char]
 %         'TruthTime'    : (1xN) time history for the truth data [sec]
 %         'TruthData'    : (1xN) truth data array [num]
+%         'Tolerance'    : (scalar) tolerance for comparing two time sources, nominally 'sec'
 %
 % Output:
 %     fig_hand        : (1xN) list of figure handles [num]
@@ -67,13 +68,14 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     truth_name      = "Truth";
 %     truth_time      = [];
 %     truth_data      = [];
+%     tolerance       = 0;
 %     [fig_hand, err] = matspace.plotting.general_quaternion_plot(description, time_one, time_two, quat_one, quat_two, ...
 %         'NameOne', name_one, 'NameTwo', name_two, 'TimeUnits', time_units, 'StartDate', start_date, ...
 %         'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, 'DispXmin', disp_xmin, 'DispXmax', disp_xmax, ...
 %         'PlotComp', plot_components, 'FigVisible', fig_visible, 'MakeSubplots', make_subplots, ...
 %         'SingleLines', single_lines, 'UseMean', use_mean, 'PlotZero', plot_zero, 'ShowRms', show_rms, ...
 %         'LegendLoc', legend_loc, 'ShowExtra', show_extra, ...
-%         'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data);
+%         'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data, 'Tolerance', tolerance);
 %
 % See Also:
 %     TBD_wrapper
@@ -92,6 +94,7 @@ import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.show_zero_ylim
 import matspace.quaternions.quat_angle_diff
+import matspace.stats.intersect2
 import matspace.utils.nanmean
 import matspace.utils.nanrms
 
@@ -101,9 +104,10 @@ truth_color = [0 0 0];
 
 %% Parser
 % Validation functions
-fun_is_cellstr = @(x) isstring(x) || iscell(x);
-fun_is_time    = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
-fun_is_bound   = @(x) (isnumeric(x) || isdatetime(x)) && isscalar(x);
+fun_is_cellstr  = @(x) isstring(x) || iscell(x);
+fun_is_time     = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
+fun_is_bound    = @(x) (isnumeric(x) || isdatetime(x)) && isscalar(x);
+fun_is_duration = @(x) (isnumeric(x) || isduration(x)) && isscalar(x);
 % Argument parser
 p = inputParser;
 addParameter(p, 'NameOne', '', @ischar);
@@ -126,6 +130,7 @@ addParameter(p, 'ShowExtra', true, @islogical);
 addParameter(p, 'TruthName', "Truth", fun_is_cellstr);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
+addParameter(p, 'Tolerance', 0, fun_is_duration);
 parse(p, varargin{:});
 name_one        = p.Results.NameOne;
 name_two        = p.Results.NameTwo;
@@ -146,6 +151,7 @@ show_extra      = p.Results.ShowExtra;
 truth_name      = p.Results.TruthName;
 truth_time      = p.Results.TruthTime;
 truth_data      = p.Results.TruthData;
+tolerance       = p.Results.Tolerance;
 if p.Results.FigVisible
     fig_visible = 'on';
 else
@@ -156,7 +162,7 @@ use_datetime = isdatetime(time_one) || isdatetime(time_two) || isdatetime(truth_
 
 %% Calculations
 % find overlapping times
-[time_overlap, q1_diff_ix, q2_diff_ix] = intersect(time_one, time_two); % TODO: add a tolerance?
+[time_overlap, q1_diff_ix, q2_diff_ix] = intersect2(time_one, time_two, tolerance);
 % find differences
 q1_miss_ix = setxor(1:length(time_one), q1_diff_ix);
 q2_miss_ix = setxor(1:length(time_two), q2_diff_ix);

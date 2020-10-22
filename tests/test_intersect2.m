@@ -23,6 +23,23 @@ classdef test_intersect2 < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(c, [2 6]);
             self.verifyEqual(ia, [2; 5]);
             self.verifyEqual(ib, [3; 7]);
+            [c2, ia2, ib2] = intersect(a, b);
+            self.verifyEqual(c, c2);
+            self.verifyEqual(ia, ia2);
+            self.verifyEqual(ib, ib2);
+        end
+        
+        function test_column_vectors(self)
+            a = [1; 2; 4; 4; 6];
+            b = [0; 8; 2; 2; 5; 8; 6; 8; 8];
+            [c, ia, ib] = matspace.stats.intersect2(a, b);
+            self.verifyEqual(c, [2; 6]);
+            self.verifyEqual(ia, [2; 5]);
+            self.verifyEqual(ib, [3; 7]);
+            [c2, ia2, ib2] = intersect(a, b);
+            self.verifyEqual(c, c2);
+            self.verifyEqual(ia, ia2);
+            self.verifyEqual(ib, ib2);
         end
 
         function test_floats(self)
@@ -211,6 +228,23 @@ classdef test_intersect2 < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(c, [10 20 -30 40 -50 70]);
             self.verifyEqual(ia, [1; 2; 3; 4; 5; 7]);
             self.verifyEqual(ib, [6; 8; 12; 13; 15; 18]);
+        end
+
+        function test_datetimes(self)
+            date_zero   = datetime(2020, 10, 21, 0, 0, 0);
+            dt          = duration(0, 0, 1); % one second
+            dt_err      = duration(0, 0, 0, 5); % five milliseconds
+            a           = date_zero + [1 2 3 3 5 6] * dt;
+            b           = date_zero + [3 * dt + dt_err, 5 * dt - dt_err];
+            precision   = 2 * dt_err;
+            [c, ia, ib] = matspace.stats.intersect2(a, b, duration(0, 0, 0));
+            self.verifyEqual(c, NaT(1, 0));
+            self.verifyEqual(ia, zeros(0, 1));
+            self.verifyEqual(ib, zeros(0, 1));
+            [c, ia, ib] = matspace.stats.intersect2(a, b, precision);
+            self.verifyEqual(c, a([3, 5]));
+            self.verifyEqual(ia, [3; 5]);
+            self.verifyEqual(ib, [1; 2]);
         end
 
         % TODO: add matrices
