@@ -1,4 +1,4 @@
-function out = between(value, lower, upper, is_closed)
+function out = is_between(value, lower, upper, is_closed)
 
 % BETWEEN  Evaluates whether a value is between the bounds.
 %
@@ -25,7 +25,7 @@ function out = between(value, lower, upper, is_closed)
 %     value = 5;
 %     lower = 0;
 %     upper = 10;
-%     out   = matspace.utils.between(value, lower, upper);
+%     out   = matspace.utils.is_between(value, lower, upper);
 %
 % Change Log:
 %     1.  Written by Matt Beck in Jan 2013.
@@ -47,7 +47,7 @@ end
 
 %% argument checks
 if numel(is_closed) ~= 2
-    error('matspace:between:BadBoundarySpecification',...
+    error('matspace:is_between:BadBoundarySpecification',...
         'Badly formatted specification of open/closed boundary conditions.');
 end
 
