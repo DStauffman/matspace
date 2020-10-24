@@ -352,6 +352,10 @@ for i = 1:num_axes
         if show_extra
             plot(this_axes, time_one(d1_miss_ix), zeros(1,length(d1_miss_ix)), 'kx', 'MarkerSize', 8, 'LineWidth', 2, 'DisplayName', [name_one,' Extra']);
             plot(this_axes, time_two(d2_miss_ix), zeros(1,length(d2_miss_ix)), 'go', 'MarkerSize', 6, 'LineWidth', 2, 'DisplayName', [name_two,' Extra']);
+        elseif isempty(time_overlap) && isdatetime(time_overlap)
+            % forces axes to still be in datetime
+            p = plot(this_axes, time_one(d1_miss_ix(1)), nan, '.', 'DisplayName', '');
+            set(get(get(p, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
         end
     end
     % set X display limits
