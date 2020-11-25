@@ -247,6 +247,41 @@ classdef test_intersect2 < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(ib, [1; 2]);
         end
 
+        function test_empties(self)
+            [c, ia, ib] = matspace.stats.intersect2([], [1 2 3], 0);
+            self.verifyEqual(size(c),  [0, 1]);
+            self.verifyEqual(size(ia), [0, 1]);
+            self.verifyEqual(size(ib), [0, 1]);
+            [c, ia, ib] = matspace.stats.intersect2([1 2 3], [], 0);
+            self.verifyEqual(size(c),  [0, 1]);
+            self.verifyEqual(size(ia), [0, 1]);
+            self.verifyEqual(size(ib), [0, 1]);
+            [c, ia, ib] = matspace.stats.intersect2([], [1 2 3], 1e-7);
+            self.verifyEqual(size(c),  [0, 1]);
+            self.verifyEqual(size(ia), [0, 1]);
+            self.verifyEqual(size(ib), [0, 1]);
+            [c, ia, ib] = matspace.stats.intersect2([1 2 3], [], 1e-7);
+            self.verifyEqual(size(c),  [0, 1]);
+            self.verifyEqual(size(ia), [0, 1]);
+            self.verifyEqual(size(ib), [0, 1]);
+            [c, ia, ib] = matspace.stats.intersect2(NaT(0), datetime('now'), duration(0, 0, 0));
+            self.verifyEqual(size(c),  [0, 1]);
+            self.verifyEqual(size(ia), [0, 1]);
+            self.verifyEqual(size(ib), [0, 1]);
+            [c, ia, ib] = matspace.stats.intersect2(datetime('now'), NaT(0), duration(0, 0, 0));
+            self.verifyEqual(size(c),  [0, 1]);
+            self.verifyEqual(size(ia), [0, 1]);
+            self.verifyEqual(size(ib), [0, 1]);
+            [c, ia, ib] = matspace.stats.intersect2(NaT(0), datetime('now'), duration(0, 0, 1));
+            self.verifyEqual(size(c),  [0, 1]);
+            self.verifyEqual(size(ia), [0, 1]);
+            self.verifyEqual(size(ib), [0, 1]);
+            [c, ia, ib] = matspace.stats.intersect2(datetime('now'), NaT(0), duration(0, 0, 1));
+            self.verifyEqual(size(c),  [0, 1]);
+            self.verifyEqual(size(ia), [0, 1]);
+            self.verifyEqual(size(ib), [0, 1]);
+        end
+
         % TODO: add matrices
     end
 end

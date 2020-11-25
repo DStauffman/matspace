@@ -79,7 +79,24 @@ classdef Opts
 
     methods
         function OPTS = Opts(overrides)
-            % store OPTS defaults
+            % check optional inputs
+            switch nargin
+                case 0
+                    overrides = struct();
+                case 1
+                    % if already a class instance, then just pass it through unmodified
+                    if isa(overrides, 'matspace.plotting.Opts')
+                        OPTS = overrides;
+                        return
+                    elseif isstruct(overrides)
+                        % nop
+                    else
+                        error('matspace:UnexpectedType', 'Unexpected input type.');
+                    end
+                otherwise
+                    error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+            end
+            % build new output class with defaults
             OPTS.case_name = '';
             OPTS.date_zero = [];
             OPTS.save_plot = false;
@@ -106,18 +123,6 @@ classdef Opts
             OPTS.leg_spot  = 'best';
             OPTS.classify  = '';
             OPTS.names     = "";
-
-            % break out early if no fields in overrides to process
-            switch nargin
-                case 0
-                    return
-                case 1
-                    if ~isstruct(overrides) && ~isa(overrides, 'matspace.plotting.Opts')
-                        error('matspace:UnexpectedType', 'Unexpected input type.');
-                    end
-                otherwise
-                    error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-            end
 
             % get the fields from the overrides and store them to OPTS
             fields = fieldnames(overrides);

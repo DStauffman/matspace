@@ -4,6 +4,7 @@
 %% set some formatting guides
 format long g;
 format compact;
+datetime.setDefaultFormats('default', 'dd-MMM-uuuu HH:mm:ss.SSSSSS');
 
 %% Get some information from environment variables
 dcs_always  = getenv('DCS_MATLAB_ALWAYS');

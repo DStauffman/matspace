@@ -67,7 +67,8 @@ switch nargin
 end
 
 % allow a zero precision to be passed in and behave like the normal intersect command
-if precision == 0
+% or when either input is empty and the tolerance won't matter
+if precision == 0 || isempty(A) || isempty(B)
     % do a normal intersect
     [c, ia, ib] = func(A, B);
     return

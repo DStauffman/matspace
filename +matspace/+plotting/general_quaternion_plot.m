@@ -317,7 +317,7 @@ for i = 1:num_axes
     else
         % difference plot
         for j = [3 1 2]
-            if ~plot_components || (single_lines && mod(i, num_channels) ~= j)
+            if ~plot_components || (single_lines && mod(i-1, num_channels) ~= j-1)
                 continue
             end
             if show_rms

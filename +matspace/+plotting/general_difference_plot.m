@@ -338,7 +338,7 @@ for i = 1:num_axes
     else
         % difference plot
         for j = loop_counter
-            if single_lines && mod(i, num_channels) ~= j
+            if single_lines && mod(i-1, num_channels) ~= j-1
                 continue
             end
             if show_rms
@@ -354,7 +354,7 @@ for i = 1:num_axes
             plot(this_axes, time_two(d2_miss_ix), zeros(1,length(d2_miss_ix)), 'go', 'MarkerSize', 6, 'LineWidth', 2, 'DisplayName', [name_two,' Extra']);
         elseif isempty(time_overlap) && isdatetime(time_overlap)
             % forces axes to still be in datetime
-            p = plot(this_axes, time_one(d1_miss_ix(1)), nan, '.', 'DisplayName', '');
+            p = plot(this_axes, NaT, nan, '.', 'DisplayName', '');
             set(get(get(p, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
         end
     end
