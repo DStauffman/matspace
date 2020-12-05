@@ -88,7 +88,7 @@ classdef Opts
                     if isa(overrides, 'matspace.plotting.Opts')
                         OPTS = overrides;
                         return
-                    elseif isstruct(overrides)
+                    elseif isstruct(overrides) || isempty(overrides)
                         % nop
                     else
                         error('matspace:UnexpectedType', 'Unexpected input type.');
@@ -125,9 +125,11 @@ classdef Opts
             OPTS.names     = "";
 
             % get the fields from the overrides and store them to OPTS
-            fields = fieldnames(overrides);
-            for i = 1:length(fields)
-                OPTS.(fields{i}) = overrides.(fields{i});
+            if ~isempty(overrides)
+                fields = fieldnames(overrides);
+                for i = 1:length(fields)
+                    OPTS.(fields{i}) = overrides.(fields{i});
+                end
             end
         end
 
