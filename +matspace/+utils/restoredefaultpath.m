@@ -22,8 +22,8 @@ function status = restoredefaultpath() %#ok<*MCAP>
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
 
 %% Turn off expected warnings
-warning('off','MATLAB:dispatcher:nameConflict');
-warning('off','MATLAB:dispatcher:pathWarning');
+warning('off', 'MATLAB:dispatcher:nameConflict');
+warning('off', 'MATLAB:dispatcher:pathWarning');
 
 %% Get some information from environment variables
 dcs_always  = getenv('DCS_MATLAB_ALWAYS');
@@ -44,7 +44,7 @@ if ~isempty(dcs_always)
     % folder to always have on my path
     addpath(dcs_always);
     disp('PATHSET:')
-    disp(['    ''', dcs_always,'''']);
+    disp(['    "',dcs_always,'"']);
 end
 
 %% output status

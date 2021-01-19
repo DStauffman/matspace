@@ -34,7 +34,7 @@ function [folders] = pathset(location, exclude)
 %     7.  Updated by David C. Stauffer in April 2020 to put into a package.
 
 %% hard-coded exclusions
-exclusions = ["\.git", "\.svn", "\mex\make", "/.git", "/.svn", "/mex/make"];
+exclusions = ["\.git", "\.svn", "\mex\make", "\MEX\make", "/.git", "/.svn", "/mex/make", "/MEX/make"];
 
 %% use specified path, or path of function itself
 switch nargin
@@ -50,7 +50,7 @@ switch nargin
         error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
-%% Generate folders paths to add
+%% Generate folder paths to add
 % Check for package locations
 ix = strfind(location, [filesep,'+']);
 if ~isempty(ix)

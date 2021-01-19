@@ -1,4 +1,4 @@
-function pathremove(location, exclude)
+function [folders] = pathremove(location, exclude)
 
 % PATHREMOVE  removes all the paths recursively.
 %
@@ -31,7 +31,7 @@ function pathremove(location, exclude)
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
 
 %% hard-coded exclusions
-exclusions = ["\.git", "\.svn", "\mex\make", "/.git", "/.svn", "/mex/make"];
+exclusions = ["\.git", "\.svn", "\mex\make", "\MEX\make", "/.git", "/.svn", "/mex/make", "/MEX/make"];
 
 %% use specified path, or path of function itself
 switch nargin
