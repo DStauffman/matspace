@@ -41,9 +41,9 @@ end
 varargout = cell(1, nargout);
 
 %% Read file
-if exist(filename, 'file') == 2
+if isfile(filename)
     % load specified variables
-    val = load( filename, varargin{:} );
+    val = load(filename, varargin{:});
     % load will return a struct with fields corresponding to each
     % requested variable it found in the file, in unknown order
 else

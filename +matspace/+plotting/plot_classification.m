@@ -11,7 +11,7 @@ function [] = plot_classification(fig_hand, classification, caveat, test, locati
 %     classification : (row) string specifying classification to use, from {'U','C','S','TS'} [char]
 %     caveat         : (row) string specifying the extra caveats beyond the main classification [char]
 %     test           : (true/false) flag to specify if this is a test or a real application [bool]
-%     location       : (row) string specifying where to put the label, 
+%     location       : (row) string specifying where to put the label,
 %                          from {'axis', 'figure', 'left', 'top', 'outside'} [char]
 %
 % Output:

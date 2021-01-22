@@ -27,7 +27,7 @@ classdef test_load_check < matlab.unittest.TestCase %#ok<*PROP>
 
     methods (TestClassTeardown)
         function delete_file(self)
-            if exist(self.filename, 'file')
+            if isfile(self.filename)
                 delete(self.filename);
             end
         end

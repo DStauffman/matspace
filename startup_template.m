@@ -38,9 +38,9 @@ if ~isempty(dcs_always)
 end
 if ~isempty(dcs_tools)
     % matspace library
-    if exist(fullfile(dcs_tools, 'pathset.m'), 'file')
+    if isfile(fullfile(dcs_tools, 'pathset.m'))
         run(fullfile(dcs_tools, 'pathset.m'));
-    elseif exist(dcs_tools, 'dir')
+    elseif isfolder(dcs_tools)
         addpath(dcs_tools);
         disp('PATHSET:')
         disp(['    "', dcs_tools,'"']);
@@ -48,12 +48,12 @@ if ~isempty(dcs_tools)
 end
 if ~isempty(dcs_current)
     % Current project, either for work or home
-    if exist(fullfile(dcs_current, 'pathset.m'), 'file')
+    if isfile(fullfile(dcs_current, 'pathset.m'))
         run(fullfile(dcs_current, 'pathset.m'));
-    elseif exist(fullfile(dcs_current, 'matlab_setup.m'), 'file')
+    elseif isfile(fullfile(dcs_current, 'matlab_setup.m'))
         disp(['Running matlab_setup.m in ', fullfile(dcs_current)]);
         run(fullfile(dcs_current, 'matlab_setup.m'));
-    elseif exist(dcs_current, 'dir')
+    elseif isfolder(dcs_current)
         addpath(dcs_current);
         disp('PATHSET:')
         disp(['    "', dcs_current,'"']);
@@ -78,7 +78,7 @@ end
 
 %% Open primary working script
 if ~isempty(dcs_open)
-    if exist(dcs_open, 'file')
+    if isfile(dcs_open)
         edit(dcs_open);
     else
         warning('matspace:startupOpen', 'Unable to open "%s".', dcs_open);

@@ -25,4 +25,4 @@ path_name = mfilename('fullpath');
 ix        = strfind(path_name,filesep);
 
 % keep the path name up to the second to last file separator
-root_dir  = path_name(1:ix(end-2));
+root_dir  = path_name(1:ix(end-2)-1);

@@ -1,4 +1,4 @@
-function [output_dir] = get_output_dir()
+function [tests_dir] = get_tests_dir()
 
 % GET_OUTPUT_DIR  gets the location of the output directory of the matspace library.
 %
@@ -22,4 +22,4 @@ function [output_dir] = get_output_dir()
 import matspace.paths.get_root_dir
 
 % keep the path name up to the second to last file separator
-output_dir = fullfile(get_root_dir, 'results');
+tests_dir = fullfile(get_root_dir, 'tests');

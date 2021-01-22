@@ -30,7 +30,7 @@ dcs_always  = getenv('DCS_MATLAB_ALWAYS');
 
 %% run built-in version
 built_in_restore = fullfile(matlabroot, 'toolbox', 'local', 'restoredefaultpath.m');
-if exist(built_in_restore, 'file')
+if isfile(built_in_restore)
     disp('RESTORING default paths.');
     run(built_in_restore);
 else

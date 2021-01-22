@@ -29,7 +29,6 @@ function [] = plot_phases(ax, times, colors, labels)
 %     times2 = [60 80 90; 70 85 100];
 %     matspace.plotting.plot_phases(ax, times2, colorlists.default{1}, 'Monitor');
 %     legend(ax, 'show');
-%     
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in July 2019.

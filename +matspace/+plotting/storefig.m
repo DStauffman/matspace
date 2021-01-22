@@ -86,7 +86,7 @@ for f = fig_hand
 end
 
 % confirm whether storage directory exists
-if ~exist(path, 'dir')
+if ~isfolder(path)
     warning('matspace:plotting:storeFigBadPath', 'Specified storage path not found: "%s".', path);
     return
 end

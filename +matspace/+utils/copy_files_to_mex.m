@@ -53,7 +53,7 @@ new_filename = fullfile(output_dir, temp_name);
 
 % check if the file already exists, and if so don't process it
 % (since we call ourselves recursively, we only want to do a file the first time)
-if exist(new_filename, 'file')
+if isfile(new_filename)
     return
 end
 

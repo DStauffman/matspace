@@ -16,11 +16,11 @@ function [] = setup_dir(directory, rec, wipe)
 %
 % Prototype:
 %     % create a folder
-%     directory = fullfile(pwd,'testdir');
+%     directory = fullfile(pwd, 'testdir');
 %     matspace.utils.setup_dir(directory);
 %
 %     % create a file within the folder
-%     save(fullfile(directory,'testfile.mat'));
+%     save(fullfile(directory, 'testfile.mat'));
 %
 %     % call setup_dir again to clear the folder
 %     matspace.utils.setup_dir(directory);
@@ -37,44 +37,40 @@ function [] = setup_dir(directory, rec, wipe)
 %     3.  Modified by David C. Stauffer to optionally not wipe existing directories in October 2016.
 %     4.  Modified by David C. Stauffer in January 2019 to be able to specify if recursive or not.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     6.  Modified by David C. Stauffer in January 2021 to use function arguments.
+
+arguments
+    directory (1,:) char
+    rec logical = true
+    wipe logical = true
+end
 
 % Imports
 import matspace.utils.setup_dir
 
-% check for optional inputs
-switch nargin
-    case 1
-        rec  = true;
-        wipe = true;
-    case 2
-        wipe = true;
-    case 3
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
-
-% add filesep to end of path if necessary
-if ~strcmp(directory(end),filesep)
-    directory = [directory,filesep];
+% check for empty case
+if isempty(directory)
+    return
 end
 
 % empty files within directory if it already exists
-if exist(directory,'dir')
+if isfolder(directory)
     if wipe
         contents = dir(directory);
         names    = {contents(3:end).name};
         isdir    = [contents(3:end).isdir];
         for i = 1:length(names)
-            this_item = [directory,names{i}];
+            this_item = fullfile(directory, names{i});
             if rec && isdir(i)
                 % call recursively for subfolders
                 setup_dir(this_item, rec, wipe);
                 % now delete the empty folder
                 rmdir(this_item);
             else
-                % delete files
-                delete(this_item);
+                if ~isdir(i)
+                    % delete files
+                    delete(this_item);
+                end
             end
         end
         % display that something was removed

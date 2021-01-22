@@ -40,7 +40,7 @@ full_mex_file_name = fullfile(mex_dir,[function_name,'.',mexext]);
 disp(['Compiling function "',function_name,'" to "',full_mex_file_name,'"']);
 
 % Check if the file already exists and delete it
-if exist(full_mex_file_name,'file')
+if isfile(full_mex_file_name)
     disp(['deleting old file "',full_mex_file_name,'"']);
     delete(full_mex_file_name);
 end

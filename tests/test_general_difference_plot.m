@@ -128,7 +128,7 @@ classdef test_general_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
                 'TruthTime', self.truth_time, 'TruthData', self.truth_data, 'Tolerance', self.tolerance);
             self.figs = [self.figs, figs];
         end
-        
+
         function test_non_overlapping(self)
             time_one      = self.time_one - 100;
             time_two      = self.time_two + 100;
@@ -149,7 +149,7 @@ classdef test_general_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(err.two, nan(2, 1));
             self.verifyEqual(err.diff, nan(2, 1));
         end
-        
+
         function test_non_overlapping_datetimes(self)
             date_zero      = datetime('now');
             dt             = duration(0, 1, 0); % 1 minute

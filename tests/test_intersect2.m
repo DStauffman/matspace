@@ -28,7 +28,7 @@ classdef test_intersect2 < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(ia, ia2);
             self.verifyEqual(ib, ib2);
         end
-        
+
         function test_column_vectors(self)
             a = [1; 2; 4; 4; 6];
             b = [0; 8; 2; 2; 5; 8; 6; 8; 8];
@@ -101,7 +101,7 @@ classdef test_intersect2 < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(ia, [2; 3; 4; 5]);
             self.verifyEqual(ib, [1; 2; 3]);
         end
-        
+
         function test_tolerance_no_ix(self)
             a = [1 3 5 7 9];
             b = [1.01 2.02 3.03 4.04 5.05 6.06 7.07 8.08 9.09];

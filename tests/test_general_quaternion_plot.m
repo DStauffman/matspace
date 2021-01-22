@@ -87,12 +87,12 @@ classdef test_general_quaternion_plot < matlab.unittest.TestCase %#ok<*PROP>
             [~, exp] = matspace.quaternions.quat_angle_diff(self.quat_one(:, 3:end), self.quat_two(:, 1:end-2));
             self.verifyEqual(err.diff, matspace.utils.nanrms(exp, 2));
         end
-        
+
         function test_minimal_args(self)
             figs = matspace.plotting.general_quaternion_plot(self.description, self.time_one, zeros(1, 0), self.quat_one, zeros(4, 0));
             self.figs = [self.figs, figs];
         end
-        
+
         function test_datetime(self)
             date_zero = datetime('now');
             dt        = duration(0, 1, 0); % 1 minute

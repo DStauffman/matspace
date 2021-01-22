@@ -70,7 +70,7 @@ else
     for i = 1:length(filenums)
         % alias this file
         this_file = [location,num2str(filenums(i),'%03i'),'.bin'];
-        if ~exist(this_file,'file')
+        if ~isfile(this_file)
             % throw warning if file doesn't exist
             warning('matspace:findBinFiles','\nUnable to find "%s" binary file.',this_file);
         else
