@@ -1,6 +1,6 @@
 function [] = write_text_file(filename, text)
 
-% check if simple character array and if so, convert to string array
+% WRITE_TEXT_FILE  Write given text out to a file.
 %
 % Input:
 %     filename : (string) specifying the name of the file to write [char]

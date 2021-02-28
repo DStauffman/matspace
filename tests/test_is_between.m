@@ -73,5 +73,20 @@ classdef test_is_between < matlab.unittest.TestCase %#ok<*PROP>
         function test_bad_boundaries(self)
             self.verifyError(@() matspace.utils.is_between(1,2,3,[1 1 1]),'matspace:is_between:BadBoundarySpecification');
         end
+
+        function test_datetimes(self)
+            date_zero = datetime('now');
+            value = date_zero + duration(0, 0, 1) * (0:10);
+            lower = date_zero + duration(0, 0, 2);
+            upper = date_zero + duration(0, 0, 8);
+            out = matspace.utils.is_between(value, lower, upper, true);
+            exp = true(size(value));
+            exp([1 2 10 11]) = false;
+            self.verifyEqual(out, exp);
+            out2 = matspace.utils.is_between(value, lower, upper, false);
+            exp2 = exp;
+            exp2([3 9]) = false;
+            self.verifyEqual(out2, exp2);
+        end
     end
 end
