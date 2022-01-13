@@ -77,9 +77,9 @@ end
 ix_exclusive = ti < t(1) | ti > t(end);
 if any(ix_exclusive)
     if inclusive
-        warning('matspace:QuatInterpExtrap', 'Desired time not found within input time vector.');
-    else
         error('matspace:QuatInterpExtrap', 'Desired time not found within input time vector.');
+    else
+        warning('matspace:QuatInterpExtrap', 'Desired time not found within input time vector.');
     end
 end
 

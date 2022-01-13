@@ -31,15 +31,35 @@ function q = qrot(k,a)
 %     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-% get the number of angles to process
-num = length(a);
-
-if num == 1
+if isscalar(k) && isscalar(a)
     % optimized scalar case
     q = [0; 0; 0; cos(a/2)];
     q(k) = sin(a/2);
+elseif isscalar(k)
+    % single axis, multiple angle case
+    num = length(a);
+    q = zeros(4, num);
+    q(4, :) = cos(a/2);
+    q(k, :) = sin(a/2);
+elseif isscalar(a)
+    % single angle, multiple axes case
+    num = length(k);
+    q = zeros(4, num);
+    q(4, :) = cos(a/2);
+    if num > 0
+        ix = sub2ind([4 num], k, 1:num);
+        q(ix) = sin(a/2);
+    end
 else
     % generic vector case
-    q = [zeros(3,num); cos(a/2)];
-    q(k,:) = sin(a/2);
+    num = length(k);
+    assert(num == length(a));
+    q = zeros(4, num);
+    q(4, :) = cos(a/2);
+    if num > 0
+        ix = sub2ind([4 num], k, 1:num);
+        q(ix) = sin(a/2);
+    end
 end
+% enforce positive scalar
+q(:, q(4, :) < 0) = -q(:, q(4, :) < 0);

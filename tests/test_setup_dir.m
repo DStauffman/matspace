@@ -110,7 +110,12 @@ classdef test_setup_dir < matlab.unittest.TestCase %#ok<*PROP>
         
         function test_string_array(self)
             str_array = string({self.folder, self.subdir});
-            self.verifyError(@() matspace.utils.setup_dir(str_array), 'MATLAB:validation:IncompatibleSize');
+            if verLessThan('matlab', 'R2020A')
+                exp_error = 'MATLAB:validation:IncompatibleSize';
+            else
+                exp_error = 'MATLAB:functionValidation:NotVector';
+            end
+            self.verifyError(@() matspace.utils.setup_dir(str_array), exp_error);
         end
     end
 end

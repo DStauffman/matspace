@@ -186,7 +186,7 @@ caxis([cmin cmax]);
 colormap(color_map);
 colorbar('location', 'EastOutside');
 % make square
-axis equal;
+axis(ax, 'equal');
 % set limits and tick labels
 xlim([0 m]);
 ylim([0 n]);

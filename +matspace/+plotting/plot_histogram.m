@@ -17,8 +17,10 @@ import matspace.plotting.setup_plots
 % Argument parser
 p = inputParser;
 addParameter(p, 'Description', '', @ischar);
+addParameter(p, 'XLabel', 'Bins', @ischar);
 parse(p, varargin{:});
 description = p.Results.Description;
+xlab = p.Results.XLabel;
 
 %% Calculations
 % histogram
@@ -41,9 +43,10 @@ for i = 1:length(N)
         'FaceColor', [0.000 0.447 0.741], 'EdgeColor', 'k');
 end
 title(ax, description, 'Interpreter', 'None');
-xlabel(ax, 'Bins');
+xlabel(ax, xlab);
 ylabel(ax, 'Number');
 plot_second_yunits(ax, 'Percentage', 100 / sum(N));
+grid(ax, 'on');
 hold(ax, 'off');
 
 %% Format plots
