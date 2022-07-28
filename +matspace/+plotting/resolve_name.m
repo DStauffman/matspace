@@ -21,6 +21,7 @@ function [new_name] = resolve_name(old_name, strip_classification)
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in April 2020 based on code within storefig.m
+%     2.  Updated by David C. Stauffer in July 2022 to check for newlines within the name.
 
 % optional inputs
 switch nargin
@@ -55,13 +56,22 @@ if strip_classification
 end
 
 % check for illegal characters and replace with underscores
-if ispc
-    bad_chars = {'<','>',':','"','/','\','|','?','*'};
+if verLessThan('matlab','9.3')
+    % support for R2016A and earlier
+    char10 = char(10); %#ok<CHARTEN>
 else
-    bad_chars = {'/'};
+    % support for R2016B and newer
+    char10 = newline;
+end
+if ispc
+    bad_chars = {'<','>',':','"','/','\','|','?','*',char10};
+else
+    bad_chars = {'/',char10};
 end
 bad_names = false(size(new_name));
 for i = 1:length(bad_chars)
+    % Use contains to make more clear, but only R2016B+
+    %ix = contains(new_name, bad_chars{i});
     ix = ~cellfun(@isempty, strfind(new_name, bad_chars{i}));
     if any(ix)
         new_name  = strrep(new_name, bad_chars{i}, '_');

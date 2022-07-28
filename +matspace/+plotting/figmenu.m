@@ -37,9 +37,11 @@ use_action = exist('action','var');
 if verLessThan('matlab','9.3')
     % support for R2016B and earlier, TODO: R2017A (9.2) is untested
     text_field = 'Label';
+    char10 = char(10); %#ok<CHARTEN>
 else
     % support for R2017B and newer
     text_field = 'Text';
+    char10 = newline;
 end
 
 %% build lists
@@ -102,7 +104,7 @@ if ~use_action
         % create a menu item for each figure
         for j = 1:nfigs
             f = figlist(j);
-            n = char(fignames(j));
+            n = strrep(fignames{j}, char10, '; ');
             eval(sprintf('item%i = uimenu(menu1);',j))
             eval(sprintf('set(item%i,''%s'',''&%s: %s'')',j,text_field,fignum_to_str(f),n));
             eval(sprintf('set(item%i,''Callback'',''figure(%s)'')',j,fignum_to_str(f)));

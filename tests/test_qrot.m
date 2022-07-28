@@ -59,12 +59,12 @@ classdef test_qrot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(quat, [self.quat(:,1), self.quat(:,2), self.quat2(:,3)], 'AbsTol', self.tolerance);
         end
 
-        function test_null1(self)
+        function test_null_one(self)
             quat = matspace.quaternions.qrot(self.axis(1), self.null);
             self.verifyEqual(quat, self.null_quat);
         end
 
-        function test_null2(self)
+        function test_null_two(self)
             quat = matspace.quaternions.qrot(self.null, self.angle);
             self.verifyEqual(quat, self.null_quat);
         end
