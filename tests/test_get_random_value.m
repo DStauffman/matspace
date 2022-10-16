@@ -27,10 +27,11 @@ classdef test_get_random_value < matlab.unittest.TestCase
             self.verifyEqual(size(values), num);
             self.verifyLessThan(values, 1);
             self.verifyGreaterThanOrEqual(values, 0);
-            half = nnz(value < 0.5);
-            self.verifyTrue(half > 4500 & half < 5500);
+            half = nnz(values < 0.5);
+            self.verifyLessThan(half, 5500);
+            self.verifyGreaterThan(half, 4500);
             % scaled draw
-            scaled_values = get_random_value('Uniform', num, 0, 10);
+            scaled_values = get_random_value('Uniform', num, [0, 10]);
             self.verifyEqual(size(scaled_values), num);
         end
         function test_normal(self)
@@ -51,7 +52,7 @@ classdef test_get_random_value < matlab.unittest.TestCase
             % scaled draw
             mu = 5;
             sigma = 3;
-            scaled_values = get_random_value('Normal', num, mu, sigma);
+            scaled_values = get_random_value('Normal', num, [mu, sigma]);
             m = mean(scaled_values);
             s = std(scaled_values);
             tol = 0.1;
@@ -63,30 +64,34 @@ classdef test_get_random_value < matlab.unittest.TestCase
         function test_beta(self)
             import matspace.utils.get_random_value
             % single draw
-            value = get_random_value('Beta');
+            value = get_random_value('Beta', 1, [1, 2]);
             self.verifyEqual(size(value), [1 1]);
             % vector draw
             num = [10000, 1];
-            %values = get_random_value('Beta', num, 0, 10);
-
+            values = get_random_value('Beta', num, [1, 2]);
             % scaled draw
-            %scaled_values = get_random_value('Beta', num, 0, 10, 1, 2);
+            scaled_values = get_random_value('Beta', num, [1, 2], [0, 10]);
             %exp = ones(num);
             %self.verifyEqual(value, exp);
         end
-%         function test_gamma(self)
-%             import matspace.utils.get_random_value
-%             num = [10000, 1];
-%             value = get_random_value('Gamma', num, 1, 2);
-%             exp = ones(num);
-%             self.verifyEqual(value, exp);
-%         end
-%         function test_triangle(self)
-%             import matspace.utils.get_random_value
-%             num = [10000, 1];
-%             value = get_random_value('Triangle', num, 0, 4);
-%             exp = ones(num);
-%             self.verifyEqual(value, exp);
-%         end
+        function test_gamma(self)
+            import matspace.utils.get_random_value
+            value = get_random_value('Gamma');
+            % vector draw
+            num = [10000, 1];
+            values = get_random_value('Gamma', num, [1, 2]);
+            %exp = ones(num);
+            %self.verifyEqual(value, exp);
+        end
+        function test_triangle(self)
+            import matspace.utils.get_random_value
+            % single draw
+            value = get_random_value('Triangular');
+            % vector draw
+            num = [10000, 1];
+            values = get_random_value('Triangular', num, [0, 4, 6]);
+            %exp = ones(num);
+            %self.verifyEqual(value, exp);
+        end
     end
 end
