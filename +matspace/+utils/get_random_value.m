@@ -42,8 +42,9 @@ end
 
 % Imports
 import matspace.coder.betarnd_mex
+import matspace.coder.gamrnd_mex
 
-use_toolbox = true;  %#ok<*UNRCH>  % Requires Statistics and Machine Learning Toolbox
+use_toolbox = false;  %#ok<*UNRCH>  % Requires Statistics and Machine Learning Toolbox
 
 % split to the appropriate distribution
 switch lower(distribution)
@@ -90,43 +91,65 @@ switch lower(distribution)
             end
         end
     case 'beta'
+        if isempty(coeffs)
+            coeffs = [1, 1];
+        end
         if use_toolbox
-            if isempty(coeffs)
-                coeffs = [1, 1];
-            end
             pd = makedist('Beta', coeffs(1), coeffs(2));
             if ~isempty(minmax)
                 pd = truncate(pd, minmax(1), minmax(2));
             end
             value = pd.random(num);
         else
-            value = betarnd_mex(num(1), num(2), alpha, beta) * (this_max-this_min) + this_min;
+            if length(num) == 1
+                num = [num num];
+            end
+            value = betarnd_mex(coeffs(1), coeffs(2), num(1), num(2));
+            if ~isempty(minmax)
+                value(value < minmax(1)) = minmax(1);
+                value(value > minmax(2)) = minmax(2);
+            end
         end
     case 'gamma'
+        if isempty(coeffs)
+            coeffs = [1, 1];
+        end
         if use_toolbox
-            if isempty(coeffs)
-                coeffs = [1, 1];
-            end
             pd = makedist('Gamma', coeffs(1), coeffs(2));
             if ~isempty(minmax)
                 pd = truncate(pd, minmax(1), minmax(2));
             end
             value = pd.random(num);
         else
-            % TODO: write this
+            if length(num) == 1
+                num = [num num];
+            end
+            value = gamrnd_mex(coeffs(1), coeffs(2), num(1), num(2));
+            if ~isempty(minmax)
+                value(value < minmax(1)) = minmax(1);
+                value(value > minmax(2)) = minmax(2);
+            end
         end
     case 'triangular'
+        if isempty(coeffs)
+            coeffs = [0, 0.5, 1];
+        end
         if use_toolbox
-            if isempty(coeffs)
-                coeffs = [0, 0.5, 1];
-            end
             pd = makedist('Triangular', coeffs(1), coeffs(2), coeffs(3));
             if ~isempty(minmax)
                 pd = truncate(pd, minmax(1), minmax(2));
             end
             value = pd.random(num);
         else
-            % TODO: write this
+            a = coeffs(1);
+            b = coeffs(2);
+            c = coeffs(3);
+            Fc = (c - a) / (b - a);
+            U = rand(num);
+            ix = U < Fc;
+            value = nan(size(U));
+            value(ix) = a + realsqrt(U(ix) * (b - a) * (c - a));
+            value(~ix) = a - realsqrt((1 - U(~ix)) * (b - a) * (b - c));
         end
     otherwise
         error('matspace:UnexpectedRandomDistribution', 'Unexpected value for distribution: "%s"', distribution');
