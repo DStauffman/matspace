@@ -49,12 +49,12 @@ use_toolbox = false;  %#ok<*UNRCH>  % Requires Statistics and Machine Learning T
 % split to the appropriate distribution
 switch lower(distribution)
     case 'none'
-        assert(isempty(minmax), 'minmax should be empty with distribution %s', distribution);
         if isempty(coeffs)
             value = ones(num);
         else
             value = repmat(coeffs(1), num);
         end
+        value = apply_minmax(value, minmax);
     case 'uniform'
         % Note: coeffs or min/max mean the same thing for a uniform distribution (TODO: is this true?)
         if use_toolbox
@@ -72,6 +72,7 @@ switch lower(distribution)
             else
                 value = rand(num) * (coeffs(2)-coeffs(1)) + coeffs(1);
             end
+            value = apply_minmax(value, minmax);
         end
     case 'normal'
         if use_toolbox
@@ -89,6 +90,7 @@ switch lower(distribution)
             else
                 value = coeffs(1) + randn(num) * coeffs(2);
             end
+            value = apply_minmax(value, minmax);
         end
     case 'beta'
         if isempty(coeffs)
@@ -105,10 +107,7 @@ switch lower(distribution)
                 num = [num num];
             end
             value = betarnd_mex(coeffs(1), coeffs(2), num(1), num(2));
-            if ~isempty(minmax)
-                value(value < minmax(1)) = minmax(1);
-                value(value > minmax(2)) = minmax(2);
-            end
+            value = apply_minmax(value, minmax);
         end
     case 'gamma'
         if isempty(coeffs)
@@ -125,10 +124,7 @@ switch lower(distribution)
                 num = [num num];
             end
             value = gamrnd_mex(coeffs(1), coeffs(2), num(1), num(2));
-            if ~isempty(minmax)
-                value(value < minmax(1)) = minmax(1);
-                value(value > minmax(2)) = minmax(2);
-            end
+            value = apply_minmax(value, minmax);
         end
     case 'triangular'
         if isempty(coeffs)
@@ -150,12 +146,20 @@ switch lower(distribution)
             value = nan(size(U));
             value(ix) = a + realsqrt(U(ix) * (b - a) * (c - a));
             value(~ix) = a - realsqrt((1 - U(~ix)) * (b - a) * (b - c));
+            value = apply_minmax(value, minmax);
         end
     otherwise
         error('matspace:UnexpectedRandomDistribution', 'Unexpected value for distribution: "%s"', distribution');
 end
 end
 
+
+function value = apply_minmax(value, minmax)
+    if ~isempty(minmax)
+        value(value < minmax(1)) = minmax(1);
+        value(value > minmax(2)) = minmax(2);
+    end
+end
 
 function mustBeLessThanXElems(a, b)
     if length(a) > b
