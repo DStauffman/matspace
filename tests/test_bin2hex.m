@@ -44,12 +44,12 @@ classdef test_bin2hex < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_pad4(self)
-            hex = matspace.utils.bin2hex(self.bin, 'pad4');
+            hex = matspace.utils.bin2hex(self.bin, 'group', 4);
             self.verifyEqual(hex, '0123 4567 89AB CDEF');
         end
 
         function test_pad8(self)
-            hex = matspace.utils.bin2hex(self.bin, 'pad8');
+            hex = matspace.utils.bin2hex(self.bin, 'group', 8);
             self.verifyEqual(hex, '01234567 89ABCDEF');
         end
 
@@ -80,17 +80,17 @@ classdef test_bin2hex < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_empty_bin2(self)
-            hex = matspace.utils.bin2hex([], 'upper');
+            hex = matspace.utils.bin2hex(strings(0), 'upper');
             self.verifyEqual(hex, '');
         end
 
         function test_multiple_options(self)
-            hex = matspace.utils.bin2hex('00000001111111110000', 'pad4', 'lower');
+            hex = matspace.utils.bin2hex('00000001111111110000', 'lower', 'group', 4);
             self.verifyEqual(hex, '0 1ff0');
         end
 
         function test_multiple_options2(self)
-            hex = matspace.utils.bin2hex('00000001111111110000', 'pad8', 'upper');
+            hex = matspace.utils.bin2hex('00000001111111110000', 'upper', 'group', 8);
             self.verifyEqual(hex, '01FF0');
         end
 
@@ -113,7 +113,7 @@ classdef test_bin2hex < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_options(self)
-            self.verifyError(@() matspace.utils.bin2hex(self.bin, 'bad_option'), 'matspace:bin2hex:BadOption');
+            self.verifyError(@() matspace.utils.bin2hex(self.bin, 'bad_option'), 'MATLAB:validators:mustBeMember');
         end
     end
 end

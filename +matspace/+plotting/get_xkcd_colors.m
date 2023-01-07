@@ -107,7 +107,7 @@ end
 
 %% Subfunctions - hex_to_num
 function [num] = hex_to_num(hex)
-% HEX_TO_NUM  converts a single hexidecimal character to its numeric value
+% HEX_TO_NUM  converts a single hexadecimal character to its numeric value
 switch hex
     case '0'
         num = 0;

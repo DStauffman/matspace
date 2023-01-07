@@ -1,9 +1,9 @@
-function [binstr] = hex2bin(hexstr, varargin)
+function [binstr] = hex2bin(hexstr, leading_zeros, kwargs)
 
-% CONVERTS a hexidecimal string of characters to its binary string representation.
+% CONVERTS a hexadecimal string of characters to its binary string representation.
 %
 % Input:
-%     hexstr : char of hexidecimal
+%     hexstr : char of hexadecimal
 %     options : conversion options from {'drop', 'pad4', 'pad8'}
 %
 % Output:
@@ -27,6 +27,13 @@ function [binstr] = hex2bin(hexstr, varargin)
 % Change Log:
 %     1.  Written by David C. Stauffer in October 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     3.  Updated by David C. Stauffer in January 2023 to use function arguments.
+
+arguments
+    hexstr {mustBeText, mustBeHexStr}
+    leading_zeros {mustBeMember(leading_zeros, ["drop", "keep"])} = 'keep'
+    kwargs.group {mustBeInteger, mustBeTwoMult(kwargs.group)} = 0
+end
 
 % check for empty case
 if isempty(hexstr)
@@ -34,32 +41,25 @@ if isempty(hexstr)
     return
 end
 
-% parse optional inputs
-if isempty(varargin)
-    options = {};
-else
-    options = varargin;
-end
-
 % deal with char/cell/string options
 if ischar(hexstr)
-    binstr = hex2bin_func(hexstr, options);
+    binstr = hex2bin_func(hexstr, leading_zeros, kwargs);
 elseif iscellstr(hexstr)
     binstr = cell(size(hexstr));
     for i = 1:numel(hexstr)
-        binstr{i} = hex2bin_func(hexstr{i}, options);
+        binstr{i} = hex2bin_func(hexstr{i}, leading_zeros, kwargs);
     end
 elseif isstring(hexstr)
     binstr = strings(size(hexstr));
     for i = 1:numel(hexstr)
-        binstr{i} = hex2bin_func(hexstr{i}, options);
+        binstr{i} = hex2bin_func(hexstr{i}, leading_zeros, kwargs);
     end
 else
     error('matspace:bin2hex:InvalidInputClass', 'Unexpected input class.');
 end
 
 %% Subfunctions - hex2bin_func
-function [binstr] = hex2bin_func(hexstr, options)
+function [binstr] = hex2bin_func(hexstr, leading_zeros, kwargs)
 
 % HEX2BIN_FUNC  is the actual implementation, separated out so that it can be called via a loop.
 
@@ -85,18 +85,18 @@ for i = 1:length(clean)
 end
 
 % process extra options
-for i = 1:length(options)
-    switch options{i}
-        case 'drop'
-            ix = find(binstr == '1', 1, 'first');
-            binstr = binstr(ix:end);
-        case 'pad4'
-            binstr = add_pad(binstr, 4);
-        case 'pad8'
-            binstr = add_pad(binstr, 8);
-        otherwise
-            error('matspace:hex2bin:BadOption', 'Unexpected option string of "%s"', options{i});
-    end
+switch leading_zeros
+    case 'drop'
+        ix = find(binstr == '1', 1, 'first');
+        binstr = binstr(ix:end);
+    case 'keep'
+        % nop
+    otherwise
+        % should not be possible to get here based on arguments validation
+        error('matspace:hex2bin:BadOption', 'Unexpected option string of "%s"', leading_zeros);
+end
+if kwargs.group ~= 0
+    binstr = add_pad(binstr, kwargs.group);
 end
 
 %% Subfunctions - get_hex
@@ -168,4 +168,36 @@ if spaces > 0
     new(temp) = old(temp);
 else
     new = old;
+end
+
+%% Subfunctions - mustBeTwoMult(x)
+function mustBeTwoMult(x)
+% validates the grouping options
+if ~any(x == [0 2 4 8 16 32])
+    eidType = 'matspace:bin2hex:badGrouping';
+    msgType = 'Output must be grouped by 0, 2, 4, 8, 16 or 32 bits.';
+    throwAsCaller(MException(eidType, msgType));
+end
+
+%% Subfunctions - mustBeBinaryStr
+function mustBeHexStr(x)
+% validates the allowed binary string characters, either 0, 1 or space
+
+% hard-coded values
+temp = '0123456789 ABCDEFabcdef';
+allowed_chars = temp(:);
+
+% check string for allowed characters
+if ischar(x)
+    chars = unique(x);
+else
+    chars = [];
+    for i = 1:length(x)
+        chars = unique([chars, unique(x{i})]);
+    end
+end
+extra = setdiff(chars, allowed_chars);
+if ~isempty(extra)
+    throwAsCaller(MException('matspace:hex2bin:BadChars', ...
+        'The following characters are not allowed in the input "%s".', extra));
 end
