@@ -18,4 +18,8 @@ function rad = d2r(deg)
 %     3.  Incorporated into matspace library in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments
+    deg {mustBeNumeric}
+end
+
 rad = pi/180*deg;

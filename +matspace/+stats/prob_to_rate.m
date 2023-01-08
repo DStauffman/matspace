@@ -21,14 +21,9 @@ function [rate] = prob_to_rate(prob, time)
 %     1.  Written by David C. Stauffer in April 2016.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-% optional inputs
-switch nargin
-    case 1
-        time = 1;
-    case 2
-        %nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+arguments
+    prob double
+    time double = 1
 end
 
 % calculate rate

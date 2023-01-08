@@ -22,17 +22,10 @@ function [out] = bins_to_str_ranges(bins, dt, cutoff)
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-% Check for optional inputs
-switch nargin
-    case 1
-        dt     = 1;
-        cutoff = 1000;
-    case 2
-        cutoff = 1000;
-    case 3
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+arguments
+    bins (1, :) {mustBeNumeric}
+    dt (1, 1) double = 1
+    cutoff (1, 1) double = 1000
 end
 
 % preallocate output

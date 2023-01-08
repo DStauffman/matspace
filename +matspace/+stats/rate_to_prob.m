@@ -19,14 +19,9 @@ function [prob] = rate_to_prob(rate, time)
 %     1.  Written by David C. Stauffer in April 2016.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-% optional inputs
-switch nargin
-    case 1
-        time = 1;
-    case 2
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+arguments
+    rate double
+    time double = 1
 end
 
 % calculate probability

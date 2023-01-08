@@ -17,14 +17,8 @@ function [out] = make_conclusion(use_mini)
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-% optional inputs
-switch nargin
-    case 0
-        use_mini = false;
-    case 1
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+arguments
+    use_mini logical = false
 end
 
 % create output

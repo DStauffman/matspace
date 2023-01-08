@@ -21,13 +21,12 @@ function out = d2dms(in)
 %     3.  Incorporated into matspace library in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-% calculate size of array
-[m,n] = size(in);
-
-% give error if not a row vector
-if m ~= 1
-    error('matspace:UnexpectedArraySize', 'd2dms expects a scalar or row vector as input');
+arguments
+    in (1, :) double {mustBeVector}
 end
+
+% calculate size of array
+n = size(in, 2);
 
 % initialize output
 out = zeros(3,n);

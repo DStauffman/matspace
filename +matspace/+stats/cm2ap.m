@@ -18,6 +18,10 @@ function [annual] = cm2ap(monthly)
 %     1.  Written by David C. Stauffer in April 2016.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments
+    monthly double
+end
+
 % Imports
 import matspace.stats.convert_monthly_to_annual_probability
 

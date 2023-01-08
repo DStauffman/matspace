@@ -33,6 +33,12 @@ function [folders] = pathset(location, exclude)
 %         function much more compact and easier to understand.
 %     7.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+%% Arguments
+arguments
+    location {mustBeTextScalar} = ''
+    exclude {mustBeText} = ''
+end
+
 %% hard-coded exclusions
 exclusions = ["\.git", "\.svn", "\mex\make", "\MEX\make", "/.git", "/.svn", "/mex/make", "/MEX/make"];
 
@@ -46,8 +52,6 @@ switch nargin
         % nop
     case 2
         exclusions = [exclusions, string(cellstr(exclude))];
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 %% Generate folder paths to add

@@ -19,6 +19,11 @@ function [out] = apply_prob_to_mask(mask, prob)
 % Change Log:
 %     1.  Written by David C. Stauffer in August 2022.
 
+arguments
+    mask logical {mustBeVector}
+    prob (1, 1) double
+end
+
 keep = rand(nnz(mask), 1) < prob;
 
 out = mask;
