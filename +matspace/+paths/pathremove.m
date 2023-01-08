@@ -30,6 +30,12 @@ function [folders] = pathremove(location, exclude)
 %     4.  Incorporated by David C. Stauffer into matspace library in November 2016.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+%% Arguments
+arguments
+    location {mustBeTextScalar} = ''
+    exclude {mustBeText} = ''
+end
+
 %% hard-coded exclusions
 exclusions = ["\.git", "\.svn", "\mex\make", "\MEX\make", "/.git", "/.svn", "/mex/make", "/MEX/make"];
 

@@ -41,6 +41,15 @@ function [n,u,s] = combine_sets(n1,u1,s1,n2,u2,s2)
 %     1.  Written by David C. Stauffer in July 2012.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments
+    n1 (1, 1) double
+    u1 (1, 1) double
+    s1 (1, 1) double
+    n2 (1, 1) double
+    u2 (1, 1) double
+    s2 (1, 1) double
+end
+
 % combine total number of samples
 n = n1 + n2;
 

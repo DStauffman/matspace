@@ -18,6 +18,10 @@ function [annual] = convert_monthly_to_annual_probability(monthly)
 %     1.  Written by David C. Stauffer in April 2016.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments
+    monthly double
+end
+
 % hard-coded values
 MONTHS_PER_YEAR = 12;
 

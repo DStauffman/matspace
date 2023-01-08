@@ -18,6 +18,10 @@ function [monthly] = ca2mp(annual)
 %     1.  Written by David C. Stauffer in April 2016.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments
+    annual double
+end
+
 % Imports
 import matspace.stats.convert_annual_to_monthly_probability
 

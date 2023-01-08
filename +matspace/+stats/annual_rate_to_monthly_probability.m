@@ -20,6 +20,10 @@ function [prob] = annual_rate_to_monthly_probability(rate)
 %     1.  Written by David C. Stauffer in April 2016.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments
+    rate double
+end
+
 % Imports
 import matspace.stats.rate_to_prob
 

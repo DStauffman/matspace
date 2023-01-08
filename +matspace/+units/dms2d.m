@@ -21,12 +21,8 @@ function out = dms2d(in)
 %     3.  Incorporated into matspace library in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-% calculate size of array
-m = size(in,1);
-
-% give error if not a 3xN array
-if m ~= 3
-    error('matspace:UnexpectedArraySize', 'dms2d expects a 3xN array as input.');
+arguments
+    in (3, :) double
 end
 
 % find fractional degrees by adding parts together

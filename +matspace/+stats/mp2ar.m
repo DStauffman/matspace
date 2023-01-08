@@ -22,5 +22,9 @@ function [rate] = mp2ar(prob)
 %     1.  Written by David C. Stauffer in January 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments
+    prob double
+end
+
 import matspace.stats.monthly_probability_to_annual_rate
 rate = monthly_probability_to_annual_rate(prob);
