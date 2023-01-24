@@ -1,4 +1,4 @@
-function [out] = make_preamble(caption, label, cols, varargin)
+function [out] = make_preamble(caption, label, cols, kwargs)
 
 % MAKE_PREAMBLE  writes the table header and preamble.
 %
@@ -23,27 +23,23 @@ function [out] = make_preamble(caption, label, cols, varargin)
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-%% Parse Inputs
-% create parser
-p = inputParser;
-% create some validation functions
-func_size_is_valid = @(x) any(strcmp(x, {'\tiny', '\scriptsize', '\footnotesize', '\small', '\normalsize',...
-    '\large', '\Large', '\LARGE', '\huge', '\Huge'}));
-% set options
-addRequired(p, 'Caption', @ischar);
-addRequired(p, 'Label', @ischar);
-addRequired(p, 'Cols', @ischar);
-addParameter(p, 'Size', '\small', func_size_is_valid);
-addParameter(p, 'UseMini', false, @islogical);
-addParameter(p, 'ShortCap', '', @ischar);
-addParameter(p, 'Numbered', true, @islogical);
-% do parse
-parse(p, caption, label, cols, varargin{:});
+%% Arguments
+arguments
+    caption (1, :) char
+    label (1, :) char
+    cols (1, :) char
+    kwargs.Size (1, :) char {mustBeMember(kwargs.Size, {'\tiny', '\scriptsize', '\footnotesize', '\small', '\normalsize',...
+    '\large', '\Large', '\LARGE', '\huge', '\Huge'})} = '\small';
+    kwargs.UseMini (1, 1) logical = false;
+    kwargs.ShortCap (1, :) char = '';
+    kwargs.Numbered (1, 1) logical = true;
+end
+
 % create some convenient aliases
-size      = p.Results.Size;
-use_mini  = p.Results.UseMini;
-short_cap = p.Results.ShortCap;
-numbered  = p.Results.Numbered;
+size      = kwargs.Size;
+use_mini  = kwargs.UseMini;
+short_cap = kwargs.ShortCap;
+numbered  = kwargs.Numbered;
 
 %% Process
 % create caption string
