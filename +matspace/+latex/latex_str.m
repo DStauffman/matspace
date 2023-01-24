@@ -1,4 +1,4 @@
-function [value_str] = latex_str(value, varargin)
+function [value_str] = latex_str(value, digits, kwargs)
 
 % LATEX_STR  Formats a given value for display in a LaTeX document.
 %
@@ -21,6 +21,15 @@ function [value_str] = latex_str(value, varargin)
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+%% Arguments
+arguments
+    value {mustBeNumOrChar}
+    digits (1, 1) {mustBeNumeric} = -1;
+    kwargs.Fixed (1, 1) logical = false;
+    kwargs.CMP2AR (1, 1) logical = false;
+    kwargs.Capped (1, 1) {mustBeNumeric} = 1073741823;
+end
+
 %% Imports
 import matspace.stats.mp2ar
 
@@ -31,17 +40,11 @@ p = inputParser;
 func_is_num_or_char = @(x) isnumeric(x) || ischar(x);
 % set options
 addRequired(p, 'Value', func_is_num_or_char);
-addOptional(p, 'Digits', -1, @isnumeric);
-addParameter(p, 'Fixed', false, @islogical);
-addParameter(p, 'CMP2AR', false, @islogical);
-addParameter(p, 'Capped', 1073741823, @isnumeric);
-% do parse
-parse(p, value, varargin{:});
+
 % create some convenient aliases
-digits = p.Results.Digits;
-fixed  = p.Results.Fixed;
-cmp2ar = p.Results.CMP2AR;
-capped = p.Results.Capped;
+fixed  = kwargs.Fixed;
+cmp2ar = kwargs.CMP2AR;
+capped = kwargs.Capped;
 
 %% Process
 % check for string case, and if so, just do replacements
@@ -78,4 +81,11 @@ else
     end
     % convert underscores
     value_str = strrep(value_str, '_', '\_');
+end
+
+%% Subfunctions
+% Custom validator functions
+function mustBeNumOrChar(x)
+if ~isnumeric(x) && ~ischar(x)
+    throwAsCaller(MException('matspace:latex_str:BadNumChar','Input must be numeric or char.'))
 end

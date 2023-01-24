@@ -18,6 +18,11 @@ function [new_text] = replace_tables(old_text, tables)
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments
+    old_text (1, :) {mustBeTextScalar}
+    tables {mustBeText}
+end
+
 % Imports
 import matspace.latex.parse_tables
 
