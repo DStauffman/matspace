@@ -43,6 +43,15 @@ classdef test_bin2hex < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(hex, upper(self.hex));
         end
 
+        function test_bad_capitilization(self)
+            self.verifyError(@() matspace.utils.bin2hex(self.bin, 'LOWERED'), 'MATLAB:validators:mustBeMember');
+        end
+
+        function test_pad2(self)
+            hex = matspace.utils.bin2hex(self.bin, 'group', 2);
+            self.verifyEqual(hex, '01 23 45 67 89 AB CD EF');
+        end
+
         function test_pad4(self)
             hex = matspace.utils.bin2hex(self.bin, 'group', 4);
             self.verifyEqual(hex, '0123 4567 89AB CDEF');
@@ -51,6 +60,15 @@ classdef test_bin2hex < matlab.unittest.TestCase %#ok<*PROP>
         function test_pad8(self)
             hex = matspace.utils.bin2hex(self.bin, 'group', 8);
             self.verifyEqual(hex, '01234567 89ABCDEF');
+        end
+
+        function test_bad_pad(self)
+            self.verifyError(@() matspace.utils.bin2hex(self.bin, 'group', 15), 'matspace:bin2hex:badGrouping');
+        end
+
+        function test_precision(self)
+            hex = matspace.utils.bin2hex('1111111111111111111111111111111111111111111111110000000000000001');
+            self.verifyEqual(hex, 'FFFFFFFFFFFF0001');
         end
 
         function test_short_bin1(self)

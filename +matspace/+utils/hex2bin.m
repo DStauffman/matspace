@@ -4,7 +4,9 @@ function [binstr] = hex2bin(hexstr, leading_zeros, kwargs)
 %
 % Input:
 %     hexstr : char of hexadecimal
-%     options : conversion options from {'drop', 'pad4', 'pad8'}
+%     leading_zeros : whether to include leading zeros or not, from {'drop', 'keep'}, default is keep
+%     kwargs : keyword arguments
+%         .group number of characters in each group, separated by spaces, default of zero means no grouping
 %
 % Output:
 %     binstr : char of zeros and ones or spaces
@@ -14,12 +16,13 @@ function [binstr] = hex2bin(hexstr, leading_zeros, kwargs)
 %     assert(strcmp(bin, '1010'));
 %     bin = matspace.utils.hex2bin('012', 'drop');
 %     assert(strcmp(bin, '10010'));
-%     bin = matspace.utils.hex2bin('89abcdef', 'pad4');
+%     bin = matspace.utils.hex2bin('89abcdef', 'group', 4);
 %     assert(strcmp(bin, '1000 1001 1010 1011 1100 1101 1110 1111'));
 %
 % Notes:
-%     1.  'drop' drops any leading zeros on the resulting binary string
-%     2.  'pad4' and 'pad8' add spaces as pads every 4 or 8 characters respectively
+%     1.  You could use dec2bin(hex2dec(hex)), but this can have issues for numbers over 53 bits,
+%         which lose precision when converted to floating point values. This function avoids those
+%         conversions.  It can also handle spaces for visual representation.
 %
 % See Also:
 %     matspace.utils.bin2hex, bin2dec, dec2bin, hex2dec, dec2hex
@@ -55,24 +58,14 @@ elseif isstring(hexstr)
         binstr{i} = hex2bin_func(hexstr{i}, leading_zeros, kwargs);
     end
 else
-    error('matspace:bin2hex:InvalidInputClass', 'Unexpected input class.');
+    % should not be possible to get here based on arguments validation
+    error('matspace:hex2bin:InvalidInputClass', 'Unexpected input class.');
 end
 
 %% Subfunctions - hex2bin_func
 function [binstr] = hex2bin_func(hexstr, leading_zeros, kwargs)
 
 % HEX2BIN_FUNC  is the actual implementation, separated out so that it can be called via a loop.
-
-% hard-coded values
-temp = '0123456789 ABCDEFabcdef';
-allowed_chars = temp(:);
-
-% check string for allowed characters
-chars = unique(hexstr(:));
-extra = setdiff(chars, allowed_chars);
-if ~isempty(extra)
-    error('matspace:hex2bin:BadChars', 'The following characters are not allowed in the input "%s".', extra);
-end
 
 % remove any spaces
 clean = hexstr(hexstr ~= ' ');
@@ -95,6 +88,7 @@ switch leading_zeros
         % should not be possible to get here based on arguments validation
         error('matspace:hex2bin:BadOption', 'Unexpected option string of "%s"', leading_zeros);
 end
+
 if kwargs.group ~= 0
     binstr = add_pad(binstr, kwargs.group);
 end
@@ -174,7 +168,7 @@ end
 function mustBeTwoMult(x)
 % validates the grouping options
 if ~any(x == [0 2 4 8 16 32])
-    eidType = 'matspace:bin2hex:badGrouping';
+    eidType = 'matspace:hex2bin:badGrouping';
     msgType = 'Output must be grouped by 0, 2, 4, 8, 16 or 32 bits.';
     throwAsCaller(MException(eidType, msgType));
 end

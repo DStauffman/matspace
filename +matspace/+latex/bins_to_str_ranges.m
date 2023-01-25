@@ -23,7 +23,7 @@ function [out] = bins_to_str_ranges(bins, dt, cutoff)
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
 arguments
-    bins (1, :) {mustBeNumeric}
+    bins (1, :)
     dt (1, 1) double = 1
     cutoff (1, 1) double = 1000
 end
