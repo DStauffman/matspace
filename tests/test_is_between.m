@@ -9,6 +9,7 @@ classdef test_is_between < matlab.unittest.TestCase %#ok<*PROP>
     %     scalar closed bounds
     %     bad number arguments (should error)
     %     bad boundaries (should error)
+    %     datetimes
 
     methods (Test)
         function test_default(self)

@@ -1,6 +1,6 @@
 function [r] = normrnd_mex(mu,sigma,m,n) %#codegen
 
-% NORMRND2  is a user version of normrnd that can be compiled.
+% NORMRND_MEX  is a user version of normrnd that can be compiled.
 %
 % Input:
 %     mu .. : (scalar) mean

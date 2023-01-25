@@ -5,6 +5,8 @@ function [hexstr] = bin2hex(binstr, capitilization, kwargs)
 % Input:
 %     binstr : char of zeros and ones or spaces
 %     capitilization : capitilization of hex string, from {'lower', 'upper'}, default is upper
+%         'lower' converts to lowercase letters for a-f
+%         'upper' converts to uppercase letters for A-F
 %     kwargs : keyword arguments
 %         .group number of characters in each group, separated by spaces, default of zero means no grouping
 %
@@ -20,9 +22,9 @@ function [hexstr] = bin2hex(binstr, capitilization, kwargs)
 %     assert(strcmp(hex, '89abcdef'));
 %
 % Notes:
-%     1.  'lower' converts the hexadecimal outputs to lowercase letters for a-f
-%     2.  'upper' converts the hexadecimal outputs to uppercase letters for A-F
-%     3.  'pad4' and 'pad8' add spaces as pads every 4 or 8 characters respectively
+%     1.  You could use dec2hex(bin2dec(bin)), but this can have issues for numbers over 53 bits,
+%         which lose precision when converted to floating point values. This function avoids those
+%         conversions.  It can also handle spaces for visual representation.
 %
 % See Also:
 %     matspace.utils.hex2bin, bin2dec, dec2bin, hex2dec, dec2hex

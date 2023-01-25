@@ -39,6 +39,15 @@ classdef test_hex2bin < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyEqual(bin, self.bin2(8:end));
         end
 
+        function test_keep(self)
+            bin = matspace.utils.hex2bin(self.hex, 'keep');
+            self.verifyEqual(bin, self.bin2);
+        end
+
+        function test_bad_leading(self)
+            self.verifyError(@() matspace.utils.bin2hex(self.bin, 'dropkicked'), 'MATLAB:validators:mustBeMember');
+        end
+
         function test_lower(self)
             bin = matspace.utils.hex2bin(lower(self.hex));
             self.verifyEqual(bin, self.bin2);
@@ -54,6 +63,23 @@ classdef test_hex2bin < matlab.unittest.TestCase %#ok<*PROP>
             temp = self.bin;
             temp(5:10:end) = [];
             self.verifyEqual(bin, temp);
+        end
+
+        function test_pad32(self)
+            bin = matspace.utils.hex2bin(self.hex, 'group', 32);
+            temp = self.bin;
+            temp(45:5:75) = [];
+            temp(5:5:35) = [];
+            self.verifyEqual(bin, temp);
+        end
+
+        function test_bad_pad(self)
+            self.verifyError(@() matspace.utils.hex2bin(self.hex, 'group', 15), 'matspace:hex2bin:badGrouping');
+        end
+
+        function test_precision(self)
+            bin = matspace.utils.hex2bin('FFFFFFFFFFFF0001');
+            self.verifyEqual(bin, '1111111111111111111111111111111111111111111111110000000000000001');
         end
 
         function test_short_hex1(self)
