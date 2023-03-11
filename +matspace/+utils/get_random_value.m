@@ -1,4 +1,4 @@
-function [value] = get_random_value(distribution, num, coeffs, minmax)
+function [value] = get_random_value(distribution, num, coeffs, minmax, kwargs)
 
 % GET_RANDOM_VALUE  gets a random value using the given distribution and coefficients.
 %
@@ -38,13 +38,15 @@ arguments
     num {mustBeNumeric, mustBeReal} = 1
     coeffs (1, :) {mustBeNumeric, mustBeReal, mustBeLessThanXElems(coeffs, 4), mustHaveXCoeffs(distribution, coeffs)} = []
     minmax (1, :) {mustBeNumeric, mustBeReal, mustBeLessThanXElems(minmax, 2)} = []
+    kwargs.use_toolbox (1, 1) logical = true
 end
 
 % Imports
 import matspace.coder.betarnd_mex
 import matspace.coder.gamrnd_mex
 
-use_toolbox = false;  %#ok<*UNRCH>  % Requires Statistics and Machine Learning Toolbox
+% Aliases
+use_toolbox = kwargs.use_toolbox;  % Requires Statistics and Machine Learning Toolbox if set to true
 
 % split to the appropriate distribution
 switch lower(distribution)
@@ -137,6 +139,7 @@ switch lower(distribution)
             end
             value = pd.random(num);
         else
+            % TODO: this method does not work correctly
             a = coeffs(1);
             b = coeffs(2);
             c = coeffs(3);
