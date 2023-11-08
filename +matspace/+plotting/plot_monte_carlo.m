@@ -23,6 +23,8 @@ function [fig_hand] = plot_monte_carlo(time_one, data_one, varargin)
 %         'SecondYScale' : (scalar) Multiplication scale factor to use to display on a secondary Y axis
 %         'PlotSigmas'   : (scalar) true/false or numeric flag for whether to plot the sigmas
 %                               if numeric, then it's that sigma value, like 1-sig or 3-sig
+%         'PlotPercents' : (scalar) true/false or (1xN) numeric flag for whether to plot the percentile values
+%                               if numeric, then it's those values, otherwise it's 5% and 95% if true
 %
 % Output:
 %     fig_hand .. : (scalar) figure handles [num]
@@ -75,6 +77,7 @@ p = inputParser;
 % create some validation functions
 fun_is_opts = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
 fun_is_time = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
+fun_is_bool_num = @(x) (islogical(x) || isnumeric(x));
 % set options
 addRequired(p, 'Time1', fun_is_time);
 addRequired(p, 'Data1', @isnumeric);
@@ -86,8 +89,9 @@ addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 addParameter(p, 'TruthName', "Truth", @isstring);
-addParameter(p, 'SecondYScale', nan, @isnumeric); % TODO: put into OPTS?
-addParameter(p, 'PlotSigmas', 1, @isnumeric); % TODO: put into OPTS?
+addParameter(p, 'SecondYScale', nan, @isnumeric);  % TODO: put into OPTS?
+addParameter(p, 'PlotSigmas', true, fun_is_bool_num);  % TODO: must be scalar?
+addParameter(p, 'PlotPercents', false, fun_is_bool_num);
 % do parse
 parse(p, time_one, data_one, varargin{:});
 % create some convenient aliases
@@ -95,7 +99,24 @@ type           = p.Results.Type;
 description    = p.Results.Description;
 truth_name     = p.Results.TruthName;
 second_y_scale = p.Results.SecondYScale;
-plot_sigmas    = p.Results.PlotSigmas;
+if islogical(p.Results.PlotSigmas)
+    if p.Results.PlotSigmas
+        plot_sigmas = 1;
+    else
+        plot_sigmas = nan;
+    end
+else
+    plot_sigmas = p.Results.PlotSigmas;
+end
+if islogical(p.Results.PlotPercents)
+    if p.Results.PlotPercents
+        plot_percents = [5 95];
+    else
+        plot_percents = nan;
+    end
+else
+    plot_percents = p.Results.PlotPercents;
+end
 % create data channel aliases
 time_two    = p.Results.TimeTwo;
 data_two    = p.Results.DataTwo;
@@ -229,6 +250,18 @@ if comp_mode ~= modes.multi
             set([p2 p3], 'Parent', sigmas_group);
             set(get(get(sigmas_group,'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
         end
+        % plot the percentiles
+        if ~isempty(plot_percents) && ~isnan(plot_percents(1)) && plot_percents(1) > 0
+            % TODO: add these
+            per = scale * prctile(data_one, plot_percents);
+            p = gobjects(1, length(plot_percents));
+            for i = 1:numel(plot_percents)
+                p(i) = plot(ax1, time_one, per(i, :), 'c.-'); %, 'DisplayName', [num2str(plot_percents(i)),'%']);
+            end
+            percents_group = hggroup('DisplayName', name1 + join(split(string(num2str(plot_percents))), '%/') + "%");
+            set(p, 'Parent', percents_group);
+            set(get(get(percents_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
+        end
         % plot the mean results
         if show_rms
             rms_data1 = nanrms(temp_mean);
@@ -276,6 +309,16 @@ if comp_mode == modes.nondeg
             sigmas_group = hggroup('DisplayName', [name2, '\pm', num2str(plot_sigmas), '\sigma']);
             set([p2 p3], 'Parent', sigmas_group);
             set(get(get(sigmas_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
+        end
+        if ~isempty(plot_percents) && ~isnan(plot_percents(1)) && plot_percents(1) > 0
+            per = scale * prctile(data_two, plot_percents);
+            p = gobjects(1, length(plot_percents));
+            for i = 1:numel(plot_percents)
+                p(i) = plot(ax1, time_two, per(i, :), 'c.-'); %, 'DisplayName', [num2str(plot_percents(i)),'%']);
+            end
+            percents_group = hggroup('DisplayName', name1 + join(split(string(num2str(plot_percents))), '%/') + "%");
+            set(p, 'Parent', percents_group);
+            set(get(get(percents_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
         end
         if show_rms
             rms_data2 = nanrms(temp_mean);
