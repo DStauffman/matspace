@@ -152,7 +152,7 @@ end
 if ~isempty(classification)
     shift_axes_up(fig_hand, 0.08);
 end
-plot_classification(fig_hand, classification, caveat);
+plot_classification(fig_hand, classification, caveat=caveat);
 
 %% Move plots
 if move_plots

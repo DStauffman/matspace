@@ -1,4 +1,4 @@
-function [hexstr] = bin2hex(binstr, capitilization, kwargs)
+function [hexstr] = bin2hex(binstr, capitalization, kwargs)
 
 % CONVERTS a binary string of zeros and ones to its hexadecimal string representation.
 %
@@ -20,6 +20,12 @@ function [hexstr] = bin2hex(binstr, capitilization, kwargs)
 %     assert(strcmp(hex, '0123 4567'));
 %     hex = matspace.utils.bin2hex('1000 1001 1010 1011 1100 1101 1110 1111', 'lower');
 %     assert(strcmp(hex, '89abcdef'));
+%     hex = matspace.utils.bin2hex({'00000000', '10100000', '11111111'});
+%     assert(all(cellfun(@strcmp, hex, {'00', 'A0', 'FF'})));
+%     hex = matspace.utils.bin2hex("11111111 11111111 00000000 00000000", "group", 2);
+%     assert(strcmp(hex, "FF FF 00 00"));
+%     hex = matspace.utils.bin2hex(["00000000", "10100000", "11111111"]);
+%     assert(all(strcmp(hex, ["00", "A0", "FF"])));
 %
 % Notes:
 %     1.  You could use dec2hex(bin2dec(bin)), but this can have issues for numbers over 53 bits,
@@ -36,7 +42,7 @@ function [hexstr] = bin2hex(binstr, capitilization, kwargs)
 
 arguments
     binstr {mustBeText, mustBeBinaryStr}
-    capitilization {mustBeMember(capitilization, ["lower", "upper"])} = 'upper'
+    capitalization {mustBeMember(capitalization, ["lower", "upper"])} = 'upper'
     kwargs.group {mustBeInteger, mustBeTwoMult(kwargs.group)} = 0
 end
 
@@ -48,16 +54,16 @@ end
 
 % deal with char/cell/string options
 if ischar(binstr)
-    hexstr = bin2hex_func(binstr, capitilization, kwargs);
+    hexstr = bin2hex_func(binstr, capitalization, kwargs);
 elseif iscellstr(binstr)
     hexstr = cell(size(binstr));
     for i = 1:numel(binstr)
-        hexstr{i} = bin2hex_func(binstr{i}, capitilization, kwargs);
+        hexstr{i} = bin2hex_func(binstr{i}, capitalization, kwargs);
     end
 elseif isstring(binstr)
     hexstr = strings(size(binstr));
     for i = 1:numel(binstr)
-        hexstr{i} = bin2hex_func(binstr{i}, capitilization, kwargs);
+        hexstr{i} = bin2hex_func(binstr{i}, capitalization, kwargs);
     end
 else
     % should not be possible to get here based on arguments validation
@@ -65,7 +71,7 @@ else
 end
 
 %% Subfunctions - bin2hex_func
-function [hexstr] = bin2hex_func(binstr, capitilization, kwargs)
+function [hexstr] = bin2hex_func(binstr, capitalization, kwargs)
 
 % BIN2HEX_FUNC  is the actual implementation, separated out so that it can be called via a loop.
 
@@ -85,14 +91,14 @@ for i = 1:num_chars
 end
 
 % process extra options
-switch capitilization
+switch lower(capitalization)
     case 'lower'
         hexstr = lower(hexstr);
     case 'upper'
         hexstr = upper(hexstr);
     otherwise
         % should not be possible to get here based on arguments validation
-        error('matspace:bin2hex:BadOption', 'Unexpected option string of "%s"', capitilization);
+        error('matspace:bin2hex:BadOption', 'Unexpected option string of "%s"', capitalization);
 end
 
 if kwargs.group ~= 0

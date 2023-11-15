@@ -3,10 +3,10 @@ function [binstr] = hex2bin(hexstr, leading_zeros, kwargs)
 % CONVERTS a hexadecimal string of characters to its binary string representation.
 %
 % Input:
-%     hexstr : char of hexadecimal
+%     hexstr : char (or cell array or string or string array) of hexadecimal characters or spaces
 %     leading_zeros : whether to include leading zeros or not, from {'drop', 'keep'}, default is keep
 %     kwargs : keyword arguments
-%         .group number of characters in each group, separated by spaces, default of zero means no grouping
+%         .group number of characters in each group, separated by spaces, default of zero means no grouping, must be even
 %
 % Output:
 %     binstr : char of zeros and ones or spaces
@@ -16,8 +16,14 @@ function [binstr] = hex2bin(hexstr, leading_zeros, kwargs)
 %     assert(strcmp(bin, '1010'));
 %     bin = matspace.utils.hex2bin('012', 'drop');
 %     assert(strcmp(bin, '10010'));
-%     bin = matspace.utils.hex2bin('89abcdef', 'group', 4);
+%     bin = matspace.utils.hex2bin('89abcdef', group=4);
 %     assert(strcmp(bin, '1000 1001 1010 1011 1100 1101 1110 1111'));
+%     bin = matspace.utils.hex2bin({'00', 'A0', 'FF'});
+%     assert(all(cellfun(@strcmp, bin, {'00000000', '10100000', '11111111'})));
+%     bin = matspace.utils.hex2bin("FFFF 0000", "group", 8);
+%     assert(strcmp(bin, "11111111 11111111 00000000 00000000"));
+%     bin = matspace.utils.hex2bin(["00", "A0", "FF"]);
+%     assert(all(strcmp(bin, ["00000000", "10100000", "11111111"])));
 %
 % Notes:
 %     1.  You could use dec2bin(hex2dec(hex)), but this can have issues for numbers over 53 bits,
@@ -78,7 +84,7 @@ for i = 1:length(clean)
 end
 
 % process extra options
-switch leading_zeros
+switch lower(leading_zeros)
     case 'drop'
         ix = find(binstr == '1', 1, 'first');
         binstr = binstr(ix:end);
@@ -181,13 +187,13 @@ function mustBeHexStr(x)
 temp = '0123456789 ABCDEFabcdef';
 allowed_chars = temp(:);
 
-% check string for allowed characters
+% check string for allowed characters, handling cell arrays and accumulating list of non-allowed characters for error reporting
 if ischar(x)
     chars = unique(x);
 else
     chars = [];
     for i = 1:length(x)
-        chars = unique([chars, unique(x{i})]);
+        chars = unique([chars, x{i}]);
     end
 end
 extra = setdiff(chars, allowed_chars);

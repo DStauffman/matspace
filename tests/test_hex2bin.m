@@ -59,14 +59,14 @@ classdef test_hex2bin < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_pad8(self)
-            bin = matspace.utils.hex2bin(self.hex, 'group', 8);
+            bin = matspace.utils.hex2bin(self.hex, group=8);
             temp = self.bin;
             temp(5:10:end) = [];
             self.verifyEqual(bin, temp);
         end
 
         function test_pad32(self)
-            bin = matspace.utils.hex2bin(self.hex, 'group', 32);
+            bin = matspace.utils.hex2bin(self.hex, group=32);
             temp = self.bin;
             temp(45:5:75) = [];
             temp(5:5:35) = [];
@@ -74,7 +74,7 @@ classdef test_hex2bin < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_pad(self)
-            self.verifyError(@() matspace.utils.hex2bin(self.hex, 'group', 15), 'matspace:hex2bin:badGrouping');
+            self.verifyError(@() matspace.utils.hex2bin(self.hex, group=15), 'matspace:hex2bin:badGrouping');
         end
 
         function test_precision(self)
@@ -109,7 +109,7 @@ classdef test_hex2bin < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_multiple_options(self)
-            bin = matspace.utils.hex2bin('0 1ff0', 'drop', 'group', 4);
+            bin = matspace.utils.hex2bin('0 1ff0', 'drop', group=4);
             self.verifyEqual(bin, '1 1111 1111 0000');
         end
 
