@@ -69,7 +69,7 @@ theta = 2*theta_over_2;
 mag(mag == 0) = 1;
 
 % normalize vector components
-nv = bsxfun(@rdivide, dv, mag);
+nv = dv ./ mag;
 
 % find angle expressed in x,y,z components based on normalized vector
-comp = bsxfun(@times, nv, theta);
+comp = nv .* theta;
