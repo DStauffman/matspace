@@ -19,16 +19,12 @@ function [data] = load_hdf5(filename, base)
 % Notes:
 %     1.  Written by David C. Stauffer in July 2022.
 
-% optional inputs
-switch nargin
-    case 1
-        base = '/self';
-    case 2
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+% arguments
+arguments
+    filename (1,:) char
+    base (1,:) = 'self'
 end
-    
+
 % open the file and find the datasets
 info = h5info(filename, base);
 datasets = string({info.Datasets(:).Name});
@@ -39,11 +35,13 @@ data = struct();
 % loop through embedded datasets
 for i = 1:length(datasets)
     key = datasets{i};
-    this_set = [base, '/', key];
+    this_set = base + "/" + key;
     this_data = h5read(filename, this_set);
     size_data = size(this_data);
     if length(size_data) < 3
-        if size_data(1) == 1 || size_data(2) == 1
+        if ischar(this_data)
+            data.(key) = this_data;
+        elseif size_data(1) == 1 || size_data(2) == 1
             data.(key) = this_data(:);
         else
             % TODO: HDF5 is row-wise data, so transpose

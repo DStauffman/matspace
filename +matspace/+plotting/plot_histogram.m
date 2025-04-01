@@ -25,8 +25,6 @@ xlab = p.Results.XLabel;
 %% Calculations
 % histogram
 N = histcounts(data, edges);
-widths = edges(2:end) - edges(1:end-1);
-mid_pts = edges(1:end-1) + 0.5 * widths;
 if OPTS.show_plot
     fig_visible = 'on';
 else
@@ -37,7 +35,6 @@ end
 fig_hand = figure('Name', description, 'Visible', fig_visible);
 ax = axes(fig_hand);
 hold(ax, 'on');
-% bar(ax, mid_pts, N);
 for i = 1:length(N)
     patch(ax, 'Faces', [1 2 3 4], 'Vertices', [edges(i) 0; edges(i+1) 0; edges(i+1) N(i); edges(i) N(i)], ...
         'FaceColor', [0.000 0.447 0.741], 'EdgeColor', 'k');
@@ -45,7 +42,7 @@ end
 title(ax, description, 'Interpreter', 'None');
 xlabel(ax, xlab);
 ylabel(ax, 'Number');
-plot_second_yunits(ax, 'Percentage', 100 / sum(N));
+plot_second_yunits(ax, 'Distribution [%]', 100 / sum(N));
 grid(ax, 'on');
 hold(ax, 'off');
 

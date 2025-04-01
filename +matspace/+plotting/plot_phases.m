@@ -55,7 +55,7 @@ switch nargin
 end
 
 % determine if using a single label
-if ischar(labels) || length(labels) == 1
+if ischar(labels) || isscalar(labels)
     use_single_label = true;
     patch_group = hggroup('DisplayName', labels);
     set(get(get(patch_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');

@@ -107,16 +107,20 @@ fig_name = resolve_name(fig_name);
 
 % save plots
 for f = 1:length(fig_hand)
+    this_name = fig_name{f};
+    if isempty(this_name)
+        this_name = ['Unnamed_', int2str(i)];
+    end
     for i = 1:length(format)
         switch format{i}
             case 'png'
-                print(fig_hand(f), '-dpng', fullfile(path, [fig_name{f},'.png']));
+                print(fig_hand(f), '-dpng', fullfile(path, [this_name,'.png']));
             case 'emf'
-                print(fig_hand(f), '-dmeta', fullfile(path, [fig_name{f},'.emf']));
+                print(fig_hand(f), '-dmeta', fullfile(path, [this_name,'.emf']));
             case 'fig'
-                saveas(fig_hand(f), fullfile(path, [fig_name{f},'.fig']));
+                saveas(fig_hand(f), fullfile(path, [this_name,'.fig']));
             case 'jpg'
-                print(fig_hand(f), '-djpeg', fullfile(path, [fig_name{f},'.jpg']));
+                print(fig_hand(f), '-djpeg', fullfile(path, [this_name,'.jpg']));
             otherwise
                 warning('matspace:plotting:storeFigBadExt', 'Unexpected extension type "%s"; plot not saved.', format{i});
         end
