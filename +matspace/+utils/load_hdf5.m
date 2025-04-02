@@ -22,7 +22,7 @@ function [data] = load_hdf5(filename, base)
 % arguments
 arguments
     filename (1,:) char
-    base (1,:) = 'self'
+    base (1,:) = '/self'
 end
 
 % open the file and find the datasets
