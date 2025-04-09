@@ -51,7 +51,7 @@ jobs:
       if: always()
 
     - name: Code Coverage Summary Report
-      uses: irongut/CodeCoverageSummany@1.3.0
+      uses: irongut/CodeCoverageSummary@v1.3.0
       with:
         filename: code-coverage/coverage.xml
         badge: true
