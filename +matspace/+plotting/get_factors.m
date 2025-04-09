@@ -34,6 +34,15 @@ arguments
     inverse logical = false
 end
 
+% hard-coded values
+ONE_MINUTE = 60;
+ONE_HOUR   = 3600;
+DEG2RAD    = pi/180;
+RAD2DEG    = 180/pi;
+ARCSEC2RAD = 1 / ONE_HOUR * DEG2RAD;
+RAD2ARCSEC = ONE_HOUR * RAD2DEG;
+MICRO_SIGN = char(181);
+
 % find the desired units and label prefix
 switch prefix
     case 'yotta'

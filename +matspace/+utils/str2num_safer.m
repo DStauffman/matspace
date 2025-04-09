@@ -45,6 +45,6 @@ if isnan(value)
     % do eval if all characters are valid
     value = eval(str);
     if isempty(value)
-        value = Nan;
+        value = nan;
     end
 end

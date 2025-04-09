@@ -178,7 +178,7 @@ if add_quiver
     quiver(ax, points(1, :), points(2, :), innovs(1, :), innovs(2, :), 'Color', colors.black, 'Units', 'x', 'Scale', quiver_scale);
 end
 if ~strcmpi(color_by, 'none')
-    caxis([cmin cmax]);
+    clim([cmin cmax]);
     colormap(innov_cmap);
     cb = colorbar('location', 'EastOutside');
     if strcmpi(color_by, 'direction')
@@ -193,10 +193,10 @@ xlabel(ax, ['FP X Loc [', units, ']']);  % TODO: pass in X,Y labels
 ylabel(ax, ['FP Y Loc [', units, ']']);
 grid(ax, 'on');
 if center_origin
-    xlims = np.max(np.abs(ax.get_xlim()));
-    ylims = np.max(np.abs(ax.get_ylim()));
-    xlim(ax, -xlims, xlims);
-    ylim(ax, -ylims, ylims);
+    xlims = max(abs(xlim(ax)));
+    ylims = max(abs(ylim(ax)));
+    xlim(ax, [-xlims, xlims]);
+    ylim(ax, [-ylims, ylims]);
 end
 axis(ax, 'equal');
 

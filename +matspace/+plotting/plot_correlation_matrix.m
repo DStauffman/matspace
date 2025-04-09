@@ -47,6 +47,9 @@ function [fig_hand] = plot_correlation_matrix(data,labels,OPTS,varargin)
 %     2.  Updated to accept varargin for lots of other options in March 2016.
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+%% Imports
+import matspace.plotting.Opts
+
 %% Hard-coded defaults
 box_size        = 1;
 cmin            = 0;

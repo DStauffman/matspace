@@ -105,7 +105,7 @@ switch lower(distribution)
             end
             value = pd.random(num);
         else
-            if length(num) == 1
+            if isscalar(num)
                 num = [num num];
             end
             value = betarnd_mex(coeffs(1), coeffs(2), num(1), num(2));
@@ -122,7 +122,7 @@ switch lower(distribution)
             end
             value = pd.random(num);
         else
-            if length(num) == 1
+            if isscalar(num)
                 num = [num num];
             end
             value = gamrnd_mex(coeffs(1), coeffs(2), num(1), num(2));

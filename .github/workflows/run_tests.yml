@@ -14,6 +14,7 @@ jobs:
     - name: Run tests
       uses: matlab-actions/run-tests@v2
       with:
+        source-folder: ${{ github.workspace }}
         select-by-folder: tests
         test-results-pdf: test-results/results.pdf
         test-results-junit: test-results/results.xml
