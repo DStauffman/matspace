@@ -1,10 +1,12 @@
-function [new_name] = resolve_name(old_name, strip_classification)
+function [new_name] = resolve_name(old_name, kwargs)
 
 % RESOLVE_NAME  resolves any issues in the given file name so that it can be saved to disk
 %
 % Input:
 %     old_name             : (row) name of the file to save [char]
 %     strip_classification : (scalar) |opt| Whether to strip any leading classification out [bool]
+%     rep_token            : (scalar) |opt| Token to replace bad characters with, defaults to '_' [char]
+%     force_win            : (scalar) |opt| Whether to force using windows replacements [bool]
 %
 % Output:
 %     new_name : (row) modified name of the file [char]
@@ -22,31 +24,32 @@ function [new_name] = resolve_name(old_name, strip_classification)
 % Change Log:
 %     1.  Written by David C. Stauffer in April 2020 based on code within storefig.m
 %     2.  Updated by David C. Stauffer in July 2022 to check for newlines within the name.
+%     3.  Updated by David C. Stauffer in April 2025 to handle string arrays
 
-% optional inputs
-switch nargin
-    case 1
-        strip_classification = true;
-    case 2
-        %nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+%% Arguments
+arguments
+    old_name {mustBeText}
+    kwargs.strip_classification (1,1) logical = true
+    kwargs.rep_token {mustBeTextScalar} = '_';
+    kwargs.force_win (1,1) logical
+end
+if isfield(kwargs, 'force_win')
+    USE_WINDOWS = kwargs.force_win;
+else
+    USE_WINDOWS = ispc;
 end
 
 % Initialize new name to the original and determine if processing a single string,
 % otherwise assumed to be cell array
-% TODO: make it process string arrays instead of cell arrays?
 if ischar(old_name)
-    is_single = true;
-    new_name  = {old_name};
+    new_name = {old_name};
 else
-    is_single = false;
-    new_name  = old_name;
+    new_name = old_name;
 end
 
 % strip any leading classification text
-if strip_classification
-    ix = regexp(new_name, '^\(\S*\)\s', 'end', 'once');
+if kwargs.strip_classification
+    ix = regexp(cellstr(new_name(:)), '^\(\S*\)\s', 'end', 'once');
     strip = cellfun(@(x) ~isempty(x), ix);
     for i = 1:length(new_name)
         if strip(i)
@@ -56,25 +59,16 @@ if strip_classification
 end
 
 % check for illegal characters and replace with underscores
-if verLessThan('matlab','9.3')
-    % support for R2016A and earlier
-    char10 = char(10); %#ok<CHARTEN>
+if USE_WINDOWS
+    bad_chars = {'<','>',':','"','/','\','|','?','*',newline};
 else
-    % support for R2016B and newer
-    char10 = newline;
-end
-if ispc
-    bad_chars = {'<','>',':','"','/','\','|','?','*',char10};
-else
-    bad_chars = {'/',char10};
+    bad_chars = {'/',newline};
 end
 bad_names = false(size(new_name));
 for i = 1:length(bad_chars)
-    % Use contains to make more clear, but only R2016B+
-    %ix = contains(new_name, bad_chars{i});
-    ix = ~cellfun(@isempty, strfind(new_name, bad_chars{i}));
+    ix = contains(new_name, bad_chars{i});
     if any(ix)
-        new_name  = strrep(new_name, bad_chars{i}, '_');
+        new_name  = strrep(new_name, bad_chars{i}, kwargs.rep_token);
         bad_names = bad_names | ix;
     end
 end
@@ -85,6 +79,6 @@ if any(bad_names)
 end
 
 % return single case back to char
-if is_single
+if ischar(old_name)
     new_name = new_name{1};
 end

@@ -34,15 +34,9 @@ callback_name = 'matspace.plotting.figmenu';
 
 %% Compatibility options
 use_action = exist('action','var');
-if verLessThan('matlab','9.3')
-    % support for R2016B and earlier, TODO: R2017A (9.2) is untested
-    text_field = 'Label';
-    char10 = char(10); %#ok<CHARTEN>
-else
-    % support for R2017B and newer
-    text_field = 'Text';
-    char10 = newline;
-end
+% Note: now only supports R2017B and newer
+text_field = 'Text';
+char10 = newline;
 
 %% build lists
 if ~use_action
@@ -116,7 +110,7 @@ else
     % get sorted list of figures
     figs = sortfigs(get(0,'Children'));
     % if only one figure, simply exit
-    if length(figs) == 1
+    if isscalar(figs)
         return
     end
     % find the next or prev figure, and set it as the active one

@@ -24,10 +24,8 @@ dcs_open    = getenv('DCS_MATLAB_OPEN');
 % warning('off', 'MATLAB:ClassInstanceExists');
 
 %% Restore old style plot controls
-if ~verLessThan('matlab', '9.4')
-    set(groot, 'defaultFigureCreateFcn', @(fig, ~) addToolbarExplorationButtons(fig));
-    set(groot, 'defaultAxesCreateFcn', @(ax, ~) set(ax.Toolbar, 'Visible', 'off'));
-end
+set(groot, 'defaultFigureCreateFcn', @(fig, ~) addToolbarExplorationButtons(fig));
+set(groot, 'defaultAxesCreateFcn', @(ax, ~) set(ax.Toolbar, 'Visible', 'off'));
 
 %% Add folders to path (ones added last have higher precidence)
 if ~isempty(dcs_always)

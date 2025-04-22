@@ -22,4 +22,4 @@ function [mex_dir] = get_mex_dir()
 import matspace.paths.get_root_dir
 
 % keep the path name up to the second to last file separator
-mex_dir = fullfile(get_root_dir, 'mex');
+mex_dir = fullfile(get_root_dir(), 'mex');
