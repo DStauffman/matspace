@@ -19,6 +19,7 @@ classdef test_resolve_name < matlab.unittest.TestCase %#ok<*PROP>
         exp_class_unix,
         exp_no_class_win,
         exp_no_class_unix,
+        exp_warning,
     end
 
     methods (TestMethodSetup)
@@ -32,6 +33,7 @@ classdef test_resolve_name < matlab.unittest.TestCase %#ok<*PROP>
             self.exp_class_unix = "(U__FOUO) Test file [\deg].txt";
             self.exp_no_class_win = "Test file [_deg].txt";
             self.exp_no_class_unix = "Test file [\deg].txt";
+            self.exp_warning = 'matspace:plotting:storeFigIllegalChars';
         end
     end
 
@@ -45,42 +47,46 @@ classdef test_resolve_name < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_mocks_windows(self)
             import matlab.unittest.fixtures.PathFixture
+            import matlab.unittest.fixtures.SuppressedWarningsFixture
+            self.applyFixture(SuppressedWarningsFixture('MATLAB:dispatcher:nameConflict'));
             self.applyFixture(PathFixture(fullfile(matspace.paths.get_root_dir(), 'mocks', 'force_win')));
-            new_name = matspace.plotting.resolve_name(self.bad_name);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name), self.exp_warning);
             self.verifyEqual(new_name, self.exp_win);
-            new_name = matspace.plotting.resolve_name(char(self.bad_name));
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(char(self.bad_name)), self.exp_warning);
             self.verifyEqual(new_name, char(self.exp_win));
-            new_name = matspace.plotting.resolve_name(self.class_name);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.class_name), self.exp_warning);
             self.verifyEqual(new_name, self.exp_no_class_win);
-            new_name = matspace.plotting.resolve_name(self.class_name, strip_classification=false);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.class_name, strip_classification=false), self.exp_warning);
             self.verifyEqual(new_name, self.exp_class_win);
         end
 
         function test_mocks_unix(self)
             import matlab.unittest.fixtures.PathFixture
+            import matlab.unittest.fixtures.SuppressedWarningsFixture
+            self.applyFixture(SuppressedWarningsFixture('MATLAB:dispatcher:nameConflict'));
             self.applyFixture(PathFixture(fullfile(matspace.paths.get_root_dir(), 'mocks', 'force_unix')));
-            new_name = matspace.plotting.resolve_name(self.bad_name);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name), self.exp_warning);
             self.verifyEqual(new_name, self.exp_unix);
-            new_name = matspace.plotting.resolve_name(char(self.bad_name));
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(char(self.bad_name)), self.exp_warning);
             self.verifyEqual(new_name, char(self.exp_unix));
             new_name = matspace.plotting.resolve_name(self.class_name);
             self.verifyEqual(new_name, self.exp_no_class_unix);
-            new_name = matspace.plotting.resolve_name(self.class_name, strip_classification=false);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.class_name, strip_classification=false), self.exp_warning);
             self.verifyEqual(new_name, self.exp_class_unix);
         end
 
         function test_nominal_win(self)
-            new_name = matspace.plotting.resolve_name(self.bad_name, force_win=true);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name, force_win=true), self.exp_warning);
             self.verifyEqual(new_name, self.exp_win);
         end
     
         function test_nominal_unix(self)
-            new_name = matspace.plotting.resolve_name(self.bad_name, force_win=false);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name, force_win=false), self.exp_warning);
             self.verifyEqual(new_name, self.exp_unix);
         end
 
         function test_string_array(self)
-            new_names = matspace.plotting.resolve_name([self.good_name, self.bad_name]);
+            new_names = self.verifyWarning(@() matspace.plotting.resolve_name([self.good_name, self.bad_name]), self.exp_warning);
             if ispc
                 exp = [self.good_name, self.exp_win];
             else
@@ -90,7 +96,7 @@ classdef test_resolve_name < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_cell_array(self)
-            new_names = matspace.plotting.resolve_name({char(self.good_name), char(self.bad_name)});
+            new_names = self.verifyWarning(@() matspace.plotting.resolve_name({char(self.good_name), char(self.bad_name)}), self.exp_warning);
             if ispc
                 exp = {char(self.good_name), char(self.exp_win)};
             else
@@ -100,18 +106,18 @@ classdef test_resolve_name < matlab.unittest.TestCase %#ok<*PROP>
         end
     
         function test_different_replacements(self)
-            bad_name = 'new <>:"/\\|?*text';
-            new_name = matspace.plotting.resolve_name(bad_name, force_win=true, rep_token='X');
-            self.verifyEqual(new_name, 'new XXXXXXXXXXtext');
-            new_name = matspace.plotting.resolve_name(bad_name, force_win=true, rep_token='');
+            bad_name = 'new <>:"/\|?*text';
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name, force_win=true, rep_token='X'), self.exp_warning);
+            self.verifyEqual(new_name, 'new XXXXXXXXXtext');
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name, force_win=true, rep_token=''), self.exp_warning);
             self.verifyEqual(new_name, 'new text');
-            new_name = matspace.plotting.resolve_name(string(bad_name), force_win=true, rep_token="YY");
-            self.verifyEqual(new_name, "new YYYYYYYYYYYYYYYYYYYYtext");
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(string(bad_name), force_win=true, rep_token="YY"), self.exp_warning);
+            self.verifyEqual(new_name, "new YYYYYYYYYYYYYYYYYYtext");
         end
     
         function test_newlines(self)
             bad_name = "Hello" + newline + "World.jpg";
-            new_name = matspace.plotting.resolve_name(bad_name);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name), self.exp_warning);
             self.verifyEqual(new_name, "Hello_World.jpg");
         end
     end
