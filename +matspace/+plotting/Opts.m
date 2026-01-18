@@ -23,6 +23,7 @@ classdef Opts
     %         .rms_xmax  : (scalar) maximum time from which to end RMS calculations [sec]
     %         .show_rms  : (scalar) true/false flag for whether to show the RMS in the legend [bool]
     %         .use_mean  : (scalar) true/false flag for using mean instead of RMS for legend calculations [bool]
+    %         .lab_vert  : (scalar) true/false flag for whether to label the RMS/Mean line in the legend [bool]
     %         .show_zero : (scalar) true/false flag for whether to show Y=0 on the plot axis [bool]
     %         .quat_comp : (scalar) true/false flag to plot quaternion component differences or just the angle [bool]
     %         .show_xtra : (scalar) true/false flag to show extra points in one vector or the other when plotting differences [bool]
@@ -65,6 +66,7 @@ classdef Opts
         rms_xmax,
         show_rms,
         use_mean,
+        lab_vert,
         show_zero,
         quat_comp,
         show_xtra,
@@ -113,6 +115,7 @@ classdef Opts
             OPTS.rms_xmax  = inf;
             OPTS.show_rms  = true;
             OPTS.use_mean  = false;
+            OPTS.lab_vert  = true;
             OPTS.show_zero = false;
             OPTS.quat_comp = false;
             OPTS.show_xtra = true;

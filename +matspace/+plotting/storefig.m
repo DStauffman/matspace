@@ -106,10 +106,12 @@ end
 fig_name = resolve_name(fig_name);
 
 % save plots
+unnamed = 1;
 for f = 1:length(fig_hand)
     this_name = fig_name{f};
     if isempty(this_name)
-        this_name = ['Unnamed_', int2str(i)];
+        this_name = ['Unnamed_', int2str(unnamed)];
+        unnamed = unnamed + 1;
     end
     for i = 1:length(format)
         switch format{i}

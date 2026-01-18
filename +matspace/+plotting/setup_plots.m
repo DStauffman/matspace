@@ -99,7 +99,8 @@ end
 update_name     = ~isempty(OPTS.case_name);
 scale_xaxis     = ~isempty(OPTS.time_unit) && ~strcmp(OPTS.time_unit, 'datetime') && ...
     ~strcmp(OPTS.time_base, OPTS.time_unit);
-change_xextents = ~isinf(OPTS.disp_xmin) || ~isinf(OPTS.disp_xmax);
+change_xextents = (~isinf(OPTS.disp_xmin) || ~isinf(OPTS.disp_xmax)) && ...
+    (~isdatetime(OPTS.disp_xmin) || ~isnat(OPTS.disp_xmin) && (~isdatetime(OPTS.disp_xmax) || ~isnat(OPTS.disp_xmax)));
 scale_yaxis     = any(strcmp(form, {'time', 'dist'})) && ~strcmp(OPTS.vert_fact, 'unity');
 save_plot       = OPTS.save_plot;
 have_save_path  = ~isempty(OPTS.save_path);

@@ -191,10 +191,10 @@ if ~use_mean
     mag_func    = nanrms(nondeg_angle(:, rms_ix3), 2);
 else
     func_name   = 'Mean';
-    q1_func     = nanmean(quat_one(:,rms_ix1),2);
-    q2_func     = nanmean(quat_two(:,rms_ix2),2);
-    nondeg_func = nanmean(nondeg_error(:, rms_ix3), 2);
-    mag_func    = nanmean(nondeg_angle(:, rms_ix3), 2);
+    q1_func     = nanmean(quat_one(:,rms_ix1),2); %#ok<NANMEAN>
+    q2_func     = nanmean(quat_two(:,rms_ix2),2); %#ok<NANMEAN>
+    nondeg_func = nanmean(nondeg_error(:, rms_ix3), 2); %#ok<NANMEAN>
+    mag_func    = nanmean(nondeg_angle(:, rms_ix3), 2); %#ok<NANMEAN>
 end
 % output errors
 err = struct('one', q1_func, 'two', q2_func, 'diff', nondeg_func, 'mag', mag_func);
