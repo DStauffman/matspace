@@ -62,6 +62,9 @@ DEGREE_SIGN = char(176);
 fun_is_colormap = @(x) ischar(x) || isempty(x) || isnumeric(x);  % or is Colormap?
 % Argument parser
 p = inputParser;
+addRequired(p, 'Description', @ischar);
+addRequired(p, 'Points', @isnumeric);
+addRequired(p, 'Innovs', @isnumeric);
 addParameter(p, 'ColorBy', 'none', @ischar);
 addParameter(p, 'HideInnovs', false, @islogical);
 addParameter(p, 'CenterOrigin', false, @islogical);
@@ -73,7 +76,8 @@ addParameter(p, 'LegScale', 'unity', @ischar);
 addParameter(p, 'ColorMap', [], fun_is_colormap);
 addParameter(p, 'AddQuiver', false, @islogical);
 addParameter(p, 'QuiverScale', [], @isnumeric);
-parse(p, varargin{:});
+addParameter(p, 'UseDatashader', false, @islogical);
+parse(p, description, points, innovs, varargin{:});
 color_by        = p.Results.ColorBy;
 hide_innovs     = p.Results.HideInnovs;
 center_origin   = p.Results.CenterOrigin;
@@ -84,6 +88,7 @@ leg_scale       = p.Results.LegScale;
 color_map       = p.Results.ColorMap;
 add_quiver      = p.Results.AddQuiver;
 quiver_scale    = p.Results.QuiverScale;
+use_datashader  = p.Results.UseDatashader; %#ok<NASGU>  % TODO: implement?
 if p.Results.FigVisible
     fig_visible = 'on';
 else

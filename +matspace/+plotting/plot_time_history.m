@@ -1,31 +1,57 @@
-function [fig_hand] = plot_time_history(time, data, varargin)
+function [fig_hand] = plot_time_history(description, time, data, varargin)
 
 % PLOT_TIME_HISTORY  plots multiple metrics over time.
 %
 %
 % Input:
+%     description : (char) text to put on the plot titles, default is empty string
 %     time ...... : (1xN) time points [years]
 %     data ...... : (MxN) data points [num]
-%     OPTS ...... : (class) optional plotting commands, see Opts.m for more information
 %     varargin .. : (char, value) pairs for other options, from:
-%         'Description' : (char) text to put on the plot titles, default is empty string
-%         'Type'        : (char) type of data to use when converting axis scale, default is 'unity'
-%         'Elements'    : {1xN} of (char) Names for each channel on the legend, default is empty
-%         'SecondYScale' : (scalar) Multiplication scale factor to use to display on a secondary Y axis
-%         'TimeTwo'     : (1xA) time points for series two, default is empty
-%         'DataTwo'     : (BxA) data points for series two, default is empty
-%         'TruthTime'   : (1xC) time points for truth data, default is empty
-%         'TruthData'   : (DxC) data points for truth data, default is empty
-%         'TruthName'   : (char) or {Dx1} of (char) name for truth data on the legend, if empty
-%                              don't include, default is 'Truth'
+%         Opts ......... : (char) (class) optional plotting commands, see Opts.m for more information
+%         IgnoreEmpties  :
+%         SkipSetupPlots :
+%         CaseName ..... :
+%         SavePlot ..... :
+%         SavePath ..... :
+%         Classify ..... :
+%     additional arguments from make_time_plot:
+%         Name
+%         Elements
+%         Units
+%         TimeUnits
+%         StartDate
+%         RmsXmin
+%         RmsXmax
+%         DispXmin
+%         DispXmax
+%         SingleLines
+%         FigVisible
+%         ColorMap
+%         UseMean
+%         PlotZero
+%         ShowRms
+%         LegendLoc
+%         SecondUnits
+%         LegendScale
+%         YLabel
+%         YLims
+%         DataAsRows
+%         ExtraPlotter
+%         UseZoh
+%         LabelVertLines
+%         UseDatashader
+%         FigAx
+%         PlotType
 %
 % Output:
 %     fig_hand .. : (scalar) figure handles [num]
 %
 % Prototype:
-%     time     = 1:10;
-%     data     = rand(5,length(time));
-%     fig_hand = matspace.plotting.plot_time_history(time, data, [], 'Description', 'Random Data');
+%     description = 'Random Data';
+%     time        = 1:10;
+%     data        = rand(5,length(time));
+%     fig_hand    = matspace.plotting.plot_time_history(description, time, data);
 %
 %     % clean up
 %     close(fig_hand);
@@ -38,144 +64,186 @@ function [fig_hand] = plot_time_history(time, data, varargin)
 %     2.  Updated by David C. Stauffer in March 2019 to be a wrapper to an even more generic
 %         function for plotting.
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     4.  Rewritten by David C. Stauffer in January 2026 based on newer python version.
 
 %% Imports
-import matspace.plotting.convert_time_to_date
 import matspace.plotting.figmenu
-import matspace.plotting.general_difference_plot
-import matspace.plotting.get_scale_and_units
 import matspace.plotting.get_start_date
+import matspace.plotting.make_time_plot
+import matspace.plotting.ignore_plot_data
 import matspace.plotting.Opts
 import matspace.plotting.setup_plots
-import matspace.plotting.tab10
-import matspace.plotting.whitten
-import matspace.utils.modd
 
-%% Parse Inputs
-% create parser
+%% Parser
+% Validation functions
+fun_is_text      = @(x) ischar(x) || (isscalar(x) && isstring(x));
+fun_is_bool      = @(x) islogical(x) && isscalar(x);
+fun_is_opts      = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
+fun_is_time      = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
+fun_is_time_cell = @(x) fun_is_time(x) || (iscell(x) && all(cellfun(fun_is_time, x)));
+fun_is_data      = @(x) isnumeric(x) || iscell(x) || iscategorical(x);
+fun_is_log_level = @(x) isscalar(x) && isnumeric(x);  % TODO: create LogLevel Enum?
+% Argument parser
 p = inputParser;
-% create some validation functions
-fun_is_opts = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
-fun_is_time = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
-fun_is_cell_char_or_str = @(x) iscellstr(x) || isstring(x);
-fun_is_num_or_cell      = @(x) isnumeric(x) || iscell(x);
-% set options
-addRequired(p, 'Time', fun_is_time);
-addRequired(p, 'Data', @isnumeric);
-addOptional(p, 'OPTS', Opts, fun_is_opts);
-addParameter(p, 'Description', '', @ischar);
-addParameter(p, 'Type', 'unity', @ischar);
-addParameter(p, 'Elements', {}, fun_is_cell_char_or_str);
-addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell); % TODO: put into OPTS?
-addParameter(p, 'TimeTwo', [], fun_is_time);
-addParameter(p, 'DataTwo', zeros(1, 0, class(data)), @isnumeric);
-addParameter(p, 'TruthTime', [], fun_is_time);
-addParameter(p, 'TruthData', zeros(1, 0, class(data)), @isnumeric);
-addParameter(p, 'TruthName', 'Truth', @ischar);
+p.KeepUnmatched = true;
+addRequired(p, 'Description', fun_is_text);
+addRequired(p, 'Time', fun_is_time_cell);
+addRequired(p, 'Data', fun_is_data);
+addParameter(p, 'Opts', Opts(), fun_is_opts);
+addParameter(p, 'IgnoreEmpties', false, fun_is_bool);
+addParameter(p, 'SkipSetupPlots', false, fun_is_bool);
+addParameter(p, 'CaseName', '', fun_is_text);
+addParameter(p, 'SavePlot', false, fun_is_bool);
+addParameter(p, 'SavePath', '', fun_is_text);
+addParameter(p, 'Classify', fun_is_text);
+addParameter(p, 'LogLevel', 10, fun_is_log_level);
 % do parse
-parse(p, time, data, varargin{:});
+parse(p, description, time, data, varargin{:});
 % create some convenient aliases
-type        = p.Results.Type;
-description = p.Results.Description;
-elements    = p.Results.Elements;
-second_y_scale = p.Results.SecondYScale;
-% create data channel aliases
-time_two    = p.Results.TimeTwo;
-data_two    = p.Results.DataTwo;
-truth_name  = p.Results.TruthName;
-truth_time  = p.Results.TruthTime;
-truth_data  = p.Results.TruthData;
-% check time formats for default values
-if isdatetime(time)
-    if isempty(time_two)
-        time_two = NaT(0);
+opts             = p.Results.Opts;
+ignore_empties   = p.Results.IgnoreEmpties;
+skip_setup_plots = p.Results.SkipSetupPlots;
+case_name        = p.Results.CaseName;
+save_plot        = p.Results.SavePlot;
+save_path        = p.Results.SavePath;
+classify         = p.Results.Classify;
+log_level        = p.Results.LogLevel;
+unmatched        = p.Unmatched;
+
+%% Check for valid data
+if ignore_plot_data(data, ignore_empties)
+    if log_level >= 5
+        fprintf(1, ' %s plot skipped due to missing data.\n', description);
     end
-    if isempty(truth_time)
-        truth_time = NaT(0);
+    fig_hand = gobjects(1, 0);  % TODO: handle FigAx input case
+    return
+end
+
+%% Processing
+this_opts = Opts(opts);
+% opts overrides
+if ~ismember('CaseName', p.UsingDefaults)
+    this_opts.case_name = case_name;
+end
+if ~ismember('SavePlot', p.UsingDefaults)
+    this_opts.save_plot = save_plot;
+end
+if ~ismember('SavePath', p.UsingDefaults)
+    this_opts.save_path = save_path;
+end
+if ~ismember('Classify', p.UsingDefaults)
+    this_opts.classify = classify;
+end
+
+% alias opts
+if isfield(unmatched, 'TimeUnits')
+    time_units = unmatched.TimeUnits;
+    unmatched = rmfield(unmatched, 'TimeUnits');
+else
+    time_units = this_opts.time_base;
+end
+if isfield(unmatched, 'StartDate')
+    start_date = unmatched.StartDate;
+    unmatched = rmfield(unmatched, 'StartDate');
+else
+    start_date = get_start_date(this_opts.date_zero);  % this_opts.get_date_zero_str();
+end
+if isfield(unmatched, 'RmsXmin')
+    rms_xmin = unmatched.RmsXmin;
+    unmatched = rmfield(unmatched, 'RmsXmin');
+else
+    rms_xmin = this_opts.rms_xmin;
+end
+if isfield(unmatched, 'RmsXmax')
+    rms_xmax = unmatched.RmsXmax;
+    unmatched = rmfield(unmatched, 'RmsXmax');
+else
+    rms_xmax = this_opts.rms_xmax;
+end
+if isfield(unmatched, 'DispXmin')
+    disp_xmin = unmatched.DispXmin;
+    unmatched = rmfield(unmatched, 'DispXmin');
+else
+    disp_xmin = this_opts.disp_xmin;
+end
+if isfield(unmatched, 'DispXmax')
+    disp_xmax = unmatched.DispXmax;
+    unmatched = rmfield(unmatched, 'DispXmax');
+else
+    disp_xmax = this_opts.disp_xmax;
+end
+if isfield(unmatched, 'SingleLines')
+    single_lines = unmatched.SingleLines;
+    unmatched = rmfield(unmatched, 'SingleLines');
+else
+    single_lines = this_opts.sing_line;
+end
+if isfield(unmatched, 'ColorMap')
+    color_map = unmatched.ColorMap;
+    unmatched = rmfield(unmatched, 'ColorMap');
+else
+    color_map = this_opts.colormap;
+    if isempty(color_map)
+        color_map = 'parula';  % TODO: make full ColorMap class
     end
 end
-
-%% Process inputs
-if isempty(elements)
-    elements = arrayfun(@(x) ['Channel: ',int2str(x)], 1:size(data,1), 'UniformOutput', false);
-end
-if ~iscell(truth_name)
-    truth_name = {truth_name};
-end
-if isempty(p.Results.OPTS)
-    OPTS = Opts();
+if isfield(unmatched, 'UseMean')
+    use_mean = unmatched.UseMean;
+    unmatched = rmfield(unmatched, 'UseMean');
 else
-    OPTS = p.Results.OPTS;
+    use_mean = this_opts.use_mean;
 end
-
-%% determine units based on type of data
-[scale, units] = get_scale_and_units(type);
-
-%% Process for comparisons and alias OPTS information
-% alias OPTS information
-show_plot   = OPTS.show_plot;
-sub_plots   = OPTS.sub_plots;
-single_line = OPTS.sing_line;
-show_rms    = OPTS.show_rms;
-use_mean    = OPTS.use_mean;
-show_zero   = OPTS.show_zero;
-time_units  = OPTS.time_base;
-rms_xmin    = OPTS.rms_xmin;
-rms_xmax    = OPTS.rms_xmax;
-disp_xmin   = OPTS.disp_xmin;
-disp_xmax   = OPTS.disp_xmax;
-show_extra  = OPTS.show_xtra;
-start_date  = get_start_date(OPTS.date_zero);
-legend_loc  = OPTS.leg_spot;
-if ~isempty(OPTS.colormap)
-    if isnumeric(OPTS.colormap)
-        colors1 = OPTS.colormap;
-    else
-        colors1 = feval(OPTS.colormap);
-    end
+if isfield(unmatched, 'LabelVertLines')
+    lab_vert = unmatched.LabelVertLines;
+    unmatched = rmfield(unmatched, 'LabelVertLines');
 else
-    colors1 = tab10();
+    lab_vert = this_opts.lab_vert;
 end
-colors2     = whitten(colors1);
-if length(OPTS.names) >= 1
-    name_one = OPTS.names{1};
+if isfield(unmatched, 'PlotZero')
+    plot_zero = unmatched.PlotZero;
+    unmatched = rmfield(unmatched, 'PlotZero');
 else
-    name_one = '';
+    plot_zero = this_opts.show_zero;
 end
-if length(OPTS.names) >= 2
-    name_two = OPTS.names{2};
+if isfield(unmatched, 'ShowRms')
+    show_rms = unmatched.ShowRms;
+    unmatched = rmfield(unmatched, 'ShowRms');
 else
-    name_two = '';
+    show_rms = this_opts.show_rms;
 end
-
-%% Potentially convert times to dates
-if strcmp(OPTS.time_unit, 'datetime')
-    date_zero  = OPTS.date_zero;
-    time       = convert_time_to_date(time,       date_zero, time_units);
-    time_two   = convert_time_to_date(time_two,   date_zero, time_units);
-    truth_time = convert_time_to_date(truth_time, date_zero, time_units);
-    disp_xmin  = convert_time_to_date(disp_xmin,  date_zero, time_units);
-    disp_xmax  = convert_time_to_date(disp_xmax,  date_zero, time_units);
-    rms_xmin   = convert_time_to_date(rms_xmin,   date_zero, time_units);
-    rms_xmax   = convert_time_to_date(rms_xmax,   date_zero, time_units);
+if isfield(unmatched, 'LegendLoc')
+    legend_loc = unmatched.LegendLoc;
+    unmatched = rmfield(unmatched, 'LegendLoc');
+else
+    legend_loc = this_opts.leg_spot;
 end
 
 %% Plot data
-% calls lower level function
-num_labels      = length(elements);
-rows            = modd(1:num_labels, size(colors1, 1));
-this_colororder = [colors1(rows,:); colors2(rows,:); colors1(rows,:)];
-fig_hand = general_difference_plot(description, time, time_two, scale*data, scale*data_two, ...
-    'NameOne', name_one, 'NameTwo', name_two, 'Elements', elements, ...
-    'Units', units, 'TimeUnits', time_units, 'LegendScale', 'unity', 'StartDate', start_date, ...
-    'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, 'DispXmin', disp_xmin, 'DispXmax', disp_xmax, ...
-    'FigVisible', show_plot, 'MakeSubplots', sub_plots, 'SingleLines', single_line, ...
-    'ColorOrder', this_colororder, 'UseMean', use_mean, 'PlotZero', show_zero, 'ShowRms', show_rms, ...
-    'LegendLoc', legend_loc, 'ShowExtra', show_extra, 'SecondYScale', second_y_scale, ...
-    'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', scale*truth_data);
+% call wrapper function for most of the details
+fig_hand = make_time_plot(...
+    description, ...
+    time, ...
+    data, ...
+    unmatched, ...
+    TimeUnits=time_units, ...
+    StartDate=start_date, ...
+    RmsXmin=rms_xmin, ...
+    RmsXmax=rms_xmax, ...
+    DispXmin=disp_xmin, ...
+    DispXmax=disp_xmax, ...
+    SingleLines=single_lines, ...
+    ColorMap=color_map, ...
+    UseMean=use_mean, ...
+    LabelVertLines=lab_vert, ...
+    PlotZero=plot_zero, ...
+    ShowRms=show_rms, ...
+    LegendLoc=legend_loc ...
+);
 
-% create figure controls
-figmenu;
-
-% setup plots
-setup_plots(fig_hand, OPTS, 'time');
+if ~skip_setup_plots
+    % create figure controls
+    figmenu;
+    
+    % setup plots
+    setup_plots(fig_hand, this_opts, 'time');
+end

@@ -2,7 +2,7 @@
 * text=auto
 
 # known text extensions
-*.m text diff=matlab merge
+*.m text diff=matlab merge=mlMerge
 *.py text diff=python merge
 *.pyx text diff=python merge
 *.coveragerc text
@@ -31,6 +31,7 @@
 *.hdf5 binary
 *.jpg binary
 *.mat binary
+*.mdl binary merge=mlAutoMerge
 *.mex binary
 *.mexw32 binary
 *.mexw64 binary
@@ -39,6 +40,7 @@
 *.ppt binary
 *.pptx binary
 *.pyc binary
+*.slx binary merge=mlAutoMerge
 *.xlx binary
 *.xlsx binary
 

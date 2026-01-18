@@ -36,7 +36,7 @@ switch nargin
     case 2
         % nop
     otherwise
-        error('Unexpected number of inputs.');
+        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
 end
 
 % parse possible commands
