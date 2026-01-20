@@ -14,7 +14,7 @@ classdef test_plot_second_units_wrapper < matlab.unittest.TestCase %#ok<*PROP>
         function initialize(self)
             self.description = 'Values over time';
             self.y_label = 'Value [rad]';
-            self.fig = figure();
+            self.fig = figure(Name='Values over time');
             self.ax = axes(self.fig);
             plot(self.ax, [1, 5, 10], [1e-6, 3e-6, 2.5e-6], ".-");
             ylabel(self.ax, self.y_label);
