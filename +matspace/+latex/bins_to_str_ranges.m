@@ -8,7 +8,7 @@ function [out] = bins_to_str_ranges(bins, dt, cutoff)
 %     cutoff : (scalar) Value at which to consider everything above it as unbounded
 %
 % Output:
-%     out    : (1xN string) text representations of the bins [char]
+%     out    : (1xN-1 string) text representations of the bins [char]
 %
 % Notes:
 %     1.  This function works on ages, years, CD4 bins or other similar things.
@@ -21,27 +21,33 @@ function [out] = bins_to_str_ranges(bins, dt, cutoff)
 % Change Log
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     3.  Updated by David C. Stauffer in January 2026 to use arguments.
 
-arguments
-    bins (1, :)
+arguments (Input)
+    bins {mustBeVector}
     dt (1, 1) double = 1
     cutoff (1, 1) double = 1000
 end
 
+arguments (Output)
+    out (1, :) string
+end
+
 % preallocate output
-out = strings(0);
+num_bins = length(bins)-1;
+out = strings(1, num_bins);
 
 % loop through ages
-for r = 1:length(bins)-1
+for i = 1:num_bins
     % alias the left boundary
-    left = bins(r);
+    left = bins(i);
     % check for string values and just pass them through
     if ~isnumeric(left)
-        out(end+1) = left; %#ok<AGROW>
+        out(i) = left;
         continue
     end
     % alias the right boundary
-    right = bins(r+1) - dt;
+    right = bins(i + 1) - dt;
     % check for large values, and replace appropriately
     if left == right
         this_str = num2str(left, '%g');
@@ -51,5 +57,5 @@ for r = 1:length(bins)-1
         this_str = num2str(left, '%g+');
     end
     % save this result
-    out(end+1) = this_str; %#ok<AGROW>
+    out(i) = this_str;
 end

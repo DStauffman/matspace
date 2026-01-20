@@ -1,0 +1,31 @@
+classdef test_bsl < matlab.unittest.TestCase %#ok<*PROP>
+
+    % Tests the bsl function with the following cases:
+    %     Nominal
+    %     Multishift
+    %     In-place
+
+    properties
+        bits,
+    end
+
+    methods (TestMethodSetup)
+        function initialize(self)
+            self.bits = [0, 0, 1, 1, 1];
+        end
+    end
+
+    methods (Test)
+        function test_nominal(self)
+            out = matspace.gps.bsl(self.bits);
+            self.verifyNotEqual(self.bits, out);
+            self.verifyEqual(out, [0, 1, 1, 1, 0]);
+        end
+
+        function test_multiple(self)
+            out = matspace.gps.bsl(self.bits, 3);
+            self.verifyNotEqual(self.bits, out);
+            self.verifyEqual(out, [1, 1, 0, 0, 1]);
+        end
+    end
+end

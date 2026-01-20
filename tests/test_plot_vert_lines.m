@@ -11,7 +11,7 @@ classdef test_plot_vert_lines < matlab.unittest.TestCase %#ok<*PROP>
 
     methods (TestMethodSetup)
         function initialize(self)
-            self.fig = figure();
+            self.fig = figure(Name='Data');
             self.ax = axes(self.fig);
             plot(self.ax, 0:9, 0:9, DisplayName="Data");
             self.x = [2, 5];

@@ -1,4 +1,4 @@
-function [out] = bsr(in,shift)
+function [out] = bsr(in, shift)
 
 % BSR  bit shifts right.
 %
@@ -22,21 +22,21 @@ function [out] = bsr(in,shift)
 %     2.  Moved to gps subfolder in Feb 2009.
 %     3.  Incorporated into matspace tools in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     5.  Updated by David C. Stauffer in January 2026 to use arguments.
 
-% optional inputs
-switch nargin
-    case 1
-        shift = 1;
-    case 2
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+arguments (Input)
+    in {mustBeVector}
+    shift (1, 1) double = 1
 end
+
+arguments (Output)
+    out {mustBeVector}
+end
+
+% initialize
+out = in;
 
 % shift bits
 for i = 1:shift
-    in = [in(end) in(1:end-1)];
+    out(:) = [out(end) out(1:end-1)];
 end
-
-% store output
-out = in;
