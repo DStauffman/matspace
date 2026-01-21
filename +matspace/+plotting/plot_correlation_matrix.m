@@ -1,4 +1,4 @@
-function [fig_hand] = plot_correlation_matrix(data,labels,OPTS,varargin)
+function [fig_hand] = plot_correlation_matrix(data, labels, kwargs)
 
 % PLOT_CORRELATION_MATRIX  visually plots a correlation matrix.
 %
@@ -47,70 +47,39 @@ function [fig_hand] = plot_correlation_matrix(data,labels,OPTS,varargin)
 %     2.  Updated to accept varargin for lots of other options in March 2016.
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+%% Arguments
+arguments
+    data
+    labels
+    kwargs.Opts {mustBeOpts} = []
+    kwargs.CMin = 0
+    kwargs.CMax = 1
+    kwargs.LowerOnly (1, 1) logical = true
+    kwargs.ColorMap {mustBeColorMap} = cool()
+    kwargs.MatrixName {mustBeTextScalar} = 'Correlation Matrix'
+    kwargs.PlotBorder (1, 1) logical = true
+    kwargs.LabelValues (1, 1) logical = false
+end
+
 %% Imports
+import matspace.plotting.does_not_exist
+import matspace.plotting.figmenu
 import matspace.plotting.Opts
+import matspace.plotting.setup_plots
 
 %% Hard-coded defaults
 box_size        = 1;
-cmin            = 0;
-cmax            = 1;
 precision       = 1e-12;
-plot_lower_only = true;
-color_map       = 'cool';
-matrix_name     = 'Correlation Matrix';
-plot_borders    = true;
-label_values    = false;
 
-%% Check for optional inputs
-n = nargin;
-switch n
-    case 0
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-    case 1
-        labels = {};
-        try
-            OPTS = Opts();
-        catch %#ok<CTCH>
-            OPTS = [];
-        end
-    case 2
-        try
-            OPTS = Opts();
-        catch %#ok<CTCH>
-            OPTS = [];
-        end
-    otherwise
-        % nop
-end
-
-%% Parse varargin
-if n > 3
-    if mod(n, 2) ~= 1
-        error('matspace:UnexpectedNameValuePair', 'Expecting an even set of Name-Value pairs.');
-    end
-    for i=1:2:length(varargin)
-        this_name  = varargin{i};
-        this_value = varargin{i+1};
-        switch lower(this_name)
-            case 'cmin'
-                cmin            = this_value;
-            case 'cmax'
-                cmax            = this_value;
-            case 'loweronly'
-                plot_lower_only = this_value;
-            case 'colormap'
-                color_map       = this_value;
-            case 'matrixname'
-                matrix_name     = this_value;
-            case 'plotborder'
-                plot_borders    = this_value;
-            case 'labelvalues'
-                label_values    = this_value;
-            otherwise
-                error('matspace:UnexpectedNameValuePair', 'Unexpected Name of "%s".', this_name);
-        end
-    end
-end
+%% Parser
+opts            = kwargs.Opts;
+cmin            = kwargs.CMin;
+cmax            = kwargs.CMax;
+plot_lower_only = kwargs.LowerOnly;
+color_map       = kwargs.ColorMap;
+matrix_name     = kwargs.MatrixName;
+plot_borders    = kwargs.PlotBorder;
+label_values    = kwargs.LabelValues;
 
 %% Process data
 % get sizes
@@ -185,7 +154,7 @@ for i = 1:m
     end
 end
 % set color limits and colormap and display colorbar
-caxis([cmin cmax]);
+clim([cmin cmax]);
 colormap(color_map);
 colorbar('location', 'EastOutside');
 % make square
@@ -209,15 +178,28 @@ text(b, repmat(n+1/5*box_size, length(b), 1), a, 'HorizontalAlignment', 'left', 
 %% Setup plots
 % Make this step optional, so that this function can exist outside the whole matspace library
 try
-    import matspace.plotting.figmenu
-    import matspace.plotting.Opts
-    import matspace.plotting.setup_plots
-    if isa(OPTS, 'matspace.plotting.Opts')
-        setup_plots(fig_hand,OPTS,'dist_no_y_scale');
+    if isa(opts, 'matspace.plotting.Opts')
+        setup_plots(fig_hand, opts, 'dist_no_y_scale');
     end
     figmenu;
 catch exception
     if ~strcmp(exception.identifier, 'MATLAB:class:invalidImportArguments')
         rethrow(exception)
     end
+end
+
+
+%% Subfunctions - mustBeOpts
+function mustBeOpts(x)
+import matspace.plotting.private.fun_is_opts
+if ~fun_is_opts(x)
+    throwAsCaller(MException('matspace:plot_cor:BadOpts','Opts must be empty, a struct, or Opts class.'))
+end
+
+
+%% Subfunctions - mustBeColorMap
+function mustBeColorMap(x)
+import matspace.plotting.private.fun_is_colormap
+if ~fun_is_colormap(x)
+    throwAsCaller(MException('matspace:plot_cor:BadCM', 'ColorMap must be a valid name or 3xN matrix or ColorMap class.'))
 end

@@ -31,7 +31,7 @@ classdef test_plot_phases < matlab.unittest.TestCase %#ok<*PROP>
             self.times = [5 20 30 50; 10 30 35 70];
             self.times2 = [60 80 90; 70 85 100];
             self.labels = ["Part 1", "Phase 2", "Watch Out", "Final"];
-            self.colorlists = matspace.plotting.get_color_lists();
+            self.colorlists = matspace.plotting.colors.get_color_lists();
             self.colors = self.colorlists.quat;
         end
     end
@@ -52,7 +52,7 @@ classdef test_plot_phases < matlab.unittest.TestCase %#ok<*PROP>
         function test_single_phase(self)
             % single phase, repeated
             plot(self.ax, self.time, self.data, '.-', 'DisplayName', 'Waves');
-            matspace.plotting.plot_phases(self.ax, self.times2, self.colorlists.default{1}, 'Monitor');
+            matspace.plotting.plot_phases(self.ax, self.times2, self.colorlists.default(1, :), 'Monitor');
             legend(self.ax, 'show');
         end
 
@@ -67,7 +67,7 @@ classdef test_plot_phases < matlab.unittest.TestCase %#ok<*PROP>
             % single phase datetime
             plot(self.ax, self.dates, self.data, '.-', 'DisplayName', 'Waves');
             time_as_dates = self.dates(1) + seconds(self.times2);
-            matspace.plotting.plot_phases(self.ax, time_as_dates, self.colorlists.default{1}, 'Monitor');
+            matspace.plotting.plot_phases(self.ax, time_as_dates, self.colorlists.default(1, :), 'Monitor');
             legend(self.ax, 'show');
         end
     end
