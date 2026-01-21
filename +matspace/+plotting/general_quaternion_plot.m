@@ -90,7 +90,7 @@ function [fig_hand, err] = general_quaternion_plot(description, time_one, time_t
 %     6.  Updated by David C. Stauffer in October 2020 to include a tolerance on the time comparison.
 
 %% Imports
-import matspace.plotting.get_color_lists
+import matspace.plotting.colors.get_color_lists
 import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.show_zero_ylim
@@ -175,8 +175,8 @@ rms_pts1 = max([rms_xmin min([min(time_one) min(time_two)])]);
 rms_pts2 = min([rms_xmax max([max(time_one) max(time_two)])]);
 % get default plotting colors
 color_lists = get_color_lists();
-colororder3 = cell2mat(color_lists.vec_diff);
-colororder8 = cell2mat(color_lists.quat_diff);
+colororder3 = color_lists.vec_diff;
+colororder8 = color_lists.quat_diff;
 % quaternion component names
 elements = {'X','Y','Z','S'};
 num_channels = length(elements);

@@ -47,6 +47,11 @@ function [fig] = make_time_plot(description, time, data, varargin)
 %% Imports
 % import matspace.plotting.get_factors
 import matspace.plotting.plot_second_units_wrapper
+import matspace.plotting.private.fun_is_bool
+import matspace.plotting.private.fun_is_colormap
+import matspace.plotting.private.fun_is_data
+import matspace.plotting.private.fun_is_text
+import matspace.plotting.private.fun_is_time
 import matspace.plotting.plot_vert_lines
 import matspace.plotting.show_zero_ylim
 % import matspace.plotting.whitten
@@ -60,49 +65,43 @@ LEG_FORMAT  = '%1.3f';
 
 %% Parser
 % Validation functions
-fun_is_text          = @(x) ischar(x) || (isscalar(x) && isstring(x));
-fun_is_bool          = @(x) islogical(x) && isscalar(x);
-fun_is_time          = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x) || iscell(x));
-fun_is_time_cell     = @(x) fun_is_time(x) || (iscell(x) && all(cellfun(fun_is_time, x)));
-fun_is_data          = @(x) isnumeric(x) || iscell(x) || iscategorical(x);
 fun_is_cellstr       = @(x) isstring(x) || iscell(x);
 fun_is_bound         = @(x) (isnumeric(x) || isdatetime(x)) && isscalar(x);
 fun_is_plot_type     = @(x) strcmp(x, 'plot') || strcmp(x, 'scatter');
 fun_is_extra_plotter = @(x) isempty(x) || isa(x, 'function_handle');
 fun_is_empty_or_len2 = @(x) (isempty(x) || length(x) == 2);
-fun_is_colormap      = @(x) fun_is_text(x) || isempty(x) || isnumeric(x);  % or is Colormap?
 fun_is_2nd_units     = @(x) isnumeric(x) || isempty(x) || iscell(x);
 fun_is_fig_ax        = @(x) isempty(x) || (iscell(x) && all(cellfun(@length, x) == 2));
 % Argument parser
 p = inputParser;
-addRequired(p, 'Description', fun_is_text);
-addRequired(p, 'Time', fun_is_time_cell);
-addRequired(p, 'Data', fun_is_data);
-addParameter(p, 'Name', '', fun_is_text);
+addRequired(p, 'Description', @fun_is_text);
+addRequired(p, 'Time', @fun_is_time);
+addRequired(p, 'Data', @fun_is_data);
+addParameter(p, 'Name', '', @fun_is_text);
 addParameter(p, 'Elements', strings(0), fun_is_cellstr);
-addParameter(p, 'Units', '', fun_is_text);
-addParameter(p, 'TimeUnits', 'sec', fun_is_text);
-addParameter(p, 'StartDate', '', fun_is_text);
+addParameter(p, 'Units', '', @fun_is_text);
+addParameter(p, 'TimeUnits', 'sec', @fun_is_text);
+addParameter(p, 'StartDate', '', @fun_is_text);
 addParameter(p, 'RmsXmin', -inf, fun_is_bound);
 addParameter(p, 'RmsXmax', inf, fun_is_bound);
 addParameter(p, 'DispXmin', -inf, fun_is_bound);
 addParameter(p, 'DispXmax', inf, fun_is_bound);
-addParameter(p, 'SingleLines', false, fun_is_bool);
-% addParameter(p, 'FigVisible', true, fun_is_bool);
-addParameter(p, 'ColorMap', 'parula', fun_is_colormap);
-addParameter(p, 'UseMean', false, fun_is_bool);
-addParameter(p, 'PlotZero', false, fun_is_bool);
-addParameter(p, 'ShowRms', true, fun_is_bool);
-addParameter(p, 'LegendLoc', 'Best', fun_is_text);
+addParameter(p, 'SingleLines', false, @fun_is_bool);
+% addParameter(p, 'FigVisible', true, @fun_is_bool);
+addParameter(p, 'ColorMap', parula(8), @fun_is_colormap);
+addParameter(p, 'UseMean', false, @fun_is_bool);
+addParameter(p, 'PlotZero', false, @fun_is_bool);
+addParameter(p, 'ShowRms', true, @fun_is_bool);
+addParameter(p, 'LegendLoc', 'Best', @fun_is_text);
 addParameter(p, 'SecondUnits', nan, fun_is_2nd_units);
 addParameter(p, 'LegendScale', 'unity', fun_is_2nd_units);
-addParameter(p, 'YLabel', '', fun_is_text);
+addParameter(p, 'YLabel', '', @fun_is_text);
 addParameter(p, 'YLims', [], fun_is_empty_or_len2);
-addParameter(p, 'DataAsRows', true, fun_is_bool);
+addParameter(p, 'DataAsRows', true, @fun_is_bool);
 addParameter(p, 'ExtraPlotter', [], fun_is_extra_plotter);
-addParameter(p, 'UseZoh', false, fun_is_bool);
-addParameter(p, 'LabelVertLines', false, fun_is_bool);
-addParameter(p, 'UseDatashader', false, fun_is_bool);
+addParameter(p, 'UseZoh', false, @fun_is_bool);
+addParameter(p, 'LabelVertLines', false, @fun_is_bool);
+addParameter(p, 'UseDatashader', false, @fun_is_bool);
 addParameter(p, 'FigAx', [], fun_is_fig_ax);
 addParameter(p, 'PlotType', 'time', fun_is_plot_type);
 % do parse

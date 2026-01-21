@@ -72,31 +72,29 @@ import matspace.plotting.get_start_date
 import matspace.plotting.make_time_plot
 import matspace.plotting.ignore_plot_data
 import matspace.plotting.Opts
+import matspace.plotting.private.fun_is_bool
+import matspace.plotting.private.fun_is_data
+import matspace.plotting.private.fun_is_log_level
+import matspace.plotting.private.fun_is_opts
+import matspace.plotting.private.fun_is_text
+import matspace.plotting.private.fun_is_time
 import matspace.plotting.setup_plots
 
 %% Parser
-% Validation functions
-fun_is_text      = @(x) ischar(x) || (isscalar(x) && isstring(x));
-fun_is_bool      = @(x) islogical(x) && isscalar(x);
-fun_is_opts      = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
-fun_is_time      = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
-fun_is_time_cell = @(x) fun_is_time(x) || (iscell(x) && all(cellfun(fun_is_time, x)));
-fun_is_data      = @(x) isnumeric(x) || iscell(x) || iscategorical(x);
-fun_is_log_level = @(x) isscalar(x) && isnumeric(x);  % TODO: create LogLevel Enum?
 % Argument parser
 p = inputParser;
 p.KeepUnmatched = true;
-addRequired(p, 'Description', fun_is_text);
-addRequired(p, 'Time', fun_is_time_cell);
-addRequired(p, 'Data', fun_is_data);
-addParameter(p, 'Opts', Opts(), fun_is_opts);
-addParameter(p, 'IgnoreEmpties', false, fun_is_bool);
-addParameter(p, 'SkipSetupPlots', false, fun_is_bool);
-addParameter(p, 'CaseName', '', fun_is_text);
-addParameter(p, 'SavePlot', false, fun_is_bool);
-addParameter(p, 'SavePath', '', fun_is_text);
-addParameter(p, 'Classify', fun_is_text);
-addParameter(p, 'LogLevel', 10, fun_is_log_level);
+addRequired(p, 'Description', @fun_is_text);
+addRequired(p, 'Time', @fun_is_time);
+addRequired(p, 'Data', @fun_is_data);
+addParameter(p, 'Opts', Opts(), @fun_is_opts);
+addParameter(p, 'IgnoreEmpties', false, @fun_is_bool);
+addParameter(p, 'SkipSetupPlots', false, @fun_is_bool);
+addParameter(p, 'CaseName', '', @fun_is_text);
+addParameter(p, 'SavePlot', false, @fun_is_bool);
+addParameter(p, 'SavePath', '', @fun_is_text);
+addParameter(p, 'Classify', @fun_is_text);
+addParameter(p, 'LogLevel', 10, @fun_is_log_level);
 % do parse
 parse(p, description, time, data, varargin{:});
 % create some convenient aliases
@@ -184,7 +182,7 @@ if isfield(unmatched, 'ColorMap')
 else
     color_map = this_opts.colormap;
     if isempty(color_map)
-        color_map = 'parula';  % TODO: make full ColorMap class
+        color_map = parula(8);  % TODO: make full ColorMap class
     end
 end
 if isfield(unmatched, 'UseMean')

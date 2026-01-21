@@ -61,8 +61,8 @@ classdef test_general_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.fig_visible    = true;
             self.make_subplots  = true;
             self.single_lines   = false;
-            color_lists         = matspace.plotting.get_color_lists();
-            self.colororder     = [cell2mat(color_lists.dbl_diff); cell2mat(color_lists.two)];
+            color_lists         = matspace.plotting.colors.get_color_lists();
+            self.colororder     = color_lists.dbl_comp;
             self.use_mean       = false;
             self.plot_zero      = false;
             self.show_rms       = true;

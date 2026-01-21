@@ -3,8 +3,8 @@ function [date] = convert_time_to_date(time, date_zero, units)
 % CONVERT_TIME_TO_DATE  converts a time to a datetime object if not already one
 %
 % Input:
-%     date_zero : (datetime or datevec) representing the date of time zero
 %     time .... : (1xN) time in the given units
+%     date_zero : (datetime or datevec) representing the date of time zero
 %     units ... : (str) specifying the units of the time vector, from {'sec', 'min', 'hr', 'day', 'month', 'year'} [char]
 %
 % Output:

@@ -48,8 +48,8 @@ classdef test_make_time_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.disp_xmin        = -inf;
             self.disp_xmax        = inf;
             self.single_lines     = false;
-            color_lists           = matspace.plotting.get_color_lists();
-            self.colormap         = cell2mat(color_lists.dbl_diff);
+            color_lists           = matspace.plotting.colors.get_color_lists();
+            self.colormap         = color_lists.dbl_diff;
             self.use_mean         = false;
             self.plot_zero        = false;
             self.show_rms         = true;
