@@ -6,7 +6,7 @@ function [] = plot_phases(ax, times, colors, labels)
 %     ax : (Axes) Figure axes
 %     times : (1xN) or (2xN) list of times, if it has two rows, then the second are the end points
 %         otherwise assume the sections are continuous.
-%     colors : {1xN} of (1x3) RGB colors, or any valid color names [numeric]
+%     colors : (Nx3) RGB colors, or any valid color names [numeric]
 %     labels : (1xN) string array of labels [char]
 %
 % Output:
@@ -21,13 +21,13 @@ function [] = plot_phases(ax, times, colors, labels)
 %     plot(ax, time, data, '.-', 'DisplayName', 'Waves');
 %     times = [5 20 30 50; 10 30 35 70];
 %     labels = ["Part 1", "Phase 2", "Watch Out", "Final"];
-%     colorlists = matspace.plotting.get_color_lists();
+%     colorlists = matspace.plotting.colors.get_color_lists();
 %     colors = colorlists.quat;
 %     matspace.plotting.plot_phases(ax, times, colors, labels);
 %
 %     % method 2
 %     times2 = [60 80 90; 70 85 100];
-%     matspace.plotting.plot_phases(ax, times2, colorlists.default{1}, 'Monitor');
+%     matspace.plotting.plot_phases(ax, times2, colorlists.default(1, :), 'Monitor');
 %     legend(ax, 'show');
 %
 % Change Log:
@@ -35,24 +35,17 @@ function [] = plot_phases(ax, times, colors, labels)
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 %     3.  Updated by David C. Stauffer in May 2020 to be able to plot multiple segments with the
 %         same color and name.
+%     4.  Updated by David C. Stauffer in January 2026 to use arguments with custom defaults.
+
+arguments
+    ax (1,1) matlab.graphics.axis.Axes
+    times {mustBeOneOrTwoByN}
+    colors = default_colors()
+    labels (1, :) {mustBeA(labels, ["char", "cell", "string"])} = strings(1, 0)
+end
 
 % hard-coded values
 transparency = 0.2; % 1 = opaque;
-
-% check for optional arguments
-switch nargin
-    case 2
-        import matspace.plotting.get_color_lists % Note: delayed import as you might not need it
-        colorlists = get_color_lists();
-        colors = colorlists.quat;
-        labels = {};
-    case 3
-        labels = {};
-    case 4
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
 
 % determine if using a single label
 if ischar(labels) || isscalar(labels)
@@ -78,7 +71,7 @@ for i = 1:size(times, 2)
     if use_single_label
         this_color = colors;
     else
-        this_color = colors{i};
+        this_color = colors(i, :);
     end
     % get the locations for this phase
     x1 = times(1, i);
@@ -101,3 +94,22 @@ end
 % reset any limits that might have changed due to the patches
 xlim(ax, xlims);
 ylim(ax, ylims);
+
+
+%% Subfunctions - mustBeOneOrTwoByN
+function mustBeOneOrTwoByN(x)
+
+if ~ismember(size(x, 1), [1 2])
+    throwAsCaller(MException('matspace:plot_phases:BadTimeSize','Input must be exactly one or two rows.'))
+end
+
+
+%% Subfunctions - default_colors
+function [colors] = default_colors()
+
+% Get a default colormap based on the quat colorlist.
+
+import matspace.plotting.colors.get_color_lists
+
+colorlists = get_color_lists();
+colors = colorlists.quat;

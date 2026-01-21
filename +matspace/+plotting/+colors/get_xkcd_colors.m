@@ -14,10 +14,10 @@ function [colors] = get_xkcd_colors(filename)
 %
 % Prototype:
 %     filename = fullfile(matspace.paths.get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
-%     colors = matspace.plotting.get_xkcd_colors(filename);
+%     colors = matspace.plotting.colors.get_xkcd_colors(filename);
 %
 % See Also:
-%     matspace.plotting.get_color_lists
+%     matspace.plotting.colors.get_color_lists
 %
 % Notes:
 %     1.  See http://xkcd.com/color/rgb.txt for colors.
@@ -25,16 +25,11 @@ function [colors] = get_xkcd_colors(filename)
 % Change Log:
 %     1.  Written by David C. Stauffer in December 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     3.  Updated by David C. Stauffer in January 2026 to use arguments and move into colors package.
 
 % optional inputs
-switch nargin
-    case 0
-        import matspace.paths.get_root_dir % Note: delayed import as you don't need it if specifying the file directly
-        filename = fullfile(get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
-    case 1
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+arguments
+    filename {mustBeFile} = default_filename()
 end
 
 % check for persistents to avoid loading from file again
@@ -79,6 +74,15 @@ end
 % save future persistent values
 colors_ = colors;
 from_file = filename;
+
+
+%% Subfunctions - default_filename
+function [filename] = default_filename()
+
+% DEFAULT_FILENAME  gets the default path to the XKCD RGB colors.
+
+import matspace.paths.get_root_dir
+filename = fullfile(get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
 
 
 %% Subfunctions - rgb_hex_to_vec

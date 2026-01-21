@@ -33,14 +33,14 @@ function [fig_hand] = plot_quaternion(time_one, quat_one, varargin)
 %     quat_two(4,3) = quat_two(4,3) + 50e-6;
 %     quat_two = matspace.quaternions.quat_norm(quat_two);
 %
-%     OPTS = matspace.plotting.Opts();
-%     OPTS.case_name = 'test_plot';
-%     OPTS.quat_comp = true;
-%     OPTS.sub_plots = true;
-%     OPTS.names = ["KF1", "KF2"];
+%     opts = matspace.plotting.Opts();
+%     opts.case_name = 'test_plot';
+%     opts.quat_comp = true;
+%     opts.sub_plots = true;
+%     opts.names = ["KF1", "KF2"];
 %
-%     fig_hand = matspace.plotting.plot_quaternion(time_one, quat_one, OPTS, 'TimeTwo', time_two, ...
-%         'QuatTwo', quat_two);
+%     fig_hand = matspace.plotting.plot_quaternion(time_one, quat_one, opts, TimeTwo=time_two, ...
+%         QuatTwo=quat_two);
 %
 %     % clean up
 %     close(fig_hand);
@@ -57,26 +57,25 @@ import matspace.plotting.figmenu
 import matspace.plotting.general_quaternion_plot
 import matspace.plotting.get_start_date
 import matspace.plotting.Opts
+import matspace.plotting.private.fun_is_opts
+import matspace.plotting.private.fun_is_text
+import matspace.plotting.private.fun_is_time
 import matspace.plotting.setup_plots
 
 %% Parse Inputs
 % create parser
 p = inputParser;
-% create some validation functions
-fun_is_opts = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
-fun_is_time = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
-fun_is_delta = @(x) isnumeric(x) || isduration(x);
 % set options
-addRequired(p, 'TimeOne', fun_is_time);
+addRequired(p, 'TimeOne', @fun_is_time);
 addRequired(p, 'QuatOne', @isnumeric);
-addOptional(p, 'OPTS', Opts, fun_is_opts);
-addParameter(p, 'Description', '', @ischar);
-addParameter(p, 'TimeTwo', [], fun_is_time);
+addOptional(p, 'OPTS', Opts, @fun_is_opts);
+addParameter(p, 'Description', '', @fun_is_text);
+addParameter(p, 'TimeTwo', [], @fun_is_time);
 addParameter(p, 'QuatTwo', zeros(4, 0, class(quat_one)), @isnumeric);
-addParameter(p, 'Tolerance', 0.0, fun_is_delta);
-addParameter(p, 'TruthTime', [], fun_is_time);
+addParameter(p, 'Tolerance', 0.0, @fun_is_dt);
+addParameter(p, 'TruthTime', [], @fun_is_time);
 addParameter(p, 'TruthData', zeros(4, 0, class(quat_one)), @isnumeric);
-addParameter(p, 'TruthName', 'Truth', @ischar);
+addParameter(p, 'TruthName', 'Truth', @fun_is_text);
 % do parse
 parse(p, time_one, quat_one, varargin{:});
 % create some convenient aliases

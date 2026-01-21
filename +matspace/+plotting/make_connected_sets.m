@@ -45,21 +45,18 @@ function [fig] = make_connected_sets(description, points, innovs, varargin)
 %     close(fig3);
 
 %% Imports
-import matspace.paths.get_root_dir
 import matspace.plotting.get_factors
 import matspace.plotting.get_unit_conversion
-import matspace.plotting.get_xkcd_colors
+import matspace.plotting.colors.get_xkcd_colors
+import matspace.plotting.private.fun_is_colormap
 
 %% Hard-coded values
-filename = fullfile(get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
-colors = get_xkcd_colors(filename);
+colors = get_xkcd_colors();
 colors_meas = colors.black;
 RAD2DEG = 180/pi;
 DEGREE_SIGN = char(176);
 
 %% Parser
-% Validation functions
-fun_is_colormap = @(x) ischar(x) || isempty(x) || isnumeric(x);  % or is Colormap?
 % Argument parser
 p = inputParser;
 addRequired(p, 'Description', @ischar);
@@ -73,7 +70,7 @@ addParameter(p, 'FigVisible', true, @islogical);
 addParameter(p, 'Units', '', @ischar);
 addParameter(p, 'MagRatio', [], @isnumeric);
 addParameter(p, 'LegScale', 'unity', @ischar);
-addParameter(p, 'ColorMap', [], fun_is_colormap);
+addParameter(p, 'ColorMap', [], @fun_is_colormap);
 addParameter(p, 'AddQuiver', false, @islogical);
 addParameter(p, 'QuiverScale', [], @isnumeric);
 addParameter(p, 'UseDatashader', false, @islogical);
