@@ -1,17 +1,17 @@
-function [fig_hand] = plot_quaternion(time_one, quat_one, varargin)
+function [fig_hand, err] = plot_quaternion(description, time_one, time_two, quat_one, quat_two, varargin)
 
 % PLOT_QUATERNION  plots multiple metrics over time.
 %
 %
 % Input:
+%         'Description' : (char) text to put on the plot titles, default is empty string
+%         'TimeTwo'     : (1xA) time points for series two, default is empty
+%         'QuatTwo'     : (BxA) data points for series two, default is empty
 %     time_one .. : (1xN) time points [years]
 %     quat_one .. : (MxN) data points [num]
 %     OPTS ...... : (class) optional plotting commands, see Opts.m for more information
 %     varargin .. : (char, value) pairs for other options, from:
-%         'Description' : (char) text to put on the plot titles, default is empty string
 %         'Type'        : (char) type of data to use when converting axis scale, default is 'unity'
-%         'TimeTwo'     : (1xA) time points for series two, default is empty
-%         'QuatTwo'     : (BxA) data points for series two, default is empty
 %         'TruthTime'   : (1xC) time points for truth data, default is empty
 %         'TruthData'   : (DxC) data points for truth data, default is empty
 %         'TruthName'   : (char) or {Dx1} of (char) name for truth data on the legend, if empty
@@ -19,6 +19,7 @@ function [fig_hand] = plot_quaternion(time_one, quat_one, varargin)
 %
 % Output:
 %     fig_hand .. : (scalar) figure handles [num]
+%     err
 %
 % Prototype:
 %     q1 = matspace.quaternions.quat_norm([0.1; -0.2; 0.3; 0.4]);
@@ -39,127 +40,138 @@ function [fig_hand] = plot_quaternion(time_one, quat_one, varargin)
 %     opts.sub_plots = true;
 %     opts.names = ["KF1", "KF2"];
 %
-%     fig_hand = matspace.plotting.plot_quaternion(time_one, quat_one, opts, TimeTwo=time_two, ...
-%         QuatTwo=quat_two);
+%     fig_hand = matspace.plotting.plot_quaternion('Quaternion', time_one, time_two, quat_one, quat_two, Opts=opts);
 %
 %     % clean up
 %     close(fig_hand);
 %
 % See Also:
-%     figmenu, setup_dir, plot_rms_lines, general_difference_plot
+%     figmenu, setup_dir, plot_rms_lines, make_quaternion_plot
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in March 2025 to wrap existing general_quaternion_plot.
+%     2.  Updated by David C. Stauffer in January 2026 to more closely mimic Python version.
 
 %% Imports
 import matspace.plotting.convert_time_to_date
 import matspace.plotting.figmenu
-import matspace.plotting.general_quaternion_plot
 import matspace.plotting.get_start_date
+import matspace.plotting.make_quaternion_plot
 import matspace.plotting.Opts
+import matspace.plotting.private.fun_is_log_level
 import matspace.plotting.private.fun_is_opts
+import matspace.plotting.private.fun_is_quat
 import matspace.plotting.private.fun_is_text
 import matspace.plotting.private.fun_is_time
+import matspace.plotting.private.kwargs_pop
 import matspace.plotting.setup_plots
 
 %% Parse Inputs
 % create parser
 p = inputParser;
+p.KeepUnmatched = true;
 % set options
+addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'TimeOne', @fun_is_time);
-addRequired(p, 'QuatOne', @isnumeric);
-addOptional(p, 'OPTS', Opts, @fun_is_opts);
-addParameter(p, 'Description', '', @fun_is_text);
-addParameter(p, 'TimeTwo', [], @fun_is_time);
-addParameter(p, 'QuatTwo', zeros(4, 0, class(quat_one)), @isnumeric);
-addParameter(p, 'Tolerance', 0.0, @fun_is_dt);
-addParameter(p, 'TruthTime', [], @fun_is_time);
-addParameter(p, 'TruthData', zeros(4, 0, class(quat_one)), @isnumeric);
-addParameter(p, 'TruthName', 'Truth', @fun_is_text);
+addRequired(p, 'TimeTwo', @fun_is_time);
+addRequired(p, 'QuatOne', @fun_is_quat);
+addRequired(p, 'QuatTwo', @fun_is_quat);
+addParameter(p, 'Opts', Opts(), @fun_is_opts);
+addParameter(p, 'SkipSetupPlots', false, @fun_is_bool);
+addParameter(p, 'LogLevel', 10, @fun_is_log_level);
+%addParameter(p, 'TruthTime', [], @fun_is_time);
+%addParameter(p, 'TruthData', zeros(4, 0, class(quat_one)), @isnumeric);
+%addParameter(p, 'TruthName', 'Truth', @fun_is_text);
 % do parse
-parse(p, time_one, quat_one, varargin{:});
+parse(p, description, time_one, time_two, quat_one, quat_two, varargin{:});
 % create some convenient aliases
-description = p.Results.Description;
-tolerance   = p.Results.Tolerance;
-% create data channel aliases
-time_two    = p.Results.TimeTwo;
-quat_two    = p.Results.QuatTwo;
-truth_name  = p.Results.TruthName;
-truth_time  = p.Results.TruthTime;
-truth_data  = p.Results.TruthData;
-% check time formats for default values
-if isdatetime(time_one)
-    if isempty(time_two)
-        time_two = NaT(0);
-    end
-    if isempty(truth_time)
-        truth_time = NaT(0);
-    end
+opts             = p.Results.Opts;
+skip_setup_plots = p.Results.SkipSetupPlots;
+log_level        = p.Results.LogLevel;
+%truth_name       = p.Results.TruthName;
+%truth_time       = p.Results.TruthTime;
+%truth_data       = p.Results.TruthData;
+unmatched        = p.Unmatched;
+
+% determine if converting units
+is_date_1 = isdatetime(time_one);
+is_date_2 = isdatetime(time_two);
+is_date_o = opts.time_unit == "datetime";
+
+% make local copy of opts that can be modified without changing the original
+this_opts = Opts(opts);
+% allow opts to convert as necessary
+if is_date_1 || (is_date_2 && ~is_date_o)
+    this_opts.convert_dates("datetime", old_form=opts.time_base)
+elseif is_date_o && ~is_date_1 && ~is_date_2
+    this_opts.convert_dates("sec", old_form=opts.time_base)
+end
+% opts overrides
+[this_opts.save_plot, unmatched] = kwargs_pop(unmatched, 'SavePlot', this_opts.save_plot);
+[this_opts.save_path, unmatched] = kwargs_pop(unmatched, 'save_path', this_opts.save_path);
+[this_opts.classify,  unmatched] = kwargs_pop(unmatched, 'classify', this_opts.classify);
+
+% alias opts
+[time_units,   unmatched] = kwargs_pop(unmatched, 'TimeUnits', this_opts.time_base);
+[start_date,   unmatched] = kwargs_pop(unmatched, 'StartDate', this_opts.get_date_zero_str());
+[rms_xmin,     unmatched] = kwargs_pop(unmatched, 'RmsXmin', this_opts.rms_xmin);
+[rms_xmax,     unmatched] = kwargs_pop(unmatched, 'RmsXmax', this_opts.rms_xmax);
+[disp_xmin,    unmatched] = kwargs_pop(unmatched, 'DispXmin', this_opts.disp_xmin);
+[disp_xmax,    unmatched] = kwargs_pop(unmatched, 'DispXmax', this_opts.disp_xmax);
+[sub_plots,    unmatched] = kwargs_pop(unmatched, 'MakeSubplots', this_opts.sub_plots);
+[plot_comps,   unmatched] = kwargs_pop(unmatched, 'PlotComponents', this_opts.quat_comp);
+[single_lines, unmatched] = kwargs_pop(unmatched, 'SingleLines', this_opts.sing_line);
+[use_mean,     unmatched] = kwargs_pop(unmatched, 'UseMean', this_opts.use_mean);
+[lab_vert,     unmatched] = kwargs_pop(unmatched, 'LabelVertLines', this_opts.lab_vert);
+[plot_zero,    unmatched] = kwargs_pop(unmatched, 'PlotZero', this_opts.show_zero);
+[show_rms,     unmatched] = kwargs_pop(unmatched, 'ShowRms', this_opts.show_rms);
+[legend_loc,   unmatched] = kwargs_pop(unmatched, 'LegendLoc', this_opts.leg_spot);
+[show_extra,   unmatched] = kwargs_pop(unmatched, 'ShowExtra', this_opts.show_xtra);
+[name_one,     unmatched] = kwargs_pop(unmatched, 'NameOne', '');
+[name_two,     unmatched] = kwargs_pop(unmatched, 'NameTwo', '');
+[name_one, name_two] = this_opts.get_name_one_and_two(NameOne=name_one, NameTwo=name_two);
+
+% hard-coded defaults
+[second_units, unmatched] = kwargs_pop(unmatched, 'second_units', 'micro');
+
+% print status
+if log_level >= 4
+    fprintf(1, "Plotting %s plots ...", description);
 end
 
-%% Process inputs
-if ~iscell(truth_name)
-    truth_name = {truth_name};
-end
-if isempty(p.Results.OPTS)
-    OPTS = Opts();
-else
-    OPTS = p.Results.OPTS;
-end
+% make plots
+unmatched_args = namedargs2cell(unmatched);
+[fig_hand, err] = make_quaternion_plot(...
+    description, ...
+    time_one, ...
+    time_two, ...
+    quat_one, ...
+    quat_two, ...
+    unmatched_args{:}, ...
+    NameOne=name_one, ...
+    NameTwo=name_two, ...
+    TimeUnits=time_units, ...
+    StartDate=start_date, ...
+    RmsXmin=rms_xmin, ...
+    RmsXmax=rms_xmax, ...
+    DispXmin=disp_xmin, ...
+    DispXmax=disp_xmax, ...
+    MakeSubplots=sub_plots, ...
+    PlotComponents=plot_comps, ...
+    SingleLines=single_lines, ...
+    UseMean=use_mean, ...
+    LabelVertLines=lab_vert, ...
+    PlotZero=plot_zero, ...
+    ShowRms=show_rms, ...
+    LegendLoc=legend_loc, ...
+    ShowExtra=show_extra, ...
+    SecondUnits=second_units,...
+    LogLevel=log_level);
 
-%% Process for comparisons and alias OPTS information
-% alias OPTS information
-show_plot   = OPTS.show_plot;
-sub_plots   = OPTS.sub_plots;
-single_line = OPTS.sing_line;
-show_rms    = OPTS.show_rms;
-use_mean    = OPTS.use_mean;
-show_zero   = OPTS.show_zero;
-plot_comp   = OPTS.quat_comp;
-time_units  = OPTS.time_base;
-rms_xmin    = OPTS.rms_xmin;
-rms_xmax    = OPTS.rms_xmax;
-disp_xmin   = OPTS.disp_xmin;
-disp_xmax   = OPTS.disp_xmax;
-show_extra  = OPTS.show_xtra;
-start_date  = get_start_date(OPTS.date_zero);
-legend_loc  = OPTS.leg_spot;
-if length(OPTS.names) >= 1
-    name_one = OPTS.names{1};
-else
-    name_one = '';
+if ~skip_setup_plots
+    % create figure controls
+    figmenu;
+    
+    % setup plots
+    setup_plots(fig_hand, opts, 'time');
 end
-if length(OPTS.names) >= 2
-    name_two = OPTS.names{2};
-else
-    name_two = '';
-end
-
-%% Potentially convert times to dates
-if strcmp(OPTS.time_unit, 'datetime')
-    date_zero  = OPTS.date_zero;
-    time_one   = convert_time_to_date(time_one,   date_zero, time_units);
-    time_two   = convert_time_to_date(time_two,   date_zero, time_units);
-    truth_time = convert_time_to_date(truth_time, date_zero, time_units);
-    disp_xmin  = convert_time_to_date(disp_xmin,  date_zero, time_units);
-    disp_xmax  = convert_time_to_date(disp_xmax,  date_zero, time_units);
-    rms_xmin   = convert_time_to_date(rms_xmin,   date_zero, time_units);
-    rms_xmax   = convert_time_to_date(rms_xmax,   date_zero, time_units);
-end
-
-%% Plot data
-% calls lower level function
-fig_hand = general_quaternion_plot(description, time_one, time_two, quat_one, quat_two, ...
-    'NameOne', name_one, 'NameTwo', name_two, 'TimeUnits', time_units, 'StartDate', start_date, ...
-    'PlotComp', plot_comp, 'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, 'DispXmin', disp_xmin, 'DispXmax', disp_xmax, ...
-    'FigVisible', show_plot, 'MakeSubplots', sub_plots, 'SingleLines', single_line, ...
-    'UseMean', use_mean, 'PlotZero', show_zero, 'ShowRms', show_rms, ...
-    'LegendLoc', legend_loc, 'ShowExtra', show_extra, ...
-    'TruthName', truth_name, 'TruthTime', truth_time, 'TruthData', truth_data, ...
-    'Tolerance', tolerance);
-
-% create figure controls
-figmenu;
-
-% setup plots
-setup_plots(fig_hand, OPTS, 'time');

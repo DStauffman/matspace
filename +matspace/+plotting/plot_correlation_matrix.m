@@ -1,4 +1,4 @@
-function [fig_hand] = plot_correlation_matrix(data, labels, kwargs)
+function [fig_hand] = plot_correlation_matrix(data, labels, units, kwargs)
 
 % PLOT_CORRELATION_MATRIX  visually plots a correlation matrix.
 %
@@ -20,15 +20,15 @@ function [fig_hand] = plot_correlation_matrix(data, labels, kwargs)
 %
 % Prototype:
 %     data   = rand(10,10);
-%     labels = {'a','b','c','d','e','f','g','h','i','j'};
+%     labels = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
 %     data   = bsxfun(@rdivide,data,realsqrt(sum(data.^2,1)));
-%     f1     = matspace.plotting.plot_correlation_matrix(data,labels);
+%     f1     = matspace.plotting.plot_correlation_matrix(data, labels);
 %
 %     data   = [0.1 -0.2 0.3; -0.6 -0.5 0];
 %     labels = {{'X1','X2','X3'},{'Y1','Y2'}};
-%     f2     = matspace.plotting.plot_correlation_matrix(data,labels);
+%     f2     = matspace.plotting.plot_correlation_matrix(data, labels);
 %
-%     f3     = matspace.plotting.plot_correlation_matrix(data,{},[],'MatrixName','Covariance Matrix');
+%     f3     = matspace.plotting.plot_correlation_matrix(data, MatrixName='Covariance Matrix');
 %
 %     % clean up
 %     close([f1 f2 f3]);
@@ -49,37 +49,68 @@ function [fig_hand] = plot_correlation_matrix(data, labels, kwargs)
 
 %% Arguments
 arguments
-    data
-    labels
-    kwargs.Opts {mustBeOpts} = []
-    kwargs.CMin = 0
-    kwargs.CMax = 1
-    kwargs.LowerOnly (1, 1) logical = true
-    kwargs.ColorMap {mustBeColorMap} = cool()
+    data (:, :) double
+    labels (1, :) {mustBeLabels} = strings(1, 0)
+    units {mustBeTextScalar} = ''
+    kwargs.Opts {mustBeOpts} = Opts()
     kwargs.MatrixName {mustBeTextScalar} = 'Correlation Matrix'
-    kwargs.PlotBorder (1, 1) logical = true
+    kwargs.CMin (1, 1) double = 0
+    kwargs.CMax (1, 1) double = 1
+    kwargs.XLabel {mustBeTextScalar} = ''
+    kwargs.YLabel {mustBeTextScalar} = ''
+    kwargs.PlotLowerOnly (1, 1) logical = true
     kwargs.LabelValues (1, 1) logical = false
+    kwargs.XLabRot (1, 1) double = 90
+    kwargs.ColorMap {mustBeColorMap} = []
+    kwargs.PlotBorder (1, 1) logical = true
+    kwargs.LegendScale {mustBe2ndUnits} = 'unity'
+    kwargs.FigAx {mustBeFigAx} = []
+    kwargs.SkipSetupPlots (1, 1) logical = false
+    kwargs.FigVisible (1, 1) logical = true
+end
+% Parser
+opts             = kwargs.Opts;
+matrix_name      = kwargs.MatrixName;
+cmin             = kwargs.CMin;
+cmax             = kwargs.CMax;
+x_label          = kwargs.XLabel;
+y_label          = kwargs.YLabel;
+plot_lower_only  = kwargs.PlotLowerOnly;
+label_values     = kwargs.LabelValues;
+x_lab_rot        = kwargs.XLabRot;
+color_map        = kwargs.ColorMap;
+plot_borders     = kwargs.PlotBorder;
+legend_scale     = kwargs.LegendScale;
+fig_ax           = kwargs.FigAx;
+skip_setup_plots = kwargs.SkipSetupPlots;
+if kwargs.FigVisible
+    fig_visible  = 'on';
+else
+    fig_visible  = 'off';
+end
+if isempty(opts)
+    opts = Opts();
+end
+if isempty(color_map)
+    if isempty(opts.colormap)
+        color_map = cool();
+    else
+        color_map = opts.colormap;
+    end
 end
 
+[new_units, scale] = get_unit_conversion(legend_scale, units);
+
 %% Imports
-import matspace.plotting.does_not_exist
 import matspace.plotting.figmenu
+import matspace.plotting.get_unit_conversion
 import matspace.plotting.Opts
 import matspace.plotting.setup_plots
+import matspace.utils.where
 
 %% Hard-coded defaults
 box_size        = 1;
 precision       = 1e-12;
-
-%% Parser
-opts            = kwargs.Opts;
-cmin            = kwargs.CMin;
-cmax            = kwargs.CMax;
-plot_lower_only = kwargs.LowerOnly;
-color_map       = kwargs.ColorMap;
-matrix_name     = kwargs.MatrixName;
-plot_borders    = kwargs.PlotBorder;
-label_values    = kwargs.LabelValues;
 
 %% Process data
 % get sizes
@@ -90,7 +121,7 @@ if isempty(labels)
     xlab = num2cell(1:m);
     ylab = num2cell(1:n);
 else
-    if iscell(labels{1})
+    if iscell(labels)
         xlab = labels{1};
         ylab = labels{2};
     else
@@ -127,28 +158,30 @@ if temp > cmax
 end
 
 %% Create plots
-% create figure;
-fig_hand = figure('name', matrix_name);
-% get handle to axes for use later
-ax = axes('color', 'none');
-% set title
-title(get(fig_hand, 'name'));
-% set hold on, since doing lots of patches
-hold on;
-% get border color
-if plot_borders
-    border_color = 'k';
+this_title = [matrix_name,char(where(~isempty(new_units), " [" + new_units + "]", ""))];
+if isempty(fig_ax)
+    % create figure;
+    fig_hand = figure(Name=this_title, Visible=fig_visible);
+    % get handle to axes for use later
+    ax = axes('color', 'none');
 else
-    border_color = 'none';
+    fig_hand = fig_ax{1}{1};
+    ax = fig_ax{1}{2};
 end
+% set title
+title(this_title);
+% set hold on, since doing lots of patches
+hold(ax, 'on');
+% get border color
+border_color = char(where(plot_borders, "k", "none"));
 % loop through and plot each element with a corresponding color
 for i = 1:m
     for j = 1:n
         if ~plot_lower_only || i <= j
-            patch(i+box_size*[-1 -1 0 0], j+box_size*[-1 0 0 -1], data(j,i), 'edgecolor', border_color);
+            patch(i+box_size*[-1 -1 0 0], j+box_size*[-1 0 0 -1], scale * data(j,i), 'edgecolor', border_color);
         end
         if label_values
-            text(box_size*i - box_size/2, box_size*j - box_size/2, num2str(data(j,i),'%.2g'), ...
+            text(box_size*i - box_size/2, box_size*j - box_size/2, num2str(scale * data(j,i),'%.2g'), ...
                 'Units', 'data', 'HorizontalAlignment', 'center', 'FontSize', 12, 'interpreter', 'none');
         end
     end
@@ -162,30 +195,27 @@ axis(ax, 'equal');
 % set limits and tick labels
 xlim([0 m]);
 ylim([0 n]);
+% reverse the y axis
+set(ax, 'YDir', 'reverse');
 set(ax, 'XTick', (1:m)-box_size/2);
 set(ax, 'YTick', (1:n)-box_size/2);
 set(ax, 'TickLabelInterpreter', 'none');
 set(ax, 'XTickLabel', xlab);
 set(ax, 'YTickLabel', ylab);
-set(ax, 'YDir', 'reverse');
 % rotate x tick labels
 a = get(ax, 'XTickLabel');
 set(ax, 'XTickLabel', []);
 b = get(ax, 'XTick');
-text(b, repmat(n+1/5*box_size, length(b), 1), a, 'HorizontalAlignment', 'left', 'rotation', -90, ...
+text(b, repmat(n+1/5*box_size, length(b), 1), a, 'HorizontalAlignment', 'left', 'rotation', x_lab_rot, ...
     'interpreter', 'none');
+% label axes
+xlabel(ax, x_label);
+ylabel(ax, y_label);
 
 %% Setup plots
-% Make this step optional, so that this function can exist outside the whole matspace library
-try
-    if isa(opts, 'matspace.plotting.Opts')
-        setup_plots(fig_hand, opts, 'dist_no_y_scale');
-    end
+if ~skip_setup_plots
     figmenu;
-catch exception
-    if ~strcmp(exception.identifier, 'MATLAB:class:invalidImportArguments')
-        rethrow(exception)
-    end
+    setup_plots(fig_hand, opts, 'dist_no_y_scale');
 end
 
 
@@ -193,7 +223,7 @@ end
 function mustBeOpts(x)
 import matspace.plotting.private.fun_is_opts
 if ~fun_is_opts(x)
-    throwAsCaller(MException('matspace:plot_cor:BadOpts','Opts must be empty, a struct, or Opts class.'))
+    throwAsCaller(MException('matspace:plot_cor:BadOpts','Opts must be empty, a struct, or Opts class.'));
 end
 
 
@@ -201,5 +231,28 @@ end
 function mustBeColorMap(x)
 import matspace.plotting.private.fun_is_colormap
 if ~fun_is_colormap(x)
-    throwAsCaller(MException('matspace:plot_cor:BadCM', 'ColorMap must be a valid name or 3xN matrix or ColorMap class.'))
+    throwAsCaller(MException('matspace:plot_cor:BadCM', 'ColorMap must be a valid name or 3xN matrix or ColorMap class.'));
+end
+
+
+%% Subfunctions - mustBeLabels
+function mustBeLabels(x)
+if ~isstring(x) && (~iscell(x) || length(x) ~= 2)
+    throwAsCaller(MException('matspace:plot_cor:BadLabels', 'Labels must be a string array, or a two element cell array of string arrays.'));
+end
+
+
+%% Subfunctions - mustBe2ndUnits
+function mustBe2ndUnits(x)
+import matspace.plotting.private.fun_is_2nd_units
+if ~fun_is_2nd_units(x)
+    throwAsCaller(MException('matspace:plot_cor:BadLegScale', 'Legend Scale is not valid.'));
+end
+
+
+%% Subfunctions - mustBeFigAx
+function mustBeFigAx(x)
+import matspace.plotting.private.fun_is_fig_ax
+if ~fun_is_fig_ax(x)
+    throwAsCaller(MException('matspace:plot_cor:BadFigAx', 'FigAx input is not valid.'));
 end

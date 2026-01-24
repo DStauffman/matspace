@@ -81,7 +81,7 @@ center_origin   = p.Results.CenterOrigin;
 legend_loc      = p.Results.LegendLoc;
 units           = p.Results.Units;
 mag_ratio       = p.Results.MagRatio;
-leg_scale       = p.Results.LegScale;
+legend_scale    = p.Results.LegendScale;
 color_map       = p.Results.ColorMap;
 add_quiver      = p.Results.AddQuiver;
 quiver_scale    = p.Results.QuiverScale;
@@ -126,7 +126,7 @@ elseif strcmpi(color_by, 'direction')
     colors_pred = colors_line;
     extra_text  = ' (Colored by Direction)';
 elseif strcmpi(color_by, 'magnitude')
-    [new_units, unit_conv] = get_unit_conversion(leg_scale, units);
+    [new_units, unit_conv] = get_unit_conversion(legend_scale, units);
     innov_mags = unit_conv * realsqrt(sum(innovs .^ 2, 1));
     if isempty(mag_ratio)
         max_innov = max(innov_mags);

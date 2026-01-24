@@ -136,7 +136,98 @@ classdef Opts
             end
         end
 
-        function [non_defaults] = plot_non_defaults(obj)
+        function [name] = get_names(self, ix)
+            % Get the specified name from the list.
+            if length(self.names) >= ix
+                name = self.names{ix};
+            else
+                name = '';
+            end
+        end
+
+        function [name_one, name_two] = get_name_one_and_two(self, kwargs)
+            % Get the first and second names from kwargs, or class names, or this opts structure.
+            arguments
+                self
+                kwargs.NameOne {mustBeTextScalar}
+                kwargs.NameTwo {mustBeTextScalar}
+                kwargs.Kf1 {mustBeStructOrEmpty} = []
+                kwargs.Kf2 {mustBeStructOrEmpty} = []
+            end
+            if isempty(kwargs.Kf1)
+                name_one = self.get_names(1);
+            elseif ~isfield(kwargs.Kf2, 'Name') || isempty(kwargs.Kf1.Name)
+                name_one = self.get_names(1);
+            else
+                name_one = kwargs.Kf1.Name;
+            end
+            if isempty(kwargs.Kf2)
+                name_two = self.get_names(2);
+            elseif ~isfield(kwargs.Kf2, 'Name') || isempty(kwargs.Kf2.Name)
+                name_two = self.get_names(2);
+            else
+                name_two = kwargs.Kf2.Name;
+            end
+        end
+
+        function [start_date] = get_date_zero_str(self, date)
+            % Gets a string representation of date_zero, typically used to print on an X axis.
+            %
+            % Returns
+            % -------
+            % start_date : str
+            %     String representing the date of time zero.
+            %
+            % Examples
+            % --------
+            %     opts = matspace.plotting.Opts();
+            %     opts.date_zero = datetime(2019, 4, 1, 18, 0, 0);
+            %     assert(strcmp(opts.get_date_zero_str(), ' t(0) = 01-Apr-2019 18:00:00 Z');
+            TIMESTR_FORMAT = "%d-%b-%Y %H:%M:%S";
+            if nargin == 1 || isempty(date)
+                if isempty(self.date_zero) || isnat(self.date_zero)
+                    start_date = '';
+                else
+                    start_date = ['  t(0) = ',char(self.date_zero, TIMESTR_FORMAT),' Z'];
+                end
+            elseif isa(date, 'datetime')
+                start_date = ['  t(0) = ',char(date, TIMESTR_FORMAT),' Z'];
+            else
+                temp_date = datetime(date);
+                start_date = ['  t(0) = ',char(temp_date, TIMESTR_FORMAT),' Z'];
+            end
+        end
+
+        function [disp_xmin, disp_xmax, rms_xmin, rms_xmax] = get_time_limits(self)
+            % Returns the display and RMS limits in the current time units.
+
+            function [value] = convert(value)
+                if ~isempty(value) && isfinite(value)
+                    value = convert_time_units(value, self.time_base, self.time_unit);
+                end
+            end
+
+            if strcmp(self.time_base, 'datetime')
+                return
+            end
+
+            disp_xmin = convert(self.disp_xmin);
+            disp_xmax = convert(self.disp_xmax);
+            rms_xmin  = convert(self.rms_xmin);
+            rms_xmax  = convert(self.rms_xmax);
+        end
+
+        function [obj] = convert_dates(obj, time_units)
+            % Potentially convert times to dates
+            if strcmp(obj.time_unit, 'datetime')
+                obj.disp_xmin = convert_time_to_date(obj.disp_xmin, obj.date_zero, time_units);
+                obj.disp_xmax = convert_time_to_date(obj.disp_xmax, obj.date_zero, time_units);
+                obj.rms_xmin  = convert_time_to_date(obj.rms_xmin,  obj.date_zero, time_units);
+                obj.rms_xmax  = convert_time_to_date(obj.rms_xmax,  obj.date_zero, time_units);
+            end
+        end
+
+        function [non_defaults] = pprint_non_defaults(obj)
             % Displays only the non-default values within the structure
 
             % Imports
@@ -167,5 +258,13 @@ classdef Opts
             % display the resulting structure using built-in matlab options
             disp(non_defaults);
         end
+    end
+end
+
+
+%% Custom validator functions
+function mustBeStructOrEmpty(x)
+    if ~isempty(x) && ~isstruct(x)
+        throwAsCaller(MException('matspace:Opts:BadKf','Input must be empty or a GND structure.'))
     end
 end

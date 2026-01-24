@@ -77,7 +77,7 @@ end
 figs = gobjects(1, 0);
 axes = cell(1, 0);
 for f = 1:num_figs
-    fig = figure;
+    fig = figure();
     ax = gobjects(1, num_row * num_col);
     c = 1;
     for i = 1:num_row

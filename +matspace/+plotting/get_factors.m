@@ -29,9 +29,13 @@ function [mult, label] = get_factors(prefix, inverse)
 %     2.  Pulled out into a separate function by David C. Stauffer in February 2019.
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-arguments
+arguments (Input)
     prefix
     inverse logical = false
+end
+arguments (Output)
+    mult (1, 1) double
+    label (1, :) char
 end
 
 % hard-coded values

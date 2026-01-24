@@ -40,7 +40,7 @@ function [fig] = plot_error_bars(description, time, data, mins, maxs, varargin)
 %     elements       = {'x', 'y', 'z'};
 %     units          = 'deg';
 %     time_units     = 'datetime';
-%     leg_scale      = 'milli';
+%     legend_scale   = 'milli';
 %     start_date     = ['  t(0) = ', datestr(now)];
 %     rms_xmin       = time(2);
 %     rms_xmax       = time(end-1);
@@ -56,7 +56,7 @@ function [fig] = plot_error_bars(description, time, data, mins, maxs, varargin)
 %     legend_loc     = 'Best';
 %     second_y_scale = nan;
 %     fig_hand       = matspace.plotting.plot_error_bars(description, time, data, mins, maxs, ...
-%         'Elements', elements, 'Units', units, 'TimeUnits', time_units, 'LegendScale', leg_scale, ...
+%         'Elements', elements, 'Units', units, 'TimeUnits', time_units, 'LegendScale', legend_scale, ...
 %         'StartDate', start_date, 'RmsXmin', rms_xmin, 'RmsXmax', rms_xmax, ...
 %         'DispXmin', disp_xmin, 'DispXmax', disp_xmax, 'FigVisible', fig_visible, ...
 %         'SingleLines', single_lines, 'ColorOrder', colororder, 'UseMean', use_mean, 'PlotZero', plot_zero, ...
@@ -101,7 +101,7 @@ parse(p, varargin{:});
 elements        = p.Results.Elements;
 units           = p.Results.Units;
 time_units      = p.Results.TimeUnits;
-leg_scale       = p.Results.LegendScale;
+legend_scale    = p.Results.LegendScale;
 start_date      = p.Results.StartDate;
 rms_xmin        = p.Results.RmsXmin;
 rms_xmax        = p.Results.RmsXmax;
@@ -137,7 +137,7 @@ else
 end
 num_channels = length(elements);
 % unit conversion value
-[temp, prefix] = get_factors(leg_scale);
+[temp, prefix] = get_factors(legend_scale);
 leg_conv = 1/temp;
 % error calculations
 err_neg = mins - data;
