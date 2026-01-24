@@ -136,6 +136,9 @@ if this_ymin == this_ymax
         end
         this_ymin = (1 - pad) * this_ymin;
         this_ymax = (1 + pad) * this_ymax;
+        if this_ymin > this_ymax
+            [this_ymax, this_ymin] = deal(this_ymin, this_ymax);
+        end
     end
 end
 % get the current limits

@@ -31,6 +31,11 @@ function [new_units, unit_mult] = get_unit_conversion(conversion, units)
 %     assert(unit_mult == 1000000.0);
 %     assert(strcmp(new_units, '\murad'));
 
+arguments (Output)
+    new_units (1, :) char
+    unit_mult (1, 1) double
+end
+
 import matspace.plotting.get_factors
 
 if isempty(conversion)
@@ -44,7 +49,7 @@ if isnumeric(conversion)
     return
 end
 if ~ischar(conversion)
-    new_units = conversion{1};
+    new_units = char(conversion{1});
     unit_mult = conversion{2};
     return
 end

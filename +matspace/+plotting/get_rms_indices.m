@@ -17,8 +17,8 @@ function [ix] = get_rms_indices(time_one, time_two, time_overlap, kwargs)
 % 
 % Returns
 % -------
-% ix : dict
-%     Dictionary of indices, with fields:
+% ix : struct
+%     Structure of indices, with fields:
 %     pts : [2, ] float
 %         Time to start and end the RMS calculations from
 %     one : (A, ) ndarray of bool
@@ -28,19 +28,18 @@ function [ix] = get_rms_indices(time_one, time_two, time_overlap, kwargs)
 %     overlap : (C, ) ndarray of bool
 %         Array of indices into time_overlap between the rms bounds
 % 
-% Notes
-% -----
-% #.  Written by David C. Stauffer in May 2020 when it needed to handle datetime64 objects.
+% Changl Log:
+%     1.  Written by David C. Stauffer in May 2020 when it needed to handle datetime64 objects.
+%     2.  Translated into Matlab by David C. Stauffer in January 2026.
 % 
-% Examples
-% --------
+% Prototype:
 %     time_one     = 0:10;
 %     time_two     = 2:12;
 %     time_overlap = 2:10;
 %     xmin         = 1;
 %     xmax         = 8;
 %     ix = matspace.plotting.get_rms_indices(time_one, time_two, time_overlap, xmin=xmin, xmax=xmax);
-%     assert(all(ix{'pts'} == [1 8]));
+%     assert(all(ix.pts == [1 8]));
 
 arguments
     time_one (1, :) {mustBeDoubleOrDatetime} = zeros(1, 0)
@@ -75,17 +74,17 @@ valid_nums(5) = isnumeric(xmax);
 valid_date(5) = isdatetime(xmax);
 
 % initialize output
-ix = dictionary();
+ix = struct();
 if all(valid_nums)
-    ix{'pts'} = zeros(1, 0);
+    ix.pts = zeros(1, 0);
 elseif all(valid_date)
-    ix{'pts'} = NaT(1, 0);
+    ix.pts = NaT(1, 0);
 else
     error('All inputs must be numeric or datetime, but you cannot mix and match');
 end
-ix{'one'} = false(1, 0);
-ix{'two'} = false(1, 0);
-ix{'overlap'} = false(1, 0);
+ix.one = false(1, 0);
+ix.two = false(1, 0);
+ix.overlap = false(1, 0);
 
 % alias some flags
 have1 = ~isempty(time_one);
@@ -120,7 +119,7 @@ if process(xmin, t_max, @lt)
     if have3
         p3_min = time_overlap >= xmin;
     end
-    ix{'pts'} = [ix{'pts'}, max([xmin, t_min])];
+    ix.pts = [ix.pts, max([xmin, t_min])];
 else
     if have1
         p1_min = true(size(time_one));
@@ -131,7 +130,7 @@ else
     if have3
         p3_min = true(size(time_overlap));
     end
-    ix{'pts'} = [ix{'pts'}, t_min];
+    ix.pts = [ix.pts, t_min];
 end
 if process(xmax, t_min, @gt)
     if have1
@@ -143,7 +142,7 @@ if process(xmax, t_min, @gt)
     if have3
         p3_max = time_overlap <= xmax;
     end
-    ix{'pts'} = [ix{'pts'}, min([xmax, t_max])];
+    ix.pts = [ix.pts, min([xmax, t_max])];
 else
     if have1
         p1_max = true(size(time_one));
@@ -154,18 +153,18 @@ else
     if have3
         p3_max = true(size(time_overlap));
     end
-    ix{'pts'} = [ix{'pts'}, t_max];
+    ix.pts = [ix.pts, t_max];
 end
-assert(length(ix{'pts'}) == 2 && ix{'pts'}(1) <= ix{'pts'}(2), 'Time points aren''t as expected: "%f"', ix{'pts'});
+assert(length(ix.pts) == 2 && ix.pts(1) <= ix.pts(2), 'Time points aren''t as expected: "%f"', ix.pts);
 % calculate indices
 if have1
-    ix{'one'} = p1_min & p1_max;
+    ix.one = p1_min & p1_max;
 end
 if have2
-    ix{'two'} = p2_min & p2_max;
+    ix.two = p2_min & p2_max;
 end
 if have3
-    ix{'overlap'} = p3_min & p3_max;
+    ix.overlap = p3_min & p3_max;
 end
 
 

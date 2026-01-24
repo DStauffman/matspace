@@ -57,7 +57,7 @@ function [fig_hand] = plot_time_history(description, time, data, varargin)
 %     close(fig_hand);
 %
 % See Also:
-%     figmenu, setup_dir, plot_rms_lines, general_difference_plot
+%     figmenu, setup_dir, plot_rms_lines, make_time_plot
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in September 2017.
