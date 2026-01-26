@@ -21,6 +21,7 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
         figs,
         data,
         labels,
+        units,
         opts,
         sym,
         fig_visible,
@@ -33,6 +34,7 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
             self.data   = rand(10, 10);
             self.data   = bsxfun(@rdivide,self.data,realsqrt(sum(self.data.^2,1)));
             self.labels = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+            self.units  = 'm';
             self.opts   = matspace.plotting.Opts;
             self.opts.case_name = 'Testing Correlation';
             self.sym = self.data;
@@ -69,11 +71,11 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_bad_nargin2(self)
-            self.verifyError(@() matspace.plotting.plot_correlation_matrix(self.data, {}, [], 'BadPairing'), 'MATLAB:TooManyInputs');
+            self.verifyError(@() matspace.plotting.plot_correlation_matrix(self.data, "", [], 'BadPairing'), 'MATLAB:TooManyInputs');
         end
 
         function test_bad_nargin3(self)
-            self.verifyError(@() matspace.plotting.plot_correlation_matrix(self.data, {}, [], 'BadKey', 10), 'MATLAB:TooManyInputs');
+            self.verifyError(@() matspace.plotting.plot_correlation_matrix(self.data, [], [], BadKey=10), 'MATLAB:TooManyInputs');
         end
 
         function test_nonsquare(self)
@@ -86,8 +88,8 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_all_args(self)
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, self.labels, self.opts, ...
-                CMin=0, CMax=1, LowerOnly=true, ColorMap=cool, ...
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, self.labels, self.units, ...
+                opts=self.opts, CMin=0, CMax=1, PlotLowerOnly=true, ColorMap=cool, ...
                 MatrixName='Correlation Matrix', PlotBorder=true, LabelValues=false, FigVisible=self.fig_visible);
         end
 
@@ -96,7 +98,7 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_symmetric_all(self)
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.sym, {}, [], LowerOnly=false, FigVisible=self.fig_visible);
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.sym, PlotLowerOnly=false, FigVisible=self.fig_visible);
         end
 
         function test_above_one(self)
@@ -106,7 +108,7 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_above_one_part2(self)
             large_data = self.data * 1000;
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(large_data, self.labels, [], cmax=2000, FigVisible=self.fig_visible);
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(large_data, self.labels, cmax=2000, FigVisible=self.fig_visible);
         end
 
         function test_below_one(self)
@@ -116,7 +118,7 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_below_one_part2(self)
             large_data = 1000*(self.data - 0.5);
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(large_data, self.labels, [], cmin=-2, FigVisible=self.fig_visible);
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(large_data, self.labels, cmin=-2, FigVisible=self.fig_visible);
         end
 
         function test_within_minus_one(self)
@@ -126,23 +128,23 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
 
         function test_within_minus_one_part2(self)
             large_data = self.data - 0.5;
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(large_data, self.labels, [], cmin=-1, cmax=1, FigVisible=self.fig_visible);
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(large_data, self.labels, cmin=-1, cmax=1, FigVisible=self.fig_visible);
         end
 
         function test_colormap(self)
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, {}, [], colormap=parula, FigVisible=self.fig_visible);
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, colormap=parula, FigVisible=self.fig_visible);
         end
 
         function test_matrix_name(self)
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, {}, [], MatrixName='Not a Correlation Matrix', FigVisible=self.fig_visible);
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, MatrixName='Not a Correlation Matrix', FigVisible=self.fig_visible);
         end
 
         function test_plot_border(self)
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, {}, [], PlotBorder=false, FigVisible=self.fig_visible);
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, PlotBorder=false, FigVisible=self.fig_visible);
         end
 
         function test_label_values(self)
-            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, {}, [], LabelValues=true, FigVisible=self.fig_visible);
+            self.figs(end+1) = matspace.plotting.plot_correlation_matrix(self.data, LabelValues=true, FigVisible=self.fig_visible);
         end
     end
 end

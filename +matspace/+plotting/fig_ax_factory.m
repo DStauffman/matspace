@@ -4,18 +4,20 @@ function [fig_ax] = fig_ax_factory(kwargs)
 % 
 % Parameters
 % ----------
-% num_figs : int
+% NumFigs : int
 %     Number of figures to produce
-% num_axes : int or (int, int)
+% NumAxes : int or (int, int)
 %     Total number of axes
-% suptitle : str
+% SupTitle : str
 %     Title to put over all axes
-% layout : str
-%     Axes layout, from {"rows", "cols", "rowwise", "colwise"}
-% sharex : bool
+% Layout : str
+%     Axes layout, from {'rows', 'cols', 'rowwise', 'colwise'}
+% ShareX : bool
 %     Whether to share the X axis
-% passthrough : bool
+% PassThrough : bool
 %     Whether to include everything and return a tuple of None's with the correct length
+% Visible : str
+%     Whether the plot is visible or not, from {'on', 'off'}
 % 
 % Notes
 % -----
@@ -33,19 +35,21 @@ function [fig_ax] = fig_ax_factory(kwargs)
 %     close(fig);
 
 arguments
-    kwargs.num_figs (1, 1) double = -1
-    kwargs.num_axes {mustBeOneOrTwo} = 1
-    kwargs.suptitle = ''
-    kwargs.layout = "rows"
-    kwargs.sharex (1, 1) logical = true
-    kwargs.passthrough (1, 1) logical = false
+    kwargs.NumFigs (1, 1) double = -1
+    kwargs.NumAxes {mustBeOneOrTwo} = 1
+    kwargs.SupTitle {mustBeTextScalar} = ''
+    kwargs.Layout {mustBeMember(kwargs.Layout, ["rows", "cols", "rowwise", "colwise"])} = 'rows'
+    kwargs.ShareX (1, 1) logical = true
+    kwargs.PassThrough (1, 1) logical = false
+    kwargs.Visible {mustBeMember(kwargs.Visible, ["on", "off"])} = 'on'
 end
-num_figs = kwargs.num_figs;
-num_axes = kwargs.num_axes;
-suptitle = kwargs.suptitle;
-layout = kwargs.layout;
-sharex = kwargs.sharex;
-passthrough = kwargs.passthrough;
+num_figs    = kwargs.NumFigs;
+num_axes    = kwargs.NumAxes;
+suptitle    = kwargs.SupTitle;
+layout      = kwargs.Layout;
+sharex      = kwargs.ShareX;
+passthrough = kwargs.PassThrough;
+fig_visible = kwargs.Visible;
 
 if isscalar(num_axes)
     is_1d = true;
@@ -77,7 +81,7 @@ end
 figs = gobjects(1, 0);
 axes = cell(1, 0);
 for f = 1:num_figs
-    fig = figure();
+    fig = figure(Visible=fig_visible);
     ax = gobjects(1, num_row * num_col);
     c = 1;
     for i = 1:num_row

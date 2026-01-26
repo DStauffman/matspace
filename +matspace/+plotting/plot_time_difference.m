@@ -97,7 +97,7 @@ skip_setup_plots = p.Results.SkipSetupPlots;
 log_level        = p.Results.LogLevel;
 unmatched        = p.Unmatched;
 
-% check for valid data
+%% Check for valid data
 if ignore_plot_data(data_one, ignore_empties) && ignore_plot_data(data_two, ignore_empties)
     if log_level >= 5
         fprint1(1, " %s plot skipped due to missing data.", description);
@@ -107,6 +107,7 @@ if ignore_plot_data(data_one, ignore_empties) && ignore_plot_data(data_two, igno
     return
 end 
 
+%% Processing
 % % determine if converting units
 % is_date_1 = isdatetime(time_one);
 % is_date_2 = isdatetime(time_two);

@@ -1,4 +1,4 @@
-function [fig_hand, err] = plot_quaternion(description, time_one, time_two, quat_one, quat_two, varargin)
+function [fig_hand, err] = plot_quaternion(description, time_one, quat_one, time_two, quat_two, varargin)
 
 % PLOT_QUATERNION  plots multiple metrics over time.
 %
@@ -40,7 +40,7 @@ function [fig_hand, err] = plot_quaternion(description, time_one, time_two, quat
 %     opts.sub_plots = true;
 %     opts.names = ["KF1", "KF2"];
 %
-%     fig_hand = matspace.plotting.plot_quaternion('Quaternion', time_one, time_two, quat_one, quat_two, Opts=opts);
+%     fig_hand = matspace.plotting.plot_quaternion('Quaternion', time_one, quat_one, time_two, quat_two, Opts=opts);
 %
 %     % clean up
 %     close(fig_hand);
@@ -73,8 +73,8 @@ p.KeepUnmatched = true;
 % set options
 addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'TimeOne', @fun_is_time);
-addRequired(p, 'TimeTwo', @fun_is_time);
 addRequired(p, 'QuatOne', @fun_is_quat);
+addRequired(p, 'TimeTwo', @fun_is_time);
 addRequired(p, 'QuatTwo', @fun_is_quat);
 addParameter(p, 'Opts', Opts(), @fun_is_opts);
 addParameter(p, 'SkipSetupPlots', false, @fun_is_bool);
@@ -83,7 +83,7 @@ addParameter(p, 'LogLevel', 10, @fun_is_log_level);
 %addParameter(p, 'TruthData', zeros(4, 0, class(quat_one)), @isnumeric);
 %addParameter(p, 'TruthName', 'Truth', @fun_is_text);
 % do parse
-parse(p, description, time_one, time_two, quat_one, quat_two, varargin{:});
+parse(p, description, time_one, quat_one, time_two, quat_two, varargin{:});
 % create some convenient aliases
 opts             = p.Results.Opts;
 skip_setup_plots = p.Results.SkipSetupPlots;

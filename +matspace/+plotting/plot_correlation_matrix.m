@@ -51,13 +51,13 @@ function [fig_hand] = plot_correlation_matrix(data, labels, units, kwargs)
 arguments
     data (:, :) double
     labels (1, :) {mustBeLabels} = strings(1, 0)
-    units {mustBeTextScalar} = ''
+    units {mustBeScalarOrEmptyText} = ''
     kwargs.Opts {mustBeOpts} = Opts()
     kwargs.MatrixName {mustBeTextScalar} = 'Correlation Matrix'
     kwargs.CMin (1, 1) double = 0
     kwargs.CMax (1, 1) double = 1
-    kwargs.XLabel {mustBeTextScalar} = ''
-    kwargs.YLabel {mustBeTextScalar} = ''
+    kwargs.XLabel {mustBeScalarOrEmptyText} = ''
+    kwargs.YLabel {mustBeScalarOrEmptyText} = ''
     kwargs.PlotLowerOnly (1, 1) logical = true
     kwargs.LabelValues (1, 1) logical = false
     kwargs.XLabRot (1, 1) double = 90
@@ -83,20 +83,12 @@ plot_borders     = kwargs.PlotBorder;
 legend_scale     = kwargs.LegendScale;
 fig_ax           = kwargs.FigAx;
 skip_setup_plots = kwargs.SkipSetupPlots;
-if kwargs.FigVisible
-    fig_visible  = 'on';
-else
-    fig_visible  = 'off';
-end
+fig_visible      = ifelse(kwargs.FigVisible, 'on', 'off');
 if isempty(opts)
     opts = Opts();
 end
 if isempty(color_map)
-    if isempty(opts.colormap)
-        color_map = cool();
-    else
-        color_map = opts.colormap;
-    end
+    color_map = ifelse(isempty(opts.colormap), cool(), opts.colormap);
 end
 
 [new_units, scale] = get_unit_conversion(legend_scale, units);
@@ -106,7 +98,7 @@ import matspace.plotting.figmenu
 import matspace.plotting.get_unit_conversion
 import matspace.plotting.Opts
 import matspace.plotting.setup_plots
-import matspace.utils.where
+import matspace.utils.ifelse
 
 %% Hard-coded defaults
 box_size        = 1;
@@ -117,7 +109,7 @@ precision       = 1e-12;
 [n,m] = size(data);
 
 %% Check labels
-if isempty(labels)
+if isempty(labels) || (isstring(labels) && isscalar(labels) && strlength(labels) == 0)
     xlab = num2cell(1:m);
     ylab = num2cell(1:n);
 else
@@ -158,7 +150,7 @@ if temp > cmax
 end
 
 %% Create plots
-this_title = [matrix_name,char(where(~isempty(new_units), " [" + new_units + "]", ""))];
+this_title = [matrix_name,ifelse(~isempty(new_units), [' [',new_units,']'], '')];
 if isempty(fig_ax)
     % create figure;
     fig_hand = figure(Name=this_title, Visible=fig_visible);
@@ -173,7 +165,7 @@ title(this_title);
 % set hold on, since doing lots of patches
 hold(ax, 'on');
 % get border color
-border_color = char(where(plot_borders, "k", "none"));
+border_color = ifelse(plot_borders, 'k', 'none');
 % loop through and plot each element with a corresponding color
 for i = 1:m
     for j = 1:n
@@ -237,6 +229,9 @@ end
 
 %% Subfunctions - mustBeLabels
 function mustBeLabels(x)
+if isempty(x)
+    return
+end
 if ~isstring(x) && (~iscell(x) || length(x) ~= 2)
     throwAsCaller(MException('matspace:plot_cor:BadLabels', 'Labels must be a string array, or a two element cell array of string arrays.'));
 end
@@ -255,4 +250,22 @@ function mustBeFigAx(x)
 import matspace.plotting.private.fun_is_fig_ax
 if ~fun_is_fig_ax(x)
     throwAsCaller(MException('matspace:plot_cor:BadFigAx', 'FigAx input is not valid.'));
+end
+
+%% mustBeScalarOrEmptyText
+function mustBeScalarOrEmptyText(x)
+
+if isempty(x)
+    return
+end
+
+if ischar(x)
+    bad = ~isvector(x);
+elseif isstring(x)
+    bad = ~isscalar(x);
+else
+    bad = true;
+end
+if bad
+    throwAsCaller(MException('matspace:plot_cor:BadText', 'Text input is not valid.'));
 end

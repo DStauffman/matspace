@@ -6,21 +6,25 @@ arguments
     num_figs (1, 1) double
     num_rows (1, 1) double
     num_cols (1, 1) double
-    kwargs.Description {mustBeTextScalar} = ""
+    kwargs.Description {mustBeTextScalar} = ''
+    kwargs.Visible {mustBeMember(kwargs.Visible, ["on", "off"])} = 'on'
 end
+description = kwargs.Description;
+fig_visible = kwargs.Visible;
 
 import matspace.plotting.fig_ax_factory
 
-description = kwargs.Description;
-
 % Create plots
 if num_cols == 1
-    fig_ax = fig_ax_factory(num_figs=num_figs, num_axes=num_rows, layout="rows", sharex=true);
+    fig_ax = fig_ax_factory(NumFigs=num_figs, NumAxes=num_rows, Layout='rows', ...
+        ShareX=true, Visible=fig_visible);
 elseif num_rows == 1
-    fig_ax = fig_ax_factory(num_figs=num_figs, num_axes=num_cols, layout="cols", sharex=true);
+    fig_ax = fig_ax_factory(NumFigs=num_figs, NumAxes=num_cols, Layout='cols', ...
+        ShareX=true, Visible=fig_visible);
 else
-    layout = "colwise";  % TODO: colwise or rowwise?
-    fig_ax = fig_ax_factory(num_figs=num_figs, num_axes=[num_rows, num_cols], layout=layout, sharex=true);
+    layout = 'colwise';  % TODO: colwise or rowwise?
+    fig_ax = fig_ax_factory(NumFigs=num_figs, NumAxes=[num_rows, num_cols], ...
+        Layout=layout, ShareX=true, Visible=fig_visible);
 end
 if ~isempty(description)
     temp = fig_ax{1};

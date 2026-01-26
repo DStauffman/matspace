@@ -133,9 +133,6 @@ fig_ax            = p.Results.FigAx;
 skip_setup_plots  = p.Results.SkipSetupPlots;
 legend_loc        = p.Results.LegendLoc;
 
-% determine if using datetimes
-use_datetime = isdatetime(time_one) || isdatetime(time_two) || isdatetime(truth_time);
-
 % data checks (do before any figures are generated)
 using_cdf = show_cdf || ~isempty(cdf_x) || ~isempty(cdf_y);
 if using_cdf && ~cdf_round_to_bin && ~isempty(data)

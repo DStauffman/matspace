@@ -5,6 +5,13 @@ classdef test_fig_ax_factory < matlab.unittest.TestCase %#ok<*PROP>
 
     properties
         fig_ax,
+        fig_visible,
+    end
+
+    methods (TestMethodSetup)
+        function initialize(self)
+            self.fig_visible = 'off';
+        end
     end
 
     methods (TestMethodTeardown)
@@ -30,43 +37,48 @@ classdef test_fig_ax_factory < matlab.unittest.TestCase %#ok<*PROP>
 
     methods (Test)
         function test_1d_rows(self)
-            self.fig_ax = matspace.plotting.fig_ax_factory(num_axes=4, layout="rows", sharex=true);
+            self.fig_ax = matspace.plotting.fig_ax_factory(NumAxes=4, Layout='rows', ...
+                ShareX=true, Visible=self.fig_visible);
             self.verifyEqual(length(self.fig_ax), 4)
             % TODO: figure out how to test rows and sharex
         end
 
         function test_1d_cols(self)
-            self.fig_ax = matspace.plotting.fig_ax_factory(num_axes=4, layout="cols", sharex=false);
+            self.fig_ax = matspace.plotting.fig_ax_factory(NumAxes=4, Layout='cols', ...
+                ShareX=false, Visible=self.fig_visible);
             self.verifyEqual(length(self.fig_ax), 4)
             % TODO: figure out how to test rows and sharex
         end
 
         function test_1d_bad_layout(self)
-            self.verifyError(@() matspace.plotting.fig_ax_factory(num_axes=4, layout="rowwise"), '');
+            self.verifyError(@() matspace.plotting.fig_ax_factory(NumAxes=4, Layout='rowwise'), '');
         end
 
         function test_multi_figures(self)
-            self.fig_ax = matspace.plotting.fig_ax_factory(num_figs=2, num_axes=1);
+            self.fig_ax = matspace.plotting.fig_ax_factory(NumFigs=2, NumAxes=1, Visible=self.fig_visible);
             self.verifyEqual(length(self.fig_ax), 2);
             self.verifyNotEqual(self.fig_ax{1}, self.fig_ax{2});
         end
 
         function test_2d(self)
-            self.fig_ax = matspace.plotting.fig_ax_factory(num_axes=[2, 3], layout="rowwise", sharex=true);
+            self.fig_ax = matspace.plotting.fig_ax_factory(NumAxes=[2, 3], ...
+                Layout='rowwise', ShareX=true, Visible=self.fig_visible);
             self.verifyEqual(length(self.fig_ax), 6);
         end
 
         function test_2d_colwise(self)
-            self.fig_ax = matspace.plotting.fig_ax_factory(num_axes=[3, 2], layout="colwise", sharex=false);
+            self.fig_ax = matspace.plotting.fig_ax_factory(NumAxes=[3, 2], ...
+                Layout='colwise', ShareX=false, Visible=self.fig_visible);
             self.verifyEqual(length(self.fig_ax), 6);
         end
 
         function test_2d_bad_layout(self)
-            self.verifyError(@() matspace.plotting.fig_ax_factory(num_axes=[4, 4], layout="rows"), '');
+            self.verifyError(@() matspace.plotting.fig_ax_factory(NumAxes=[4, 4], Layout='rows'), '');
         end
 
         function test_suptitle(self)
-            self.fig_ax = matspace.plotting.fig_ax_factory(num_axes=[1, 2], layout="rowwise", suptitle="Test Title");
+            self.fig_ax = matspace.plotting.fig_ax_factory(NumAxes=[1, 2], ...
+                Layout='rowwise', SupTitle='Test Title', Visible=self.fig_visible);
             title(self.fig_ax{1}{2}, 'Title 1');
             title(self.fig_ax{2}{2}, 'Title 2');
             self.verifyEqual(length(self.fig_ax), 2);
@@ -83,7 +95,8 @@ classdef test_fig_ax_factory < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_passthrough(self)
-            fig_ax = matspace.plotting.fig_ax_factory(num_axes=3, passthrough=true);
+            fig_ax = matspace.plotting.fig_ax_factory(NumAxes=3, PassThrough=true, ...
+                Visible=self.fig_visible);
             self.verifyEqual(length(fig_ax), 3);
             for i = 1:3
                 self.verifyTrue(isempty(fig_ax{i}));

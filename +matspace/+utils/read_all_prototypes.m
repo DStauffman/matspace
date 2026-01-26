@@ -26,6 +26,14 @@ function [counter] = read_all_prototypes(folder,recursive,fid,counter)
 %     2.  Incorporated by David C. Stauffer into matspace library in Dec 2016.
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+% Arguments
+arguments
+    folder {mustBeTextScalar} = pwd
+    recursive (1, 1) logical = true
+    fid {mustBeScalarOrEmpty} = []
+    counter (1, 1) double = 0
+end
+
 % Imports
 import matspace.utils.read_all_prototypes % calls itself recursively
 
@@ -33,28 +41,6 @@ import matspace.utils.read_all_prototypes % calls itself recursively
 folder_exclusions = {'new', 'tests'};
 file_exclusions   = {'all_prototypes'};
 ignore_classes    = true;
-
-% check for optional inputs
-switch nargin
-    case 0
-        folder    = pwd;
-        recursive = true;
-        fid       = [];
-        counter   = 0;
-    case 1
-        recursive = true;
-        fid       = [];
-        counter   = 0;
-    case 2
-        fid       = [];
-        counter   = 0;
-    case 3
-        counter   = 0;
-    case 4
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
 
 % open file if not already specified
 if isempty(fid)
@@ -122,7 +108,7 @@ for i = 3:length(list)
     end
 end
 
-if length(dbstack) == 1
+if isscalar(dbstack)
     fprintf(fid,'%s\n','%% Wrapper function');
     fprintf(fid,'%s\n','function [] = main()');
     fprintf(fid,'%s\n','');
