@@ -1,4 +1,4 @@
-function [fig_hand, err] = make_difference_plot(description, time_one, time_two, data_one, data_two, varargin)
+function [fig_hand, err] = make_difference_plot(description, time_one, data_one, time_two, data_two, varargin)
 
 % Generic difference comparison plot for use in other wrapper functions.
 % 
@@ -17,8 +17,8 @@ function [fig_hand, err] = make_difference_plot(description, time_one, time_two,
 % Prototype:
 %     description      = 'example';
 %     time_one         = 0:10;
-%     time_two         = 2:12;
 %     data_one         = 50e-6 * rand(2, 11);
+%     time_two         = 2:12;
 %     data_two         = data_one[:, [3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2]] - 1e-6 * rand(2, 11);
 %     name_one         = 'test1';
 %     name_two         = 'test2';
@@ -49,7 +49,7 @@ function [fig_hand, err] = make_difference_plot(description, time_one, time_two,
 %     use_datashader   = false;
 %     fig_ax           = [];
 %     diff_type        = 'comp';
-%     fig_hand = make_difference_plot(description, time_one, time_two, data_one, data_two, ...
+%     fig_hand = make_difference_plot(description, time_one, data_one, time_two, data_two, ...
 %         NameOne=name_one, NameTwo=name_two, Elements=elements, Units=units, ...
 %         StartDate=start_date, RmsXmin=rms_xmin, RmsXmax=rms_xmax, DispXmin=disp_xmin, ...
 %         TimeUnits=time_units, DispXmax=disp_xmax, MakeSubplots=make_subplots, ...
@@ -64,6 +64,7 @@ function [fig_hand, err] = make_difference_plot(description, time_one, time_two,
 %     close(fig_hand);
 
 %% Imports
+import matspace.plotting.ignore_plot_data
 import matspace.plotting.plot_second_units_wrapper
 import matspace.plotting.private.build_diff_indices
 import matspace.plotting.private.build_indices
@@ -93,6 +94,7 @@ import matspace.plotting.show_zero_ylim
 import matspace.plotting.zoom_ylim
 import matspace.quaternions.quat_angle_diff
 import matspace.stats.intersect2
+import matspace.utils.ifelse
 
 %% Hard-coded values
 LEG_FORMAT  = '%1.3f';
@@ -102,8 +104,8 @@ LEG_FORMAT  = '%1.3f';
 p = inputParser;
 addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'TimeOne', @fun_is_time);
-addRequired(p, 'TimeTwo', @fun_is_time);
 addRequired(p, 'DataOne', @fun_is_data);
+addRequired(p, 'TimeTwo', @fun_is_time);
 addRequired(p, 'DataTwo', @fun_is_data);
 addParameter(p, 'NameOne', '', @fun_is_text);
 addParameter(p, 'NameTwo', '', @fun_is_text);
@@ -138,7 +140,7 @@ addParameter(p, 'FigAx', [], @fun_is_fig_ax);
 addParameter(p, 'DiffType', 'comp', @(x) (ischar(x) || (isstring(x) && isscalar(x))) && any(x == ["comp", "quat_comp", "quat_mag", "quat_all"]));
 addParameter(p, 'LogLevel', 10, @fun_is_log_level);
 % do parse
-parse(p, description, time_one, time_two, data_one, data_two, varargin{:});
+parse(p, description, time_one, data_one, time_two, data_two, varargin{:});
 % create some convenient aliases
 name_one         = p.Results.NameOne;
 name_two         = p.Results.NameTwo;
@@ -171,11 +173,7 @@ use_datashader   = p.Results.UseDatashader;
 fig_ax           = p.Results.FigAx;
 diff_type        = p.Results.DiffType;
 log_level        = p.Results.LogLevel;
-if p.Results.FigVisible
-    fig_visible = 'on';
-else
-    fig_visible = 'off';
-end
+fig_visible      = ifelse(p.Results.FigVisible, 'on', 'off');
 
 % check if doing quaternion diffs
 is_quat_diff = startsWith(diff_type, "quat");
@@ -207,11 +205,7 @@ end
 
 % check for valid data
 if ~have_data_one && ~have_data_two
-    if is_quat_diff
-        data_type = 'quaternions';
-    else
-        data_type = 'differences';
-    end
+    data_type = ifelse(is_quat_diff, 'quaternions', 'differences');
     if log_level >= 5
         fprintf(1, 'No %s data was provided, so no plot was generated for "%s".', data_type, description);
     end
@@ -220,11 +214,7 @@ if ~have_data_one && ~have_data_two
     return
 end
 % check sizing information
-if have_data_one
-    num_channels = length(times1);
-elseif have_data_two
-    num_channels = length(times2);
-end
+num_channels = ifelse(have_data_one, length(times1), length(times2));
 if have_both && length(times1) ~= length(times2)
     error('The given elements need to match the data sizes, got %i and %i.', length(times1), length(times2));
 end
@@ -257,11 +247,7 @@ end
 
 % build RMS indices
 if have_both
-    if time_is_date
-        dt_same = seconds(1e-12);  % TODO: is this possible?  How accurate are datetimes?
-    else
-        dt_same = 1e-12;
-    end
+    dt_same = ifelse(time_is_date, seconds(1e-12), 1e-12);  % TODO: is this possible?  How accurate are datetimes?
     have_unique_t1 = isscalar(unique(cellfun(@length, times1))) && all(cellfun(@(x) max(abs(x - times1{1})), times1) < dt_same);
     have_unique_t2 = isscalar(unique(cellfun(@length, times2))) && all(cellfun(@(x) max(abs(x - times2{1})), times2) < dt_same);
     if have_unique_t1 && have_unique_t2
@@ -317,11 +303,7 @@ end
 [new_units, unit_conv, leg_units, leg_conv] = get_units(units, second_units, legend_scale);
 
 % plotting options
-if use_zoh
-    plot_func = @plot_zoh;
-else
-    plot_func = @plot_linear;
-end
+plot_func = ifelse(use_zoh, @plot_zoh, @plot_linear);
 
 if isscalar(single_lines)
     single_lines1 = single_lines;
@@ -347,23 +329,33 @@ if isempty(fig_ax)
                 if single_lines2
                     fig_ax = create_figure(1, num_channels, 2, Description=description);
                 else
-                    fig = figure();
-                    gs = fig.add_gridspec(num_channels, 2)
-                    ax = [fig.add_subplot(gs[0, 0])]
-                    for i = 2:num_channels
-                        ax.append(fig.add_subplot(gs[i, 0], sharex=ax[0]))
+                    fig_ax = cell(1, 2 * num_channels);
+                    fig = figure(Visible=fig_visible);
+                    ax = gobjects(1, 2 * num_channels);
+                    for i = 1:num_channels
+                        ax(i) = subplot(num_channels, 2, i);
                     end
-                    ax2 = fig.add_subplot(gs[:, 1], sharex=ax[0])
-                    fig_ax = tuple((fig, this_ax) for this_ax in ax) + num_channels * ((fig, ax2),)
+                    ax2 = subplot(num_channels, 2, num_channels + 1);
+                    error('Not yet implemented.');
+                    % gs = fig.add_gridspec(num_channels, 2)
+                    % ax = [fig.add_subplot(gs[0, 0])]
+                    % for i = 2:num_channels
+                    %     ax.append(fig.add_subplot(gs[i, 0], sharex=ax[0]))
+                    % end
+                    % ax2 = fig.add_subplot(gs[:, 1], sharex=ax[0])
+                    % fig_ax = tuple((fig, this_ax) for this_ax in ax) + num_channels * ((fig, ax2),)
                 end
             elseif single_lines2
-                fig = plt.figure(constrained_layout=True)
-                gs = fig.add_gridspec(num_channels, 2)
-                ax1 = fig.add_subplot(gs[:, 0])
-                ax = [fig.add_subplot(gs[i, 1], sharex=ax1) for i in range(num_channels)]
-                fig_ax = num_channels * ((fig, ax1),) + tuple((fig, this_ax) for this_ax in ax)
+                fig = figure(Visible=fig_visible);
+                ax = gobjects(1, 2 * num_channels);
+                error('Not yet implemnted.');
+                %fig = plt.figure(constrained_layout=True)
+                %gs = fig.add_gridspec(num_channels, 2)
+                %ax1 = fig.add_subplot(gs[:, 0])
+                %ax = [fig.add_subplot(gs[i, 1], sharex=ax1) for i in range(num_channels)]
+                %fig_ax = num_channels * ((fig, ax1),) + tuple((fig, this_ax) for this_ax in ax)
             else
-                temp_fig_ax = create_figure(1, 2, 1, Description=description);
+                temp_fig_ax = create_figure(1, 2, 1, Description=description, Visible=fig_visible);
                 fig_ax = cell(1, num_channels * length(temp_fig_ax));
                 for f = 1:length(temp_fig_ax)
                     n = num_channels * f;
@@ -382,11 +374,7 @@ if isempty(fig_ax)
             fig_ax = [repmat(create_figure(1, 1, 1, Description=description), 1, num_channels), repmat(create_figure(1, 1, 1, Description=[description,' Difference']), 1, num_channels)];
         end
     else
-        if single_lines1
-            num_rows = num_channels;
-        else
-            num_rows = 1;
-        end
+        num_rows = ifelse(single_lines1, num_channels, 1);
         fig_ax = create_figure(1, num_rows, 1, Description=description);
         if ~single_lines1
             temp_fig_ax = fig_ax;
@@ -398,11 +386,7 @@ if isempty(fig_ax)
         end
     end
 end
-if have_both
-    expected_axes = 2 * num_channels;
-else
-    expected_axes = num_channels;
-end
+expected_axes = ifelse(have_both, 2 * num_channels, num_channels);
 assert(length(fig_ax) == expected_axes, "Mismatch in the number of figures and axes.");
 
 % Get main figures and axes
@@ -425,11 +409,7 @@ end
 % Primary plot
 color_offset = length(times1);
 datashaders = [];
-if is_quat_diff
-    this_zorder = 3;
-else
-    this_zorder = 4;
-end
+this_zorder =ifelse(is_quat_diff, 3, 4);
 for i = 1:num_channels
     this_fig = fig_ax{i}{1};
     this_axes = fig_ax{i}{2};
@@ -505,72 +485,91 @@ for i = 1:num_channels
 end
 
 % Difference plots
-if have_both:
-    assert time_overlap is not None
-    color_offset = len(times1) + len(times2)
-    diff_elems = ("X", "Y", "Z", "Magnitude") if is_quat_diff else elements
-    ylabels2 = _get_ylabels(len(ix_diff), ylabel, elements=diff_elems, single_lines=single_lines2, description=description, units=units)  # fmt: skip
-    for i, this_ylabel, this_zorder in zip(ix_diff, ylabels2, zorders):
-        this_fig, this_axes = fig_ax[i + num_channels]
-        this_label = f"{diff_elems[i]}"
-        if show_rms:
-            value = _LEG_FORMAT.format(leg_conv * nondeg_func[i])
-            if leg_units:
-                this_label += f" ({func_name}: {value} {leg_units})"
-            else:
-                this_label += f" ({func_name}: {value})"
-        lines = _draw_lines(datashaders, time_overlap[i], diffs[i], plot_func, this_axes, symbol=".-", markersize=4,
-            color=cm.get_color(i + color_offset), label=this_label, zorder=this_zorder, use_datashader=use_datashader)  # fmt: skip
-        if bool(datashaders) and bool(lines):
-            lines[0].set_linestyle("none")
-        if show_extra and i == ix_diff[-1]:
-            if d1_miss_ix.size > 0:
-                this_axes.plot(
-                    this_time[d1_miss_ix],
-                    np.zeros(len(d1_miss_ix)),
-                    "kx",
-                    markersize=8,
-                    markeredgewidth=2,
-                    markerfacecolor="none",
-                    label=name_one + " Extra",
-                )
-            if d2_miss_ix.size > 0:
-                this_axes.plot(
-                    times2[i][d2_miss_ix],
-                    np.zeros(len(d2_miss_ix)),
-                    "go",
-                    markersize=8,
-                    markeredgewidth=2,
-                    markerfacecolor="none",
-                    label=name_two + " Extra",
-                )
-        xlim = _label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date)
-        if not ignore_plot_data(diffs[i], True):
-            zoom_ylim(this_axes, t_start=xlim[0], t_final=xlim[1])
-        if plot_zero:
+if have_both
+    assert(~isempty(time_overlap));
+    color_offset = length(times1) + length(times2);
+    diff_elems = ifelse(is_quat_diff, ["X", "Y", "Z", "Magnitude"], elements);
+    y_labels2 = get_ylabels(length(ix_diff), y_label, Elements=diff_elems, SingleLines=single_lines2, Description=description, Units=units);
+    for t = 1:length(ix_diff)
+        i = ix_diff(t);
+        this_ylabel = y_labels2{t};
+        this_zorder = zorders(t);
+        this_fig = fig_ax{i + num_channels}{1};
+        this_axes = fig_ax{i + num_channels}{2};
+        this_label = char(diff_elems{i});
+        if show_rms
+            value = num2str(leg_conv * nondeg_func{i}, LEG_FORMAT);
+            if leg_units
+                this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];
+            else
+                this_label = [this_label,' (',func_name,': ',value,')'];
+            end
+        end
+        lines = draw_lines(datashaders, time_overlap{i}, diffs{i}, plot_func, this_axes, Symbol=".-", MarkerSize=4, ...
+            Color=cm(i + color_offset, :), Label=this_label, ZOrder=this_zorder, UseDatashader=use_datashader);  % cm.get_color(i + color_offset)
+        if ~isempty(datashaders) && ~isempty(lines)
+            lines(1).set_linestyle("none");
+        end
+        if show_extra && i == ix_diff(end)
+            if ~isempty(d1_miss_ix)
+                plot(this_axes, ...
+                    this_time(d1_miss_ix), ...
+                    zeros(1, length(d1_miss_ix)), ...
+                    'kx', ...
+                    markersize=8, ...
+                    markeredgewidth=2, ...
+                    markerfacecolor='none', ...
+                    label=name_one + " Extra");
+            end
+            if d2_miss_ix.size > 0
+                plot(this_axes, ...
+                    times2{1}(d2_miss_ix), ...
+                    zeros(1, length(d2_miss_ix)), ...
+                    'go', ...
+                    markersize=8, ...
+                    markeredgewidth=2, ...
+                    markerfacecolor='none', ...
+                    label=name_two + " Extra");
+            end
+        end
+        xlims = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
+        if ~ignore_plot_data(diffs{i}, true)
+            zoom_ylim(this_axes, [], [], t_start=xlims(1), t_final=xlims(2));
+        end
+        if plot_zero
             show_zero_ylim(this_axes)
-        if ylims is not None:
-            this_axes.set_ylim(ylims)
-        if i == ix_diff[0]:
-            this_axes.set_title(description + " Difference")
-        if bool(this_ylabel) or single_lines2:
-            this_axes.set_ylabel(this_ylabel)
-            this_axes.grid(True)
+        end
+        if ~isempty(ylims)
+            this_axes.set_ylim(ylims);
+        end
+        if i == ix_diff(1)
+            title(this_axes, [description,' Difference']);
+        end
+        if ~isempty(this_ylabel) || single_lines2
+            ylabel(this_axes, this_ylabel);
+            grid(this_axes, 'on');
             % optionally add second Y axis
-            plot_second_units_wrapper(this_axes, (new_units, unit_conv))
+            plot_second_units_wrapper(this_axes, {new_units, unit_conv});
             % plot RMS lines
-            if show_rms:
-                vert_labels = None if not use_mean else ["Mean Start Time", "Mean Stop Time"]
-                plot_vert_lines(this_axes, ix["pts"], show_in_legend=label_vert_lines, labels=vert_labels)  # type: ignore[arg-type]
+            if show_rms
+                vert_labels = ifelse(~use_mean, strings(1, 0), ["Mean Start Time", "Mean Stop Time"]);
+                plot_vert_lines(this_axes, ix.pts, ShowInLegend=label_vert_lines, Labels=vert_labels);
+            end
+        end
+    end
+end
 
 if single_lines1 || single_lines2
-    figs[0].supylabel(description)
+    fig_hand(1).supylabel(description)
 end
 
 % plot any extra information through a generic callable
 if ~isempty(extra_plotter)
-    for fig in figs:
-        extra_plotter(fig=fig, ax=[ax for ax in fig.axes if id(ax) in axes[id(fig)]])
+    for f = 1:length(fig_hand)
+        fig = fig_hand{f};
+        ax = findall(fig, type='axes');
+        ax = ax(ismember(ax, axes{fig.Number}));
+        extra_plotter(fig, ax);
     end
 end
 

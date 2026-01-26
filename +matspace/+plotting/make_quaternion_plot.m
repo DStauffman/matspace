@@ -1,4 +1,4 @@
-function [fig_hand, err] = make_quaternion_plot(description, time_one, time_two, quat_one, quat_two, varargin)
+function [fig_hand, err] = make_quaternion_plot(description, time_one, quat_one, time_two, quat_two, varargin)
 
 % Generic quaternion comparison plot for use in other wrapper functions.
 %
@@ -73,15 +73,15 @@ import matspace.plotting.private.fun_is_log_level
 import matspace.plotting.private.fun_is_quat
 import matspace.plotting.private.fun_is_text
 import matspace.plotting.private.fun_is_time
-import matspace.utils.where
+import matspace.utils.ifelse
 
 %% Parser
 % Argument parser
 p = inputParser;
 addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'TimeOne', @fun_is_time);
-addRequired(p, 'TimeTwo', @fun_is_time);
 addRequired(p, 'QuatOne', @fun_is_quat);
+addRequired(p, 'TimeTwo', @fun_is_time);
 addRequired(p, 'QuatTwo', @fun_is_quat);
 addParameter(p, 'NameOne', '', @fun_is_text);
 addParameter(p, 'NameTwo', '', @fun_is_text);
@@ -111,7 +111,7 @@ addParameter(p, 'UseDatashader', false, @fun_is_bool);
 addParameter(p, 'FigAx', [], @fun_is_fig_ax);
 addParameter(p, 'LogLevel', 10, @fun_is_log_level);
 % do parse
-parse(p, description, time_one, time_two, quat_one, quat_two, varargin{:});
+parse(p, description, time_one, quat_one, time_two, quat_two, varargin{:});
 % create some convenient aliases
 name_one         = p.Results.NameOne;
 name_two         = p.Results.NameTwo;
@@ -141,7 +141,7 @@ fig_ax           = p.Results.FigAx;
 log_level        = p.Results.LogLevel;
 fig_visible_bool = p.Results.FigVisible;
 
-diff_type = char(where(plot_components, "quat_comp", "quat_mag"));
+diff_type = ifelse(plot_components, 'quat_comp', 'quat_mag');
 if isscalar(single_lines) && single_lines
     diff_type = 'quat_all';
 end

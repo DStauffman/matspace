@@ -197,7 +197,7 @@ if isempty(fig_ax)
         num_rows = 1;
     end
     num_cols = 1;
-    fig_ax = create_figure(num_figs, num_rows, num_cols, Description=description);
+    fig_ax = create_figure(num_figs, num_rows, num_cols, Description=description, Visible=fig_visible);
     if ~single_lines
         fig_ax(1:num_channels) = fig_ax;
     end

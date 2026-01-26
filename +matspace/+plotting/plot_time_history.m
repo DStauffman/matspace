@@ -101,10 +101,6 @@ parse(p, description, time, data, varargin{:});
 opts             = p.Results.Opts;
 ignore_empties   = p.Results.IgnoreEmpties;
 skip_setup_plots = p.Results.SkipSetupPlots;
-case_name        = p.Results.CaseName;
-save_plot        = p.Results.SavePlot;
-save_path        = p.Results.SavePath;
-classify         = p.Results.Classify;
 log_level        = p.Results.LogLevel;
 unmatched        = p.Unmatched;
 
@@ -118,103 +114,32 @@ if ignore_plot_data(data, ignore_empties)
 end
 
 %% Processing
+% make local copy of opts that can be modified without changing the original
 this_opts = Opts(opts);
 % opts overrides
-if ~ismember('CaseName', p.UsingDefaults)
-    this_opts.case_name = case_name;
-end
-if ~ismember('SavePlot', p.UsingDefaults)
-    this_opts.save_plot = save_plot;
-end
-if ~ismember('SavePath', p.UsingDefaults)
-    this_opts.save_path = save_path;
-end
-if ~ismember('Classify', p.UsingDefaults)
-    this_opts.classify = classify;
-end
+[this_opts.case_name, unmatched] = kwargs_pop(unmatched, 'CaseName', this_opts.case_name);
+[this_opts.save_plot, unmatched] = kwargs_pop(unmatched, 'SavePlot', this_opts.save_plot);
+[this_opts.save_path, unmatched] = kwargs_pop(unmatched, 'SavePath', this_opts.save_path);
+[this_opts.classify,  unmatched] = kwargs_pop(unmatched, 'Classify', this_opts.classify);
 
 % alias opts
-if isfield(unmatched, 'TimeUnits')
-    time_units = unmatched.TimeUnits;
-    unmatched = rmfield(unmatched, 'TimeUnits');
-else
-    time_units = this_opts.time_base;
+[time_units,   unmatched] = kwargs_pop(unmatched, 'TimeUnits', this_opts.time_base);
+% TODO: does this_opts.get_date_zero_str(); work instead?
+[start_date,   unmatched] = kwargs_pop(unmatched, 'StartDate', get_start_date(this_opts.date_zero));
+[rms_xmin,     unmatched] = kwargs_pop(unmatched, 'RmsXmin', this_opts.rms_xmin);
+[rms_xmax,     unmatched] = kwargs_pop(unmatched, 'RmsXmax', this_opts.rms_xmax);
+[disp_xmin,    unmatched] = kwargs_pop(unmatched, 'DispXmin', this_opts.disp_xmin);
+[disp_xmax,    unmatched] = kwargs_pop(unmatched, 'DispXmax', this_opts.disp_xmax);
+[single_lines, unmatched] = kwargs_pop(unmatched, 'SingleLines', this_opts.sing_line);
+[color_map,    unmatched] = kwargs_pop(unmatched, 'ColorMap', this_opts.colormap);
+if isempty(color_map)
+    color_map = parula(8);  % TODO: make full ColorMap class
 end
-if isfield(unmatched, 'StartDate')
-    start_date = unmatched.StartDate;
-    unmatched = rmfield(unmatched, 'StartDate');
-else
-    start_date = get_start_date(this_opts.date_zero);  % this_opts.get_date_zero_str();
-end
-if isfield(unmatched, 'RmsXmin')
-    rms_xmin = unmatched.RmsXmin;
-    unmatched = rmfield(unmatched, 'RmsXmin');
-else
-    rms_xmin = this_opts.rms_xmin;
-end
-if isfield(unmatched, 'RmsXmax')
-    rms_xmax = unmatched.RmsXmax;
-    unmatched = rmfield(unmatched, 'RmsXmax');
-else
-    rms_xmax = this_opts.rms_xmax;
-end
-if isfield(unmatched, 'DispXmin')
-    disp_xmin = unmatched.DispXmin;
-    unmatched = rmfield(unmatched, 'DispXmin');
-else
-    disp_xmin = this_opts.disp_xmin;
-end
-if isfield(unmatched, 'DispXmax')
-    disp_xmax = unmatched.DispXmax;
-    unmatched = rmfield(unmatched, 'DispXmax');
-else
-    disp_xmax = this_opts.disp_xmax;
-end
-if isfield(unmatched, 'SingleLines')
-    single_lines = unmatched.SingleLines;
-    unmatched = rmfield(unmatched, 'SingleLines');
-else
-    single_lines = this_opts.sing_line;
-end
-if isfield(unmatched, 'ColorMap')
-    color_map = unmatched.ColorMap;
-    unmatched = rmfield(unmatched, 'ColorMap');
-else
-    color_map = this_opts.colormap;
-    if isempty(color_map)
-        color_map = parula(8);  % TODO: make full ColorMap class
-    end
-end
-if isfield(unmatched, 'UseMean')
-    use_mean = unmatched.UseMean;
-    unmatched = rmfield(unmatched, 'UseMean');
-else
-    use_mean = this_opts.use_mean;
-end
-if isfield(unmatched, 'LabelVertLines')
-    lab_vert = unmatched.LabelVertLines;
-    unmatched = rmfield(unmatched, 'LabelVertLines');
-else
-    lab_vert = this_opts.lab_vert;
-end
-if isfield(unmatched, 'PlotZero')
-    plot_zero = unmatched.PlotZero;
-    unmatched = rmfield(unmatched, 'PlotZero');
-else
-    plot_zero = this_opts.show_zero;
-end
-if isfield(unmatched, 'ShowRms')
-    show_rms = unmatched.ShowRms;
-    unmatched = rmfield(unmatched, 'ShowRms');
-else
-    show_rms = this_opts.show_rms;
-end
-if isfield(unmatched, 'LegendLoc')
-    legend_loc = unmatched.LegendLoc;
-    unmatched = rmfield(unmatched, 'LegendLoc');
-else
-    legend_loc = this_opts.leg_spot;
-end
+[use_mean,     unmatched] = kwargs_pop(unmatched, 'UseMean', this_opts.use_mean);
+[lab_vert,     unmatched] = kwargs_pop(unmatched, 'LabelVertLines', this_opts.lab_vert);
+[plot_zero,    unmatched] = kwargs_pop(unmatched, 'PlotZero', this_opts.show_zero);
+[show_rms,     unmatched] = kwargs_pop(unmatched, 'ShowRms', this_opts.show_rms);
+[legend_loc,   unmatched] = kwargs_pop(unmatched, 'LegendLoc', this_opts.leg_spot);
 
 %% Plot data
 % call wrapper function for most of the details

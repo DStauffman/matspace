@@ -32,7 +32,7 @@ opts.sing_line = true;
 opts.names = ["KF1", "KF2"];
 
 % make plots
-figs1 = matspace.plotting.plot_quaternion('Quaternion', time_one, time_two, quat_one, quat_two, opts=opts);
+figs1 = matspace.plotting.plot_quaternion('Quaternion', time_one, quat_one, time_two, quat_two, opts=opts);
 
 figs2 = matspace.plotting.plot_time_difference(...
     'State Differences', ...

@@ -14,6 +14,7 @@ rms_xmax = kwargs.RmsXmax;
 
 import matspace.plotting.get_rms_indices
 import matspace.plotting.private.build_indices
+import matspace.utils.ifelse
 
 if isempty(times1) && isempty(times2)
     % have nothing
@@ -32,11 +33,7 @@ if isempty(times1) && ~isempty(times2)
 end
 % have both times1 and times2
 % TODO: pass in this information instead of repeating it
-if isdatetime(times1{1})
-    dt_same = seconds(1e-12);  % TODO: is this possible?  How accurate are datetimes?
-else
-    dt_same = 1e-12;
-end
+dt_same = ifelse(isdatetime(times1{1}), seconds(1e-12), 1e-12);  % TODO: is this possible?  How accurate are datetimes?
 have_unique_t1 = isscalar(unique(cellfun(@length, times1))) && all(cellfun(@(x) max(abs(x - times1{1})), times1) < dt_same);
 have_unique_t2 = isscalar(unique(cellfun(@length, times2))) && all(cellfun(@(x) max(abs(x - times2{1})), times2) < dt_same);
 for i = 1:length(times1)

@@ -61,6 +61,7 @@ classdef test_make_time_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.extra_plotter    = [];
             self.use_zoh          = false;
             self.label_vert_lines = true;
+            self.fig_visible      = false;
         end
     end
 
@@ -72,7 +73,8 @@ classdef test_make_time_plot < matlab.unittest.TestCase %#ok<*PROP>
 
     methods (Test)
         function test_simple(self)
-            self.fig = matspace.plotting.make_time_plot(self.description, self.time, self.data);
+            self.fig = matspace.plotting.make_time_plot(self.description, self.time, ...
+                self.data, FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
@@ -102,43 +104,47 @@ classdef test_make_time_plot < matlab.unittest.TestCase %#ok<*PROP>
                 DataAsRows=self.data_as_rows, ...
                 ExtraPlotter=self.extra_plotter, ...
                 UseZoh=self.use_zoh, ...
-                LabelVertLines=self.label_vert_lines ...
-            );
+                LabelVertLines=self.label_vert_lines, ...
+                FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
         function test_scalars(self)
-            self.fig = matspace.plotting.make_time_plot('', 0, 0);
+            self.fig = matspace.plotting.make_time_plot('', 0, 0, FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
         function test_0d(self)
-            self.fig = matspace.plotting.make_time_plot('', 5, 10.0);
+            self.fig = matspace.plotting.make_time_plot('', 5, 10.0, FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
         function test_list1(self)
             data = {self.data, self.data + 0.5, self.data + 1.0};
-            self.fig = matspace.plotting.make_time_plot(self.description, self.time, data);
+            self.fig = matspace.plotting.make_time_plot(self.description, ...
+                self.time, data, FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
         function test_list2(self)
             time = {self.time, self.time(1:end-1)};
             data = {self.data, 2 * self.data(1:end-1)};
-            self.fig = matspace.plotting.make_time_plot(self.description, time, data);
+            self.fig = matspace.plotting.make_time_plot(self.description, ...
+                time, data, FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
         function test_row_vectors(self)
             data = [self.data; sin(self.time)];
-            self.fig = matspace.plotting.make_time_plot(self.description, self.time, data);
+            self.fig = matspace.plotting.make_time_plot(self.description, ...
+                self.time, data, FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
         function test_col_vectors(self)
             data = [self.data', sin(self.time)'];
-            self.fig = matspace.plotting.make_time_plot(self.description, self.time, data, DataAsRows=false);
+            self.fig = matspace.plotting.make_time_plot(self.description, ...
+                self.time, data, DataAsRows=false, FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
@@ -168,8 +174,8 @@ classdef test_make_time_plot < matlab.unittest.TestCase %#ok<*PROP>
                 DataAsRows=self.data_as_rows, ...
                 ExtraPlotter=self.extra_plotter, ...
                 UseZoh=self.use_zoh, ...
-                LabelVertLines=self.label_vert_lines ...
-            );
+                LabelVertLines=self.label_vert_lines, ...
+                FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
@@ -178,14 +184,16 @@ classdef test_make_time_plot < matlab.unittest.TestCase %#ok<*PROP>
             data = repmat("open", [1, 100]);
             data(10:20) = "closed";
             data_cat = categorical(data);
-            self.fig = matspace.plotting.make_time_plot(self.description, time, data_cat, ShowRms=false);
+            self.fig = matspace.plotting.make_time_plot(self.description, ...
+                time, data_cat, ShowRms=false, FigVisible=self.fig_visible);
             self.verifyEqual(length(self.fig), 1);
         end
 
         % function test_datashader(self)
         %     time = linspace(0.0, 1000.0, 1e6);
         %     data = rand(1, 1e6);
-        %     self.fig = matspace.plotting.make_time_plot(self.description, time, data, UseDatashader=true);
+        %     self.fig = matspace.plotting.make_time_plot(self.description, ...
+        %         time, data, UseDatashader=true, FigVisible=self.fig_visible);
         %     self.verifyEqual(length(self.fig), 1);
         % end
 
@@ -193,7 +201,8 @@ classdef test_make_time_plot < matlab.unittest.TestCase %#ok<*PROP>
         %     temp = linspace(0, 1000, 1e6);
         %     time = datetime("2021-06-01T00:00:00") + seconds(temp);
         %     data = rand(1, 1e6);
-        %     self.fig = matspace.plotting.make_time_plot(self.description, time, data, TimeUnits='numpy', UseDatashader=true);
+        %     self.fig = matspace.plotting.make_time_plot(self.description, ...
+        %         time, data, TimeUnits='numpy', UseDatashader=true, FigVisible=self.fig_visible);
         %     self.verifyEqual(length(self.fig), 1);
         % end
 
@@ -201,7 +210,8 @@ classdef test_make_time_plot < matlab.unittest.TestCase %#ok<*PROP>
         %     time = linspace(0, 1000, 1e4);
         %     data = repmat("open", [1 1e4]);
         %     data(1000:2000) = "closed";
-        %     self.fig = matspace.plotting.make_time_plot(self.description, time, data, ShowRms=false, UseDatashader=true);
+        %     self.fig = matspace.plotting.make_time_plot(self.description, ...
+        %         time, data, ShowRms=false, UseDatashader=true, FigVisible=self.fig_visible);
         %     self.verifyEqual(length(self.fig), 1);
         % end
     end
