@@ -495,7 +495,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             %     LogLevel.L5, 'No %s data was provided, so no plot was generated for "%s".', "differences", ""
             % )
             self.verifyNotEmpty(self.fig_hand);
-            self.assertEqual(len(self.fig_hand), 0);
+            self.assertEqual(length(self.fig_hand), 0);
         end
     end
 end
