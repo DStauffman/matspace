@@ -41,19 +41,19 @@ function [fig_hand, err] = plot_time_difference(description, time_one, data_one,
 % #.  Written by David C. Stauffer in December 2022.
 % 
 % Prototype:
-%     description = "Random Data"
-%     time_one = np.arange(0, 5, 1./12) + 2000
-%     data_one = prng.random((5, len(time_one))).cumsum(axis=1)
-%     data_one[:] = 10 * data_one / np.expand_dims(data_one[:, -1], axis=1)
-%     time_two = np.arange(0, 5, 0.5) + 2000
-%     data_two = prng.random((5, len(time_two))).cumsum(axis=1)
-%     data_two[:] = 10 * data_two / np.expand_dims(data_two[:, -1], axis=1)
-%     figs1 = plot_time_difference(description, time_one, data_one, time_two, data_two)
+%     description = 'Random Data'
+%     time_one = 2000:1/12:2005;
+%     data_one = cumsum(rand(5, length(time_one)), 2);
+%     data_one(:) = 10 * data_one ./ data_one(:, end);
+%     time_two = 2000:0.5:2005;
+%     data_two = cumsum(rand(5, length(time_two)), 2);
+%     data_two(:) = 10 * data_two ./ data_two(:, end);
+%     figs1 = plot_time_difference(description, time_one, data_one, time_two, data_two);
 % 
 % Date based version
-%     time1 = np.datetime64("2020-05-01 00:00:00", "ns") + 10**9*np.arange(0, 5*60, 5, dtype=np.int64)
-%     time2 = np.datetime64("2020-05-01 00:00:00", "ns") + 10**9*np.arange(0, 5*60, 30, dtype=np.int64)
-%     figs2 = plot_time_difference(description, time1, data_one, time2, data_two, time_units="datetime")
+%     time1 = datetime(2020, 05, 01, 00, 00, 00) + seconds(0:5:5*60);
+%     time2 = datetime(2020, 05, 01, 00, 00, 00) + seconds(0:30:5*60);
+%     figs2 = plot_time_difference(description, time1, data_one, time2, data_two, TimeUnits='datetime');
 % 
 %     % Close plots
 %     close(fig_hand1);

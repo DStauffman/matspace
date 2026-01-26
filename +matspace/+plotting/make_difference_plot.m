@@ -254,8 +254,8 @@ if have_both
         % find overlapping times
         [time_overlap_single, d1_diff_ix, d2_diff_ix] = intersect2(times1{1}, times2{1}, tolerance);
         % find differences
-        d1_miss_ix = xor(1:length(times1{1}), d1_diff_ix);
-        d2_miss_ix = xor(1:length(times2{1}), d2_diff_ix);
+        d1_miss_ix = setxor(1:length(times1{1}), d1_diff_ix);
+        d2_miss_ix = setxor(1:length(times2{1}), d2_diff_ix);
         time_overlap = repmat({time_overlap_single}, [1 num_channels]);
         if is_quat_diff
             [nondeg_angle, nondeg_error] = quat_angle_diff(data_one(:, d1_diff_ix), data_two(:, d2_diff_ix));
@@ -327,7 +327,7 @@ if isempty(fig_ax)
         if make_subplots
             if single_lines1
                 if single_lines2
-                    fig_ax = create_figure(1, num_channels, 2, Description=description);
+                    fig_ax = create_figure(1, num_channels, 2, Description=description, Visible=fig_visible);
                 else
                     fig_ax = cell(1, 2 * num_channels);
                     fig = figure(Visible=fig_visible);
@@ -364,18 +364,22 @@ if isempty(fig_ax)
             end
         elseif single_lines1
             if single_lines2
-                fig_ax = [create_figure(1, num_channels, 1, Description=description), create_figure(1, num_channels, 1, Description=[description,' Difference'])];
+                fig_ax = [create_figure(1, num_channels, 1, Description=description, Visible=fig_visible), ...
+                    create_figure(1, num_channels, 1, Description=[description,' Difference'], Visible=fig_visible)];
             else
-                fig_ax = [create_figure(1, num_channels, 1, Description=description), repmat(create_figure(1, 1, 1, Description=[description,' Difference']), 1, num_channels)];
+                fig_ax = [create_figure(1, num_channels, 1, Description=description, Visible=fig_visible), ...
+                    repmat(create_figure(1, 1, 1, Description=[description,' Difference']), 1, num_channels, Visible=fig_visible)];
             end
         elseif single_lines2
-            fig_ax = [repmat(create_figure(1, 1, 1, Description=description), 1, num_channels), create_figure(1, num_channels, 1, Description=[description,' Difference'])];
+            fig_ax = [repmat(create_figure(1, 1, 1, Description=description, Visible=fig_visible), 1, num_channels), ...
+                create_figure(1, num_channels, 1, Description=[description,' Difference'], Visible=fig_visible)];
         else
-            fig_ax = [repmat(create_figure(1, 1, 1, Description=description), 1, num_channels), repmat(create_figure(1, 1, 1, Description=[description,' Difference']), 1, num_channels)];
+            fig_ax = [repmat(create_figure(1, 1, 1, Description=description, Visible=fig_visible), 1, num_channels), ...
+                repmat(create_figure(1, 1, 1, Description=[description,' Difference'], Visible=fig_visible), 1, num_channels)];
         end
     else
         num_rows = ifelse(single_lines1, num_channels, 1);
-        fig_ax = create_figure(1, num_rows, 1, Description=description);
+        fig_ax = create_figure(1, num_rows, 1, Description=description, Visible=fig_visible);
         if ~single_lines1
             temp_fig_ax = fig_ax;
             fig_ax = cell(1, num_channels * length(temp_fig_ax));
@@ -516,20 +520,20 @@ if have_both
                     this_time(d1_miss_ix), ...
                     zeros(1, length(d1_miss_ix)), ...
                     'kx', ...
-                    markersize=8, ...
-                    markeredgewidth=2, ...
-                    markerfacecolor='none', ...
-                    label=name_one + " Extra");
+                    MarkerSize=8, ...
+                    ...MarkerEdgeWidth=2, ...
+                    MarkerFaceColor='none', ...
+                    DisplayName=name_one + " Extra");
             end
-            if d2_miss_ix.size > 0
+            if ~isempty(d2_miss_ix)
                 plot(this_axes, ...
                     times2{1}(d2_miss_ix), ...
                     zeros(1, length(d2_miss_ix)), ...
                     'go', ...
-                    markersize=8, ...
-                    markeredgewidth=2, ...
-                    markerfacecolor='none', ...
-                    label=name_two + " Extra");
+                    MarkerSize=8, ...
+                    ...MarkerEdgeWidth=2, ...
+                    MarkerFaceColor='none', ...
+                    DisplayName=name_two + " Extra");
             end
         end
         xlims = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
