@@ -9,7 +9,7 @@ function [] = plot_classification(fig_hand, classification, kwargs)
 % Input:
 %     fig_hand        : (1xN) vector of figure handles [num]
 %     classification  : (row) string specifying classification to use, from {'', 'U','CUI', 'C','S','TS'} [char]
-%     kwargs          : 
+%     kwargs          :
 %         .caveat     : (row) keywstring specifying the extra caveats beyond the main classification [char]
 %         .test       : (true/false) flag to specify if this is a test or a real application [bool]
 %         .location   : (row) string specifying where to put the label, from:

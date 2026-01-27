@@ -1,25 +1,19 @@
 function [fig_hand, err] = make_difference_plot(description, time_one, data_one, time_two, data_two, varargin)
 
 % Generic difference comparison plot for use in other wrapper functions.
-% 
+%
 % Plots two vector histories over time, along with a difference from one another.
-% 
+%
 % Output:
 %     fig_hand .. : (1xN) figure handles [num]
 %     err ....... : (struct) Differences
-% 
-% Change Log:
-%     1.  Written by David C. Stauffer in MATLAB in October 2011, updated in 2018.
-%     2.  Ported to Python by David C. Stauffer in March 2019.
-%     3.  Made fully functional by David C. Stauffer in April 2020.
-%     4.  Wrapped to the generic do everything version by David C. Stauffer in March 2021.
-% 
+%
 % Prototype:
 %     description      = 'example';
 %     time_one         = 0:10;
 %     data_one         = 50e-6 * rand(2, 11);
 %     time_two         = 2:12;
-%     data_two         = data_one[:, [3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2]] - 1e-6 * rand(2, 11);
+%     data_two         = data_one(:, [3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2]) - 1e-6 * rand(2, 11);
 %     name_one         = 'test1';
 %     name_two         = 'test2';
 %     elements         = ["x", "y"];
@@ -59,9 +53,15 @@ function [fig_hand, err] = make_difference_plot(description, time_one, data_one,
 %         Tolerance=tolerance, UseZoh=use_zoh, ...
 %         LabelVertLines=label_vert_lines, ExtraPlotter=extra_plotter, ...
 %         UseDatashader=use_datashader, FigAx=fig_ax, DiffType=diff_type);
-% 
+%
 %     % Close plots
 %     close(fig_hand);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in MATLAB in October 2011, updated in 2018.
+%     2.  Ported to Python by David C. Stauffer in March 2019.
+%     3.  Made fully functional by David C. Stauffer in April 2020.
+%     4.  Wrapped to the generic do everything version by David C. Stauffer in March 2021.
 
 %% Imports
 import matspace.plotting.ignore_plot_data
@@ -349,11 +349,11 @@ if isempty(fig_ax)
                 fig = figure(Visible=fig_visible);
                 ax = gobjects(1, 2 * num_channels);
                 error('Not yet implemnted.');
-                %fig = plt.figure(constrained_layout=True)
-                %gs = fig.add_gridspec(num_channels, 2)
-                %ax1 = fig.add_subplot(gs[:, 0])
-                %ax = [fig.add_subplot(gs[i, 1], sharex=ax1) for i in range(num_channels)]
-                %fig_ax = num_channels * ((fig, ax1),) + tuple((fig, this_ax) for this_ax in ax)
+                % fig = plt.figure(constrained_layout=True)
+                % gs = fig.add_gridspec(num_channels, 2)
+                % ax1 = fig.add_subplot(gs[:, 0])
+                % ax = [fig.add_subplot(gs[i, 1], sharex=ax1) for i in range(num_channels)]
+                % fig_ax = num_channels * ((fig, ax1),) + tuple((fig, this_ax) for this_ax in ax)
             else
                 temp_fig_ax = create_figure(1, 2, 1, Description=description, Visible=fig_visible);
                 fig_ax = cell(1, num_channels * length(temp_fig_ax));
@@ -564,7 +564,9 @@ if have_both
 end
 
 if single_lines1 || single_lines2
-    fig_hand(1).supylabel(description)
+    % ensure the figure is active, as the sgtitle command does not take in inputs for it
+    figure(fig_hand(1));
+    sgtitle(description);
 end
 
 % plot any extra information through a generic callable

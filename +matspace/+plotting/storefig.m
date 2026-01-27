@@ -1,4 +1,4 @@
-function storefig(fig_hand,path,format) %#ok<*MCPRT>
+function storefig(fig_hand, path, format) %#ok<*MCPRT>
 
 % STOREFIG  store figures to directory in specified format.
 %
@@ -17,27 +17,29 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 %
 % Prototype:
 %     f1 = figure(5);
-%     hold on;
-%     set(gcf,'name','fig5');
-%     title('somethingA');
-%     plot(linspace(0,3600),1+randn(1,100),'r');
-%     legend('r');
-%     xlabel('something [sec]');
-%     ylabel('something');
+%     set(f1, Name='fig5');  % cannot combine lines when using numeric figures
+%     ax = axes(f1);
+%     hold(ax, 'on');
+%     title(ax, 'somethingA');
+%     plot(ax, linspace(0, 3600), 1 + randn(1, 100), 'r');
+%     legend(ax, 'r');
+%     xlabel(ax, 'something [sec]');
+%     ylabel(ax, 'something');
 %     matspace.plotting.figmenu;
 %
 %     f2 = figure(6);
-%     hold on;
-%     set(gcf,'name','fig6');
-%     title('somethingB');
-%     plot(linspace(0,3600),1+randn(1,100),'r');
-%     legend('r');
-%     xlabel('something [sec]');
-%     ylabel('something');
+%     set(f2, Name='fig6');
+%     ax = axes(f2);
+%     hold(ax, 'on');
+%     title(ax, 'somethingB');
+%     plot(ax, linspace(0, 3600), 1 + randn(1, 100), 'r');
+%     legend(ax, 'r');
+%     xlabel(ax, 'something [sec]');
+%     ylabel(ax, 'something');
 %     matspace.plotting.figmenu;
 %
 %     folder = matspace.paths.get_root_dir();
-%     matspace.plotting.storefig([f1 f2],folder,'png');
+%     matspace.plotting.storefig([f1 f2], folder, 'png');
 %
 %     % clean up
 %     close([f1 f2]);
@@ -49,27 +51,21 @@ function storefig(fig_hand,path,format) %#ok<*MCPRT>
 %     matspace.plotting.setup_plots
 %
 % Notes:
-%     1.  "format" can also be a cell array to save the plots as multiple different types.
+%     1.  "format" can also be a cell array or string to save the plots as multiple different types.
 %
 % Change Log:
 %     1.  Added to matspace library in Sept 2013.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+% Arguments
+arguments
+    fig_hand (1, :) matlab.ui.Figure
+    path {mustBeFolder} = pwd
+    format {mustBeMember(format, ["png", "emf", "fig", "jpg"])} = 'png'
+end
+
 % Imports
 import matspace.plotting.resolve_name
-
-% optional inputs
-switch nargin
-    case 1
-        path   = pwd;
-        format = 'png';
-    case 2
-        format = 'png';
-    case 3
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
 
 % confirm that handles are valid figures
 for f = fig_hand
@@ -83,12 +79,6 @@ for f = fig_hand
         warning('matspace:plotting:storeFigBadAxes', 'Specified figure "%i" does not contain an axis.', hfig);
         return
     end
-end
-
-% confirm whether storage directory exists
-if ~isfolder(path)
-    warning('matspace:plotting:storeFigBadPath', 'Specified storage path not found: "%s".', path);
-    return
 end
 
 % make formats always be a cell array

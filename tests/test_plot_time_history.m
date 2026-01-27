@@ -21,6 +21,7 @@ classdef test_plot_time_history < matlab.unittest.TestCase %#ok<*PROP>
         units,
         opts,
         elements,
+        fig_visible,
     end
 
     methods (TestMethodSetup)
@@ -36,6 +37,7 @@ classdef test_plot_time_history < matlab.unittest.TestCase %#ok<*PROP>
             self.opts           = matspace.plotting.Opts();
             self.opts.show_plot = false;
             self.elements       = ["Value 1", "Value 2", "Value 3", "Value 4", "Value 5"];
+            self.fig_visible    = false;
         end
     end
 
@@ -54,14 +56,15 @@ classdef test_plot_time_history < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_defaults(self)
-            self.fig_hand = matspace.plotting.plot_time_history('', self.time, self.col_data);
+            self.fig_hand = matspace.plotting.plot_time_history('', self.time, self.col_data, ...
+                FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 1);
         end
 
         function test_with_units(self)
             self.fig_hand = matspace.plotting.plot_time_history(self.description, self.time, ...
-                self.col_data, Units=self.units);
+                self.col_data, Units=self.units, FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 1);
         end
@@ -74,14 +77,14 @@ classdef test_plot_time_history < matlab.unittest.TestCase %#ok<*PROP>
         end
 
         function test_no_data(self)
-            self.fig_hand = matspace.plotting.plot_time_history('', self.time, []);
+            self.fig_hand = matspace.plotting.plot_time_history('', self.time, [], FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 1);
         end
 
         function test_ignore_zeros(self)
             self.fig_hand = matspace.plotting.plot_time_history(self.description, self.time, ...
-                self.col_data, IgnoreEmpties=true);
+                self.col_data, IgnoreEmpties=true, FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 1);
         end
@@ -90,7 +93,7 @@ classdef test_plot_time_history < matlab.unittest.TestCase %#ok<*PROP>
             self.col_data(1, :) = 0;
             self.col_data(3, :) = 0;
             self.fig_hand = matspace.plotting.plot_time_history(self.description, self.time, ...
-                self.col_data, IgnoreEmpties=true);
+                self.col_data, IgnoreEmpties=true, FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 1);
         end
@@ -98,19 +101,19 @@ classdef test_plot_time_history < matlab.unittest.TestCase %#ok<*PROP>
         function test_ignore_zeros3(self)
             self.col_data(:) = 0;
             self.fig_hand = matspace.plotting.plot_time_history('All Zeros', self.time, ...
-                self.col_data, IgnoreEmpties=true);
+                self.col_data, IgnoreEmpties=true, FigVisible=self.fig_visible);
             self.verifyEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 0);
         end
 
         function test_0d(self)
-            self.fig_hand = matspace.plotting.plot_time_history('Zero', 0, 0);
+            self.fig_hand = matspace.plotting.plot_time_history('Zero', 0, 0, FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 1);
         end
 
         function test_1d(self)
-            self.fig_hand = matspace.plotting.plot_time_history('Line', 1:5, 1:5);
+            self.fig_hand = matspace.plotting.plot_time_history('Line', 1:5, 1:5, FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 1);
         end
@@ -137,7 +140,7 @@ classdef test_plot_time_history < matlab.unittest.TestCase %#ok<*PROP>
         function test_lists0(self)
             time = 1:100;
             data = {zeros(1, 100), ones(1, 100)};
-            self.fig_hand = matspace.plotting.plot_time_history('', time, data);
+            self.fig_hand = matspace.plotting.plot_time_history('', time, data, FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyEqual(length(self.fig_hand), 1);
         end

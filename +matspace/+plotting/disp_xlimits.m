@@ -1,36 +1,33 @@
 function [] = disp_xlimits(fig_or_axis, kwargs)
 
 % Set the xlimits to the specified xmin and xmax.
-% 
-% Parameters
-% ----------
+%
+% Input:
 % fig_or_axis : matlpotlib.pyplot.Axes or matplotlib.pyplot.Figure or list of them
 %     List of figures/axes to process
 % xmin : scalar
 %     Minimum X value
 % xmax : scalar
 %     Maximum X value
-% 
-% Notes
-% -----
-% #.  Written by David C. Stauffer in August 2015.
-% #.  Modified by David C. Stauffer in May 2020 to come out of setup_plots and into lower level
-%     routines.
-% 
-% Examples
-% --------
+%
+% Prototype:
 %     fig = figure(Name='Figure Title');
 %     ax = axes(fig);
 %     x = 0:0.1:10;
 %     y = sin(x);
 %     plot(ax, x, y);
-%     title(ax, "X vs Y");
+%     title(ax, 'X vs Y');
 %     xmin = 2;
 %     xmax = 5;
 %     matspace.plotting.disp_xlimits(fig, xmin, xmax);
-% 
-% Close plot
-%     close(fig)
+%
+%     % close plot
+%     close(fig);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in August 2015.
+%     2.  Modified by David C. Stauffer in May 2020 to come out of setup_plots and into lower level
+%         routines.
 
 arguments
     fig_or_axis

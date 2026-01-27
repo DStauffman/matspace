@@ -1,7 +1,7 @@
 function [fig_ax] = fig_ax_factory(kwargs)
 
 % Creates the figures and axes for use in a given plotting function.
-% 
+%
 % Parameters
 % ----------
 % NumFigs : int
@@ -18,11 +18,11 @@ function [fig_ax] = fig_ax_factory(kwargs)
 %     Whether to include everything and return a tuple of None's with the correct length
 % Visible : str
 %     Whether the plot is visible or not, from {'on', 'off'}
-% 
+%
 % Notes
 % -----
 % #.  Written by David C. Stauffer in February 2022.
-% 
+%
 % Examples
 % --------
 %     fig_ax = matspace.plotting.fig_ax_factory();
@@ -30,7 +30,7 @@ function [fig_ax] = fig_ax_factory(kwargs)
 %     ax = fig_ax{1}{2};
 %     assert(isa(fig, 'matlab.ui.Figure'));
 %     assert(isa(ax, 'matlab.graphics.axis.Axes'));
-% 
+%
 % Close plot
 %     close(fig);
 

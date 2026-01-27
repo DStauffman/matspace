@@ -29,9 +29,6 @@ classdef Opts
     %         .show_xtra : (scalar) true/false flag to show extra points in one vector or the other when plotting differences [bool]
     %         .time_base : (row) string specifying the base units of time, typically from {'sec', 'months'} [char]
     %         .time_unit : (row) string specifying the time unit for the x axis, from {'', 'sec', 'min', 'hr', 'day', 'month', 'year'} [char]
-    %         .vert_fact : (row) string specifying the vertical factor to apply to the Y axis, [char]
-    %             from: {'yotta','zetta','exa','peta','tera','giga','mega','kilo','hecto','deca',
-    %             'unity','deci','centi','milli', 'micro','nano','pico','femto','atto','zepto','yocto'}
     %         .colormap  : (row) string specifying the name of the colormap to use [char]
     %         .leg_spot  : (row) string specifying the location of the legend, from {'north', 'south', 'east', 'west',
     %             'northeast', 'northwest', 'southeast', 'southwest', 'northoutside', 'southoutside', 'eastoutside',
@@ -72,7 +69,6 @@ classdef Opts
         show_xtra,
         time_base,
         time_unit,
-        vert_fact,
         colormap,
         leg_spot,
         classify,
@@ -121,7 +117,6 @@ classdef Opts
             OPTS.show_xtra = true;
             OPTS.time_base = 'sec'; % Nominally seconds or years, time when no scaling done
             OPTS.time_unit = ''; % Time unit to display plots in, potentially scaling from the base
-            OPTS.vert_fact = 'unity';
             OPTS.colormap  = '';
             OPTS.leg_spot  = 'best';
             OPTS.classify  = '';
@@ -201,6 +196,8 @@ classdef Opts
         function [disp_xmin, disp_xmax, rms_xmin, rms_xmax] = get_time_limits(self)
             % Returns the display and RMS limits in the current time units.
 
+            import matspace.plotting.convert_time_units
+
             function [value] = convert(value)
                 if ~isempty(value) && isfinite(value)
                     value = convert_time_units(value, self.time_base, self.time_unit);
@@ -208,6 +205,10 @@ classdef Opts
             end
 
             if strcmp(self.time_base, 'datetime')
+                disp_xmin = self.disp_xmin;
+                disp_xmax = self.disp_xmax;
+                rms_xmin  = self.rms_xmin;
+                rms_xmax  = self.rms_xmax;
                 return
             end
 

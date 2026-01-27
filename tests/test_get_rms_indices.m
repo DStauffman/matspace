@@ -61,7 +61,7 @@ classdef test_get_rms_indices < matlab.unittest.TestCase %#ok<*PROP>
                 self.verifyEqual(ix.(field), self.exp.(field), sprintf('Failed for field %s', field));
             end
         end
-    
+
         function test_datetime(self)
             date_zero = datetime(2026, 1, 15, 9, 0, 0);
             time_one = date_zero + seconds(self.time_one);

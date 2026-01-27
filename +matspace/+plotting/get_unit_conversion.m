@@ -15,6 +15,13 @@ function [new_units, unit_mult] = get_unit_conversion(conversion, units)
 %     new_units : (row) Units with the correctly prepended abbreviation (or substitution) [char]
 %     unit_mult : (scalar) Multiplication factor [num]
 %
+% Prototype:
+%     conversion = 'micro';
+%     units = 'rad';
+%     [new_units, unit_mult] = matspace.plotting.get_unit_conversion(conversion, units);
+%     assert(unit_mult == 1000000.0);
+%     assert(strcmp(new_units, '\murad'));
+%
 % Notes:
 %     1.  Special cases include dimensionless/radians to arcseconds or parts per million, or
 %         appropriately scaling radians squared.
@@ -23,13 +30,6 @@ function [new_units, unit_mult] = get_unit_conversion(conversion, units)
 %     1.  Written by David C. Stauffer in February 2021 when he had to deal with arcseconds and other
 %         special cases.
 %     2.  Translated from Python into Matlab by David C. Stauffer in January 2022.
-%
-% Prototype:
-%     conversion = 'micro';
-%     units = 'rad';
-%     [new_units, unit_mult] = matspace.plotting.get_unit_conversion(conversion, units);
-%     assert(unit_mult == 1000000.0);
-%     assert(strcmp(new_units, '\murad'));
 
 arguments (Output)
     new_units (1, :) char

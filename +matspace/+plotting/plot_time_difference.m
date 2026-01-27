@@ -1,7 +1,7 @@
 function [fig_hand, err] = plot_time_difference(description, time_one, data_one, time_two, data_two, varargin)
 
 % Plot multiple metrics over time.
-% 
+%
 % Parameters
 % ----------
 % description : str
@@ -26,20 +26,20 @@ function [fig_hand, err] = plot_time_difference(description, time_one, data_one,
 %     Whether the function should return the error differences in addition to the figure handles
 % **kwargs : dict
 %     Remaining keyword arguments will be passed to make_time_plot
-% 
+%
 % Returns
 % -------
 % figs : list of class matplotlib.figure.Figure
 %     figure handles
-% 
+%
 % See Also
 % --------
 % make_time_plot
-% 
+%
 % Notes
 % -----
 % #.  Written by David C. Stauffer in December 2022.
-% 
+%
 % Prototype:
 %     description = 'Random Data'
 %     time_one = 2000:1/12:2005;
@@ -49,12 +49,12 @@ function [fig_hand, err] = plot_time_difference(description, time_one, data_one,
 %     data_two = cumsum(rand(5, length(time_two)), 2);
 %     data_two(:) = 10 * data_two ./ data_two(:, end);
 %     figs1 = plot_time_difference(description, time_one, data_one, time_two, data_two);
-% 
+%
 % Date based version
 %     time1 = datetime(2020, 05, 01, 00, 00, 00) + seconds(0:5:5*60);
 %     time2 = datetime(2020, 05, 01, 00, 00, 00) + seconds(0:30:5*60);
 %     figs2 = plot_time_difference(description, time1, data_one, time2, data_two, TimeUnits='datetime');
-% 
+%
 %     % Close plots
 %     close(fig_hand1);
 %     close(fig_hand2);
@@ -105,7 +105,7 @@ if ignore_plot_data(data_one, ignore_empties) && ignore_plot_data(data_two, igno
     fig_hand = gobjects(1, 0);
     err = [];
     return
-end 
+end
 
 %% Processing
 % % determine if converting units
@@ -156,8 +156,8 @@ unmatched_args = namedargs2cell(unmatched);
 [fig_hand, err] = make_difference_plot(...
     description, ...
     time_one, ...
-    time_two, ...
     data_one, ...
+    time_two, ...
     data_two, ...
     unmatched_args{:}, ...
     NameOne=name_one, ...
@@ -182,7 +182,7 @@ unmatched_args = namedargs2cell(unmatched);
 if ~skip_setup_plots
     % create figure controls
     figmenu;
-    
+
     % setup plots
     setup_plots(fig_hand, opts, 'time');
 end

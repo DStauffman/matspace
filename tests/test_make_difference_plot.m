@@ -117,7 +117,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_no_subplots(self)
             self.make_subplots = false;
             [self.fig_hand, err] = matspace.plotting.make_difference_plot(...
@@ -154,7 +154,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_no_start_date(self)
             self.start_date = '';
             [self.fig_hand, err] = matspace.plotting.make_difference_plot(...
@@ -191,7 +191,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_only_data_one(self)
             self.data_two(:) = nan;
             self.name_two = '';
@@ -230,7 +230,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
             self.verifyTrue(all(isnan(err.diff)));
         end
-    
+
         function test_only_data_two(self)
             self.data_one = [];
             self.name_one = '';
@@ -269,7 +269,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
             self.verifyTrue(all(isnan(err.diff)));
         end
-    
+
         function test_rms_bounds(self)
             self.rms_xmin = 5;
             self.rms_xmax = 7;
@@ -307,7 +307,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_use_mean(self)
             self.use_mean = true;
             [self.fig_hand, err] = matspace.plotting.make_difference_plot(...
@@ -344,7 +344,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_no_rms_in_legend(self)
             self.show_rms = false;
             [self.fig_hand, err] = matspace.plotting.make_difference_plot(...
@@ -381,7 +381,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_plot_zero(self)
             self.plot_zero = true;
             [self.fig_hand, err] = matspace.plotting.make_difference_plot(...
@@ -418,7 +418,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_disp_bounds(self)
             self.fig_hand = matspace.plotting.make_difference_plot(...
                 self.description, ...
@@ -434,9 +434,9 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_no_overlap(self)
-            time_one = 1:10;
+            time_one = 0:10;
             time_two = (2:12) + 0.5;
             self.fig_hand = matspace.plotting.make_difference_plot(...
                 self.description, ...
@@ -472,21 +472,21 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_none1(self)
             self.fig_hand = matspace.plotting.make_difference_plot(self.description, self.time_one, ...
                 self.data_one, [], [], FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         function test_none2(self)
             self.fig_hand = matspace.plotting.make_difference_plot(self.description, [], [], self.time_two, ...
                 self.data_two, FigVisible=self.fig_visible);
             self.verifyNotEmpty(self.fig_hand);
             self.verifyGreaterThanOrEqual(length(self.fig_hand), 1);
         end
-    
+
         % @patch("lmspace.plotting.generic.logger")
         function test_none3(self)
             self.fig_hand = matspace.plotting.make_difference_plot('', [], [], [], [], FigVisible=self.fig_visible);
@@ -494,7 +494,7 @@ classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
             % mock_logger.log.assert_called_with(
             %     LogLevel.L5, 'No %s data was provided, so no plot was generated for "%s".', "differences", ""
             % )
-            self.verifyNotEmpty(self.fig_hand);
+            self.verifyEmpty(self.fig_hand);
             self.assertEqual(length(self.fig_hand), 0);
         end
     end

@@ -1,6 +1,6 @@
 % Example script for generating plots using the matspace library.
-% 
-% Notes
+%
+% Change Log:
 %     1.  Written by David C. Stauffer in May 2015.
 %     2.  Translated into Matlab by David C. Stauffer in January 2026.
 
