@@ -41,7 +41,7 @@ classdef test_qrot < matlab.unittest.TestCase %#ok<*PROP>
                 self.verifyEqual(quat, self.quat(:, i), 'AbsTol', self.tolerance);
             end
         end
-        
+
         function test_single_axis(self)
             for i = 1:length(self.axis)
                 quat = matspace.quaternions.qrot(self.axis(i), [self.angle, self.angle2]);

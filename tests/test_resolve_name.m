@@ -79,7 +79,7 @@ classdef test_resolve_name < matlab.unittest.TestCase %#ok<*PROP>
             new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name, force_win=true), self.exp_warning);
             self.verifyEqual(new_name, self.exp_win);
         end
-    
+
         function test_nominal_unix(self)
             new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name, force_win=false), self.exp_warning);
             self.verifyEqual(new_name, self.exp_unix);
@@ -104,7 +104,7 @@ classdef test_resolve_name < matlab.unittest.TestCase %#ok<*PROP>
             end
             self.verifyEqual(new_names, exp);
         end
-    
+
         function test_different_replacements(self)
             bad_name = 'new <>:"/\|?*text';
             new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name, force_win=true, rep_token='X'), self.exp_warning);
@@ -114,7 +114,7 @@ classdef test_resolve_name < matlab.unittest.TestCase %#ok<*PROP>
             new_name = self.verifyWarning(@() matspace.plotting.resolve_name(string(bad_name), force_win=true, rep_token="YY"), self.exp_warning);
             self.verifyEqual(new_name, "new YYYYYYYYYYYYYYYYYYtext");
         end
-    
+
         function test_newlines(self)
             bad_name = "Hello" + newline + "World.jpg";
             new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name), self.exp_warning);

@@ -107,7 +107,7 @@ classdef test_setup_dir < matlab.unittest.TestCase %#ok<*PROP>
             matspace.utils.setup_dir(str);
             self.verifyTrue(isfolder(self.folder));
         end
-        
+
         function test_string_array(self)
             str_array = string({self.folder, self.subdir});
             self.verifyError(@() matspace.utils.setup_dir(str_array), 'MATLAB:validation:IncompatibleSize');

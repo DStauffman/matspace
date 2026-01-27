@@ -1,7 +1,7 @@
 function [ignore] = ignore_plot_data(data, ignore_empties, col)
 
 % Determine whether to ignore this data or not.
-% 
+%
 % Inputs:
 % data : (N, M) ndarray
 %     Data to plot or ignore
@@ -9,21 +9,21 @@ function [ignore] = ignore_plot_data(data, ignore_empties, col)
 %     Whether to potentially ignore empties or not
 % col : int, optional
 %     Column number to look at to determine if ignoring, if not present, look at entire matrix
-% 
+%
 % Output:
 % ignore : bool
 %     Whether data is null (all zeros/nans) and should be ignored.
-% 
-% Notes:
-%     1.  Written by David C. Stauffer in April 2017.
-%     2.  Translated into Matlab by David C. Stauffer in January 2026.
-% 
+%
 % Prototype:
-%     data = zeros([3, 10])
+%     data = zeros([3, 10]);
 %     ignore_empties = true;
 %     col = 2;
 %     ignore = matspace.plotting.ignore_plot_data(data, ignore_empties, col);
 %     assert(ignore);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in April 2017.
+%     2.  Translated into Matlab by David C. Stauffer in January 2026.
 
 switch nargin
     case 1

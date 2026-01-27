@@ -68,11 +68,8 @@ import matspace.plotting.private.plot_linear
 import matspace.plotting.private.plot_zoh
 import matspace.plotting.plot_vert_lines
 import matspace.plotting.show_zero_ylim
-% import matspace.plotting.whitten
 import matspace.plotting.zoom_ylim
-% import matspace.stats.intersect2
-import matspace.utils.nanmean
-% import matspace.utils.nanrms
+import matspace.utils.ifelse
 
 %% Hard-coded values
 LEG_FORMAT  = '%1.3f';
@@ -139,11 +136,7 @@ label_vert_lines = p.Results.LabelVertLines;
 use_datashader   = p.Results.UseDatashader;
 fig_ax           = p.Results.FigAx;
 plot_type        = p.Results.PlotType;
-if p.Results.FigVisible
-    fig_visible = 'on';
-else
-    fig_visible = 'off';
-end
+fig_visible      = ifelse(p.Results.FigVisible, 'on', 'off');
 
 %% Processing
 [times, datum] = make_time_and_data_lists(time, data, DataAsRows=data_as_rows);

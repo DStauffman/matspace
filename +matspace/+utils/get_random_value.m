@@ -139,16 +139,18 @@ switch lower(distribution)
             end
             value = pd.random(num);
         else
-            % TODO: this method does not work correctly
             a = coeffs(1);
             b = coeffs(2);
             c = coeffs(3);
-            Fc = (c - a) / (b - a);
+            if ~(a <= b && b <= c)
+                error('Require a <= b <= c for a triangular distribution.');
+            end
+            Fc = (b - a) / (c - a);
             U = rand(num);
             ix = U < Fc;
             value = nan(size(U));
-            value(ix) = a + realsqrt(U(ix) * (b - a) * (c - a));
-            value(~ix) = a - realsqrt((1 - U(~ix)) * (b - a) * (b - c));
+            value(ix) = a + realsqrt(U(ix) * (c - a) * (b - a));
+            value(~ix) = c - realsqrt((1 - U(~ix)) * (c - a) * (c - b));
             value = apply_minmax(value, minmax);
         end
     otherwise

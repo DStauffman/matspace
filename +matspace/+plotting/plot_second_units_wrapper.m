@@ -1,20 +1,20 @@
 function [] = plot_second_units_wrapper(ax, second_units)
 
 % Wrapper to plot_second_yunits that allows numeric or dict options.
-% 
+%
 % Input:
 %     ax : Figure axes
 %     second_units : string, double or {char, double}
 %         Scale factor to apply, or dict with key for label and value for factor
-% 
+%
 % Returns:
 %     None
-% 
+%
 % Notes:
 %     1.  If second_units is just a number, then no units are displayed, but if a key and value,
 %         then if it has brakets, replace the entire label, otherwise only replace what is in the
 %         old label within the brackets
-% 
+%
 % Prototype:
 %     description = "Values over time";
 %     y_label = "Value [rad]";
@@ -25,8 +25,11 @@ function [] = plot_second_units_wrapper(ax, second_units)
 %     ylabel(ax, y_label);
 %     title(ax, description);
 %     ax2 = matspace.plotting.plot_second_units_wrapper(ax, second_units);
-% 
+%
 %     close(fig);
+%
+% Change Log:
+%     1.  Translate from Python by David C. Stauffer in January 2026.
 
 arguments
     ax (1, 1) matlab.graphics.axis.Axes

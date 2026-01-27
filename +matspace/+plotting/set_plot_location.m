@@ -14,7 +14,7 @@ function [] = set_plot_location(fig_hand,location)
 %     (None)
 %
 % Prototype:
-%     fig_hand = figure()
+%     fig_hand = figure();
 %     plot(0,0);
 %     location = 'full';
 %     matspace.plotting.set_plot_location(fig_hand,location);

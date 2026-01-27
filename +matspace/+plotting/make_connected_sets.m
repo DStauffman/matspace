@@ -1,5 +1,5 @@
 function [fig] = make_connected_sets(description, points, innovs, varargin)
-    
+
 % MAKE_CONNECTED_SETS  Plots two sets of X-Y pairs, with lines drawn between them.
 %
 % Summary:

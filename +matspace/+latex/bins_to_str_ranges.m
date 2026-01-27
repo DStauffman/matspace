@@ -18,7 +18,7 @@ function [out] = bins_to_str_ranges(bins, dt, cutoff)
 %     age_strs = matspace.latex.bins_to_str_ranges(age_bins);
 %     assert(all(age_strs == ["0-19", "20-39", "40-59", "60+"]));
 %
-% Change Log
+% Change Log:
 %     1.  Ported from Python to Matlab by David C. Stauffer in January 2018.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 %     3.  Updated by David C. Stauffer in January 2026 to use arguments.

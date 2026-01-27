@@ -12,9 +12,9 @@ function [c] = quat_mult(a,b) %#codegen
 % Prototype:
 %     a  = [ 0; 0; 0; 1];
 %     b  = [ 0; 0; 1; 0];
-%     q1 = [ 0.5;-0.5; 0.5; 0.5]
-%     q2 = [-0.5; 0.5;-0.5; 0.5]
-%     c  = matspace.quaternions.quat_mult([a,q1], [b,q2])
+%     q1 = [ 0.5;-0.5; 0.5; 0.5];
+%     q2 = [-0.5; 0.5;-0.5; 0.5];
+%     c  = matspace.quaternions.quat_mult([a,q1], [b,q2]);
 %
 % See Also:
 %     matspace.quaternions.quat_norm, matspace.quaternions.quat_inv, matspace.quaternions.quat_prop,

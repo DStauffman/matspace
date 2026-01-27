@@ -21,7 +21,7 @@ classdef test_bsr < matlab.unittest.TestCase %#ok<*PROP>
             self.verifyNotEqual(self.bits, out);
             self.verifyEqual(out, [1, 0, 0, 1, 1]);
         end
-    
+
         function test_multiple(self)
             out = matspace.gps.bsr(self.bits, 3);
             self.verifyNotEqual(self.bits, out);

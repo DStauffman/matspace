@@ -1,4 +1,4 @@
-function [] = setup_plots(fig_hand,OPTS,form)
+function [] = setup_plots(fig_hand, opts, form)
 
 % SETUP_PLOTS  applies each plot preference in one function.
 %
@@ -7,7 +7,7 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %
 % Input:
 %      fig_hand       : (1xN) figure handles [num]
-%      OPTS           : (class) optional plot settings
+%      opts           : (class) optional plot settings
 %          .case_name
 %          .disp_xmin
 %          .disp_xmax
@@ -39,16 +39,15 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     ylabel('something [rad]');
 %     matspace.plotting.figmenu;
 %
-%     OPTS           = matspace.plotting.Opts();
-%     OPTS.case_name = 'NULL';
-%     OPTS.disp_xmin = 100;
-%     OPTS.disp_xmax = 580;
-%     OPTS.time_unit = 'min';
-%     OPTS.save_plot = true;
-%     OPTS.plot_type = 'png';
-%     OPTS.save_path = matspace.paths.get_root_dir();
-%     OPTS.vert_fact = 'milli';
-%     matspace.plotting.setup_plots(f, OPTS, 'time');
+%     opts           = matspace.plotting.Opts();
+%     opts.case_name = 'NULL';
+%     opts.disp_xmin = 100;
+%     opts.disp_xmax = 580;
+%     opts.time_unit = 'min';
+%     opts.save_plot = true;
+%     opts.plot_type = 'png';
+%     opts.save_path = matspace.paths.get_root_dir();
+%     matspace.plotting.setup_plots(f, opts, 'time');
 %
 %     % clean up
 %     close(f);
@@ -63,8 +62,16 @@ function [] = setup_plots(fig_hand,OPTS,form)
 %     2.  Updated by David C. Stauffer in March 2020 to support datetime time vectors.
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+%% Arguments
+arguments
+    fig_hand (1, :) matlab.ui.Figure
+    opts (1, 1) matspace.plotting.Opts
+    form {mustBeMember(form, ["time", "dist", "time_no_y_scale", "dist_no_y_scale"])} = 'time'
+end
+
 %% Imports
 import matspace.plotting.get_classification
+import matspace.plotting.get_time_factor
 import matspace.plotting.plot_classification
 import matspace.plotting.set_plot_location
 import matspace.plotting.shift_axes_up
@@ -75,14 +82,6 @@ import matspace.plotting.xscale_plots
 import matspace.plotting.yscale_plots
 
 %% Initializations
-switch nargin
-    case 2
-        form = 'time';
-    case 3
-        %nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
 % check for empty input
 if isempty(fig_hand)
     return
@@ -95,61 +94,42 @@ if ~any(strcmp(form, {'time', 'dist', 'time_no_y_scale', 'dist_no_y_scale'}))
     error('matspace:UnexpectedForm', 'Unexpected plot form of "%s".', form);
 end
 
-%% OPTS Aliases
-update_name     = ~isempty(OPTS.case_name);
-scale_xaxis     = ~isempty(OPTS.time_unit) && ~strcmp(OPTS.time_unit, 'datetime') && ...
-    ~strcmp(OPTS.time_base, OPTS.time_unit);
-change_xextents = (~isinf(OPTS.disp_xmin) || ~isinf(OPTS.disp_xmax)) && ...
-    (~isdatetime(OPTS.disp_xmin) || ~isnat(OPTS.disp_xmin) && (~isdatetime(OPTS.disp_xmax) || ~isnat(OPTS.disp_xmax)));
-scale_yaxis     = any(strcmp(form, {'time', 'dist'})) && ~strcmp(OPTS.vert_fact, 'unity');
-save_plot       = OPTS.save_plot;
-have_save_path  = ~isempty(OPTS.save_path);
-show_link       = OPTS.show_link;
-move_plots      = ~strcmp(OPTS.plot_locs, 'default');
-plot_type       = OPTS.plot_type;
+%% opts Aliases
+update_name     = ~isempty(opts.case_name);
+scale_xaxis     = ~isempty(opts.time_unit) && ~strcmp(opts.time_unit, 'datetime') && ...
+    ~strcmp(opts.time_base, opts.time_unit);
+change_xextents = (~isinf(opts.disp_xmin) || ~isinf(opts.disp_xmax)) && ...
+    (~isdatetime(opts.disp_xmin) || ~isnat(opts.disp_xmin) && (~isdatetime(opts.disp_xmax) || ~isnat(opts.disp_xmax)));
+save_plot       = opts.save_plot;
+have_save_path  = ~isempty(opts.save_path);
+show_link       = opts.show_link;
+move_plots      = ~strcmp(opts.plot_locs, 'default');
+plot_type       = opts.plot_type;
 
 %% append case name to plots
 if update_name
-    titleprefix(fig_hand,[OPTS.case_name,' - ']);
+    titleprefix(fig_hand,[opts.case_name,' - ']);
 end
 
-if any(strcmp(form,{'time','time_no_y_scale'}))
+if any(strcmp(form, {'time','time_no_y_scale'}))
     %% Change x-axis scale
     if scale_xaxis
-        xscale_plots(fig_hand,['[',OPTS.time_base,']'],['[',OPTS.time_unit,']']);
+        xscale_plots(fig_hand,['[',opts.time_base,']'],['[',opts.time_unit,']']);
     end
 
     %% Change x-axis extents
     if change_xextents
         if scale_xaxis
-            switch OPTS.time_unit
-                case 'epoch'
-                    mult = 1/400;
-                case 'sec'
-                    mult = 1;
-                case 'min'
-                    mult = 60;
-                case 'hr'
-                    mult = 3600;
-                case 'day'
-                    mult = 86400;
-                otherwise
-                    error('matspace:plotting:BadOptsTimeUnit', 'Unexpected value for ''OPTS.time_unit''.');
-            end
-            xextents(fig_hand, OPTS.disp_xmin/mult, OPTS.disp_xmax/mult);
+            mult = get_time_factor(opts.time_unit);
+            xextents(fig_hand, opts.disp_xmin/mult, opts.disp_xmax/mult);
         else
-            xextents(fig_hand, OPTS.disp_xmin, OPTS.disp_xmax);
+            xextents(fig_hand, opts.disp_xmin, opts.disp_xmax);
         end
     end
 end
 
-%% Scale the y-axis
-if scale_yaxis
-    yscale_plots(fig_hand, 'unity', OPTS.vert_fact);
-end
-
 %% Label plot classification
-[classification, caveat] = get_classification(OPTS.classify);
+[classification, caveat] = get_classification(opts.classify);
 if ~isempty(classification)
     shift_axes_up(fig_hand, 0.08);
 end
@@ -157,13 +137,13 @@ plot_classification(fig_hand, classification, caveat=caveat);
 
 %% Move plots
 if move_plots
-    set_plot_location(fig_hand, OPTS.plot_locs);
+    set_plot_location(fig_hand, opts.plot_locs);
 end
 
 %% Save Plots
 if save_plot
     if have_save_path
-        save_path = OPTS.save_path;
+        save_path = opts.save_path;
     else
         save_path = pwd;
     end

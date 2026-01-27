@@ -1,7 +1,7 @@
 function [] = zoom_ylim(ax, time, data, kwargs)
 
 % Zooms the Y-axis to the data for the given time bounds, with an optional pad.
-% 
+%
 % Parameters
 % ----------
 % ax : class matplotlib.axes.Axes
@@ -20,11 +20,11 @@ function [] = zoom_ylim(ax, time, data, kwargs)
 %     Amount of pad, as a percentage of delta range, to show around the plot bounds
 % zoom : str, from {"in", "out", "both"}
 %     Whether to zoom in only, or out only, or both.
-% 
+%
 % Notes
 % -----
 % #.  Written by David C. Stauffer in August 2019.
-% 
+%
 % Examples
 % --------
 %     fig = figure(Name='Figure Title');
@@ -33,15 +33,15 @@ function [] = zoom_ylim(ax, time, data, kwargs)
 %     data = time .^ 2;
 %     plot(ax, time, data);
 %     title(ax, "X vs Y");
-% 
+%
 % Zoom X-axis and show how Y doesn't rescale
 %     t_start = 3;
 %     t_final = 5.0001;
 %     matspace.plotting.disp_xlimits(fig, t_start, t_final);
-% 
+%
 % Force Y-axis to rescale to data
 %     matspace.plotting.zoom_ylim(ax, time, data, t_start=t_start, t_final=t_final, pad=0);
-% 
+%
 % Close plot
 %     close(fig);
 

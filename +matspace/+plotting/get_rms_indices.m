@@ -1,7 +1,7 @@
 function [ix] = get_rms_indices(time_one, time_two, time_overlap, kwargs)
 
 % Gets the indices and time points for doing RMS calculations and plotting RMS lines.
-% 
+%
 % Parameters
 % ----------
 % time_one : array_like
@@ -14,7 +14,7 @@ function [ix] = get_rms_indices(time_one, time_two, time_overlap, kwargs)
 %     Minimum time to include in calculation
 % xmax : float
 %     Maximum time to include in calculation
-% 
+%
 % Returns
 % -------
 % ix : struct
@@ -27,11 +27,11 @@ function [ix] = get_rms_indices(time_one, time_two, time_overlap, kwargs)
 %         Array of indices into time_two between the rms bounds
 %     overlap : (C, ) ndarray of bool
 %         Array of indices into time_overlap between the rms bounds
-% 
+%
 % Changl Log:
 %     1.  Written by David C. Stauffer in May 2020 when it needed to handle datetime64 objects.
 %     2.  Translated into Matlab by David C. Stauffer in January 2026.
-% 
+%
 % Prototype:
 %     time_one     = 0:10;
 %     time_two     = 2:12;

@@ -22,7 +22,7 @@ function [q_A_B,angles,rms_err] = compute_att_fit(q_A,q_B)
 %     seq        = [1 2 3];
 %     q_A_B_true = matspace.quaternions.quat_from_euler(-angle_true, seq);
 %     q_A        = matspace.quaternions.quat_mult(q_A_B_true, q_B);
-%     [q_A_B_estm, angle_estm, rms_err] = matspace.quaternions.compute_att_fit(q_A, q_B)
+%     [q_A_B_estm, angle_estm, rms_err] = matspace.quaternions.compute_att_fit(q_A, q_B);
 %     % Compare estimated to true:
 %     [q_A_B_estm, q_A_B_true, q_A_B_estm-q_A_B_true]
 %     [angle_estm, angle_true, angle_estm-angle_true]

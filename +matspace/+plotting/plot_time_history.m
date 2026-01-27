@@ -78,6 +78,7 @@ import matspace.plotting.private.fun_is_log_level
 import matspace.plotting.private.fun_is_opts
 import matspace.plotting.private.fun_is_text
 import matspace.plotting.private.fun_is_time
+import matspace.plotting.private.kwargs_pop
 import matspace.plotting.setup_plots
 
 %% Parser
@@ -124,8 +125,7 @@ this_opts = Opts(opts);
 
 % alias opts
 [time_units,   unmatched] = kwargs_pop(unmatched, 'TimeUnits', this_opts.time_base);
-% TODO: does this_opts.get_date_zero_str(); work instead?
-[start_date,   unmatched] = kwargs_pop(unmatched, 'StartDate', get_start_date(this_opts.date_zero));
+[start_date,   unmatched] = kwargs_pop(unmatched, 'StartDate', this_opts.get_date_zero_str());
 [rms_xmin,     unmatched] = kwargs_pop(unmatched, 'RmsXmin', this_opts.rms_xmin);
 [rms_xmax,     unmatched] = kwargs_pop(unmatched, 'RmsXmax', this_opts.rms_xmax);
 [disp_xmin,    unmatched] = kwargs_pop(unmatched, 'DispXmin', this_opts.disp_xmin);
@@ -140,6 +140,7 @@ end
 [plot_zero,    unmatched] = kwargs_pop(unmatched, 'PlotZero', this_opts.show_zero);
 [show_rms,     unmatched] = kwargs_pop(unmatched, 'ShowRms', this_opts.show_rms);
 [legend_loc,   unmatched] = kwargs_pop(unmatched, 'LegendLoc', this_opts.leg_spot);
+[fig_visible,  unmatched] = kwargs_pop(unmatched, 'FigVisible', this_opts.show_plot);
 
 %% Plot data
 % call wrapper function for most of the details
@@ -160,13 +161,14 @@ fig_hand = make_time_plot(...
     LabelVertLines=lab_vert, ...
     PlotZero=plot_zero, ...
     ShowRms=show_rms, ...
-    LegendLoc=legend_loc ...
+    LegendLoc=legend_loc, ...
+    FigVisible=fig_visible ...
 );
 
 if ~skip_setup_plots
     % create figure controls
     figmenu;
-    
+
     % setup plots
     setup_plots(fig_hand, this_opts, 'time');
 end
