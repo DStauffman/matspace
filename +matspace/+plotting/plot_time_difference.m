@@ -108,19 +108,19 @@ if ignore_plot_data(data_one, ignore_empties) && ignore_plot_data(data_two, igno
 end
 
 %% Processing
-% % determine if converting units
-% is_date_1 = isdatetime(time_one);
-% is_date_2 = isdatetime(time_two);
-% is_date_o = opts.time_unit == "datetime";
+% determine if converting units
+is_date_1 = isdatetime(time_one);
+is_date_2 = isdatetime(time_two);
+is_date_o = opts.time_unit == "datetime";
 
 % make local copy of opts that can be modified without changing the original
 this_opts = Opts(opts);
-% % allow opts to convert as necessary
-% if is_date_1 || (is_date_2 && ~is_date_o)
-%     this_opts.convert_dates("datetime", old_form=opts.time_base)
-% elseif is_date_o && ~is_date_1 && ~is_date_2
-%     this_opts.convert_dates("sec", old_form=opts.time_base)
-% end
+% allow opts to convert as necessary
+if is_date_1 || (is_date_2 && ~is_date_o)
+    this_opts.convert_dates('datetime');
+elseif is_date_o && ~is_date_1 && ~is_date_2
+    this_opts.convert_dates('sec');
+end
 % opts overrides
 [this_opts.save_plot, unmatched] = kwargs_pop(unmatched, 'SavePlot', this_opts.save_plot);
 [this_opts.save_path, unmatched] = kwargs_pop(unmatched, 'SavePath', this_opts.save_path);

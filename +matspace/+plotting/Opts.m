@@ -178,7 +178,7 @@ classdef Opts
             %     opts = matspace.plotting.Opts();
             %     opts.date_zero = datetime(2019, 4, 1, 18, 0, 0);
             %     assert(strcmp(opts.get_date_zero_str(), ' t(0) = 01-Apr-2019 18:00:00 Z');
-            TIMESTR_FORMAT = "%d-%b-%Y %H:%M:%S";
+            TIMESTR_FORMAT = 'dd-MMM-uuuu HH:mm:ss';
             if nargin == 1 || isempty(date)
                 if isempty(self.date_zero) || isnat(self.date_zero)
                     start_date = '';
@@ -198,9 +198,11 @@ classdef Opts
 
             import matspace.plotting.convert_time_units
 
-            function [value] = convert(value)
+            function [new_value] = convert(value)
                 if ~isempty(value) && isfinite(value)
-                    value = convert_time_units(value, self.time_base, self.time_unit);
+                    new_value = convert_time_units(value, self.time_base, self.time_unit);
+                else
+                    new_value = value;
                 end
             end
 
@@ -220,12 +222,22 @@ classdef Opts
 
         function [obj] = convert_dates(obj, time_units)
             % Potentially convert times to dates
-            if strcmp(obj.time_unit, 'datetime')
-                obj.disp_xmin = convert_time_to_date(obj.disp_xmin, obj.date_zero, time_units);
-                obj.disp_xmax = convert_time_to_date(obj.disp_xmax, obj.date_zero, time_units);
-                obj.rms_xmin  = convert_time_to_date(obj.rms_xmin,  obj.date_zero, time_units);
-                obj.rms_xmax  = convert_time_to_date(obj.rms_xmax,  obj.date_zero, time_units);
+            import matspace.plotting.convert_time_to_date
+            if strcmp(obj.time_unit, time_units)
+                % no conversion needed
+                return
             end
+            if strcmp(time_units, 'datetime')
+                obj.time_base = 'datetime';
+                obj.time_unit = 'datetime';
+                time_units = 'sec';
+            else
+                obj.time_unit = time_units;
+            end
+            obj.disp_xmin = convert_time_to_date(obj.disp_xmin, obj.date_zero, time_units);
+            obj.disp_xmax = convert_time_to_date(obj.disp_xmax, obj.date_zero, time_units);
+            obj.rms_xmin  = convert_time_to_date(obj.rms_xmin,  obj.date_zero, time_units);
+            obj.rms_xmax  = convert_time_to_date(obj.rms_xmax,  obj.date_zero, time_units);
         end
 
         function [non_defaults] = pprint_non_defaults(obj)

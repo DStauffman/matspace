@@ -1,6 +1,6 @@
 function map = viridis(m)
 
-% VIRIDIS  Blue-green-yellow color map
+% VIRIDIS  Perceptually Uniform Purple-Blue-green-yellow color map
 %
 % Summary:
 %     VIRIDIS(m) returns an m-by-3 matrix containing a colormap.
@@ -14,13 +14,13 @@ function map = viridis(m)
 %     map : (mx3) color triple
 %
 % Prototype:
-%     map = matspace.plotting.viridis();
+%     map = matspace.plotting.colors.viridis();
 %     assert(all(size(map) == [64 3]));
 %     assert(min(min(map)) >= 0);
 %     assert(max(max(map)) <= 1);
 %     % plotting example:
 %     surf(peaks);
-%     colormap('matspace.plotting.viridis');
+%     colormap('matspace.plotting.colors.viridis');
 %     colorbar;
 %
 % See Also:
@@ -43,6 +43,7 @@ if nargin < 1
     end
 end
 
+% viridi = matspace.plotting.colors.get_python_colormap('viridis', 64)
 viridi = [
     0.26700401  0.00487433  0.32941519
     0.26851048  0.00960483  0.33542652

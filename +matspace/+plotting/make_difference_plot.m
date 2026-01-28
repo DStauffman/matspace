@@ -466,7 +466,7 @@ for i = 1:num_channels
     end
     if i == 1
         if is_quat_diff
-            title(this_axes, [description,' Components']);
+            title(this_axes, [char(description),' Components']);
         else
             title(this_axes, description);
         end
@@ -547,7 +547,7 @@ if have_both
             this_axes.set_ylim(ylims);
         end
         if i == ix_diff(1)
-            title(this_axes, [description,' Difference']);
+            title(this_axes, [char(description),' Difference']);
         end
         if ~isempty(this_ylabel) || single_lines2
             ylabel(this_axes, this_ylabel);

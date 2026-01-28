@@ -1,0 +1,33 @@
+function [colors] = dark2()
+
+% DARK2  is the Dark2 colormap from Python matplotlib.
+%
+% Input:
+%     (None)
+%
+% Output
+%     colors : (3x8) table of colors that are useful to plot with
+%
+% Prototype:
+%     colors = matspace.plotting.colors.dark2();
+%     % plotting example:
+%     surf(peaks);
+%     colormap('matspace.plotting.colors.dark2');
+%     colorbar;
+%
+% See Also:
+%     matspace.plotting.colors.get_python_colormap, colormap
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in January 2026.
+
+% matspace.plotting.colors.get_python_colormap('Dark2')
+colors = [...
+     0.105882352941176         0.619607843137255         0.466666666666667
+     0.850980392156863         0.372549019607843       0.00784313725490196
+     0.458823529411765          0.43921568627451         0.701960784313725
+     0.905882352941176          0.16078431372549         0.541176470588235
+                   0.4         0.650980392156863         0.117647058823529
+     0.901960784313726         0.670588235294118       0.00784313725490196
+     0.650980392156863         0.462745098039216         0.113725490196078
+                   0.4                       0.4                       0.4];
