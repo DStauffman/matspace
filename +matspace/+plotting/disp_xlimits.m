@@ -76,8 +76,10 @@ for i = 1:length(ax)
     if isinf(new_xmax) || (isnumeric(new_xmax) && isnan(new_xmax)) || (isdatetime(new_xmax) && isnat(new_xmax))
         new_xmax = old_xmax;
     end
-    % modify xlimits
-    xlim(this_axis, [new_xmin, new_xmax]);
+    % modify xlimits (if any changes)
+    if old_xmin ~= new_xmin || old_xmax ~= new_xmax
+        xlim(this_axis, [new_xmin, new_xmax]);
+    end
 end
 
 

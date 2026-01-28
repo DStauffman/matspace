@@ -45,7 +45,6 @@ function [fig] = make_time_plot(description, time, data, varargin)
 %     close(fig_hand);
 
 %% Imports
-% import matspace.plotting.get_factors
 import matspace.plotting.plot_second_units_wrapper
 import matspace.plotting.private.build_indices
 import matspace.plotting.private.calc_rms

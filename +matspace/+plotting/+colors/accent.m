@@ -1,0 +1,33 @@
+function [colors] = accent()
+
+% ACCENT  is the Accent colormap from Python matplotlib.
+%
+% Input:
+%     (None)
+%
+% Output
+%     colors : (3x8) table of colors that are useful to plot with
+%
+% Prototype:
+%     colors = matspace.plotting.colors.accent();
+%     % plotting example:
+%     surf(peaks);
+%     colormap('matspace.plotting.colors.accent');
+%     colorbar;
+%
+% See Also:
+%     matspace.plotting.colors.get_python_colormap, colormap
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in January 2026.
+
+% matspace.plotting.colors.get_python_colormap('Accent')
+colors = [...
+     0.498039215686275         0.788235294117647         0.498039215686275
+     0.745098039215686         0.682352941176471         0.831372549019608
+     0.992156862745098         0.752941176470588         0.525490196078431
+                     1                         1                       0.6
+     0.219607843137255         0.423529411764706         0.690196078431373
+     0.941176470588235       0.00784313725490196         0.498039215686275
+     0.749019607843137         0.356862745098039        0.0901960784313725
+                   0.4                       0.4                       0.4];

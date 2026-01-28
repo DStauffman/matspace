@@ -53,9 +53,7 @@ function [fig_hand, err] = plot_quaternion(description, time_one, quat_one, time
 %     2.  Updated by David C. Stauffer in January 2026 to more closely mimic Python version.
 
 %% Imports
-import matspace.plotting.convert_time_to_date
 import matspace.plotting.figmenu
-import matspace.plotting.get_start_date
 import matspace.plotting.make_quaternion_plot
 import matspace.plotting.Opts
 import matspace.plotting.private.fun_is_log_level
@@ -102,9 +100,9 @@ is_date_o = opts.time_unit == "datetime";
 this_opts = Opts(opts);
 % allow opts to convert as necessary
 if is_date_1 || (is_date_2 && ~is_date_o)
-    this_opts.convert_dates("datetime", old_form=opts.time_base)
+    this_opts.convert_dates('datetime');
 elseif is_date_o && ~is_date_1 && ~is_date_2
-    this_opts.convert_dates("sec", old_form=opts.time_base)
+    this_opts.convert_dates('sec');
 end
 % opts overrides
 [this_opts.save_plot, unmatched] = kwargs_pop(unmatched, 'SavePlot', this_opts.save_plot);
@@ -132,7 +130,7 @@ end
 [name_one, name_two] = this_opts.get_name_one_and_two(NameOne=name_one, NameTwo=name_two);
 
 % hard-coded defaults
-[second_units, unmatched] = kwargs_pop(unmatched, 'second_units', 'micro');
+[second_units, unmatched] = kwargs_pop(unmatched, 'SecondUnits', 'micro');
 
 % print status
 if log_level >= 4
