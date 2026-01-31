@@ -1,4 +1,4 @@
-function [dcm] = quat_to_dcm(q) %#codegen
+function [dcm] = quat_to_dcm(q)  %#codegen
 
 % QUAT_TO_DCM  convert quaternion to a direction cosine matrix.
 %
@@ -10,7 +10,7 @@ function [dcm] = quat_to_dcm(q) %#codegen
 %
 % Prototype:
 %     q   = [0.5; -0.5; 0.5; 0.5];
-%     dcm = matspace.quaternions.quat_to_dcm(q)
+%     dcm = matspace.quaternions.quat_to_dcm(q);
 %
 % See Also:
 %     matspace.quaternions.quat_mult, matspace.quaternions.quat_inv, matspace.quaternions.quat_norm,
@@ -22,15 +22,23 @@ function [dcm] = quat_to_dcm(q) %#codegen
 %     2.  Updated by Matt Beck in June 2009.
 %     3.  Updated by Tom Trankle in July 2011 for #eml support.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     5.  Updated by David C. Stauffer in January 2026 to use arguments.
+
+arguments (Input)
+    q (4, 1) double
+end
+arguments (Output)
+    dcm (3, 3) double
+end
 
 % build dcm components
-dcm      = zeros(3);
-dcm(1,1) = q(4)^2+q(1)^2-q(2)^2-q(3)^2;
-dcm(1,2) = 2*(q(1)*q(2)+q(3)*q(4));
-dcm(1,3) = 2*(q(1)*q(3)-q(2)*q(4));
-dcm(2,1) = 2*(q(1)*q(2)-q(3)*q(4));
-dcm(2,2) = q(4)^2-q(1)^2+q(2)^2-q(3)^2;
-dcm(2,3) = 2*(q(2)*q(3)+q(1)*q(4));
-dcm(3,1) = 2*(q(1)*q(3)+q(2)*q(4));
-dcm(3,2) = 2*(q(2)*q(3)-q(1)*q(4));
-dcm(3,3) = q(4)^2-q(1)^2-q(2)^2+q(3)^2;
+dcm       = zeros(3);
+dcm(1, 1) = q(4)^2 + q(1)^2 - q(2)^2 - q(3)^2;
+dcm(1, 2) = 2*(q(1)*q(2) + q(3)*q(4));
+dcm(1, 3) = 2*(q(1)*q(3) - q(2)*q(4));
+dcm(2, 1) = 2*(q(1)*q(2) - q(3)*q(4));
+dcm(2, 2) = q(4)^2 - q(1)^2 + q(2)^2 - q(3)^2;
+dcm(2, 3) = 2*(q(2)*q(3) + q(1)*q(4));
+dcm(3, 1) = 2*(q(1)*q(3) + q(2)*q(4));
+dcm(3, 2) = 2*(q(2)*q(3) - q(1)*q(4));
+dcm(3, 3) = q(4)^2 - q(1)^2 - q(2)^2 + q(3)^2;

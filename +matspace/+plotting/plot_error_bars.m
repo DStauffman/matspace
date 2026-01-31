@@ -67,8 +67,6 @@ import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
 import matspace.plotting.show_zero_ylim
-import matspace.utils.nanmean
-import matspace.utils.nanrms
 
 %% Hard-coded values
 leg_format  = '%1.3f';
@@ -130,10 +128,10 @@ rms_pts2 = min([rms_xmax max(time)]);
 % calculate the rms (or mean) values
 if ~use_mean
     func_name = 'RMS';
-    data_func = nanrms(data(:,rms_ix),2);
+    data_func = rms(data(:, rms_ix), 2, 'omitnan');
 else
     func_name = 'Mean';
-    data_func = nanmean(data(:,rms_ix),2);
+    data_func = mean(data(:, rms_ix), 2, 'omitnan');
 end
 num_channels = length(elements);
 % unit conversion value

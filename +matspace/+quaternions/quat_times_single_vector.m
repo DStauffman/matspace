@@ -1,4 +1,4 @@
-function [vec] = quat_times_single_vector(q, v)
+function [vec] = quat_times_single_vector(q, v)  %#codegen
 
 % QUAT_TIMES_SINGLE_VECTOR  multiply one or more quaternions against a single vector.
 %
@@ -30,6 +30,14 @@ function [vec] = quat_times_single_vector(q, v)
 %     2.  Updated by Scott Sims in June 2009.
 %     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+
+arguments (Input)
+    q (4, :) double
+    v (3, 1) double
+end
+arguments (Output)
+    vec (3, :) double
+end
 
 % get number of quaternions
 num_q = size(q,2);

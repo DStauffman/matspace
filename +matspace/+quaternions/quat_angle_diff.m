@@ -1,4 +1,4 @@
-function [theta,comp] = quat_angle_diff(q1,q2)
+function [theta, comp] = quat_angle_diff(q1, q2)  %#codegen
 
 % QUAT_ANGLE_DIFF  calculates the angular difference between two quaternions.
 %
@@ -41,7 +41,17 @@ function [theta,comp] = quat_angle_diff(q1,q2)
 %     2.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments (Input)
+    q1 (4, :) double
+    q2 (4, :) double
+end
+arguments (Output)
+    theta (1, :) double
+    comp (3, :) double
+end
+
 % Imports
+%#ok<*EMIMP>
 import matspace.quaternions.quat_inv
 import matspace.quaternions.quat_mult
 
@@ -49,10 +59,10 @@ import matspace.quaternions.quat_mult
 dq = quat_mult(q2, quat_inv(q1));
 
 % pull vector components out of delta quaternion
-dv = dq(1:3,:);
+dv = dq(1:3, :);
 
 % sum vector components to get sin(theta/2)^2
-mag2 = sum(dv.^2, 1);
+mag2 = sum(dv .^ 2, 1);
 
 % take square root to get sin(theta/2)
 mag = realsqrt(mag2);
@@ -62,7 +72,7 @@ assert(all(mag <= 1 | isnan(mag)), 'Magnitudes should always be less than or equ
 theta_over_2 = asin(mag);
 
 % multiply by 2 to get theta
-theta = 2*theta_over_2;
+theta = 2 * theta_over_2;
 
 % set any magnitude that is identically 0 to be 1 instead
 % to avoid a divide by zero warning.

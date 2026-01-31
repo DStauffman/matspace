@@ -31,7 +31,17 @@ function [qout] = quat_interp_single(t, q, ti) %#codegen
 %     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments (Input)
+    t (1, 2) double  % TODO datetime?
+    q (4, 2) double
+    ti (1, 1) double
+end
+arguments (Output)
+    qout (4, 1) double
+end
+
 % Imports
+%#ok<*EMIMP>
 import matspace.quaternions.quat_inv
 import matspace.quaternions.quat_mult_single
 
@@ -43,26 +53,26 @@ end
 % pull out bounding times and quaternions
 t1 = t(1);
 t2 = t(2);
-q1 = q(:,1);
-q2 = q(:,2);
+q1 = q(:, 1);
+q2 = q(:, 2);
 
 % calculate delta quaternion
-dq12       = quat_mult_single(q2,quat_inv(q1));
+dq12       = quat_mult_single(q2, quat_inv(q1));
 % find delta quaternion axis of rotation
-vec        = dq12(1:3,:);
-norm_vec   = realsqrt(sum(vec.^2));
+vec        = dq12(1:3, :);
+norm_vec   = realsqrt(sum(vec .^ 2));
 % check for zero norm vectors
 norm_fix   = norm_vec;
 norm_fix(norm_fix == 0) = 1;
-ax         = vec/norm_fix;
+ax         = vec / norm_fix;
 % find delta quaternion rotation angle
-ang        = 2*asin(norm_vec);
+ang        = 2 * asin(norm_vec);
 % scale rotation angle based on time
-scaled_ang = ang*(ti-t1)/(t2-t1);
+scaled_ang = ang * (ti - t1) / (t2 - t1);
 % find scaled delta quaternion
-dq         = [ax*sin(scaled_ang/2); cos(scaled_ang/2)];
+dq         = [ax * sin(scaled_ang / 2); cos(scaled_ang / 2)];
 % calculate desired quaternion
-qout       = quat_mult_single(dq,q1);
+qout       = quat_mult_single(dq, q1);
 
 % Enforce sign convention on scalar quaternion element.
 % Scalar element (fourth element) of quaternion must not be negative.

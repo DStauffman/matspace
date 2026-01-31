@@ -1,4 +1,4 @@
-function [s] = int2str_mex(n)
+function [s] = int2str_mex(n)  %#codegen
 
 % Coder compatible version of int2str.
 %

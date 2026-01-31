@@ -1,4 +1,4 @@
-function q = qrot(k,a)
+function q = qrot(k, a)  %#codegen
 
 % QROT  construct quaternion expressing rotation about a single axis
 %
@@ -30,6 +30,15 @@ function q = qrot(k,a)
 %     3.  Updated by David C. Stauffer in Jan 2010.
 %     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     6.  Updated by David C. Stauffer in January 2026 to use arguments.
+
+arguments (Input)
+    k (1, :) double {mustBeMember(k, 1:3)}
+    a (1, :) double
+end
+arguments (Output)
+    q (4, :) double
+end
 
 if isscalar(k) && isscalar(a)
     % optimized scalar case

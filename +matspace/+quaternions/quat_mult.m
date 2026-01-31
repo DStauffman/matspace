@@ -1,4 +1,4 @@
-function [c] = quat_mult(a,b) %#codegen
+function [c] = quat_mult(a, b)  %#codegen
 
 % QUAT_MULT  multiply quaternions together.
 %
@@ -38,18 +38,28 @@ function [c] = quat_mult(a,b) %#codegen
 %     2.  Updated by Matt Beck in June 2009.
 %     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     5.  Updated by David C. Stauffer in January 2026 to use arguments.
+
+% arguments
+arguments (Input)
+    a (4, :) double
+    b (4, :) double
+end
+arguments (Output)
+    c (4, :) double
+end
 
 % check for vectorized inputs
 na = numel(a);
 nb = numel(b);
 
-if ((na==4) && (nb==4))
+if (na == 4) && (nb == 4)
     % single quaternion inputs case
     c = [ a(4)  a(3) -a(2)  a(1); ...
          -a(3)  a(4)  a(1)  a(2); ...
           a(2) -a(1)  a(4)  a(3); ...
          -a(1) -a(2) -a(3)  a(4)] * b;
-    if c(4)<0
+    if c(4) < 0
         c = -c;
     end
 else
@@ -67,5 +77,5 @@ else
           b1.*a2 - b2.*a1 + b3.*a4 + b4.*a3; ...
          -b1.*a1 - b2.*a2 - b3.*a3 + b4.*a4];
     % enforce positive sign on scalar component
-    c(:,c(4,:)<0) = -c(:,c(4,:)<0);
+    c(:, c(4, :) < 0) = -c(:, c(4, :) < 0);
 end

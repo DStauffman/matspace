@@ -1,4 +1,4 @@
-function [t] = drot_matlab(k,a) %#codegen
+function [t] = drot_matlab(k, a)  %#codegen
 
 % DROT_MATLAB  derivative of transformation matrix for rotation about a single axis.
 %
@@ -35,6 +35,14 @@ function [t] = drot_matlab(k,a) %#codegen
 %     3.  Renamed by David C. Stauffer in June 2014 to avoid coder bug.
 %     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
+
+arguments (Input)
+    k (1, 1) {mustBeMember(k, [1 2 3])}
+    a (1, 1) double
+end
+arguments (Output)
+    t (3, 3) double
+end
 
 % alias values
 ca = cos(a);

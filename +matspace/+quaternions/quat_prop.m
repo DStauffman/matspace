@@ -1,4 +1,4 @@
-function quat_new = quat_prop(quat, delta_ang, renorm) %#codegen
+function quat_new = quat_prop(quat, delta_ang, renorm)  %#codegen
 
 % QUAT_PROP  approximate propagation of a quaternion using a small delta angle.
 %
@@ -31,19 +31,20 @@ function quat_new = quat_prop(quat, delta_ang, renorm) %#codegen
 %     5.  Updated by David C. Stauffer in December 2018 to enforce positive scalar component and
 %         optionally renormalize.
 %     6.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     7.  Updated by David C. Stauffer in January 2026 to use arguments.
+
+arguments (Input)
+    quat (4, 1) double
+    delta_ang (3, 1) double
+    renorm (1, 1) logical = true
+end
+arguments (Output)
+    quat_new (4, 1) double
+end
 
 % imports
+%#ok<*EMIMP>
 import matspace.quaternions.quat_norm
-
-% optional inputs
-switch nargin
-    case 2
-        renorm = true;
-    case 3
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
 
 % compute angle rate matrix
 W = [      0         delta_ang(3)   -delta_ang(2)   delta_ang(1);...

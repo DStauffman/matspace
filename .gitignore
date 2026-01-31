@@ -50,6 +50,8 @@ Temporary Items
 *.mex
 *.mexw64
 *.mexw32
+mex/make/*.m
+!mex/make/make_mex_files.m
 mex/make/codegen/*
 
 # =========================

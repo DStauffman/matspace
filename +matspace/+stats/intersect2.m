@@ -1,4 +1,4 @@
-function [c, ia, ib] = intersect2(A, B, precision, flag, setOrder) %#codegen
+function [c, ia, ib] = intersect2(A, B, precision, flag, setOrder)  %#codegen
 
 % INTERSECT2  is the same as the built-in intersect, but with a specified precision.
 %
@@ -74,15 +74,15 @@ if precision == 0 || isempty(A) || isempty(B)
     return
 end
 
-% determine if all the inputs and integers
+% determine if all the inputs are integers
 all_int = isinteger(A) && isinteger(B) && isinteger(precision);
 % determine if everything in a datettime and duration
 all_dates = isdatetime(A) && isdatetime(B) && isduration(precision);
 % convert datetimes to old datenum versions for the rest of the function
 if all_dates
-    precision = datenum(precision);
-    A = datenum(A);
-    B = datenum(B);
+    precision = datenum(precision);  %#ok<DATNM>
+    A = datenum(A);  %#ok<DATNM>
+    B = datenum(B);  %#ok<DATNM>
 end
 % find larger max of A or B, must call max three times to support up to 3D matrices A and B
 maxAorB = max(max(abs(A), [], 'all'), max(abs(B), [], 'all'));
@@ -122,7 +122,7 @@ ia = union(union(union(union(ia1, ia2), ia3), ia4), ia5);
 ib = union(union(union(union(ib1, ib2), ib3), ib4), ib5);
 
 % calculate output
-if nargin >= 4 && strcmpi(flag,'rows')
+if nargin >= 4 && strcmpi(flag, 'rows')
     c = A(ia,:);
     return
 end

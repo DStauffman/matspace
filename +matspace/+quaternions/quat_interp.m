@@ -1,4 +1,4 @@
-function qout = quat_interp(t, q, ti, inclusive) %#codegen
+function qout = quat_interp(t, q, ti, inclusive)  %#codegen
 
 % QUAT_INTERP  interpolate quaternions from a monotonic time series of quaternions.
 %
@@ -16,10 +16,11 @@ function qout = quat_interp(t, q, ti, inclusive) %#codegen
 %     qout      : (4xB) interpolated quaternion at ti [ndim] see note 1
 %
 % Prototype:
-%     t  = [1,3,5];
-%     q  = [[0;0;0;1],[0;0;0.1961;0.9806],[0.5;-0.5;-0.5;0.5]];
-%     ti = [1 2 4.5 5];
-%     matspace.quaternions.quat_interp(t,q,ti)
+%     t    = [1 3 5];
+%     q    = [[0;0;0;1], [0;0;0.1961;0.9806], [0.5;-0.5;-0.5;0.5]];
+%     ti   = [1 2 4.5 5];
+%     qout = matspace.quaternions.quat_interp(t, q, ti);
+%     assert(all(size(qout) == [4 4]));
 %
 % See Also:
 %     matspace.quaternions.quat_interp_single
@@ -35,7 +36,16 @@ function qout = quat_interp(t, q, ti, inclusive) %#codegen
 %     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+%% Arguments
+arguments
+    t (1, :) double  % TODO: datetime?
+    q (4, :) double
+    ti (1, :) double  % TODO: datetime?
+    inclusive (1, 1) logical = false
+end
+
 %% Imports
+%#ok<*EMIMP>
 import matspace.quaternions.quat_inv
 import matspace.quaternions.quat_mult
 import matspace.quaternions.quat_norm
@@ -45,17 +55,7 @@ import matspace.quaternions.quat_norm
 num   = length(ti);
 
 % initialize output
-qout  = nan(4,num);
-
-% optional inputs
-switch nargin
-    case 3
-        inclusive = false;
-    case 4
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
+qout  = nan(4, num);
 
 %% Scalar case
 % optimization for simple use case(s), where ti is a scalar and contained in t
@@ -63,9 +63,9 @@ switch num
     case 0
         return
     case 1
-        ix = find(ti == t,1,'first');
+        ix = find(ti == t, 1, 'first');
         if ~isempty(ix)
-            qout = q(:,ix);
+            qout = q(:, ix);
             return
         end
     otherwise
@@ -85,27 +85,29 @@ end
 
 %% Given times
 % find desired points that are contained in input time vector
-[ix_known,ix_input] = ismember(ti,t);
+[ix_known, ix_input] = ismember(ti, t);
 
 % set quaternions directly to known values
-qout(:,ix_known) = q(:,ix_input(ix_known));
+qout(:, ix_known) = q(:, ix_input(ix_known));
 
 % find other points to be calculated
 ix_calc = ~ix_known & ~ix_exclusive;
 
 %% Calculations
 % find index within t to surround ti
-index = nan(1,num);
+index = nan(1, num);
+%#mex<start_swap>
 % If not compiling, then you can do a for i = find(ix_calc) and skip the if ix_calc(i) line,
 % which may make the non-compiled matlab version faster
 for i = find(ix_calc)
-    temp = find(ti(i) <= t,1,'first');
+    temp = find(ti(i) <= t, 1, 'first');
     if temp(1) ~= 1
         index(i) = temp(1);
     else
         index(i) = temp(1) + 1;
     end
 end
+%#mex<middle_swap>
 % If you want to compile this function, then you need this instead of the last for loop,
 % plus a coder.extrinsic('warning') line.  These are not kept, because it makes the MATLAB-only
 % version less efficient:
@@ -119,37 +121,38 @@ end
 %         end
 %     end
 % end
+%#mex<final_swap>
 
 % remove points that are NaN, either they weren't in the time vector, or they were next to a drop out
 % and cannot be interpolated.
 index(isnan(index)) = [];
 % pull out bounding times and quaternions
-t1 = t(index-1);
+t1 = t(index - 1);
 t2 = t(index);
-q1 = q(:,index-1);
-q2 = q(:,index);
+q1 = q(:, index - 1);
+q2 = q(:, index);
 % calculate delta quaternion
-dq12       = quat_norm(quat_mult(q2,quat_inv(q1)));
+dq12       = quat_norm(quat_mult(q2, quat_inv(q1)));
 % find delta quaternion axis of rotation
-vec        = dq12(1:3,:);
-norm_vec   = realsqrt(sum(vec.^2));
+vec        = dq12(1:3, :);
+norm_vec   = realsqrt(sum(vec .^ 2));
 % check for zero norm vectors
 norm_fix   = norm_vec;
 norm_fix(norm_fix == 0) = 1;
-ax         = bsxfun(@rdivide,vec,norm_fix);
+ax         = bsxfun(@rdivide, vec, norm_fix);
 % find delta quaternion rotation angle
-ang        = 2*asin(norm_vec);
+ang        = 2 * asin(norm_vec);
 % scale rotation angle based on time
-scaled_ang = ang.*(ti(ix_calc)-t1)./(t2-t1);
+scaled_ang = ang .* (ti(ix_calc) - t1) ./ (t2 - t1);
 % find scaled delta quaternion
-dq         = [bsxfun(@times,ax,sin(scaled_ang/2)); cos(scaled_ang/2)];
+dq         = [bsxfun(@times, ax, sin(scaled_ang / 2)); cos(scaled_ang / 2)];
 % calculate desired quaternion
-qout_temp  = quat_norm(quat_mult(dq,q1));
+qout_temp  = quat_norm(quat_mult(dq, q1));
 % store into output structure
-qout(:,ix_calc) = qout_temp;
+qout(:, ix_calc) = qout_temp;
 
 %% Sign convention
 % Enforce sign convention on scalar quaternion element.
 % Scalar element (fourth element) of quaternion must not be negative.
 % So change sign on entire quaternion if qout(4) is less than zero.
-qout(:,qout(4,:) < 0) = -qout(:,qout(4,:) < 0);
+qout(:, qout(4, :) < 0) = -qout(:, qout(4, :) < 0);

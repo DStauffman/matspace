@@ -57,8 +57,6 @@ import matspace.plotting.Opts
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
 import matspace.plotting.setup_plots
-import matspace.utils.nanmean
-import matspace.utils.nanrms
 
 %% hard-coded values
 std_flag      = 1;
@@ -191,7 +189,7 @@ if comp_mode == modes.nondeg
     nondeg_data            = mean(data_two(:,ix2),1) - mean(data_one(:,ix1),1);
     ix_rms_xmin_nondeg     = finde(nondeg_time >= rms_xmin,1,'first');
     ix_rms_xmax_nondeg     = finde(nondeg_time <= rms_xmax,1,'last');
-    nondeg_rms             = scale*nanrms(nondeg_data(:,ix_rms_xmin_nondeg:ix_rms_xmax_nondeg));
+    nondeg_rms             = scale * rms(nondeg_data(:, ix_rms_xmin_nondeg:ix_rms_xmax_nondeg), 'omitnan');
     if use_sub_plots
         fig_hand           = gobjects(1);
     else
@@ -226,7 +224,7 @@ if comp_mode ~= modes.multi
     if size(data_one, data_dim) == 1
         % calculate RMS for legend
         if show_rms
-            rms_data1 = scale*nanrms(data_one(:,ix_rms_xmin1:ix_rms_xmax1));
+            rms_data1 = scale * rms(data_one(:, ix_rms_xmin1:ix_rms_xmax1), 'omitnan');
             this_name = [name1,'Mean (RMS: ',num2str(rms_data1,leg_format),')'];
         else
             this_name = [name1,'Mean'];
@@ -264,7 +262,7 @@ if comp_mode ~= modes.multi
         end
         % plot the mean results
         if show_rms
-            rms_data1 = nanrms(temp_mean);
+            rms_data1 = rms(temp_mean, 'omitnan');
             this_name = [name1,'Mean (RMS: ',num2str(rms_data1,leg_format),')'];
         else
             this_name = [name1,'Mean'];
@@ -274,7 +272,7 @@ if comp_mode ~= modes.multi
 else
     % In multi-mode, calculate RMS if necessary
     if show_rms
-        rms_data1 = nanrms(scale*data_one, 2);
+        rms_data1 = rms(scale*data_one, 2, 'omitnan');
     end
     % plot all the channels
     p1 = plot(ax1, time_one, scale*data_one, '.-');
@@ -290,7 +288,7 @@ end
 if comp_mode == modes.nondeg
     if size(data_two, data_dim) == 1
         if show_rms
-            rms_data2 = scale*nanrms(data_two(:,ix_rms_xmin2:ix_rms_xmax2));
+            rms_data2 = scale*rms(data_two(:, ix_rms_xmin2:ix_rms_xmax2), 'omitnan');
             this_name = [name2,'Mean (RMS: ',num2str(rms_data2,leg_format),')'];
         else
             this_name = [name2,'Mean'];
@@ -321,7 +319,7 @@ if comp_mode == modes.nondeg
             set(get(get(percents_group, 'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'on');
         end
         if show_rms
-            rms_data2 = nanrms(temp_mean);
+            rms_data2 = rms(temp_mean, 'omitnan');
             this_name = [name2,'Mean (RMS: ',num2str(rms_data2,leg_format),')'];
         else
             this_name = [name2,'Mean'];
