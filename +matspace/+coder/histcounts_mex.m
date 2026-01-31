@@ -1,4 +1,4 @@
-function [n] = histcounts_mex(x, edges) %#codegen
+function [n] = histcounts_mex(x, edges)  %#codegen
 
 % HISTCOUNTS_MEX  is a compilable version of the built-in histcounts function.
 %
@@ -13,7 +13,7 @@ function [n] = histcounts_mex(x, edges) %#codegen
 %     x     = [nan; 0; 1e-7; 1; 250; 499; 500; 1e6];
 %     edges = [eps, 200, 350, 500];
 %     % built-in version
-%     [n1,edges, bin] = histcounts(x, edges);
+%     [n1, edges, bin] = histcounts(x, edges);
 %     % this version
 %     n2 = matspace.coder.histcounts_mex(x, edges);
 %     assert(all(n1(:) == n2));

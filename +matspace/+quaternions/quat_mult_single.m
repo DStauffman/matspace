@@ -1,4 +1,4 @@
-function [c] = quat_mult_single(a,b) %#codegen
+function [c] = quat_mult_single(a, b)  %#codegen
 
 % QUAT_MULT_SINGLE  multiply two single quaternions together.
 %
@@ -10,9 +10,9 @@ function [c] = quat_mult_single(a,b) %#codegen
 %     c  : (4x1) x,y,z,s quaternion representing A w/r/t C [dimensionless]
 %
 % Prototype:
-%     a = [.5;-.5;.5;-.5];
-%     b = [-.5;.5;-.5;.5];
-%     c = matspace.quaternions.quat_mult_single(a,b)
+%     a = [0.5; -0.5; 0.5; -0.5];
+%     b = [-0.5; 0.5; -0.5; 0.5];
+%     c = matspace.quaternions.quat_mult_single(a, b);
 %
 % See Also:
 %     matspace.quaternions.quat_mult
@@ -32,6 +32,15 @@ function [c] = quat_mult_single(a,b) %#codegen
 %     2.  Updated by Scott Sims in Jun 2009.
 %     3.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     5.  Updated by David C. Stauffer in January 2026 to use arguments.
+
+arguments (Input)
+    a (4, 1) double
+    b (4, 1) double
+end
+arguments (Output)
+    c (4, 1) double
+end
 
 % perform multiplication
 c = [ a(4)  a(3) -a(2)  a(1); ...
@@ -40,6 +49,6 @@ c = [ a(4)  a(3) -a(2)  a(1); ...
      -a(1) -a(2) -a(3)  a(4)] * b;
 
 % force scalar component to be positive
-if c(4)<0
+if c(4) < 0
     c = -c;
 end

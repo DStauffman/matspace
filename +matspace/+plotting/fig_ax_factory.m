@@ -2,10 +2,9 @@ function [fig_ax] = fig_ax_factory(kwargs)
 
 % Creates the figures and axes for use in a given plotting function.
 %
-% Parameters
-% ----------
-% NumFigs : int
-%     Number of figures to produce
+% Input:
+%     NumFigs : int
+%         Number of figures to produce
 % NumAxes : int or (int, int)
 %     Total number of axes
 % SupTitle : str
@@ -18,22 +17,23 @@ function [fig_ax] = fig_ax_factory(kwargs)
 %     Whether to include everything and return a tuple of None's with the correct length
 % Visible : str
 %     Whether the plot is visible or not, from {'on', 'off'}
+% Theme : str
+%     Figure theme, from {'light', 'dark', 'auto'}
 %
-% Notes
-% -----
-% #.  Written by David C. Stauffer in February 2022.
-%
-% Examples
-% --------
+% Prototype:
 %     fig_ax = matspace.plotting.fig_ax_factory();
 %     fig = fig_ax{1}{1};
 %     ax = fig_ax{1}{2};
 %     assert(isa(fig, 'matlab.ui.Figure'));
 %     assert(isa(ax, 'matlab.graphics.axis.Axes'));
 %
-% Close plot
+%     % Close plot
 %     close(fig);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2022.
 
+%% Arguments
 arguments
     kwargs.NumFigs (1, 1) double = -1
     kwargs.NumAxes {mustBeOneOrTwo} = 1
@@ -42,6 +42,7 @@ arguments
     kwargs.ShareX (1, 1) logical = true
     kwargs.PassThrough (1, 1) logical = false
     kwargs.Visible {mustBeMember(kwargs.Visible, ["on", "off"])} = 'on'
+    kwargs.Theme {mustBeMember(kwargs.Theme, ["light", "dark", "auto"])} = 'light'
 end
 num_figs    = kwargs.NumFigs;
 num_axes    = kwargs.NumAxes;
@@ -50,7 +51,9 @@ layout      = kwargs.Layout;
 sharex      = kwargs.ShareX;
 passthrough = kwargs.PassThrough;
 fig_visible = kwargs.Visible;
+fig_theme   = kwargs.Theme;
 
+%% Sizes
 if isscalar(num_axes)
     is_1d = true;
     if strcmp(layout, 'rows')
@@ -74,14 +77,18 @@ end
 if num_figs == -1
     num_figs = 1;
 end
+
+%% Passthrough option
 if passthrough
     fig_ax = cell(1, num_figs * num_row * num_col);
     return
 end
+
+%% Create figures
 figs = gobjects(1, 0);
 axes = cell(1, 0);
 for f = 1:num_figs
-    fig = figure(Visible=fig_visible);
+    fig = figure(Visible=fig_visible, Theme=fig_theme);
     ax = gobjects(1, num_row * num_col);
     c = 1;
     for i = 1:num_row

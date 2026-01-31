@@ -1,22 +1,23 @@
-function [bins] = discretize_mex(x, edges, checks) %#codegen
+function [bins] = discretize_mex(x, edges, checks)  %#codegen
 
 % DISCRETIZE_MEX  is a compilable version of the built-in discretize function plus an option for
 %                 checking valid bounds.
 %
 % Input:
-%     x     : (Nx1) array of values to be discretized into bins
-%     edges : (1xM) array of edges specifying the bins
+%     x      : (Nx1) array of values to be discretized into bins
+%     edges  : (1xM) array of edges specifying the bins
+%     checks : (1x1) true/false flag for where values fell outside the bins
 %
 % Output:
-%     bins  : (Nx1) array of values specifying which bin the x values fall into.
+%     bins   : (Nx1) array of values specifying which bin the x values fall into.
 %
 % Prototype:
-%     x     = [-1; 0; 5; 10; 12; 35];
-%     edges = [0, 10, 20];
+%     x      = [-1; 0; 5; 10; 12; 35];
+%     edges  = [0, 10, 20];
 %     % built-in version
-%     bins1 = discretize(x, edges);
+%     bins1  = discretize(x, edges);
 %     % this version
-%     bins2 = matspace.coder.discretize_mex(x, edges);
+%     bins2  = matspace.coder.discretize_mex(x, edges);
 %     assert(all(isequaln(bins1, bins2)));
 %
 % See Also:
@@ -29,17 +30,14 @@ function [bins] = discretize_mex(x, edges, checks) %#codegen
 %     1.  Written by David C. Stauffer in October 2016.
 %     2.  Moved to package by David C. Stauffer in April 2020.
 
-switch nargin
-    case 2
-        checks = false;
-    case 3
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
+arguments
+    x
+    edges
+    checks (1, 1) logical = false
 end
 
 % count the number of bins that are greater than the current value and sum across.
-bins = sum(bsxfun(@ge,x(:),edges(:)'),2);
+bins = sum(bsxfun(@ge, x(:), edges(:)'), 2);
 
 % take care of values that fall outside the bins.
 bins(bins < 1) = nan;

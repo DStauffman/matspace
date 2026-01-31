@@ -1,4 +1,4 @@
-function q = quat_from_euler(angles, seq)
+function [q] = quat_from_euler(angles, seq)  %#codegen
 
 % QUAT_FROM_EULER  convert set(s) of euler angles to quaternion(s).
 %
@@ -22,7 +22,7 @@ function q = quat_from_euler(angles, seq)
 %     a   = [0.01; 0.02; 0.03];
 %     b   = [0.04; 0.05; 0.06];
 %     seq = [3 2 1];
-%     matspace.quaternions.quat_from_euler([a, b], seq)
+%     matspace.quaternions.quat_from_euler([a, b], seq);
 %
 % See Also:
 %     matspace.quaternions.dcm_to_quat, matspace.quaternions.quat_to_euler
@@ -40,32 +40,31 @@ function q = quat_from_euler(angles, seq)
 %     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+arguments (Input)
+    angles (3, :) double
+    seq (1, 3) double = [3 1 2]
+end
+arguments (Output)
+    q (4, :) double
+end
+
 % Imports
+%#ok<*EMIMP>
 import matspace.quaternions.qrot
 import matspace.quaternions.quat_mult
 
-% set default euler order
-switch nargin
-    case 1
-        seq = [3 1 2];
-    case 2
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
-
 % execute algorithm
-n = size(angles,2);
-q = zeros(4,n);
+n = size(angles, 2);
+q = zeros(4, n);
 
 % loop through quaternions
-for i=1:n
+for i = 1:n
     q_temp = [0; 0; 0; 1];
     % apply each rotation
-    for j=1:length(seq)
-        q_single = qrot(seq(j),angles(j,i));
-        q_temp = quat_mult(q_temp,q_single);
+    for j = 1:length(seq)
+        q_single = qrot(seq(j), angles(j, i));
+        q_temp = quat_mult(q_temp, q_single);
     end
     % save output
-    q(:,i) = q_temp;
+    q(:, i) = q_temp;
 end

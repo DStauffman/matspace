@@ -1,10 +1,10 @@
-function [r] = betarnd_mex(a,b,m,n) %#codegen
+function [r] = betarnd_mex(a, b, m, n)  %#codegen
 
 % BETARND_MEX  is a user version of betarnd that can be compiled.
 %
 % Input:
-%     a : (scalar) alpha shaping parameter for beta function
-%     b : (scalar) beta shaping parameter for beta function
+%     a : (scalar or mxn) alpha shaping parameter for beta function
+%     b : (scalar or mxn) beta shaping parameter for beta function
 %     m : (scalar) number of rows
 %     n : (scalar) number of cols
 %
@@ -33,31 +33,31 @@ function [r] = betarnd_mex(a,b,m,n) %#codegen
 %         single option like in the original function.
 
 % Generate gamma random values and take ratio of the first to the sum.
-g1 = randg_mex(a,m,n); % could be Infs or NaNs
-g2 = randg_mex(b,m,n); % could be Infs or NaNs
+g1 = randg_mex(a, m, n); % could be Infs or NaNs
+g2 = randg_mex(b, m, n); % could be Infs or NaNs
 
 r = g1 ./ (g1 + g2);
 
 % For a and b both very small, we often get 0/0.  Since the distribution is
 % essentially a Bernoulli(a/(a+b)), we can replace those NaNs.
-t = (g1==0 & g2==0);
+t = (g1 == 0 & g2 == 0);
 if any(t)
-    p = a ./ (a+b);
+    p = a ./ (a + b);
     if ~isscalar(p)
         p = p(t);
     end
-    r(t) = binornd(1,p(:),sum(t(:)),1);
+    r(t) = binornd(1, p(:), sum(t(:)), 1);
 end
 
 %% Subfunctions - binornd
-function r = binornd(n,p,c,d)
+function r = binornd(n, p, c, d)
 if isscalar(p)
-    p_full = p * ones(c,d);
+    p_full = p * ones(c, d);
 else
     p_full = p;
 end
 
-r = zeros(c,d);
+r = zeros(c, d);
 for i = 1:max(n(:))
     k = find(n >= i);
     r(k) = r(k) + (rand(size(k)) < p_full(k));
@@ -85,14 +85,14 @@ elseif shape < 1.0
         U = rand();
         V = random_standard_exponential();
         if U <= 1.0 - shape
-            X = U^(1./shape);
+            X = U ^ (1./shape);
             if X <= V
                 out = X;
                 return
             end
         else
-            Y = -log((1-U)./shape);
-            X = (1.0 - shape + shape*Y) ^ (1./shape);
+            Y = -log((1 - U) ./ shape);
+            X = (1.0 - shape + shape*Y) ^ (1 ./ shape);
             if X <= (V + Y)
                 out = X;
                 return
@@ -100,8 +100,8 @@ elseif shape < 1.0
         end
     end
 else
-    b = shape - 1./3.;
-    c = 1./sqrt(9*b);
+    b = shape - 1.0/3.0;
+    c = 1 ./ sqrt(9 * b);
     while true
         X = randn();  % do ----
         V = 1.0 + c*X;
@@ -109,14 +109,14 @@ else
             X = randn();
             V = 1.0 + c*X;
         end
-        V = V*V*V;
+        V = V * V * V;
         U = rand();
-        if (U < 1.0 - 0.0331*(X*X)*(X*X))
+        if (U < 1.0 - 0.0331 * (X*X) * (X*X))
             out = (b*V);
             return
         end
-        if (log(U) < 0.5*X*X + b*(1. - V + log(V)))
-            out = (b*V);
+        if (log(U) < 0.5 * (X*X) + b * (1. - V + log(V)))
+            out = (b * V);
             return
         end
     end

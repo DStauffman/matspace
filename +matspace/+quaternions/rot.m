@@ -1,4 +1,4 @@
-function [t] = rot(k,a) %#codegen
+function [t] = rot(k, a)  %#codegen
 
 % ROT  direction cosine matrix for rotation about a single axis.
 %
@@ -14,11 +14,11 @@ function [t] = rot(k,a) %#codegen
 % Prototype:
 %     % simple 90deg z-rotation
 %     k = 3;
-%     a = pi/2;
-%     t = matspace.quaternions.rot(k,a)
+%     a = pi / 2;
+%     t = matspace.quaternions.rot(k, a)
 %
 % See Also:
-%     drot_matlab, quat_to_dcm
+%     matspace.quaternions.drot_matlab, matspace.quaternions.quat_to_dcm
 %
 % Change Log:
 %     1.  lineage: HARS (Romney), CARS (Romney, Hull), GARSE (Sims, Stauffer, Beck)
@@ -26,6 +26,15 @@ function [t] = rot(k,a) %#codegen
 %     3.  Updated by Tom Trankle in July 2011 for #eml support.
 %     4.  Incorporated by David C. Stauffer into matspace in Nov 2016.
 %     5.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     6.  Updated by David C. Stauffer in January 2026 to use arguments.
+
+arguments (Input)
+    k (1, 1) {mustBeMember(k, 1:3)}
+    a (1, 1) double
+end
+arguments (Output)
+    t (3, 3) double
+end
 
 % sines of angle
 ca = cos(a);
@@ -39,4 +48,6 @@ switch k
         t = [ca 0 -sa; 0 1 0; sa 0 ca];
     case 3
         t = [ca sa 0; -sa ca 0; 0 0 1];
+    otherwise
+        error('matspace:rot:BadAxis', 'Unexpected axis: %i; must be 1, 2, or 3.', k);
 end

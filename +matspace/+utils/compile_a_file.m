@@ -47,7 +47,7 @@ end
 
 % Set mex settings as a configuration object
 mex_config_obj = coder.config('mex');
-mex_config_obj.DynamicMemoryAllocation = 'AllVariableSizeArrays';
+mex_config_obj.EnableDynamicMemoryAllocation = true;
 
 % Turn off parallelization warning for our compiler
 warning('off','Coder:reportGen:noCompilerOpenMPSupport');

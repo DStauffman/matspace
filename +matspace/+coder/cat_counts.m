@@ -1,4 +1,4 @@
-function [n] = cat_counts(x, cats) %#codegen
+function [n] = cat_counts(x, cats)  %#codegen
 
 % CAT_COUNTS  is a compilable version of the categorical counts of discretize.
 %

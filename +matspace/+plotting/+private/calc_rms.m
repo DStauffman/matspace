@@ -8,17 +8,14 @@ arguments
     kwargs.UseMean (1, 1) logical
 end
 
-import matspace.utils.nanmean
-import matspace.utils.nanrms
-
 use_mean = kwargs.UseMean;
 
 if ~use_mean
     func_name = 'RMS';
-    func_lamb = @nanrms;
+    func_lamb = @(x) rms(x, 'omitnan');
 else
     func_name = 'Mean';
-    func_lamb = @nanmean; %#ok<NANMEAN>
+    func_lamb = @(x) mean(x, 'omitnan');
 end
 data_func = cell(1, length(datum));
 for j = 1:length(datum)

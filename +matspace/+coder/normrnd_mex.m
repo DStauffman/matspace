@@ -1,10 +1,10 @@
-function [r] = normrnd_mex(mu,sigma,m,n) %#codegen
+function [r] = normrnd_mex(mu, sigma, m, n)  %#codegen
 
 % NORMRND_MEX  is a user version of normrnd that can be compiled.
 %
 % Input:
-%     mu .. : (scalar) mean
-%     sigma : (scalar) standard deviation
+%     mu .. : (scalar or MxN) mean
+%     sigma : (scalar or MxN) standard deviation
 %     m ... : (scalar) number of rows
 %     n ... : (scalar) number of cols
 %
@@ -16,7 +16,8 @@ function [r] = normrnd_mex(mu,sigma,m,n) %#codegen
 %     sigma = 1;
 %     m = 100;
 %     n = 1;
-%     r = matspace.coder.normrnd_mex(mu,sigma,m,n);
+%     r = matspace.coder.normrnd_mex(mu, sigma, m, n);
+%     assert(all(size(r) == [m n]));
 %
 % See Also:
 %     normrnd, randn
@@ -34,4 +35,4 @@ function [r] = normrnd_mex(mu,sigma,m,n) %#codegen
 sigma(sigma < 0) = NaN;
 
 % Do the random number draw
-r = randn(m,n) .* sigma + mu;
+r = randn(m, n) .* sigma + mu;

@@ -38,6 +38,15 @@ function [q] = dcm_to_quat(dcm)
 %     2.  Incorporated by David C. Stauffer into matspace in March 2008.
 %     3.  Updated by David C. Stauffer in Mar 2010 to allow vectorized inputs and outputs.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     5.  Updated by David C. Stauffer in January 2026.
+
+%% Arguments
+arguments (Input)
+    dcm (:, :, :) double {mustBeDcm}
+end
+arguments (Output)
+    q (4, :) double
+end
 
 %% find number of DCMs
 [n1,n2,n3] = size(dcm);
@@ -135,4 +144,14 @@ else
     q(3,f) = (x(2,f) - y(1,f))./(4*q(4,f));
     % negate vector as needed such that quaternion scalar component is positive
     q(:,q(4,:)<0) = -q(:,q(4,:)<0);
+end
+
+
+%% Subfunctions - mustBeEqualTime
+function mustBeDcm(dcm)
+% Test for equal size for time dimension (second dim)
+if size(dcm, 1) ~= 9 && (size(dcm, 1) ~= 3 || size(dcm, 2) ~=3)
+    eid = 'matspace:BadDcm';
+    msg = 'Input DCM must be 9xN or 3x3xN.';
+    throwAsCaller(MException(eid, msg));
 end
