@@ -312,7 +312,7 @@ else
     single_lines1 = single_lines(1);
     single_lines2 = single_lines(2);
 end
-ylabels = get_ylabels(num_channels, y_label, Elements=elements, SingleLines=single_lines1, Description=description, Units=units);
+y_labels = get_ylabels(num_channels, y_label, Elements=elements, SingleLines=single_lines1, Description=description, Units=units);
 if have_both
     symbol_one = '^-';
     symbol_two = 'v:';
@@ -417,7 +417,7 @@ this_zorder =ifelse(is_quat_diff, 3, 4);
 for i = 1:num_channels
     this_fig = fig_ax{i}{1};
     this_axes = fig_ax{i}{2};
-    this_ylabel = ylabels{i};
+    this_ylabel = y_labels{i};
     if ~isempty(name_one)
         this_label = [char(name_one),' ',elements{i}];
     else

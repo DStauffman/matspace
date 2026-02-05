@@ -1,4 +1,4 @@
-classdef test_dms2d < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_dms2d < matlab.unittest.TestCase
 
 % Tests the dms2d function with the following cases:
 %     Scalar usage

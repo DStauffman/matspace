@@ -2,8 +2,7 @@ function [fig_hand, err] = plot_time_difference(description, time_one, data_one,
 
 % Plot multiple metrics over time.
 %
-% Parameters
-% ----------
+% Input:
 % description : str
 %     Name to label on the plots
 % time_one : 1D ndarray
@@ -22,23 +21,12 @@ function [fig_hand, err] = plot_time_difference(description, time_one, data_one,
 %     Whether to skip the setup_plots step, in case you are manually adding to an existing axis
 % save_plot : bool, optional
 %     Ability to overide the option in opts
-% return_err : bool, optional, default is False
-%     Whether the function should return the error differences in addition to the figure handles
 % **kwargs : dict
 %     Remaining keyword arguments will be passed to make_time_plot
 %
-% Returns
-% -------
+% Output:
 % figs : list of class matplotlib.figure.Figure
 %     figure handles
-%
-% See Also
-% --------
-% make_time_plot
-%
-% Notes
-% -----
-% #.  Written by David C. Stauffer in December 2022.
 %
 % Prototype:
 %     description = 'Random Data'
@@ -58,6 +46,13 @@ function [fig_hand, err] = plot_time_difference(description, time_one, data_one,
 %     % Close plots
 %     close(fig_hand1);
 %     close(fig_hand2);
+%
+% See Also:
+%     matspace.plotting.make_time_plot
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in December 2022.
+%     2.  Updated to match Python version by David C Stauffer in February 2026.
 
 %% Imports
 import matspace.plotting.convert_time_to_date
@@ -66,6 +61,7 @@ import matspace.plotting.get_start_date
 import matspace.plotting.ignore_plot_data
 import matspace.plotting.make_difference_plot
 import matspace.plotting.Opts
+import matspace.plotting.private.fun_is_bool
 import matspace.plotting.private.fun_is_data
 import matspace.plotting.private.fun_is_log_level
 import matspace.plotting.private.fun_is_opts
@@ -74,19 +70,22 @@ import matspace.plotting.private.fun_is_time
 import matspace.plotting.private.kwargs_pop
 import matspace.plotting.setup_plots
 
-%% Parse Inputs
-% create parser
+%% Parser
+% Argument parser
 p = inputParser;
 p.KeepUnmatched = true;
-% set options
 addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'TimeOne', @fun_is_time);
-addRequired(p, 'DataOne', @fun_is_data);  % TODO: reorder to match the rest of them?
+addRequired(p, 'DataOne', @fun_is_data);
 addRequired(p, 'TimeTwo', @fun_is_time);
 addRequired(p, 'DataTwo', @fun_is_data);
 addParameter(p, 'Opts', Opts(), @fun_is_opts);
 addParameter(p, 'IgnoreEmpties', false, @fun_is_bool);
 addParameter(p, 'SkipSetupPlots', false, @fun_is_bool);
+addParameter(p, 'CaseName', '', @fun_is_text);
+addParameter(p, 'SavePlot', false, @fun_is_bool);
+addParameter(p, 'SavePath', '', @fun_is_text);
+addParameter(p, 'Classify', @fun_is_text);
 addParameter(p, 'LogLevel', 10, @fun_is_log_level);
 % do parse
 parse(p, description, time_one, data_one, time_two, data_two, varargin{:});
@@ -100,9 +99,9 @@ unmatched        = p.Unmatched;
 %% Check for valid data
 if ignore_plot_data(data_one, ignore_empties) && ignore_plot_data(data_two, ignore_empties)
     if log_level >= 5
-        fprint1(1, " %s plot skipped due to missing data.", description);
+        fprintf(1, ' %s plot skipped due to missing data.\n', description);
     end
-    fig_hand = gobjects(1, 0);
+    fig_hand = gobjects(1, 0);  % TODO: handle FigAx input case
     err = [];
     return
 end
@@ -122,6 +121,7 @@ elseif is_date_o && ~is_date_1 && ~is_date_2
     this_opts.convert_dates('sec');
 end
 % opts overrides
+[this_opts.case_name, unmatched] = kwargs_pop(unmatched, 'CaseName', this_opts.case_name);
 [this_opts.save_plot, unmatched] = kwargs_pop(unmatched, 'SavePlot', this_opts.save_plot);
 [this_opts.save_path, unmatched] = kwargs_pop(unmatched, 'SavePath', this_opts.save_path);
 [this_opts.classify,  unmatched] = kwargs_pop(unmatched, 'Classify', this_opts.classify);
@@ -145,6 +145,7 @@ end
 [name_one,     unmatched] = kwargs_pop(unmatched, 'NameOne', '');
 [name_two,     unmatched] = kwargs_pop(unmatched, 'NameTwo', '');
 [name_one, name_two] = this_opts.get_name_one_and_two(NameOne=name_one, NameTwo=name_two);
+[fig_visible,  unmatched] = kwargs_pop(unmatched, 'FigVisible', this_opts.show_plot);
 
 % print status
 if log_level >= 4
@@ -184,5 +185,5 @@ if ~skip_setup_plots
     figmenu;
 
     % setup plots
-    setup_plots(fig_hand, opts, 'time');
+    setup_plots(fig_hand, this_opts, 'time');
 end

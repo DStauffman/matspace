@@ -1,4 +1,4 @@
-classdef test_plot_monte_carlo < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_plot_monte_carlo < matlab.unittest.TestCase
 
     % Tests the plot_monte_carlo function with the following cases:
     %     TBD

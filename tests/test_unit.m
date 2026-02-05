@@ -1,4 +1,4 @@
-classdef test_unit < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_unit < matlab.unittest.TestCase
 
     % Tests the minmin function with the following cases:
     %     single row input

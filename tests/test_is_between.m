@@ -1,4 +1,4 @@
-classdef test_is_between < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_is_between < matlab.unittest.TestCase
 
     % Tests the is_between function with the following cases:
     %     Default behavior

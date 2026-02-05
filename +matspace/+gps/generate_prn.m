@@ -1,4 +1,4 @@
-function [prn] = generate_prn(sat,len)
+function [prn] = generate_prn(sat, len)
 
 % GENERATE_PRN  generates the prn bit stream.
 %
@@ -22,31 +22,30 @@ function [prn] = generate_prn(sat,len)
 %     3.  Incorporated into matspace tools in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+% arguments
+arguments (Input)
+    sat (1, 1) double {mustBeMember(sat, 1:37)}
+    len (1, 1) double = 1023
+end
+arguments (Output)
+    prn (1, :) double
+end
+
 % imports
 import matspace.gps.get_prn_bits
 
-% optional inputs
-switch nargin
-    case 1
-        len = 1023;
-    case 2
-        % nop
-    otherwise
-        error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
-end
-
 % find which bits to mod based on the satellite number
-[bit1,bit2] = get_prn_bits(sat);
+[bit1, bit2] = get_prn_bits(sat);
 
 % initialize generators
-g1 = ones(1,10);
-g2 = ones(1,10);
+g1 = ones(1, 10);
+g2 = ones(1, 10);
 
 % initialize output
 prn = zeros(1,len);
 
 % loop through bits
-for i=1:len
+for i = 1:len
     % calculate new values for generators
     g1n = bplus(g1([3 10]));
     g2n = bplus(g2([2 3 6 8 9 10]));
@@ -65,4 +64,4 @@ end
 %% Subfunctions
 function out = bplus(in)
 % bplus does modulo 2 addition (exclusive or) on vector input
-out = mod(sum(in),2);
+out = mod(sum(in), 2);

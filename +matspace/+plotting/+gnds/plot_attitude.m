@@ -7,10 +7,14 @@ function [fig_hand, err] = plot_attitude(kf1, kf2, varargin)
 %     Kalman filter output
 % kf2 : class Kf, optional
 %     Second filter output for potential comparison
+% truth : class Kf, optional
+%     Third filter output that is considered truth
 % opts : class Opts, optional
 %     Plotting options
 % skip_setup_plots : bool, optional, default is False
 %     Whether to skip the setup_plots step
+% groups : iterable of ints
+%     How to group plots based on state numbers
 % fields : dict[str, str], optional
 %     Fields to plot, default is covar and Covariance
 % **kwargs : dict
@@ -39,7 +43,7 @@ function [fig_hand, err] = plot_attitude(kf1, kf2, varargin)
 %     kf2.att(4, 5) = kf2.att(4, 5) + 50e-6;
 %     kf2.att = matspace.quaternions.quat_norm(kf2.att);
 %
-%     opts = Opts();
+%     opts = matspace.plotting.Opts();
 %     opts.case_name = 'test_plot'
 %     opts.quat_comp = true;
 %     opts.sub_plots = true;
@@ -196,7 +200,7 @@ end
 % Setup plots
 if ~skip_setup_plots
     figmenu;
-    setup_plots(fig_hand, this_opts)
+    setup_plots(fig_hand, this_opts);
 end
 if printed && log_level >= 4
     fprintf(1, '%s\n', '... done.');

@@ -1,4 +1,4 @@
-classdef test_hex2bin < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_hex2bin < matlab.unittest.TestCase  %#ok<*PROP>
 
     % Tests the hex2bin function with the following cases:
     %     Nominal

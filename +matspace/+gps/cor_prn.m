@@ -1,4 +1,4 @@
-function cor = cor_prn(prn1,prn2,shift,form)
+function cor = cor_prn(prn1, prn2, shift, form)
 
 % COR_PRN  is the correlation of PRN codes with an optional shift.
 %
@@ -14,7 +14,7 @@ function cor = cor_prn(prn1,prn2,shift,form)
 % Prototype:
 %     prn   = matspace.gps.generate_prn(1);
 %     shift = 0:1022;
-%     cor   = matspace.gps.cor_prn(prn,prn,shift,'zero-one');
+%     cor   = matspace.gps.cor_prn(prn, prn, shift, 'zero-one');
 %     assert(cor(1) == 1);
 %     assert(max(abs(cor(2:end))) < 0.1);
 %
@@ -29,6 +29,16 @@ function cor = cor_prn(prn1,prn2,shift,form)
 %     2.  Moved to gps subfolder in Feb 2009.
 %     3.  Incorporated into matspace tools in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+
+arguments (Input)
+    prn1 (1, :) double
+    prn2 (1, :) double
+    shift (1, :) double
+    form (1, 1) string {mustBeMember(form, ["zero-one", "one-one"])}
+end
+arguments (Output)
+    cor (1, :) double
+end
 
 % Imports
 import matspace.gps.bsr
@@ -49,11 +59,11 @@ cor = zeros(size(shift));
 % loop through different shift values
 for i = 1:length(shift)
     % shift prn2
-    prn2s = bsr(prn2,shift(i));
+    prn2s = bsr(prn2, shift(i));
 
     % initialize output
-    temp = sum(prn1.*prn2s);
+    temp = sum(prn1 .* prn2s);
 
     % scale correlation by number of samples
-    cor(i) = temp/1023;
+    cor(i) = temp / 1023;
 end

@@ -1,4 +1,4 @@
-classdef test_d2r < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_d2r < matlab.unittest.TestCase
 
 % Tests the d2r function with the following cases:
 %     Scalar usage

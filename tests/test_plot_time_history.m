@@ -1,4 +1,4 @@
-classdef test_plot_time_history < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_plot_time_history < matlab.unittest.TestCase  %#ok<*PROP>
 
     % Tests the make_time_plot function with the following cases:
     %     Nominal

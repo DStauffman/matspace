@@ -1,4 +1,4 @@
-classdef test_qrot < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_qrot < matlab.unittest.TestCase  %#ok<*PROP>
 
     % Tests the qrot function with the following cases:
     %     Single input case

@@ -1,4 +1,4 @@
-classdef test_plot_phases < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_plot_phases < matlab.unittest.TestCase
 
     % Tests the plot_phases function with the following cases:
     %     normal mode

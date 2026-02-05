@@ -1,4 +1,4 @@
-classdef test_make_difference_plot < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_make_difference_plot < matlab.unittest.TestCase  %#ok<*PROP>
 
     % Tests the make_difference_plot function with the following cases:
     %     TBD

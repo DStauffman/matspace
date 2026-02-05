@@ -1,4 +1,4 @@
-classdef test_plot_second_units_wrapper < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_plot_second_units_wrapper < matlab.unittest.TestCase
 
     % Tests the make_time_plot function with the following cases:
     %     TBD

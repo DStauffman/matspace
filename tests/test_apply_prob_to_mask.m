@@ -1,4 +1,4 @@
-classdef test_apply_prob_to_mask < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_apply_prob_to_mask < matlab.unittest.TestCase
 
     % Tests the qrot function with the following cases:
     %     Nominal

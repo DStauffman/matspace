@@ -1,4 +1,4 @@
-classdef test_intersect2 < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_intersect2 < matlab.unittest.TestCase
 
 % Tests the fix_rollover function with the following cases:
 %     Nominal

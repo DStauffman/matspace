@@ -1,4 +1,4 @@
-classdef test_bins_to_str_ranges < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_bins_to_str_ranges < matlab.unittest.TestCase
 
     % Tests the bins_to_str_ranges function with the following cases:
     %     Nominal

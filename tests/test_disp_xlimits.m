@@ -1,4 +1,4 @@
-classdef test_disp_xlimits < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_disp_xlimits < matlab.unittest.TestCase
 
     % Tests the make_time_plot function with the following cases:
     %     Normal use

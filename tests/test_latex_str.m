@@ -1,4 +1,4 @@
-classdef test_latex_str < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_latex_str < matlab.unittest.TestCase
 
     % Tests the latex_str function with the following cases:
     %     TBD

@@ -26,7 +26,7 @@ function [fig] = make_time_plot(description, time, data, varargin)
 %     legend_loc       = 'best';
 %     second_units     = '';
 %     legend_scale     = '';
-%     ylabel           = '';
+%     y_label          = '';
 %     data_as_rows     = true;
 %     extra_plotter    = [];
 %     use_zoh          = false;
@@ -35,13 +35,13 @@ function [fig] = make_time_plot(description, time, data, varargin)
 %     fig_ax           = [];
 %     fig_hand = matspace.plotting.make_time_plot(description, time, data, Name=name, Elements=elements, ...
 %         Units=units, TimeUnits=time_units, StartDate=start_date, RmsXmin=rms_xmin, RmsXmax=rms_xmax, ...
-%         DispXmin=disp_xmin, DispXmax=disp_xmax, SingleLines=single_lines, ColorMap=colormap, ...
+%         DispXmin=disp_xmin, DispXmax=disp_xmax, SingleLines=single_lines, ColorMap=color_map, ...
 %         UseMean=use_mean, PlotZero=plot_zero, ShowRms=show_rms, LegendLoc=legend_loc, ...
-%         SecondUnits=second_units, LegendScale=legend_scale, YLabel=ylabel, DataAsRows=data_as_rows, ...
+%         SecondUnits=second_units, LegendScale=legend_scale, YLabel=y_label, DataAsRows=data_as_rows, ...
 %         ExtraPlotter=extra_plotter, UseZoh=use_zoh, LabelVertLines=label_vert_lines, ...
 %         UseDatashader=use_datashader, FigAx=fig_ax);
 %
-%     % clean up
+%     % Close plots
 %     close(fig_hand);
 
 %% Imports
@@ -178,7 +178,7 @@ switch plot_type
 end
 
 % get labels
-ylabels = get_ylabels(num_channels, y_label, Elements=elements, SingleLines=single_lines, Description=description, Units=units);
+y_labels = get_ylabels(num_channels, y_label, Elements=elements, SingleLines=single_lines, Description=description, Units=units);
 
 if isempty(fig_ax)
     % get the number of figures and axes to make
@@ -212,7 +212,7 @@ for i = 1:min([length(times), length(datum)])
     this_axes = temp_fig_ax{2};
     this_time = times{i};
     this_data = datum{i};
-    this_ylabel = ylabels{i};
+    this_ylabel = y_labels{i};
     if ~isempty(name)
         this_label = [name,' ',elements{i}];
     else
@@ -246,11 +246,7 @@ for i = 1:min([length(times), length(datum)])
         plot_second_units_wrapper(this_axes, {new_units, unit_conv});
         % plot RMS lines
         if show_rms
-            if ~use_mean
-                vert_labels = strings(1, 0);
-            else
-                vert_labels = ["Mean Start Time", "Mean Stop Time"];
-            end
+            vert_labels = ifelse(~use_mean, strings(1, 0), ["Mean Start Time", "Mean Stop Time"]);
             plot_vert_lines(this_axes, ix.pts, ShowInLegend=label_vert_lines, Labels=vert_labels);
         end
     end
@@ -262,7 +258,7 @@ end
 
 % plot any extra information through a generic callable
 if ~isempty(extra_plotter)  % test if callable instead?
-    extra_plotter(fig=fig, ax=ax)
+    extra_plotter(fig, ax);
 end
 
 % overlay the datashaders (with appropriate time units information)

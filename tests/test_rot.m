@@ -1,4 +1,4 @@
-classdef test_rot < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_rot < matlab.unittest.TestCase
 
     % Tests the rot function with the following cases:
     %     Reference 1, single axis
