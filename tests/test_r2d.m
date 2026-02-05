@@ -1,4 +1,4 @@
-classdef test_r2d < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_r2d < matlab.unittest.TestCase
 
 % Tests the r2d function with the following cases:
 %     Scalar usage

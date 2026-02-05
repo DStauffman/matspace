@@ -1,4 +1,4 @@
-classdef test_zoom_ylim < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_zoom_ylim < matlab.unittest.TestCase
 
     % Tests the make_time_plot function with the following cases:
     %     TBD

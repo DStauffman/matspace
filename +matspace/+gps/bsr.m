@@ -28,7 +28,6 @@ arguments (Input)
     in {mustBeVector}
     shift (1, 1) double = 1
 end
-
 arguments (Output)
     out {mustBeVector}
 end

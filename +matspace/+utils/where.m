@@ -24,6 +24,16 @@ function [out] = where(bool, a, b)
 %     1.  Written by David C. Stauffer in July 2019.  Inspired by the Python numpy.where function.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
+% broadcast sizes
+if ~isscalar(bool)
+    if isscalar(a)
+        a = repmat(a, size(bool));
+    end
+    if isscalar(b)
+        b = repmat(b, size(bool));
+    end
+end
+
 % check inputs
 assert(numel(bool) == numel(a), 'Input a (%i) must have the same number of elements as bool (%i).', numel(a), numel(bool));
 assert(numel(bool) == numel(b), 'Input b (%i) must have the same number of elements as bool (%i).', numel(b), numel(bool));

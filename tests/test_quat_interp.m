@@ -1,4 +1,4 @@
-classdef test_quat_interp < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_quat_interp < matlab.unittest.TestCase  %#ok<*PROP>
 
     % Tests the qrot function with the following cases:
     %     TBD

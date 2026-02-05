@@ -1,4 +1,4 @@
-classdef test_setup_dir < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_setup_dir < matlab.unittest.TestCase
 
     % Tests the setup_dir function with the following cases:
     %     Empty string

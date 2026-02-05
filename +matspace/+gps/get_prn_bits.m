@@ -1,4 +1,4 @@
-function [b1,b2] = get_prn_bits(sat)
+function [b1, b2] = get_prn_bits(sat)
 
 % GET_PRN_BITS  gets the bit numbers to generate the desired prn sequence
 %
@@ -10,7 +10,7 @@ function [b1,b2] = get_prn_bits(sat)
 %     b2 : bit 2 for xor step in PRN sequence generator
 %
 % Prototype:
-%     [b1,b2] = matspace.gps.get_prn_bits(19);
+%     [b1, b2] = matspace.gps.get_prn_bits(19);
 %     assert(b1 == 3);
 %     assert(b2 == 6);
 %
@@ -22,6 +22,14 @@ function [b1,b2] = get_prn_bits(sat)
 %     2.  Moved to gps subfolder in Feb 2009.
 %     3.  Incorporated into matspace tools in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+
+arguments (Input)
+    sat (1, 1) double {mustBeMember(sat, 1:37)}
+end
+arguments (Output)
+    b1 (1, 1) double
+    b2 (1, 1) double
+end
 
 switch sat
     case 1

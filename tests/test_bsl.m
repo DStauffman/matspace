@@ -1,4 +1,4 @@
-classdef test_bsl < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_bsl < matlab.unittest.TestCase
 
     % Tests the bsl function with the following cases:
     %     Nominal

@@ -1,4 +1,4 @@
-classdef test_plot_vert_lines < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_plot_vert_lines < matlab.unittest.TestCase
 
     % Tests the make_time_plot function with the following cases:
     %     Nominal

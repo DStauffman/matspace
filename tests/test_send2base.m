@@ -1,4 +1,4 @@
-classdef test_send2base < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_send2base < matlab.unittest.TestCase  %#ok<*PROP>
 
     % Tests the send_vars_to_workspace function with the following cases:
     %     function with normal inputs

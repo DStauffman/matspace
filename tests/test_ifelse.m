@@ -1,4 +1,4 @@
-classdef test_ifelse < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_ifelse < matlab.unittest.TestCase
 
     % Tests the ifelse function with the following cases:
     %     True

@@ -1,4 +1,4 @@
-classdef test_modd < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_modd < matlab.unittest.TestCase  %#ok<*PROP>
 
 % Tests the modd function with the following cases:
 %     Nominal

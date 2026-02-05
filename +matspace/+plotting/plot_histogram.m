@@ -1,8 +1,8 @@
 function [fig] = plot_histogram(description, data, bins, varargin)
+
 % Creates a histogram plot of the given data and bins.
 %
-% Parameters
-% ----------
+% Input:
 % description : str
 %     Name to label on the plots
 % data : (N, ) ndarray
@@ -50,28 +50,26 @@ function [fig] = plot_histogram(description, data, bins, varargin)
 % **kwargs : dict
 %     Additional plotting arguments to override Opts, from {"legend_loc"}
 %
-% Returns
-% -------
+% Output:
 % fig : class matplotlib.figure.Figure
 %     Figure handle
 %
-% Notes
-% -----
-% #.  Written by David C. Stauffer in February 2021.
+% Prototype:
+%     description = 'Histogram';
+%     data = [0.5, 3.3, 1.0, 1.5, 1.5, 1.75, 2.5, 2.5];
+%     bins = [0.0, 1.0, 2.0, 3.0, 5.0, 7.0];
+%     fig_hand = matspace.plotting.plot_histogram(description, data, bins);
 %
-% Examples
-% --------
-% >>> description = 'Histogram'
-% >>> data = [0.5, 3.3, 1.0, 1.5, 1.5, 1.75, 2.5, 2.5];
-% >>> bins = [0.0, 1.0, 2.0, 3.0, 5.0, 7.0];
-% >>> fig = matspace.plotting.plot_histogram(description, data, bins);
+%     % With CDF
+%     fig2 = matspace.plotting.plot_histogram(description, data, bins, ShowCdf=true, CdfY=0.5);
 %
-% With CDF
-% >>> fig2 = matspace.plotting.plot_histogram(description, data, bins, ShowCdf=true, CdfY=0.5);
+%     % Close plots
+%     close(fig);
+%     close(fig2);
 %
-% Close plot
-% >>> close(fig);
-% >>> close(fig2);
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2021.
+%     2.  Translated into Matlab by David C. Stauffer in 2026.
 
 %% Imports
 import matspace.plotting.get_factors
@@ -82,8 +80,6 @@ import matspace.plotting.private.fun_is_opts
 import matspace.plotting.show_zero_ylim
 import matspace.plotting.whitten
 import matspace.stats.intersect2
-import matspace.utils.nanmean
-import matspace.utils.nanrms
 
 %% Parser
 % Validation functions
@@ -221,7 +217,7 @@ ax.add_collection(coll)
 ax.grid(True)
 ax.set_xlabel(f"{xlabel} [{units}]" if units else xlabel)
 ax.set_ylabel(ylabel)
-if xlim is None
+if isempty(x_lim)
     if missing > 0
         ax.set_xlim((np.min(plotting_bins), np.max(plotting_bins) + 1))
     else

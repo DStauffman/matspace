@@ -1,4 +1,4 @@
-classdef test_icer < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_icer < matlab.unittest.TestCase  %#ok<*PROP>
 
     % Tests the icer function with the following cases:
     %     nominal

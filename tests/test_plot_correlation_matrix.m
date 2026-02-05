@@ -1,4 +1,4 @@
-classdef test_plot_correlation_matrix < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_plot_correlation_matrix < matlab.unittest.TestCase
 
     % Tests the plot_correlation_matrix function with the following cases:
     %     normal mode

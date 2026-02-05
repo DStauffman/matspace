@@ -1,4 +1,4 @@
-classdef test_make_preamble < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_make_preamble < matlab.unittest.TestCase
 
     % Tests the make_preamble function with the following cases:
     %     Nominal

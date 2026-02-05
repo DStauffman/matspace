@@ -1,4 +1,4 @@
-classdef test_where < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_where < matlab.unittest.TestCase
 
     % Tests the where function with the following cases:
     %     True
@@ -23,6 +23,33 @@ classdef test_where < matlab.unittest.TestCase %#ok<*PROP>
             b    = [-2 -4 -6 -8];
             out  = matspace.utils.where(bool, a, b);
             expected = [1 -4 -6 7];
+            self.verifyEqual(out, expected);
+        end
+
+        function test_scalar_values(self)
+            bool = [true false false true];
+            a    = 5;
+            b    = -3;
+            out  = matspace.utils.where(bool, a, b);
+            expected = [5 -3 -3 5];
+            self.verifyEqual(out, expected);
+        end
+
+        function test_a_scalar(self)
+            bool = [true false false true];
+            a    = 5;
+            b    = [-3 -2 -1 0];
+            out  = matspace.utils.where(bool, a, b);
+            expected = [5 -2 -1 5];
+            self.verifyEqual(out, expected);
+        end
+
+        function test_b_scalar(self)
+            bool = [true false false true];
+            a    = [5 6 7 8];
+            b    = -3;
+            out  = matspace.utils.where(bool, a, b);
+            expected = [5 -3 -3 8];
             self.verifyEqual(out, expected);
         end
 

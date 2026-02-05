@@ -1,4 +1,4 @@
-classdef test_plot_classification < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_plot_classification < matlab.unittest.TestCase
 
     % Tests the plot_classification function with the following cases:
     %     normal mode

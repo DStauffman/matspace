@@ -1,6 +1,6 @@
 function out = prn_01_to_m11(in)
 
-% PRN_01_TO_m11  shifts from (0,1) to (1,-1)
+% PRN_01_TO_m11  shifts from (0, 1) to (1, -1)
 %
 % Input:
 %     in  : PRN sequence of 0's and 1's
@@ -19,4 +19,4 @@ function out = prn_01_to_m11(in)
 %     3.  Incorporated into matspace tools in Nov 2016.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
 
-out = 1*(in==0) + -1*(in==1);
+out = 1*(in==0) + -1*(in==1);  % matspace.utils.where(in == 1, -1, 1);

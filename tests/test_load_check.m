@@ -1,4 +1,4 @@
-classdef test_load_check < matlab.unittest.TestCase %#ok<*PROP>
+classdef test_load_check < matlab.unittest.TestCase  %#ok<*PROP>
 
 % Tests the load_check function with the following cases:
 %     Nominal, load whole file
