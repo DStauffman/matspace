@@ -76,7 +76,9 @@ classdef Opts
     end
 
     methods
-        function OPTS = Opts(overrides)
+        function self = Opts(overrides)
+            % imports
+            import matspace.plotting.colors.ColorMap
             % check optional inputs
             switch nargin
                 case 0
@@ -84,7 +86,7 @@ classdef Opts
                 case 1
                     % if already a class instance, then just pass it through unmodified
                     if isa(overrides, 'matspace.plotting.Opts')
-                        OPTS = overrides;
+                        self = overrides;
                         return
                     elseif isstruct(overrides) || isempty(overrides)
                         % nop
@@ -95,38 +97,38 @@ classdef Opts
                     error('matspace:UnexpectedNargin', 'Unexpected number of inputs: "%i"', nargin);
             end
             % build new output class with defaults
-            OPTS.case_name = '';
-            OPTS.date_zero = [];
-            OPTS.save_plot = false;
-            OPTS.save_path = pwd;
-            OPTS.show_plot = true;
-            OPTS.show_link = false;
-            OPTS.plot_type = 'png';
-            OPTS.sub_plots = true;
-            OPTS.sing_line = false;
-            OPTS.plot_locs = 'default';
-            OPTS.disp_xmin = -inf;
-            OPTS.disp_xmax = inf;
-            OPTS.rms_xmin  = -inf;
-            OPTS.rms_xmax  = inf;
-            OPTS.show_rms  = true;
-            OPTS.use_mean  = false;
-            OPTS.lab_vert  = true;
-            OPTS.show_zero = false;
-            OPTS.quat_comp = false;
-            OPTS.show_xtra = true;
-            OPTS.time_base = 'sec'; % Nominally seconds or years, time when no scaling done
-            OPTS.time_unit = ''; % Time unit to display plots in, potentially scaling from the base
-            OPTS.colormap  = '';
-            OPTS.leg_spot  = 'best';
-            OPTS.classify  = '';
-            OPTS.names     = "";
+            self.case_name = '';
+            self.date_zero = [];
+            self.save_plot = false;
+            self.save_path = pwd;
+            self.show_plot = true;
+            self.show_link = false;
+            self.plot_type = 'png';
+            self.sub_plots = true;
+            self.sing_line = false;
+            self.plot_locs = 'default';
+            self.disp_xmin = -inf;
+            self.disp_xmax = inf;
+            self.rms_xmin  = -inf;
+            self.rms_xmax  = inf;
+            self.show_rms  = true;
+            self.use_mean  = false;
+            self.lab_vert  = true;
+            self.show_zero = false;
+            self.quat_comp = false;
+            self.show_xtra = true;
+            self.time_base = 'sec'; % Nominally seconds or years, time when no scaling done
+            self.time_unit = ''; % Time unit to display plots in, potentially scaling from the base
+            self.colormap  = ColorMap();
+            self.leg_spot  = 'best';
+            self.classify  = '';
+            self.names     = "";
 
-            % get the fields from the overrides and store them to OPTS
+            % get the fields from the overrides and store them to self
             if ~isempty(overrides)
                 fields = fieldnames(overrides);
                 for i = 1:length(fields)
-                    OPTS.(fields{i}) = overrides.(fields{i});
+                    self.(fields{i}) = overrides.(fields{i});
                 end
             end
         end
@@ -220,27 +222,27 @@ classdef Opts
             rms_xmax  = convert(self.rms_xmax);
         end
 
-        function [obj] = convert_dates(obj, time_units)
+        function [self] = convert_dates(self, time_units)
             % Potentially convert times to dates
             import matspace.plotting.convert_time_to_date
-            if strcmp(obj.time_unit, time_units)
+            if strcmp(self.time_unit, time_units)
                 % no conversion needed
                 return
             end
             if strcmp(time_units, 'datetime')
-                obj.time_base = 'datetime';
-                obj.time_unit = 'datetime';
+                self.time_base = 'datetime';
+                self.time_unit = 'datetime';
                 time_units = 'sec';
             else
-                obj.time_unit = time_units;
+                self.time_unit = time_units;
             end
-            obj.disp_xmin = convert_time_to_date(obj.disp_xmin, obj.date_zero, time_units);
-            obj.disp_xmax = convert_time_to_date(obj.disp_xmax, obj.date_zero, time_units);
-            obj.rms_xmin  = convert_time_to_date(obj.rms_xmin,  obj.date_zero, time_units);
-            obj.rms_xmax  = convert_time_to_date(obj.rms_xmax,  obj.date_zero, time_units);
+            self.disp_xmin = convert_time_to_date(self.disp_xmin, self.date_zero, time_units);
+            self.disp_xmax = convert_time_to_date(self.disp_xmax, self.date_zero, time_units);
+            self.rms_xmin  = convert_time_to_date(self.rms_xmin,  self.date_zero, time_units);
+            self.rms_xmax  = convert_time_to_date(self.rms_xmax,  self.date_zero, time_units);
         end
 
-        function [non_defaults] = pprint_non_defaults(obj)
+        function [non_defaults] = pprint_non_defaults(self)
             % Displays only the non-default values within the structure
 
             % Imports
@@ -258,13 +260,13 @@ classdef Opts
                 % determine how to compare
                 if ischar(Nom.(this_field))
                     % if text, do a string comparison
-                    if ~strcmp(obj.(this_field), Nom.(this_field))
-                        non_defaults.(this_field) = obj.(this_field);
+                    if ~strcmp(self.(this_field), Nom.(this_field))
+                        non_defaults.(this_field) = self.(this_field);
                     end
                 else
                     % otherwise, do a numeric comparsion, which can be a vector (but not 2D matrix)
-                    if any(obj.(this_field) ~= Nom.(this_field))
-                        non_defaults.(this_field) = obj.(this_field);
+                    if any(self.(this_field) ~= Nom.(this_field))
+                        non_defaults.(this_field) = self.(this_field);
                     end
                 end
             end

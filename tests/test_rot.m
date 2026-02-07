@@ -40,51 +40,51 @@ classdef test_rot < matlab.unittest.TestCase
 
     methods (Test)
         function test_ref1(self)
-            out1 = matspace.quaternions.rot(1, self.t1);
-            out2 = matspace.quaternions.rot(2, self.t1);
-            out3 = matspace.quaternions.rot(3, self.t1);
-            self.verifyEqual(out1, self.r1x, 'AbsTol', self.tolerance);
-            self.verifyEqual(out2, self.r1y, 'AbsTol', self.tolerance);
-            self.verifyEqual(out3, self.r1z, 'AbsTol', self.tolerance);
+            out1 = matspace.vectors.rot(1, self.t1);
+            out2 = matspace.vectors.rot(2, self.t1);
+            out3 = matspace.vectors.rot(3, self.t1);
+            self.verifyEqual(out1, self.r1x, AbsTol=self.tolerance);
+            self.verifyEqual(out2, self.r1y, AbsTol=self.tolerance);
+            self.verifyEqual(out3, self.r1z, AbsTol=self.tolerance);
         end
 
         function test_ref2(self)
-            out1 = matspace.quaternions.rot(1, self.t2);
-            out2 = matspace.quaternions.rot(2, self.t2);
-            out3 = matspace.quaternions.rot(3, self.t2);
-            self.verifyEqual(out1, self.r2x, 'AbsTol', self.tolerance);
-            self.verifyEqual(out2, self.r2y, 'AbsTol', self.tolerance);
-            self.verifyEqual(out3, self.r2z, 'AbsTol', self.tolerance);
+            out1 = matspace.vectors.rot(1, self.t2);
+            out2 = matspace.vectors.rot(2, self.t2);
+            out3 = matspace.vectors.rot(3, self.t2);
+            self.verifyEqual(out1, self.r2x, AbsTol=self.tolerance);
+            self.verifyEqual(out2, self.r2y, AbsTol=self.tolerance);
+            self.verifyEqual(out3, self.r2z, AbsTol=self.tolerance);
         end
 
         function test_rot_radians(self)
-            % out1 = matspace.quaternions.rot(1, self.t1, 0);
-            % out2 = matspace.quaternions.rot(2, self.t1, 0);
-            % out3 = matspace.quaternions.rot(3, self.t1, 0);
-            % out1 = matspace.quaternions.rot(1, self.t2, 0);
-            % out2 = matspace.quaternions.rot(2, self.t2, 0);
-            % out3 = matspace.quaternions.rot(3, self.t2, 0);
-            % self.verifyEqual(out1, self.r1x, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out2, self.r1y, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out3, self.r1z, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out1, self.r2x, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out2, self.r2y, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out3, self.r2z, 'AbsTol', self.tolerance);
+            % out1 = matspace.vectors.rot(1, self.t1, 0);
+            % out2 = matspace.vectors.rot(2, self.t1, 0);
+            % out3 = matspace.vectors.rot(3, self.t1, 0);
+            % out1 = matspace.vectors.rot(1, self.t2, 0);
+            % out2 = matspace.vectors.rot(2, self.t2, 0);
+            % out3 = matspace.vectors.rot(3, self.t2, 0);
+            % self.verifyEqual(out1, self.r1x, AbsTol=self.tolerance);
+            % self.verifyEqual(out2, self.r1y, AbsTol=self.tolerance);
+            % self.verifyEqual(out3, self.r1z, AbsTol=self.tolerance);
+            % self.verifyEqual(out1, self.r2x, AbsTol=self.tolerance);
+            % self.verifyEqual(out2, self.r2y, AbsTol=self.tolerance);
+            % self.verifyEqual(out3, self.r2z, AbsTol=self.tolerance);
         end
 
         function test_rot_degrees(self)
-            % out1 = matspace.quaternions.rot(1, self.t1d, 1);
-            % out2 = matspace.quaternions.rot(2, self.t1d, 1);
-            % out3 = matspace.quaternions.rot(3, self.t1d, 1);
-            % out1 = matspace.quaternions.rot(1, self.t2d, 1);
-            % out2 = matspace.quaternions.rot(2, self.t2d, 1);
-            % out3 = matspace.quaternions.rot(3, self.t2d, 1);
-            % self.verifyEqual(out1, self.r1x, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out2, self.r1y, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out3, self.r1z, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out1, self.r2x, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out2, self.r2y, 'AbsTol', self.tolerance);
-            % self.verifyEqual(out3, self.r2z, 'AbsTol', self.tolerance);
+            % out1 = matspace.vectors.rot(1, self.t1d, 1);
+            % out2 = matspace.vectors.rot(2, self.t1d, 1);
+            % out3 = matspace.vectors.rot(3, self.t1d, 1);
+            % out1 = matspace.vectors.rot(1, self.t2d, 1);
+            % out2 = matspace.vectors.rot(2, self.t2d, 1);
+            % out3 = matspace.vectors.rot(3, self.t2d, 1);
+            % self.verifyEqual(out1, self.r1x, AbsTol=self.tolerance);
+            % self.verifyEqual(out2, self.r1y, AbsTol=self.tolerance);
+            % self.verifyEqual(out3, self.r1z, AbsTol=self.tolerance);
+            % self.verifyEqual(out1, self.r2x, AbsTol=self.tolerance);
+            % self.verifyEqual(out2, self.r2y, AbsTol=self.tolerance);
+            % self.verifyEqual(out3, self.r2z, AbsTol=self.tolerance);
         end
 
         function test_1ax_mult_rot(self)

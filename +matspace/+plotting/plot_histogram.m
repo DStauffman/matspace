@@ -72,6 +72,7 @@ function [fig] = plot_histogram(description, data, bins, varargin)
 %     2.  Translated into Matlab by David C. Stauffer in 2026.
 
 %% Imports
+import matspace.plotting.colors.get_xkcd_colors
 import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
@@ -201,25 +202,26 @@ if missing > 0:
     rects.append(Rectangle((plotting_bins[-1], 0), 1, missing))
 coll = PatchCollection(rects, facecolor=color, edgecolor="k", zorder=6)
 % create plot
-if fig_ax is None
-    fig = plt.figure()
-    ax = fig.add_subplot(1, 1, 1)
+if isempty(fig_ax)
+    fig = plt.figure();
+    ax = axes(fig);
 else
-    (fig, ax) = fig_ax
+    fig = fig_ax{1}{1};
+    ax = fig_ax{1}{2};
 end
 if (sup := fig._suptitle) is None
     fig.canvas.manager.set_window_title(description)
 else
     fig.canvas.manager.set_window_title(sup.get_text())
 end
-ax.set_title(description)
+title(ax, description);
 ax.add_collection(coll)
-ax.grid(True)
-ax.set_xlabel(f"{xlabel} [{units}]" if units else xlabel)
-ax.set_ylabel(ylabel)
+grid(ax, 'on');
+xlabel(ax, ifelse(~isempty(units), xlabel + " [" + units + "]", xlabel));
+ylabel(ax, y_label);
 if isempty(x_lim)
     if missing > 0
-        ax.set_xlim((np.min(plotting_bins), np.max(plotting_bins) + 1))
+        xlim(ax , [np.min(plotting_bins), np.max(plotting_bins) + 1))
     else
         ax.set_xlim((np.min(plotting_bins), np.max(plotting_bins)))
     end
@@ -248,9 +250,10 @@ color_ix = 0;
 if using_cdf
     % prepare the colormap
     if isempty(cdf_colormap)
-        cdf_colormap = colors.ListedColormap(("xkcd:grass green",) * num_cdf + ("xkcd:red",) * num_cdf_x + ("xkcd:hot magenta",) * num_cdf_y)  # fmt: skip
+        colors = get_xkcd_colors();
+        cdf_colormap = [repmat(colors.grass_green, [num_cdf 1]); repmat(colors.red, [num_cdf_x 1]); repmat(colors.hot_magenta, [num_cdf_y 1])];
     end
-    cm = ColorMap(colormap=cdf_colormap, num_colors=num_cdf + num_cdf_x + num_cdf_y);
+    cm = ColorMap(cdf_colormap);
     % create fake items to add to legend
     p = Rectangle((0, 0), 1, 1, facecolor=color, linewidth=0, edgecolor="none");
     % create a transform with X in data units and Y in axes units
@@ -302,7 +305,7 @@ if ~isempty(cdf_x)
             [this_cdf, this_cdf], ...
             color=cm.get_color(color_ix), ...
             label=this_label, ...
-            zorder=9, ...
+            ... zorder=9, ...
             transform=ax.transAxes, ...
         );
         ax.plot(...
@@ -312,7 +315,7 @@ if ~isempty(cdf_x)
             markeredgecolor=cm.get_color(color_ix), ...
             markerfacecolor="none", ...
             label="", ...
-            zorder=10, ...
+            ... zorder=10, ...
             transform=trans, ...
         );
         color_ix = color_ix + 1;

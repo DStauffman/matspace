@@ -68,7 +68,7 @@ classdef test_fix_rollover < matlab.unittest.TestCase  %#ok<*PROP>
             roll = 3.35;
             data = roll * mod(exp / roll, 1);
             out  = matspace.utils.fix_rollover(data, roll, 1);
-            self.verifyEqual(out, exp, 'AbsTol', 1e-14);
+            self.verifyEqual(out, exp, AbsTol=1e-14);
         end
 
         function test_signed_rollover(self)

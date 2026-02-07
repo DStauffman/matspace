@@ -58,6 +58,7 @@ function [fig_hand] = make_error_bar_plot(description, time, data, mins, maxs, v
 %     close(fig_hand);
 
 %% Imports
+import matspace.plotting.colors.ColorMap
 import matspace.plotting.ignore_plot_data
 import matspace.plotting.plot_second_units_wrapper
 import matspace.plotting.private.build_indices
@@ -98,7 +99,7 @@ addParameter(p, 'RmsXmax', inf, @fun_is_bound);
 addParameter(p, 'DispXmin', -inf, @fun_is_bound);
 addParameter(p, 'DispXmax', inf, @fun_is_bound);
 addParameter(p, 'FigVisible', true, @fun_is_bool);
-addParameter(p, 'ColorMap', parula(8), @fun_is_colormap);
+addParameter(p, 'ColorMap', [], @fun_is_colormap);
 addParameter(p, 'UseMean', false, @fun_is_bool);
 addParameter(p, 'PlotZero', false, @fun_is_bool);
 addParameter(p, 'ShowRms', true, @fun_is_bool);
@@ -163,7 +164,7 @@ if show_rms || return_err
 end
 
 % create a colormap
-cm = color_map;  % ColorMap(colormap=color_map, num_colors=num_channels);
+cm = ColorMap(colormap=color_map);
 
 % calculate the rms (or mean) values
 if show_rms || return_err
@@ -248,7 +249,7 @@ for i = 1:num_channels
             this_label = [this_label, ' (',func_name,': ',value,')'];  %#ok<AGROW>
         end
     end
-    this_color = cm(i, :);  % cm.get_color(i)
+    this_color = cm.get_color(i);
     plot_func(...
         this_axes, ...
         this_time, ...
@@ -265,7 +266,7 @@ for i = 1:num_channels
         this_data, ...
         yerr=this_yerr, ...
         color="None", ...
-        ecolor=cm(i, :), ....get_color(i), ...
+        ecolor=cm.get_color(i), ...
         capsize=2);  % zorder=5
     x_lim = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
     zoom_ylim(this_axes, t_start=x_lim(1), t_final=x_lim(2));

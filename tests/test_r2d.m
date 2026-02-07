@@ -20,13 +20,13 @@ classdef test_r2d < matlab.unittest.TestCase
         function test_scalar(self)
             for i = 1:length(self.deg)
                 out = matspace.units.r2d(self.rad(i));
-                self.verifyEqual(out, self.deg(i), 'AbsTol', 1e-14);
+                self.verifyEqual(out, self.deg(i), AbsTol=1e-14);
             end
         end
 
         function test_nominal(self)
             out = matspace.units.r2d(self.rad);
-            self.verifyEqual(out, self.deg, 'AbsTol', 1e-14);
+            self.verifyEqual(out, self.deg, AbsTol=1e-14);
         end
     end
 end

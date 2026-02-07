@@ -1,0 +1,26 @@
+# This is the project configuration for Gitlab Continuous Integration
+# It builds any mex files and executes any provided unit tests.
+#
+# CLASSIFICATION:
+#     UNCLASSIFIED
+
+.matlab_defaults:
+    timeout: 1h
+    variables:
+        MATSPACE_ROOT: "$CI_PROJECT_DIR"
+    image:
+        name: registry.gitlab.us.lmco.com:443/coresiminitiative/coresim-admin-utils/coresimdockerimages/docker-coresim:R2024b
+        entrypoint: [""]
+    tags:
+        - docker
+
+stages:
+    - tests
+
+# Run Unit tests
+test-run-unittests:
+    extends: .matlab_defaults
+    stage: tests
+    script:
+        - cd tests
+        - matlab -batch 'addpath(getenv("MATSPACE_ROOT")), results = runtests, assertSuccess(results);'

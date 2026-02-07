@@ -35,6 +35,7 @@ function [] = plot_second_yunits(ax, ylab, multiplier)
 %     2.  Incorporated by David C. Stauffer into matspace library in Nov 2016.
 %     3.  Re-written by David C. Stauffer in December 2017 to use new yyaxis built-in.
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
+%     5.  Updated by David C. Stauffer in February 2026 to handle either axes as active.
 
 % get the original bounds
 orig_bounds = ax.YLim;
@@ -42,9 +43,6 @@ orig_color  = ax.YColor;
 
 % store the multiplier for use later when panning or zooming
 ax.UserData.multiplier = multiplier;
-
-% turn existing plot into two axis version and put original on left axes
-yyaxis(ax, 'left');
 
 % create second axis on the right and set it as active
 yyaxis(ax, 'right');
@@ -62,7 +60,6 @@ ylabel(ax, ylab);
 yyaxis(ax, 'left');
 
 % update the pan and zoom callbacks to effect both axes
-% set pan and zoom callbacks
 z1 = zoom;
 p1 = pan;
 z1.ActionPostCallback = @mypostcallback;
@@ -77,10 +74,19 @@ axes = event.Axes;
 % get new x and y limits and apply to second axes
 new_xlim = axes.XLim;
 new_ylim = axes.YLim;
-% make second axes active
-yyaxis(axes, 'right');
-% update to appropriate limits
-axes.XLim = new_xlim;
-axes.YLim = axes.UserData.multiplier * new_ylim;
-% restore original axes as active
-yyaxis(axes, 'left');
+switch event.Axes.YAxisLocation
+    case 'right'
+        % make second axes active
+        yyaxis(axes, 'left');
+        % update to appropriate limits
+        axes.XLim = new_xlim;
+        axes.YLim = 1 / axes.UserData.multiplier * new_ylim;
+        yyaxis(axes, 'right');
+    case 'left'
+        % make second axes active
+        yyaxis(axes, 'right');
+        % update to appropriate limits
+        axes.XLim = new_xlim;
+        axes.YLim = axes.UserData.multiplier * new_ylim;
+        yyaxis(axes, 'left');
+end

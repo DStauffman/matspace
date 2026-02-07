@@ -27,6 +27,7 @@ for j = 1:num
 end
 % create opts
 opts = matspace.plotting.Opts();
+opts.colormap = cool();
 
 % %% Create the plots
 fig1 = matspace.plotting.plot_correlation_matrix(data, labels, opts=opts);

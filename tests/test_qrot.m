@@ -38,25 +38,25 @@ classdef test_qrot < matlab.unittest.TestCase  %#ok<*PROP>
         function test_single_inputs(self)
             for i = 1:length(self.axis)
                 quat = matspace.quaternions.qrot(self.axis(i), self.angle);
-                self.verifyEqual(quat, self.quat(:, i), 'AbsTol', self.tolerance);
+                self.verifyEqual(quat, self.quat(:, i), AbsTol=self.tolerance);
             end
         end
 
         function test_single_axis(self)
             for i = 1:length(self.axis)
                 quat = matspace.quaternions.qrot(self.axis(i), [self.angle, self.angle2]);
-                self.verifyEqual(quat, [self.quat(:, i), self.quat2(:, i)], 'AbsTol', self.tolerance);
+                self.verifyEqual(quat, [self.quat(:, i), self.quat2(:, i)], AbsTol=self.tolerance);
             end
         end
 
         function test_single_angle(self)
             quat = matspace.quaternions.qrot(self.axis, self.angle);
-            self.verifyEqual(quat, self.quat, 'AbsTol', self.tolerance);
+            self.verifyEqual(quat, self.quat, AbsTol=self.tolerance);
         end
 
         function test_all_vector_inputs(self)
             quat = matspace.quaternions.qrot(self.axis, [self.angle, self.angle, self.angle2]);
-            self.verifyEqual(quat, [self.quat(:,1), self.quat(:,2), self.quat2(:,3)], 'AbsTol', self.tolerance);
+            self.verifyEqual(quat, [self.quat(:,1), self.quat(:,2), self.quat2(:,3)], AbsTol=self.tolerance);
         end
 
         function test_null_one(self)
