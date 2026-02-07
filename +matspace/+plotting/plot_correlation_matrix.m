@@ -88,12 +88,15 @@ if isempty(opts)
     opts = Opts();
 end
 if isempty(color_map)
-    color_map = ifelse(isempty(opts.colormap), cool(), opts.colormap);
+    cm = ColorMap(opts.colormap);
+else
+    cm = ColorMap();
 end
 
 [new_units, scale] = get_unit_conversion(legend_scale, units);
 
 %% Imports
+import matspace.plotting.colors.ColorMap
 import matspace.plotting.figmenu
 import matspace.plotting.get_unit_conversion
 import matspace.plotting.Opts
@@ -180,7 +183,7 @@ for i = 1:m
 end
 % set color limits and colormap and display colorbar
 clim([cmin cmax]);
-colormap(color_map);
+colormap(cm.cmap);
 colorbar('location', 'EastOutside');
 % make square
 axis(ax, 'equal');

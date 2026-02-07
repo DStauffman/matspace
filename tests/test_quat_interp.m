@@ -28,7 +28,7 @@ classdef test_quat_interp < matlab.unittest.TestCase  %#ok<*PROP>
     methods (Test)
         function test_nominal(self)
             qout = matspace.quaternions.quat_interp(self.time, self.quat, self.ti);
-            self.verifyEqual(qout, self.qout, 'AbsTol', self.tolerance);
+            self.verifyEqual(qout, self.qout, AbsTol=self.tolerance);
         end
 
         function test_empty(self)
@@ -38,12 +38,12 @@ classdef test_quat_interp < matlab.unittest.TestCase  %#ok<*PROP>
 
         function test_scalar1(self)
             qout = matspace.quaternions.quat_interp(self.time, self.quat, self.ti(1));
-            self.verifyEqual(qout, self.qout(:, 1), 'AbsTol', self.tolerance);
+            self.verifyEqual(qout, self.qout(:, 1), AbsTol=self.tolerance);
         end
 
         function test_scalar2(self)
             qout = matspace.quaternions.quat_interp(self.time, self.quat, self.ti(2));
-            self.verifyEqual(qout, self.qout(:, 2), 'AbsTol', self.tolerance);
+            self.verifyEqual(qout, self.qout(:, 2), AbsTol=self.tolerance);
         end
 
         function test_extra1(self)
@@ -55,7 +55,7 @@ classdef test_quat_interp < matlab.unittest.TestCase  %#ok<*PROP>
             import matlab.unittest.fixtures.SuppressedWarningsFixture
             self.applyFixture(SuppressedWarningsFixture('matspace:QuatInterpExtrap'));
             qout = matspace.quaternions.quat_interp(self.time, self.quat, self.ti_extra, false);
-            self.verifyEqual(qout(:, 2:end-1), self.qout, 'AbsTol', self.tolerance);
+            self.verifyEqual(qout(:, 2:end-1), self.qout, AbsTol=self.tolerance);
             self.verifyEqual(qout(:, [1 end]), nan(4, 2));
         end
     end

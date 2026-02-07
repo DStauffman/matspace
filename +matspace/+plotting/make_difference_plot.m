@@ -64,6 +64,7 @@ function [fig_hand, err] = make_difference_plot(description, time_one, data_one,
 %     4.  Wrapped to the generic do everything version by David C. Stauffer in March 2021.
 
 %% Imports
+import matspace.plotting.colors.ColorMap
 import matspace.plotting.ignore_plot_data
 import matspace.plotting.plot_second_units_wrapper
 import matspace.plotting.private.build_diff_indices
@@ -120,7 +121,7 @@ addParameter(p, 'DispXmax', inf, @fun_is_bound);
 addParameter(p, 'MakeSubplots', true, @fun_is_bool);
 addParameter(p, 'SingleLines', false, @(x) islogical(x) & isvector(x));  % Can be more than one boolean
 addParameter(p, 'FigVisible', true, @fun_is_bool);
-addParameter(p, 'ColorMap', parula(8), @fun_is_colormap);
+addParameter(p, 'ColorMap', [], @fun_is_colormap);
 addParameter(p, 'UseMean', false, @fun_is_bool);
 addParameter(p, 'PlotZero', false, @fun_is_bool);
 addParameter(p, 'ShowRms', true, @fun_is_bool);
@@ -272,7 +273,7 @@ end
 ix = build_diff_indices(times1, times2, time_overlap, RmsXmin=rms_xmin, RmsXmax=rms_xmax);
 
 % create a colormap
-cm = color_map;  % ColorMap(color_map, num_colors=3 * num_channels);
+cm = ColorMap(color_map);
 
 % calculate the rms (or mean) values
 if show_rms || nargout > 1
@@ -435,7 +436,7 @@ for i = 1:num_channels
             end
         end
         draw_lines(datashaders, this_time, this_data, plot_func, this_axes, Symbol=symbol_one, MarkerSize=4, ...
-            Color=cm(i, :), Label=this_label, ZOrder=this_zorder, UseDatashader=use_datashader);  % TODO: cm.get_color(i)
+            Color=cm.get_color(i), Label=this_label, ZOrder=this_zorder, UseDatashader=use_datashader);
     end
     if ~isempty(name_two)
         this_label = [char(name_two),' ',elements{i}];
@@ -454,7 +455,7 @@ for i = 1:num_channels
             end
         end
         draw_lines(datashaders, this_time2, this_data2, plot_func, this_axes, Symbol=symbol_two, MarkerSize=4, ...
-            Color=cm(i + color_offset, :), Label=this_label, ZOrder=this_zorder + 1, UseDatashader=use_datashader);  % TODO: cm.get_color(i + color_offset)
+            Color=cm.get_color(i + color_offset), Label=this_label, ZOrder=this_zorder + 1, UseDatashader=use_datashader);
     end
     xlims = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
     zoom_ylim(this_axes, [], [], t_start=xlims(1), t_final=xlims(2));
@@ -510,7 +511,7 @@ if have_both
             end
         end
         lines = draw_lines(datashaders, time_overlap{i}, diffs{i}, plot_func, this_axes, Symbol=".-", MarkerSize=4, ...
-            Color=cm(i + color_offset, :), Label=this_label, ZOrder=this_zorder, UseDatashader=use_datashader);  % cm.get_color(i + color_offset)
+            Color=cm.get_color(i + color_offset), Label=this_label, ZOrder=this_zorder, UseDatashader=use_datashader);
         if ~isempty(datashaders) && ~isempty(lines)
             lines(1).set_linestyle("none");
         end

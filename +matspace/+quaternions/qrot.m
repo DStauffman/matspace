@@ -17,7 +17,7 @@ function q = qrot(k, a)  %#codegen
 %     q = matspace.quaternions.qrot(3, pi/2);
 %
 % See Also:
-%     matspace.quaternions.quat_mult, matspace.quaternions.rot
+%     matspace.quaternions.quat_mult, matspace.vectors.rot
 %
 % Reference:
 %     1.  Wertz, James R. (editor), Equations 12.11 in "Parameterization of the Attitude",

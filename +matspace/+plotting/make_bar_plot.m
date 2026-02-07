@@ -51,6 +51,7 @@ function [fig_hand] = make_bar_plot(description, time, data, varargin)
 %     close(fig_hand);
 
 %% Imports
+import matspace.plotting.colors.ColorMap
 import matspace.plotting.ignore_plot_data
 import matspace.plotting.plot_second_units_wrapper
 import matspace.plotting.private.build_indices
@@ -89,7 +90,7 @@ addParameter(p, 'RmsXmax', inf, @fun_is_bound);
 addParameter(p, 'DispXmin', -inf, @fun_is_bound);
 addParameter(p, 'DispXmax', inf, @fun_is_bound);
 addParameter(p, 'FigVisible', true, @fun_is_bool);
-addParameter(p, 'ColorMap', parula(8), @fun_is_colormap);
+addParameter(p, 'ColorMap', [], @fun_is_colormap);
 addParameter(p, 'UseMean', false, @fun_is_bool);
 addParameter(p, 'PlotZero', false, @fun_is_bool);
 addParameter(p, 'ShowRms', true, @fun_is_bool);
@@ -160,7 +161,7 @@ if show_rms || return_err
 end
 
 % create a colormap
-cm = color_map;  % ColorMap(colormap=color_map, num_colors=num_channels);
+cm = ColorMap(color_map);
 
 % calculate the rms (or mean) values
 if show_rms || return_err
@@ -213,7 +214,7 @@ for i = num_channels:-1:1
             bottoms{i + 1}, ...
             step='mid', ...
             label=this_label, ...
-            color=cm(i, :), ... cm.get_color(i), ...
+            color=cm.get_color(i), ...
             edgecolor='none');
     end
     if i == 1

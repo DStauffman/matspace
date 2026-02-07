@@ -15,10 +15,10 @@ function [t] = rot(k, a)  %#codegen
 %     % simple 90deg z-rotation
 %     k = 3;
 %     a = pi / 2;
-%     t = matspace.quaternions.rot(k, a)
+%     t = matspace.vectors.rot(k, a)
 %
 % See Also:
-%     matspace.quaternions.drot_matlab, matspace.quaternions.quat_to_dcm
+%     matspace.vectors.drot_matlab, matspace.quaternions.quat_to_dcm
 %
 % Change Log:
 %     1.  lineage: HARS (Romney), CARS (Romney, Hull), GARSE (Sims, Stauffer, Beck)

@@ -22,13 +22,13 @@ classdef test_d2dms < matlab.unittest.TestCase
         function test_scalar(self)
             for i = 1:length(self.deg)
                 out = matspace.units.d2dms(self.deg(i));
-                self.verifyEqual(out, self.dms(:,i), 'AbsTol', 1e-10);
+                self.verifyEqual(out, self.dms(:,i), AbsTol=1e-10);
             end
         end
 
         function test_nominal(self)
             out = matspace.units.d2dms(self.deg);
-            self.verifyEqual(out, self.dms, 'AbsTol', 1e-10);
+            self.verifyEqual(out, self.dms, AbsTol=1e-10);
         end
     end
 end
