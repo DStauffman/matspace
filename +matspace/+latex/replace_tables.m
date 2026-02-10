@@ -3,13 +3,17 @@ function [new_text] = replace_tables(old_text, tables)
 % REPLACE_TABLES  replaces the existing LaTeX tables in old_text, with those in the structure tables.
 %
 % Input:
-%     TBD
+%     old_text : Text that contains latex tables
+%     tables : struct with information about any table that are found
 %
 % Output:
-%     TBD
+%     new_Text : Text with table values replaced
 %
 % Prototype:
-%     TBD
+%     style_guide = fullfile(matspace.paths.get_root_dir(), 'docs', 'Style_Guide', 'Style_Guide.tex');
+%     old_text = matspace.utils.read_text_file(style_guide);
+%     tables = matspace.latex.parse_tables(text);
+%     new_text = matspace.latex.replace_tables(old_text, tables);
 %
 % See Also:
 %     matspace.latex.parse_tables

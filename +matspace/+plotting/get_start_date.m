@@ -14,13 +14,17 @@ function [start_date_str] = get_start_date(date)
 %                       followed by the date formatted to human readable form [char]
 %
 % Prototype:
-%     blank_date           = [];
-%     blank_start_date_str = matspace.plotting.get_start_date(blank_date);
-%     assert(isempty(blank_start_date_str));
+%     blank_sd1 = matspace.plotting.get_start_date([]);
+%     assert(isempty(blank_sd1));
 %
-%     date           = datevec(now);
-%     start_date_str = matspace.plotting.get_start_date(date);
-%     assert(strncmp(start_date_str, '  t(0) = ', 9));
+%     blank_sd2 = matspace.plotting.get_start_date(NaT);
+%     assert(isempty(blank_sd2));
+%
+%     sd_str1   = matspace.plotting.get_start_date(datevec(now));  %#ok<TNOW1>
+%     assert(strncmp(sd_str1, '  t(0) = ', 9));
+%
+%     sd_str2   = matspace.plotting.get_start_date(datetime('now'));
+%     assert(strncmp(sd_str2, '  t(0) = ', 9));
 %
 % See Also:
 %     datestr, datevec, date
@@ -32,10 +36,17 @@ function [start_date_str] = get_start_date(date)
 %     4.  Updated by David C. Stauffer in April 2020 to put into a package.
 
 % build date string
-if ~isempty(date)
-    start_date = datestr(date,0);
-    start_date_str = ['  t(0) = ',start_date,' Z'];
-else
+if isempty(date)
     % return an empty string if no date was specified
     start_date_str = '';
+elseif isdatetime(date)
+    if isnat(date)
+        % return an empty string if a NaT is encountered
+        start_date_str = '';
+    else
+        start_date_str = ['  t(0) = ',char(date, 'dd-MMM-yyyy HH:mm:ss'), ' Z'];
+    end
+else
+    start_date = datestr(date, 0);  %#ok<DATST>
+    start_date_str = ['  t(0) = ',start_date,' Z'];
 end

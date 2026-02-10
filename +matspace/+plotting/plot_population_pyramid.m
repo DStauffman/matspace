@@ -20,7 +20,10 @@ function [fig] = plot_population_pyramid(age_bins, male_per, fmal_per, varargin)
 %     age_bins = [  0,   5,  10,  15,  20, 1000];
 %     male_per = [500, 400, 300, 200, 100] / 3000;
 %     fmal_per = [450, 375, 325, 225, 125] / 3000;
-%     fig      = matspace.plotting.plot_population_pyramid(age_bins, male_per, fmal_per);
+%     fig_hand = matspace.plotting.plot_population_pyramid(age_bins, male_per, fmal_per);
+%
+%     % Close plot
+%     close(fig_hand);
 %
 % References:
 %     1.  https://en.wikipedia.org/wiki/Population_pyramid

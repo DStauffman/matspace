@@ -10,6 +10,7 @@ function [output_dir] = get_output_dir()
 %
 % Prototype:
 %     output_dir = matspace.paths.get_output_dir();
+%     assert(isfolder(output_dir));
 %
 % See Also:
 %     matspace.paths.get_root_dir, mfilename

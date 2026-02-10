@@ -24,7 +24,7 @@ function [] = plot_second_units_wrapper(ax, second_units)
 %     plot(ax, [1, 5, 10], [1e-6, 3e-6, 2.5e-6], ".-");
 %     ylabel(ax, y_label);
 %     title(ax, description);
-%     ax2 = matspace.plotting.plot_second_units_wrapper(ax, second_units);
+%     matspace.plotting.plot_second_units_wrapper(ax, second_units);
 %
 %     close(fig);
 %

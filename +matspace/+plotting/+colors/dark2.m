@@ -6,10 +6,13 @@ function [colors] = dark2()
 %     (None)
 %
 % Output
-%     colors : (3x8) table of colors that are useful to plot with
+%     colors : (8x3) table of colors that are useful to plot with
 %
 % Prototype:
 %     colors = matspace.plotting.colors.dark2();
+%     assert(all(size(colors) == [8 3]));
+%     assert(min(colors, 'all') >= 0);
+%     assert(max(colors, 'all') <= 1);
 %     % plotting example:
 %     surf(peaks);
 %     colormap('matspace.plotting.colors.dark2');

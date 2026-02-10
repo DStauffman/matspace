@@ -3,13 +3,15 @@ function [tables] = parse_tables(text)
 % PARSE_TABLES  parses the given text for the location of any LaTeX tables.
 %
 % Input:
-%     (TBD)
+%     text : Text to parse
 %
 % Output:
-%     (TBD)
+%     tables : struct with information about any table that are found
 %
 % Prototype:
-%     (TBD)
+%     style_guide = fullfile(matspace.paths.get_root_dir(), 'docs', 'Style_Guide', 'Style_Guide.tex');
+%     text = matspace.utils.read_text_file(style_guide);
+%     tables = matspace.latex.parse_tables(text);
 %
 % See Also:
 %     matspace.latex.replace_tables

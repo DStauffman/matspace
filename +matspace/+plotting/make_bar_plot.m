@@ -9,10 +9,6 @@ function [fig_hand] = make_bar_plot(description, time, data, varargin)
 % Output:
 % fig_hand : figure handle
 %
-% Change Log:
-%     1.  Written by David C. Stauffer in March 2021.
-%     2.  Translated in Matlab by David C. Stauffer in January 2026.
-%
 % Prototype:
 %     description      = 'Test vs Time';
 %     time             = 2000:1/12:2005;
@@ -49,6 +45,10 @@ function [fig_hand] = make_bar_plot(description, time, data, varargin)
 %
 %     % Close plots
 %     close(fig_hand);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in March 2021.
+%     2.  Translated in Matlab by David C. Stauffer in January 2026.
 
 %% Imports
 import matspace.plotting.colors.ColorMap

@@ -17,7 +17,9 @@ function [t] = drot_matlab(k, a)  %#codegen
 %     % simple 90deg z-rotation
 %     k = 3;
 %     a = pi/2;
-%     t = matspace.vectors.drot_matlab(k, a)
+%     t = matspace.vectors.drot_matlab(k, a);
+%     exp = [-1 0 0; 0 -1 0; 0 0 0];
+%     assert(all(abs(t - exp) < 1e-12, 'all'));
 %
 % See Also:
 %     matspace.vectors.rot

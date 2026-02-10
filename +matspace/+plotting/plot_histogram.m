@@ -64,7 +64,7 @@ function [fig] = plot_histogram(description, data, bins, varargin)
 %     fig2 = matspace.plotting.plot_histogram(description, data, bins, ShowCdf=true, CdfY=0.5);
 %
 %     % Close plots
-%     close(fig);
+%     close(fig_hand);
 %     close(fig2);
 %
 % Change Log:

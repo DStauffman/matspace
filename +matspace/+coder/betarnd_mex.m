@@ -16,7 +16,8 @@ function [r] = betarnd_mex(a, b, m, n)  %#codegen
 %     b = 1;
 %     m = 100;
 %     n = 1;
-%     r = matspace.coder.betarnd_mex(a,b,m,n);
+%     r = matspace.coder.betarnd_mex(a, b, m, n);
+%     assert(all(size(r) == [100 1]));
 %
 % See Also:
 %     betarnd, rand, randg

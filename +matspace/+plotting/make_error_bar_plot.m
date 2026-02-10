@@ -8,13 +8,6 @@ function [fig_hand] = make_error_bar_plot(description, time, data, mins, maxs, v
 %
 % Output:
 % fig_hand : figure handle
-%
-% Change Log:
-%     1.  Written by David C. Stauffer in MATLAB in October 2011, updated in 2018.
-%     2.  Ported to Python by David C. Stauffer in March 2019.
-%     3.  Made fully functional by David C. Stauffer in April 2020.
-%     4.  Wrapped to the generic do everything version by David C. Stauffer in March 2021
-%     5.  Ported to Matlab by David C. Stauffer in January 2026.
 % 
 % Prototype:
 %     description      = 'Random Data Error Bars';
@@ -22,7 +15,7 @@ function [fig_hand] = make_error_bar_plot(description, time, data, mins, maxs, v
 %     data             = [3.0; -2.0; 5.0] + rand(3, 11);
 %     mins             = data - 0.5 * rand(3, 11);
 %     maxs             = data + 1.5 * rand(3, 11);
-%     name             = ''
+%     name             = '';
 %     elements         = ["x", "y", "z"];
 %     units            = 'rad';
 %     time_units       = 'sec';
@@ -48,7 +41,7 @@ function [fig_hand] = make_error_bar_plot(description, time, data, mins, maxs, v
 %     fig_hand  = matspace.plotting.make_error_bar_plot(description, time, data, mins, maxs, Name=name, ...
 %         Elements=elements, Units=units, TimeUnits=time_units, StartDate=start_date, ...
 %         RmsXmin=rms_xmin, RmsXmax=rms_xmax, DispXmin=disp_xmin, DispXmax=disp_xmax, ...
-%         single_lines=single_lines, colormap=colormap, use_mean=use_mean, plot_zero=plot_zero, ...
+%         SingleLines=single_lines, ColorMap=color_map, UseMean=use_mean, PlotZero=plot_zero, ...
 %         ShowRms=show_rms, LegendLoc=legend_loc, SecondUnits=second_units, ...
 %         LegendScale=legend_scale, YLabel=y_label, DataAsRows=data_as_rows, ...
 %         ExtraPlotter=extra_plotter, UseZoh=use_zoh, LabelVertLines=label_vert_lines, ...
@@ -56,6 +49,13 @@ function [fig_hand] = make_error_bar_plot(description, time, data, mins, maxs, v
 %
 %     % Close plots
 %     close(fig_hand);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in MATLAB in October 2011, updated in 2018.
+%     2.  Ported to Python by David C. Stauffer in March 2019.
+%     3.  Made fully functional by David C. Stauffer in April 2020.
+%     4.  Wrapped to the generic do everything version by David C. Stauffer in March 2021
+%     5.  Ported to Matlab by David C. Stauffer in January 2026.
 
 %% Imports
 import matspace.plotting.colors.ColorMap

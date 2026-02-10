@@ -10,6 +10,9 @@ function [colors] = accent()
 %
 % Prototype:
 %     colors = matspace.plotting.colors.accent();
+%     assert(all(size(colors) == [8 3]));
+%     assert(min(colors, 'all') >= 0);
+%     assert(max(colors, 'all') <= 1);
 %     % plotting example:
 %     surf(peaks);
 %     colormap('matspace.plotting.colors.accent');

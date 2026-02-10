@@ -9,17 +9,17 @@ function [combined_name] = minimize_names(names, kwargs)
 % Output:
 %     combined_name : (1, 1) string; Combined string of shortened names
 %
+% Prototype:
+%     names = ["Gyro Bias 1", "Gyro Bias 2", "Gyro Bias 3"];
+%     combined_name = matspace.plotting.gnds.minimize_names(names);
+%     assert(combined_name == "Gyro Bias 1,2,3");
+%
 % See Also:
 %     matspace.plotting.gnds.plot_covariance
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in July 2024.
 %     2.  Translated into Matlab by David C. Stauffer in February 2026.
-%
-% Prototype:
-%     names = ["Gyro Bias 1", "Gyro Bias 2", "Gyro Bias 3"];
-%     combined_name = matspace.plotting.gnds.minimize_names(names);
-%     assert(combined_name == "Gyro Bias 1,2,3");
 
 % parse inputs
 arguments (Input)

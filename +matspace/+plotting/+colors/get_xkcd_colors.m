@@ -15,6 +15,7 @@ function [colors] = get_xkcd_colors(filename)
 % Prototype:
 %     filename = fullfile(matspace.paths.get_root_dir(), 'data', 'xkcd_rgb_colors.txt');
 %     colors = matspace.plotting.colors.get_xkcd_colors(filename);
+%     assert(isfield(colors, 'red'));
 %
 % See Also:
 %     matspace.plotting.colors.get_color_lists
