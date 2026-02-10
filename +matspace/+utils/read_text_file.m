@@ -10,11 +10,9 @@ function [lines] = read_text_file(filename)
 %     None
 %
 % Prototype:
-%     filename = fullfile(matspace.paths.get_root_dir(), '+matspace', '+utils', 'calculate_bin.m');
+%     filename = fullfile(matspace.paths.get_root_dir(), '+matspace', '+utils', 'cdd.m');
 %     lines = matspace.utils.read_text_file(filename);
-%
-%     % clean-up
-%     delete(filename);
+%     assert(length(lines) > 5);
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in April 2020.

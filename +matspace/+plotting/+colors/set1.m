@@ -6,10 +6,13 @@ function [colors] = set1()
 %     (None)
 %
 % Output
-%     colors : (3x9) table of colors that are useful to plot with
+%     colors : (9x3) table of colors that are useful to plot with
 %
 % Prototype:
 %     colors = matspace.plotting.colors.set1();
+%     assert(all(size(colors) == [9 3]));
+%     assert(min(colors, 'all') >= 0);
+%     assert(max(colors, 'all') <= 1);
 %     % plotting example:
 %     surf(peaks);
 %     colormap('matspace.plotting.colors.set1');

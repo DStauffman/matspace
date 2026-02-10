@@ -15,7 +15,9 @@ function [t] = rot(k, a)  %#codegen
 %     % simple 90deg z-rotation
 %     k = 3;
 %     a = pi / 2;
-%     t = matspace.vectors.rot(k, a)
+%     t = matspace.vectors.rot(k, a);
+%     exp = [0 1 0; -1 0 0; 0 0 1];
+%     assert(all(abs(t - exp) < 1e-12, 'all'));
 %
 % See Also:
 %     matspace.vectors.drot_matlab, matspace.quaternions.quat_to_dcm

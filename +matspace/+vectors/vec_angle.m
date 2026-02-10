@@ -19,8 +19,8 @@ function [result] = vec_angle(vec1, vec2, kwargs)
 %     angle = matspace.vectors.vec_angle(vec1, vec2);
 %     assert(angle == 1e-5);
 % 
-%     angle2 = matspace.vectors.vec_angle(vec1, vec3, UseCross=False);
-%     assert(angle2 == 1.570796326795);
+%     angle2 = matspace.vectors.vec_angle(vec1, vec3, UseCross=false);
+%     assert(abs(angle2 - 1.570796326795) < 1e-12);
 %
 % Notes:
 %     1.  Note that the cross product method is more computationally expensive, but is more accurate

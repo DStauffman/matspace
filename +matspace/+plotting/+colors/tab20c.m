@@ -6,10 +6,13 @@ function [colors] = tab20c()
 %     (None)
 %
 % Output
-%     colors : (3x20) table of colors that are useful to plot with
+%     colors : (20x3) table of colors that are useful to plot with
 %
 % Prototype:
 %     colors = matspace.plotting.colors.tab20c();
+%     assert(all(size(colors) == [20 3]));
+%     assert(min(colors, 'all') >= 0);
+%     assert(max(colors, 'all') <= 1);
 %     % plotting example:
 %     surf(peaks);
 %     colormap('matspace.plotting.colors.tab20c');

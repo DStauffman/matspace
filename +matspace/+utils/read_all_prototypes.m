@@ -137,7 +137,7 @@ if isscalar(dbstack)
     fprintf(fid, '%s\n', '    this_name = [''function_'',num2str(i,''%04i'')];');
     fprintf(fid, '%s\n', '    try');
     fprintf(fid, '%s\n', '        eval(this_name);');
-    fprintf(fid, '%s\n', '    catch exception  %#ok<NASGU>');
+    fprintf(fid, '%s\n', '    catch exception');
     fprintf(fid, '%s\n', '        warning(''utils:prototypeFailed'', ''Protoype for "%s" failed.'', this_name);');
     fprintf(fid, '%s\n', '    end');
     fprintf(fid, '%s', 'end');

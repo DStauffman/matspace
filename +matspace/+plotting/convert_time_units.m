@@ -13,15 +13,15 @@ function [new_time] = convert_time_units(time, old_unit, new_unit)
 % Output:
 %     new_time : New time history in the new units
 %
-% Change Log:
-%     1.  Written by David C. Stauffer in June 2020.
-%
 % Prototype:
 %     time = 7200;
 %     old_unit = 'sec';
-%     new_unit = 'hr'
+%     new_unit = 'hr';
 %     new_time = matspace.plotting.convert_time_units(time, old_unit, new_unit);
 %     assert(new_time == 2);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in June 2020.
 
 arguments (Input)
     time (1, 1) double

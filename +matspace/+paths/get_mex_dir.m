@@ -10,6 +10,7 @@ function [mex_dir] = get_mex_dir()
 %
 % Prototype:
 %     mex_dir = matspace.paths.get_mex_dir();
+%     assert(isfolder(mex_dir));
 %
 % See Also:
 %     matspace.paths.get_root_dir, mfilename

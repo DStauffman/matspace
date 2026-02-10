@@ -12,7 +12,7 @@ function map = inferno(m)
 %     map : (mx3) color triple
 %
 % Prototype:
-%     map = matspace.plotting.colors.inferno();
+%     map = matspace.plotting.colors.inferno(64);
 %     assert(all(size(map) == [64 3]));
 %     assert(min(min(map)) >= 0);
 %     assert(max(max(map)) <= 1);

@@ -17,7 +17,7 @@ function [date_gps] = gps_to_datetime(week, time)
 %     week     = [1782 1783];
 %     time     = [425916 4132];
 %     date_gps = matspace.gps.gps_to_datetime(week, time);
-%     assert(all(date_gps == [datetime(2014, 3, 6, 22, 18, 36); datetime(2014, 3, 9, 1, 8, 52)], 'all'));
+%     assert(all(date_gps == [datetime(2014, 3, 6, 22, 18, 36), datetime(2014, 3, 9, 1, 8, 52)], 'all'));
 %
 % See Also:
 %     datetime, matspace.gps.gps_to_datetime

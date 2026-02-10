@@ -14,10 +14,10 @@ function read_bit_stream(fid,nlines,reset)
 %     (NONE) - displays results to the command window
 %
 % Prototype:
-%     fid    = fopen('test_file.bin','r','ieee-be');
+%     fid    = fopen(fullfile(matspace.paths.get_root_dir(), 'data', 'seeds.bin'), 'r', 'ieee-be');
 %     nlines = 10;
 %     reset  = false;
-%     matspace.utils.read_bit_stream(fid,nlines,reset);
+%     matspace.utils.read_bit_stream(fid, nlines, reset);
 %     fclose(fid);
 %
 % Change Log:

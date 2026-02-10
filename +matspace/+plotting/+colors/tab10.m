@@ -6,10 +6,13 @@ function [colors] = tab10()
 %     (None)
 %
 % Output
-%     colors : (3x10) table of 10 colors that are useful to plot with
+%     colors : (10x3) table of 10 colors that are useful to plot with
 %
 % Prototype:
 %     colors = matspace.plotting.colors.tab10();
+%     assert(all(size(colors) == [10 3]));
+%     assert(min(colors, 'all') >= 0);
+%     assert(max(colors, 'all') <= 1);
 %     % plotting example:
 %     surf(peaks);
 %     colormap('matspace.plotting.colors.tab10');

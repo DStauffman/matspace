@@ -11,10 +11,13 @@ function [] = show_zero_ylim(ax)
 % Prototype:
 %     % create figure and plot data that doesn't show the origin
 %     fig = figure;
-%     ax = axes;
+%     ax = axes(fig);
 %     plot(ax, 0:10, rand(3, 11) + 5);
 %     % call the function to show the origin
 %     matspace.plotting.show_zero_ylim(ax);
+%
+%     % Close plot
+%     close(fig);
 %
 % See Also:
 %     ylim

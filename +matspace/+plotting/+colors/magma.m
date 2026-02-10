@@ -12,7 +12,7 @@ function map = magma(m)
 %     map : (mx3) color triple
 %
 % Prototype:
-%     map = matspace.plotting.colors.magma();
+%     map = matspace.plotting.colors.magma(64);
 %     assert(all(size(map) == [64 3]));
 %     assert(min(min(map)) >= 0);
 %     assert(max(max(map)) <= 1);

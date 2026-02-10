@@ -19,7 +19,7 @@ function [date_utc] = gps_to_utc(week, time, kwargs)
 %     week     = [1782 1783];
 %     time     = [425916 4132];
 %     date_utc = matspace.gps.gps_to_utc(week, time);
-%     assert(all(date_utc == [datetime(2014, 3, 6, 22, 18, 19, TimeZone='UTC'); datetime(2014, 3, 9, 1, 8, 35, TimeZone='UTC')], 'all'));
+%     assert(all(date_utc == [datetime(2014, 3, 6, 22, 18, 20, TimeZone='UTC'), datetime(2014, 3, 9, 1, 8, 36, TimeZone='UTC')], 'all'));
 %
 % See Also:
 %     datetime, matspace.gps.gps_to_datetime

@@ -29,19 +29,19 @@ function [fig_hand, err] = plot_time_difference(description, time_one, data_one,
 %     figure handles
 %
 % Prototype:
-%     description = 'Random Data'
+%     description = 'Random Data';
 %     time_one = 2000:1/12:2005;
 %     data_one = cumsum(rand(5, length(time_one)), 2);
 %     data_one(:) = 10 * data_one ./ data_one(:, end);
 %     time_two = 2000:0.5:2005;
 %     data_two = cumsum(rand(5, length(time_two)), 2);
 %     data_two(:) = 10 * data_two ./ data_two(:, end);
-%     figs1 = plot_time_difference(description, time_one, data_one, time_two, data_two);
+%     fig_hand1 = matspace.plotting.plot_time_difference(description, time_one, data_one, time_two, data_two);
 %
-% Date based version
+%     % Date based version
 %     time1 = datetime(2020, 05, 01, 00, 00, 00) + seconds(0:5:5*60);
 %     time2 = datetime(2020, 05, 01, 00, 00, 00) + seconds(0:30:5*60);
-%     figs2 = plot_time_difference(description, time1, data_one, time2, data_two, TimeUnits='datetime');
+%     fig_hand2 = matspace.plotting.plot_time_difference(description, time1, data_one, time2, data_two, TimeUnits='datetime');
 %
 %     % Close plots
 %     close(fig_hand1);
