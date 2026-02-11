@@ -1,4 +1,4 @@
-function [inc_cost, inc_qaly, icer_out, order, data] = icer(cost, qaly, names, baseline, make_plot, OPTS)
+function [inc_cost, inc_qaly, icer_out, order, data] = icer(cost, qaly, names, baseline, make_plot, opts)
 
 % ICER  calculates the incremental cost effectiveness ratios with steps to throw out dominated strategies.
 %
@@ -18,7 +18,7 @@ function [inc_cost, inc_qaly, icer_out, order, data] = icer(cost, qaly, names, b
 %     names ... : {Mx1} names of the different strategies
 %     baseline  : (scalar) index of baseline strategy to use for cost comparisons, if not nan [num]
 %     make_plot : (scalar) true/false flag for whether to plot the data [bool]
-%     OPTS .... : (class) plotting options, see Opts.m for details
+%     opts .... : (class) plotting options, see Opts.m for details
 %
 % Output:
 %     inc_cost  : (Nx1) incremental costs [dollars] - see note 1
@@ -61,16 +61,16 @@ switch nargin
         names     = [];
         baseline  = nan;
         make_plot = false;
-        OPTS      = Opts();
+        opts      = Opts();
     case 3
         baseline  = nan;
         make_plot = false;
-        OPTS      = Opts();
+        opts      = Opts();
     case 4
         make_plot = false;
-        OPTS      = Opts();
+        opts      = Opts();
     case 5
-        OPTS      = Opts();
+        opts      = Opts();
     case 6
         % nop
     otherwise
@@ -220,5 +220,5 @@ if make_plot
     axis(lim);
     % add standard plotting features
     figmenu;
-    setup_plots(fig, OPTS, 'dist_no_y_scale');
+    setup_plots(fig, opts, 'dist_no_y_scale');
 end

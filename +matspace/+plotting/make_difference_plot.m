@@ -360,7 +360,7 @@ if isempty(fig_ax)
                 fig_ax = cell(1, num_channels * length(temp_fig_ax));
                 for f = 1:length(temp_fig_ax)
                     n = num_channels * f;
-                    fig_ax(n + 1 - num_channels:n) = repmat({temp_fig_ax{f}}, 1, num_channels);
+                    fig_ax(n + 1 - num_channels:n) = repmat(temp_fig_ax(f), 1, num_channels);
                 end
             end
         elseif single_lines1
@@ -386,7 +386,7 @@ if isempty(fig_ax)
             fig_ax = cell(1, num_channels * length(temp_fig_ax));
             for f = 1:length(temp_fig_ax)
                 n = num_channels * f;
-                fig_ax(n + 1 - num_channels:n) = repmat({temp_fig_ax{f}}, 1, num_channels);
+                fig_ax(n + 1 - num_channels:n) = repmat(temp_fig_ax(f), 1, num_channels);
             end
         end
     end
@@ -416,7 +416,6 @@ color_offset = length(times1);
 datashaders = [];
 this_zorder =ifelse(is_quat_diff, 3, 4);
 for i = 1:num_channels
-    this_fig = fig_ax{i}{1};
     this_axes = fig_ax{i}{2};
     this_ylabel = y_labels{i};
     if ~isempty(name_one)
@@ -430,9 +429,9 @@ for i = 1:num_channels
         if show_rms
             value = num2str(leg_conv * data_func{i}, LEG_FORMAT);
             if ~isempty(leg_units)
-                this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];
+                this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];  %#ok<AGROW>
             else
-                this_label = [this_label,' (',func_name,': ',value,')'];
+                this_label = [this_label,' (',func_name,': ',value,')'];  %#ok<AGROW>
             end
         end
         draw_lines(datashaders, this_time, this_data, plot_func, this_axes, Symbol=symbol_one, MarkerSize=4, ...
@@ -449,9 +448,9 @@ for i = 1:num_channels
         if show_rms
             value = num2str(leg_conv * data2_func{i}, LEG_FORMAT);
             if ~isempty(leg_units)
-                this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];
+                this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];  %#ok<AGROW>
             else
-                this_label = [this_label,' (',func_name,': ',value,')'];
+                this_label = [this_label,' (',func_name,': ',value,')'];  %#ok<AGROW>
             end
         end
         draw_lines(datashaders, this_time2, this_data2, plot_func, this_axes, Symbol=symbol_two, MarkerSize=4, ...
@@ -499,15 +498,14 @@ if have_both
         i = ix_diff(t);
         this_ylabel = y_labels2{t};
         this_zorder = zorders(t);
-        this_fig = fig_ax{i + num_channels}{1};
         this_axes = fig_ax{i + num_channels}{2};
         this_label = char(diff_elems{i});
         if show_rms
             value = num2str(leg_conv * nondeg_func{i}, LEG_FORMAT);
             if leg_units
-                this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];
+                this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];  %#ok<AGROW>
             else
-                this_label = [this_label,' (',func_name,': ',value,')'];
+                this_label = [this_label,' (',func_name,': ',value,')'];  %#ok<AGROW>
             end
         end
         lines = draw_lines(datashaders, time_overlap{i}, diffs{i}, plot_func, this_axes, Symbol=".-", MarkerSize=4, ...

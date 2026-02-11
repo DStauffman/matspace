@@ -11,41 +11,41 @@ function [fig] = plot_histogram(description, data, bins, varargin)
 %     boundaries of the bins to use for the histogram
 % counts : (A, ) ndarray, optional
 %     If specified, use this already processed counts instead of data
-% opts : class Opts, optional
+% Opts : class Opts, optional
 %     plotting options
-% color : str or RGB or RGBA code, optional
+% Color : str or RGB or RGBA code, optional
 %     Name of color to use
-% xlabel : str, optional
+% XLabel : str, optional
 %     Name to put on x-axis
-% ylabel : str, optional
+% YLabel : str, optional
 %     Name to put on y-axis
-% second_ylabel : str, optional
+% SecondYLabel : str, optional
 %     Name to put on second y-axis
-% xlim : tuple[float, float], optional
+% XLim : tuple[float, float], optional
 %     X-limits to override those calculated automatically
-% units : str, optional
+% Units : str, optional
 %     Units to label on the x-axis
-% formatter : str, optional
+% Formatter : str, optional
 %     Formatter to use in the legend for CDF calculations
-% normalize_spacing : bool, optional, default is False
+% NormalizeSpacing : bool, optional, default is False
 %     Whether to normalize all the bins to the same horizontal size
-% use_exact_counts : bool, optional, default is False
+% UseExactCounts : bool, optional, default is False
 %     Whether to bin things based only on exactly equal values
-% show_cdf : bool, optional, default is False
+% ShowCdf : bool, optional, default is False
 %     Whether to draw the CDF result
-% cdf_x : scalar or (B, ) ndarray
+% CdfX : scalar or (B, ) ndarray
 %     X values to draw lines at CDF
-% cdf_y : scalar or (C, ) ndarray
+% CdfY : scalar or (C, ) ndarray
 %     Y values to draw lines at CDF
-% cdf_colormap : str or matplotlib.colors.Colormap, optional
+% CdfColormap : str or matplotlib.colors.Colormap, optional
 %     Colors/colormap to use for CDF lines
-% cdf_same_axis : bool, optional, default is False
+% CdfSameAxis : bool, optional, default is False
 %     Whether to use the same axis for the CDF, or to create a secondary one
-% cdf_round_to_bin : bool, optional, default is False
+% CdfRoundToBin : bool, optional, default is False
 %     Whether to round the CDF crossings to bin edges
-% fig_ax : (fig, ax) tuple, optional
+% FigAx : (fig, ax) tuple, optional
 %     Figure and axis to use, otherwise create new ones
-% skip_setup_plots : bool, optional, default is False
+% SkipSetupPlots : bool, optional, default is False
 %     Whether to skip the setup_plots step, in case you are manually adding to an existing axis
 % **kwargs : dict
 %     Additional plotting arguments to override Opts, from {"legend_loc"}
@@ -73,14 +73,19 @@ function [fig] = plot_histogram(description, data, bins, varargin)
 
 %% Imports
 import matspace.plotting.colors.get_xkcd_colors
+import matspace.plotting.figmenu
 import matspace.plotting.get_factors
+import matspace.plotting.Opts
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
 import matspace.plotting.private.fun_is_colormap
+import matspace.plotting.private.fun_is_fig_ax
 import matspace.plotting.private.fun_is_opts
+import matspace.plotting.setup_plots
 import matspace.plotting.show_zero_ylim
 import matspace.plotting.whitten
 import matspace.stats.intersect2
+import matspace.utils.ifelse
 
 %% Parser
 % Validation functions
@@ -88,7 +93,7 @@ fun_is_empty_or_len2 = @(x) (isempty(x) || length(x) == 2);
 % Argument parser
 p = inputParser;
 addParameter(p, 'Counts', [], @isnumeric);
-addParameter(p, 'OPTS', Opts, @fun_is_opts);
+addParameter(p, 'Opts', Opts, @fun_is_opts);
 addParameter(p, 'Color', '#1f77b4', @ischar);
 addParameter(p, 'XLabel', 'Data', @ischar);
 addParameter(p, 'YLabel', 'Number', @ischar);
@@ -104,13 +109,13 @@ addParameter(p, 'CdfY', [], @isnumeric);
 addParameter(p, 'CdfColormap', [], @fun_is_colormap);
 addParameter(p, 'CdfSameAxis', false, @islogical);
 addParameter(p, 'CdfRoundToBin', false, @islogical);
-addParameter(p, 'FigAx', fun_is_empty_or_len2);
+addParameter(p, 'FigAx', [], @fun_is_fig_ax);
 addParameter(p, 'SkipSetupPlots', false, @islogical);
 addParameter(p, 'LegendLoc', '', @ischar);
 
 parse(p, varargin{:});
 counts            = p.Results.Counts;
-opts              = p.Results.OPTS;
+opts              = p.Results.Opts;
 color             = p.Results.Color;
 x_label           = p.Results.XLabel;
 y_label           = p.Results.YLabel;
@@ -197,56 +202,60 @@ else
         end
     end
 end
-rects = [Rectangle((plotting_bins[i], 0), plotting_bins[i + 1] - plotting_bins[i], counts[i]) for i in range(num - 1)]
-if missing > 0:
-    rects.append(Rectangle((plotting_bins[-1], 0), 1, missing))
-coll = PatchCollection(rects, facecolor=color, edgecolor="k", zorder=6)
 % create plot
 if isempty(fig_ax)
-    fig = plt.figure();
+    fig = figure();
     ax = axes(fig);
 else
     fig = fig_ax{1}{1};
     ax = fig_ax{1}{2};
 end
-if (sup := fig._suptitle) is None
-    fig.canvas.manager.set_window_title(description)
+sgt_hand = findall(fig, 'Type', 'subplottext');
+if isempty(sgt_hand)
+    fig.Name = description;
 else
-    fig.canvas.manager.set_window_title(sup.get_text())
+    fig.Name = sgt_hand.String;
 end
 title(ax, description);
-ax.add_collection(coll)
+for i = 1:num - 1
+    verts = [plotting_bins(i) 0; plotting_bins(i+1) 0; plotting_bins(i+1) counts(i); plotting_bins(i) counts(i)];
+    patch(ax, Faces=[1 2 3 4], Vertices=verts, FaceColor=color, EdgeColor='k');
+end
+if missing > 0
+    verts = [plotting_bins(end-1) 0; plotting_bins(end) 0; plotting_bins(end) counts(i); plotting_bins(end-1) counts(i)];
+    patch(ax, Faces=[1 2 3 4], Vertices=verts, FaceColor=color, EdgeColor='k');
+end
 grid(ax, 'on');
-xlabel(ax, ifelse(~isempty(units), xlabel + " [" + units + "]", xlabel));
+xlabel(ax, ifelse(~isempty(units), x_label + " [" + units + "]", x_label));
 ylabel(ax, y_label);
 if isempty(x_lim)
     if missing > 0
-        xlim(ax , [np.min(plotting_bins), np.max(plotting_bins) + 1))
+        xlim(ax, [min(plotting_bins), max(plotting_bins) + 1]);
     else
-        ax.set_xlim((np.min(plotting_bins), np.max(plotting_bins)))
+        xlim(ax, [min(plotting_bins), max(plotting_bins)]);
     end
 else
-    ax.set_xlim(xlim)
+    xlim(ax, x_lim);
 end
 if cdf_same_axis
-    ax.set_ylim((0, data_size))
+    ylim(ax, [0 data_size]);
 else
-    ax.set_ylim((0, 1.05 * np.max(counts)))
+    ylim(ax, [0 1.05 * max(counts)]);
 end
 if normalize_spacing
-    ax.set_xticks(plotting_bins)
-    ax.set_xticklabels(xlab)
+    xticks(ax, plotting_bins);
+    xticklabels(ax, xlab);
 elseif use_exact_counts
     if missing > 0
-        ax.set_xticks(plotting_bins + 0.5)
+        xticks(ax, plotting_bins + 0.5);
     else
-        ax.set_xticks(plotting_bins[:-1] + 0.5)
+        xticks(ax, plotting_bins(1:end-1) + 0.5);
     end
-    ax.set_xticklabels(xlab)
+    xticklabels(ax, xlab);
 end
-plot_second_yunits(ax, ylab=second_ylabel, multiplier=100 / data_size);
+plot_second_yunits(ax, second_y_label, 100 / data_size);
 % Optionally add CDF information
-color_ix = 0;
+color_ix = 1;
 if using_cdf
     % prepare the colormap
     if isempty(cdf_colormap)
@@ -255,37 +264,35 @@ if using_cdf
     end
     cm = ColorMap(cdf_colormap);
     % create fake items to add to legend
-    p = Rectangle((0, 0), 1, 1, facecolor=color, linewidth=0, edgecolor="none");
-    % create a transform with X in data units and Y in axes units
-    trans = transforms.blended_transform_factory(ax.transData, ax.transAxes);
+    patch(ax, [0 0 0 0], [0 0 0 0], facecolor=color, linewidth=0, edgecolor='none', DisplayName='PDF');
     % create the CDF
     if cdf_round_to_bin
-        cdf = np.hstack([0.0, np.cumsum(counts)]) / data_size;
+        cdf = [0, cumsum(counts)] ./ data_size;
         cdf_bin = plotting_bins;
     else
-        cdf = np.hstack([np.arange(data_size) / data_size, 1.0]);
-        cdf_bin = np.hstack([0.0, np.sort(data)]);
+        cdf = (0:data_size) ./ data_size;
+        cdf_bin = [0, sort(data)];
     end
 end
 if show_cdf
     % plot the CDF
     if ~cdf_same_axis
-        ax3 = ax.twinx();
-        ax3.set_ylim(0, 100);
-        ax3.spines.right.set_position("axes", 1.06);
-        ax3.yaxis.label.set_color(cm.get_color(color_ix));
-        ax3.set_ylabel("CDF Distribution [%]");
-        ax3.tick_params(axis="y", colors=cm.get_color(color_ix));
+        %yyaxis(ax, 'right');  % TODO: make third axes farther right!
+        %ylim(ax, [0 100]);
+        %ax3.spines.right.set_position("axes", 1.06);
+        %ax3.yaxis.label.set_color(cm.get_color(color_ix));
+        %ylabel(ax, 'CDF Distribution [%]');
+        %ax3.tick_params(axis="y", colors=cm.get_color(color_ix));
     end
     % Note: plot on transformed axes instead of ax3 to maintain constant pan/zoom
     if normalize_spacing
-        temp = np_digitize(cdf_bin, bins);
-        bins_temp = np.array([bins[t] for t in temp])
-        bins_plus = np.array([bins[t + 1] for t in temp])
+        temp = discretize_mex(cdf_bin, bins);
+        bins_temp = arrayfun(@(x) bins(x), temp, UniformOutput=false);
+        bins_plus = arrayfun(@(x) bins(x + 1), temp, UniformOutput=false);  % np.array([bins[t + 1] for t in temp])
         cdf_scaled = temp + (cdf_bin - bins_temp) / (bins_plus - bins_temp);
-        ax.step(cdf_scaled, cdf, color=cm.get_color(color_ix), label="CDF", zorder=8, transform=trans);
+        step(ax, cdf_scaled, cdf, color=cm.get_color(color_ix), DisplayName='CDF');  % ZOrder=8, Transform=trans
     else
-        ax.step(cdf_bin, cdf, color=cm.get_color(color_ix), label="CDF", zorder=8, transform=trans);
+        step(ax, cdf_bin, cdf, color=cm.get_color(color_ix), DisplayName='CDF');  % ZOrder=8, Transform=trans
     end
     color_ix = color_ix + 1;
 end
@@ -300,24 +307,22 @@ if ~isempty(cdf_x)
         end
         this_cdf = cdf(this_ix);
         this_label = format(this_x, formatter) + unit_pad + units + "=" + format(100 * this_cdf, formatter) + "%";
-        ax.plot(...
+        plot(ax, ...
             [0, 1], ...
             [this_cdf, this_cdf], ...
             color=cm.get_color(color_ix), ...
-            label=this_label, ...
-            ... zorder=9, ...
-            transform=ax.transAxes, ...
-        );
-        ax.plot(...
+            label=this_label);
+            % zorder=9, ...
+            % transform=ax.transAxes, ...
+        plot(ax, ...
             this_bin, ...
             this_cdf, ...
-            marker="o", ...
+            marker='o', ...
             markeredgecolor=cm.get_color(color_ix), ...
-            markerfacecolor="none", ...
-            label="", ...
-            ... zorder=10, ...
-            transform=trans, ...
-        );
+            markerfacecolor='none', ...
+            label='');
+            % zorder=10, ...
+            % transform=trans, ...
         color_ix = color_ix + 1;
     end
 end
@@ -325,20 +330,21 @@ if ~isempty(cdf_y)
     for i = 1:length(cdf_y)
         this_cdf = cdf_y(i);
         this_ix = np.argmax(cdf >= this_cdf);
-        this_label = format(100 * this_cdf, formatter) + "%=" + format(cdf_bin[this_ix], formatter) + unit_pad + units;
-        this_bin = cdf_scaled[this_ix] if normalize_spacing else cdf_bin[this_ix];
-        ax.axvline(this_bin, label=this_label, color=cm.get_color(color_ix), zorder=9);
-        ax.plot(this_bin, cdf[this_ix], marker="x", color=cm.get_color(color_ix), label="", zorder=10, transform=trans);
+        this_label = format(100 * this_cdf, formatter) + "%=" + format(cdf_bin(this_ix), formatter) + unit_pad + units;
+        this_bin = ifelse(normalize_spacing, cdf_scaled(this_ix), cdf_bin(this_ix));
+        yline(ax, this_bin, DisplayName=this_label, Color=cm.get_color(color_ix));  % zorder=9
+        plot(ax, this_bin, cdf(this_ix), Marker='x', Color=cm.get_color(color_ix), DisplayName='');  % zorder=10, transform=trans
         color_ix = color_ix + 1;
     end
 end
 if using_cdf
     % Add a legend now, since there is something to display
-    [handles, labels] = ax.get_legend_handles_labels();
-    handles.insert(0, p);
-    labels.insert(0, "PDF");
-    ax.legend(handles, labels, loc=legend_loc);
+    %[handles, labels] = ax.get_legend_handles_labels();
+    %handles.insert(0, p);
+    %labels.insert(0, 'PDF');
+    legend(ax, 'show', Location=legend_loc);
 end
 if ~skip_setup_plots
-    setup_plots(fig, OPTS=opts);
+    figmenu;
+    setup_plots(fig, opts);
 end

@@ -48,7 +48,7 @@ exclusions = {};
 
 % handle simple string case
 if nargin == 1 && ischar(varargin)
-    varargin = {varargin};
+    varargin = {varargin};  %#ok<UNRCH>
 end
 num_args = length(varargin);
 

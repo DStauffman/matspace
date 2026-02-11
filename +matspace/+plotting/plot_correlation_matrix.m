@@ -5,18 +5,24 @@ function [fig_hand] = plot_correlation_matrix(data, labels, units, kwargs)
 % Input:
 %     data ...... : (NxN) correlation matrix [any]
 %     labels .... : {Nx1} of char labels to put on plot
-%     OPTS ...... : (class) optional plotting commands, see Opts.m for more information
-%     varargin .. : (char, value) pairs for other options, from:
-%         'CMin'        : minimum numeric value for the colormap, default is 0
-%         'CMax'        : maximum numeric value for the colormap, default is 1
-%         'LowerOnly'   : plot below diag lower triangle of symmetric matrix, default is true
-%         'ColorMap'    : colormap to use on plot, default is 'cool'
-%         'MatrixName'  : name of the matrix to put on the title, default is 'Correlation Matrix'
-%         'PlotBorder'  : whether to plot a border on each box, default is true
-%         'LabelValues' : whether to label the numeric values on the boxes, default is false
+%     units ..... : 
+%     varargin ......... : (char, value) pairs for other options, from:
+%         Opts ......... : (class) optional plotting commands, see Opts.m for more information
+%         MatrixName     : name of the matrix to put on the title, default is 'Correlation Matrix'
+%         CMin           : minimum numeric value for the colormap, default is 0
+%         CMax           : maximum numeric value for the colormap, default is 1
+%         PlotLowerOnly  : plot below diag lower triangle of symmetric matrix, default is true
+%         LabelValues    : whether to label the numeric values on the boxes, default is false
+%         XLabRot        :
+%         ColorMap       : colormap to use on plot, default is 'cool'
+%         PlotBorder     : whether to plot a border on each box, default is true
+%         LegendScale    :
+%         FigAx          :
+%         SkipSetupPlots :
+%         FigVisible     :
 %
 % Output:
-%     fig_hand .. : (scalar) figure handles [num]
+%     fig_hand ......... : (scalar) figure handles [num]
 %
 % Prototype:
 %     data   = rand(10,10);

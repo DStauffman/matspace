@@ -215,7 +215,7 @@ if ischar(x)
     return
 end
 if isstring(x)
-    if length(x) == 1
+    if isscalar(x)
         return
     end
     eidType = 'ssc:plot_classification:badColor';

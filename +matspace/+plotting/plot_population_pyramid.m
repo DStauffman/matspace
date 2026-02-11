@@ -3,15 +3,16 @@ function [fig] = plot_population_pyramid(age_bins, male_per, fmal_per, varargin)
 % PLOT_POPULATION_PYRAMID  plots the standard population pyramid.
 %
 % Input:
-%     age_bins ... : (1xN+1) Age boundaries to plot
-%     male_per ... : (1xN) Male population percentage in each bin
-%     fmal_per ... : (1xN) Female population percentage in each bin
-%     OPTS ....... : (class) optional plotting commands, see Opts.m for more information
-%     varargin ... : (char, value) pairs for other options, from:
-%         'Name1'  : (1xA) time points for series two, default is empty
-%         'Name2'  : (BxA) data points for series two, default is empty
-%         'Color1' : (char) text to put on the plot titles, default is empty string
-%         'Color2' : (char) type of data to use when converting axis scale, default is 'unity'
+%     age_bins . : (1xN+1) Age boundaries to plot
+%     male_per . : (1xN) Male population percentage in each bin
+%     fmal_per . : (1xN) Female population percentage in each bin
+%     varargin . : (char, value) pairs for other options, from:
+%         Opts . : (class) optional plotting commands, see Opts.m for more information
+%         Title  :
+%         Name1  : (1xA) time points for series two, default is empty
+%         Name2  : (BxA) data points for series two, default is empty
+%         Color1 : (char) text to put on the plot titles, default is empty string
+%         Color2 : (char) type of data to use when converting axis scale, default is 'unity'
 %
 % Output:
 %     fig : figure handle
@@ -48,7 +49,7 @@ p = inputParser;
 fun_is_opts = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
 fun_is_color = @(x) ischar || (isvector(x) && length(x) == 3);
 % set options
-addOptional(p, 'OPTS', Opts, fun_is_opts);
+addOptional(p, 'Opts', Opts, fun_is_opts);
 addParameter(p, 'Title', 'Population Pyramid', @ischar);
 addParameter(p, 'Name1', 'Male', @ischar);
 addParameter(p, 'Name2', 'Female', @ischar);
@@ -64,10 +65,10 @@ color1 = p.Results.Color1;
 color2 = p.Results.Color2;
 
 %% Process inputs
-if isempty(p.Results.OPTS)
-    OPTS = Opts();
+if isempty(p.Results.Opts)
+    opts = Opts();
 else
-    OPTS = p.Results.OPTS;
+    opts = p.Results.Opts;
 end
 
 %% Plot data
@@ -103,4 +104,4 @@ legend('show');
 figmenu;
 
 %% setup plots
-setup_plots(fig, OPTS, 'dist_no_y_scale')
+setup_plots(fig, opts, 'dist_no_y_scale')

@@ -4,21 +4,21 @@ function [fig_hand, err] = plot_quaternion(description, time_one, quat_one, time
 %
 %
 % Input:
-%         'Description' : (char) text to put on the plot titles, default is empty string
-%         'TimeTwo'     : (1xA) time points for series two, default is empty
-%         'QuatTwo'     : (BxA) data points for series two, default is empty
-%     time_one .. : (1xN) time points [years]
-%     quat_one .. : (MxN) data points [num]
-%     OPTS ...... : (class) optional plotting commands, see Opts.m for more information
-%     varargin .. : (char, value) pairs for other options, from:
-%         'Type'        : (char) type of data to use when converting axis scale, default is 'unity'
-%         'TruthTime'   : (1xC) time points for truth data, default is empty
-%         'TruthData'   : (DxC) data points for truth data, default is empty
-%         'TruthName'   : (char) or {Dx1} of (char) name for truth data on the legend, if empty
+%     description ... : (char) text to put on the plot titles, default is empty string
+%     time_one ...... : (1xN) time points [years]
+%     quat_one ...... : (MxN) data points [num]
+%     time_two ...... : (1xA) time points for series two, default is empty
+%     quat_two ...... : (BxA) data points for series two, default is empty
+%     varargin ...... : (char, value) pairs for other options, from:
+%         Opts ...... : (class) optional plotting commands, see Opts.m for more information
+%         Type        : (char) type of data to use when converting axis scale, default is 'unity'
+%         TruthTime   : (1xC) time points for truth data, default is empty
+%         TruthData   : (DxC) data points for truth data, default is empty
+%         TruthName   : (char) or {Dx1} of (char) name for truth data on the legend, if empty
 %                              don't include, default is 'Truth'
 %
 % Output:
-%     fig_hand .. : (scalar) figure handles [num]
+%     fig_hand ...... : (scalar) figure handles [num]
 %     err
 %
 % Prototype:
