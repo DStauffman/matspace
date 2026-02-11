@@ -10,8 +10,8 @@ function [fig_hand] = plot_monte_carlo(time_one, data_one, varargin)
 % Input:
 %     time1 ..... : (1xN) time points [years]
 %     data1 ..... : (MxN) data points [num]
-%     OPTS ...... : (class) optional plotting commands, see Opts.m for more information
 %     varargin .. : (char, value) pairs for other options, from:
+%         'Opts' ...... : (class) optional plotting commands, see Opts.m for more information
 %         'TimeTwo'     : (1xA) time points for series two, default is empty
 %         'DataTwo'     : (BxA) data points for series two, default is empty
 %         'Description' : (char) text to put on the plot titles, default is empty string
@@ -79,7 +79,7 @@ fun_is_bool_num = @(x) (islogical(x) || isnumeric(x));
 % set options
 addRequired(p, 'Time1', fun_is_time);
 addRequired(p, 'Data1', @isnumeric);
-addOptional(p, 'OPTS', Opts, fun_is_opts);
+addOptional(p, 'Opts', Opts, fun_is_opts);
 addParameter(p, 'TimeTwo', [], fun_is_time);
 addParameter(p, 'DataTwo', [], @isnumeric);
 addParameter(p, 'Description', '', @ischar);
@@ -87,7 +87,7 @@ addParameter(p, 'Type', 'unity', @ischar);
 addParameter(p, 'TruthTime', [], fun_is_time);
 addParameter(p, 'TruthData', [], @isnumeric);
 addParameter(p, 'TruthName', "Truth", @isstring);
-addParameter(p, 'SecondYScale', nan, @isnumeric);  % TODO: put into OPTS?
+addParameter(p, 'SecondYScale', nan, @isnumeric);  % TODO: put into opts?
 addParameter(p, 'PlotSigmas', true, fun_is_bool_num);  % TODO: must be scalar?
 addParameter(p, 'PlotPercents', false, fun_is_bool_num);
 % do parse
@@ -121,20 +121,20 @@ data_two    = p.Results.DataTwo;
 truth_time  = p.Results.TruthTime;
 truth_data  = p.Results.TruthData;
 
-%% Process OPTS
-if isempty(p.Results.OPTS)
-    OPTS = Opts();
+%% Process Opts
+if isempty(p.Results.Opts)
+    opts = Opts();
 else
-    OPTS = p.Results.OPTS;
+    opts = p.Results.Opts;
 end
 
 %% determine units based on type of data
 [scale, units] = get_scale_and_units(type);
-time_units = OPTS.time_base;
+time_units = opts.time_base;
 
-%% Process for comparisons and alias OPTS information
-% check for multiple comparisons mode and alias some OPTS information
-names = OPTS.names;
+%% Process for comparisons and alias opts information
+% check for multiple comparisons mode and alias some opts information
+names = opts.names;
 if length(names) > 1
     if length(names) == 2
         comp_mode = modes.nondeg;
@@ -147,8 +147,8 @@ else
     comp_mode = modes.single;
 end
 % determine if creating a difference plot and/or using subplots
-use_sub_plots = OPTS.sub_plots && comp_mode == modes.nondeg;
-show_rms      = OPTS.show_rms;
+use_sub_plots = opts.sub_plots && comp_mode == modes.nondeg;
+show_rms      = opts.show_rms;
 name1         = '';
 name2         = '';
 if length(names) >= 1 && ~isempty(names{1})
@@ -157,15 +157,15 @@ end
 if length(names) >= 2 && ~isempty(names{2})
     name2 = [names{2}, ': '];
 end
-rms_xmin    = OPTS.rms_xmin;
-rms_xmax    = OPTS.rms_xmax;
-disp_xmin   = OPTS.disp_xmin;
-disp_xmax   = OPTS.disp_xmax;
-start_date  = get_start_date(OPTS.date_zero);
+rms_xmin    = opts.rms_xmin;
+rms_xmax    = opts.rms_xmax;
+disp_xmin   = opts.disp_xmin;
+disp_xmax   = opts.disp_xmax;
+start_date  = get_start_date(opts.date_zero);
 
 %% Potentially convert times to dates
-if strcmp(OPTS.time_base, 'datetime')
-    date_zero  = OPTS.date_zero;
+if strcmp(opts.time_base, 'datetime')
+    date_zero  = opts.date_zero;
     time_one   = convert_time_to_date(time_one,   date_zero, time_units);
     time_two   = convert_time_to_date(time_two,   date_zero, time_units);
     truth_time = convert_time_to_date(truth_time, date_zero, time_units);
@@ -441,7 +441,7 @@ end
 figmenu;
 
 % setup plots
-setup_plots(fig_hand, OPTS, 'time');
+setup_plots(fig_hand, opts, 'time');
 
 
 %% Subfunctions

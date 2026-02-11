@@ -27,10 +27,7 @@ function [folder] = cdd(name)
 switch nargin
     case 0
         % get the current active file in the editor
-        active_editor = com.mathworks.mlservices.MLEditorServices.getEditorApplication.getInstance.getActiveEditor;
-        if ~isempty(active_editor)
-            name = char(active_editor.getStorageLocation.getFile.getAbsolutePath);
-        end
+        name = matlab.desktop.editor.getActiveFilename;
     case 1
         % nop
     otherwise
@@ -53,10 +50,10 @@ end
 
 %% Change to the directory
 if ~isempty(folder)
-    disp(['cd to: ', folder]);
+    fprintf(1, 'cd to: <a href="matlab:cd(''%s'');">%s</a>\n', strrep(folder, '\', '/'), folder);
     cd(folder);
 else
-    disp([name, ' was not found.']);
+    fprintf(1, '"%s" was not found.\n', name);
 end
 
 % clear varargout to avoid ans being printed when called as a script with no outputs

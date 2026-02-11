@@ -3,10 +3,10 @@ classdef Opts
     % OPTS  defines the class for all the possible plotting options.
     %
     % Input:
-    %     overrides : (struct) existing OPTS instance or similar struct to use to override the defaults
+    %     overrides : (struct) existing Opts instance or similar struct to use to override the defaults
     %
     % Output:
-    %     OPTS ......... : (class) plotting options
+    %     Opts ......... : (class) plotting options
     %         .case_name : (row) string specifying the name of the case to be plotted [char]
     %         .date_zero : (1x6) datevec (or datetime) of t = 0 time [year month day hour minute second]
     %         .save_plot : (scalar) true/false flag for whether to save the plots [bool]
@@ -38,7 +38,7 @@ classdef Opts
     %         .names     : (1xN) of (string) specifying the name of the data structures to be plotted [char]
     %
     % Prototype:
-    %     OPTS = matspace.plotting.Opts();
+    %     opts = matspace.plotting.Opts();
     %
     % Change Log:
     %     1.  Written by David C. Stauffer in September 2013.

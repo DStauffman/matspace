@@ -13,7 +13,7 @@ function [fig_hand] = make_categories_plot(description, time, data, cats, vararg
 %     time             = -10:0.1:10;
 %     data             = [time + cos(time); ones(size(time))];
 %     data(2, 60:85)   = 2;
-%     cats             = repmat(matspace.enum.accepted, size(time));
+%     cats             = repmat(matspace.enum.MeasStatus.accepted, size(time));
 %     cats(50:100)     = matspace.enum.MeasStatus.rejected;
 %     cat_names        = dictionary(0, "rejected", 1, "accepted");
 %     name             = '';
@@ -60,6 +60,8 @@ function [fig_hand] = make_categories_plot(description, time, data, cats, vararg
 %     3.  Translated into Matlab by David C. Stauffer in January 2026.
 
 %% Imports
+import matspace.plotting.colors.ColorMap
+import matspace.plotting.colors.get_xkcd_colors
 import matspace.plotting.plot_second_units_wrapper
 import matspace.plotting.private.build_indices
 import matspace.plotting.private.calc_rms
@@ -96,7 +98,7 @@ addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'Time', @fun_is_time);
 addRequired(p, 'Data', @fun_is_data);
 addRequired(p, 'Cats', @fun_is_data);  % TODO: any further restrictions or let-ups?
-addParameter(p, 'CatNames', strings(1, 0), @isstring);
+addParameter(p, 'CatNames', dictionary(), @(x) isa(x, 'dictionary'));
 addParameter(p, 'Name', '', @fun_is_text);
 addParameter(p, 'Elements', strings(0), @isstring);
 addParameter(p, 'Units', '', @fun_is_text);
@@ -156,6 +158,9 @@ use_datashader   = p.Results.UseDatashader;
 fig_ax           = p.Results.FigAx;
 fig_visible      = ifelse(p.Results.FigVisible, 'on', 'off');
 
+%% Hard-coded values
+colors = get_xkcd_colors();
+
 %% Processing
 [times, datum] = make_time_and_data_lists(time, data, DataAsRows=data_as_rows);
 num_channels = length(times);
@@ -183,29 +188,31 @@ if show_rms
 end
 
 % create a colormap
-cm = ColorMap(colormap=colormap);
+cm = ColorMap(color_map);
 
 % Category calculations
 unique_cats = unique(cats);
 num_cats = length(unique_cats);
 % Add any missing dictionary values
-for x in unique_cats
-    if x not in cat_names
-        cat_names[x] = "Status=" + str(x)
+for i = 1:num_cats
+    this_key = unique_cats(i);
+    if ~isKey(cat_names, this_key)
+        insert(cat_names, this_key, "Status=" + this_key);
     end
 end
-ordered_cats = [x for x in cat_names if x in unique_cats]
-cat_keys = np.array(list(cat_names.keys()), dtype=int)
+ordered_cats = keys(cat_names);
+% cat_keys = string(keys(cat_names));  % TODO: don't need in Matlab?
 
 % calculate the rms (or mean) values
 if show_rms
-    data_func = {}
-    for cat in ordered_cats
+    data_func = dictionary();
+    for i = 1:length(ordered_cats)
+        cat = ordered_cats(i);
         % TODO: handle isinstance(cats, list) case
-        ix_cat = cats == cat
-        this_datum = [data[ix_cat] for data in datum]
-        temp_ix_one = [i[ix_cat] for i in ix["one"]]
-        data_func[cat], func_name = _calc_rms(this_datum, temp_ix_one, use_mean=use_mean)
+        ix_cat = cats == cat;
+        this_datum = cellfun(@(x) x(ix_cat), datum, UniformOutput=false);
+        temp_ix_one = cellfun(@(x) x(ix_cat), ix.one, UniformOutput=false);
+        [data_func{cat}, func_name] = calc_rms(this_datum, temp_ix_one, UseMean=use_mean);
     end
 end
 
@@ -225,9 +232,10 @@ y_labels = get_ylabels(num_channels, y_label, Elements=elements, SingleLines=tru
 if isempty(fig_ax)
     % get the figure titles
     if single_lines
-        titles = [f"{description} {e} {cat_names[cat]}" for cat in ordered_cats for e in elements]
+        error('Not implemented yet');
+        % titles = [f"{description} {e} {cat_names[cat]}" for cat in ordered_cats for e in elements]
     else
-        titles = [f"{description} {e}" for e in elements]
+        titles = description + " " + elements;
     end
     % get the number of figures and axes to make
     if make_subplots
@@ -249,10 +257,11 @@ if isempty(fig_ax)
         axes_hand = cellfun(@(x) x{2}, fig_ax);  % [fig.axes[0:1] for fig in figs]
     end
     if ~single_lines
-        fig_ax = tuple(item for temp in fig_ax for item in [temp] * num_cats)
+        temp = arrayfun(@(x) repmat(x, [1 num_cats]), fig_ax, UniformOutput=false);
+        fig_ax = [temp{:}];
     end
-    for fig, title in zip(figs, titles):
-        fig.canvas.manager.set_window_title(title)
+    for i = 1:length(fig_hand)
+        fig_hand(i).Name = titles{i};
     end
 end
 
@@ -261,36 +270,44 @@ datashaders = [];
 for i = 1:min([length(times), length(datum)])
     this_time = times{i};
     this_data = datum{i};
-    this_ylabel = ylabels{i};
-    this_label = f"{name} {elements[i]}" if name else f"{elements[i]}"
-    this_axes = fig_ax[i * num_cats][1]
+    this_ylabel = y_labels{i};
+    this_label = elements{i};
+    if ~isempty(name)
+        this_label = [name,' ',this_label];  %#ok<AGROW>
+    end
+    this_axes = fig_ax{i * num_cats}{2};
     % plot the full underlying line once
     if ~use_datashader || numel(this_time) <= datashader_pts
-        plot_func(this_axes, this_time, this_data, ':', label='', color="xkcd:slate", linewidth=1, zorder=2)
+        plot_func(this_axes, this_time, this_data, ':', DisplayName='', Color=colors.slate, LineWidth=1);  % , ZOrder=2);
     end
     % plot the data with this category value
-    for j, cat in enumerate(ordered_cats):
-        _, sub_axes = fig_ax[i * num_cats + j]
-        this_cat_name = cat_names[cat]
+    for j = 1:length(ordered_cats)
+        cat = ordered_cats(j);
+        sub_axes = fig_ax{(i - 1) * num_cats + j}{2};
+        this_cat_name = char(cat_names(cat));
         if show_rms
             value = num2str(leg_conv * data_func{cat}{i}, LEG_FORMAT);
             if ~isempty(leg_units)
                 cat_label = [this_label,' ',this_cat_name,' (',func_name,': ',num2str(value),' ',leg_units,')'];
             else
-                cat_label = [this_label,' ',this_cat_name,' ('func_name,': ',num2str(value),')'];
+                cat_label = [this_label,' ',this_cat_name,' (',func_name,': ',num2str(value),')'];
             end
         else
             cat_label = [this_label,' ',this_cat_name];
         end
         this_cats = cats == cat;
-        % Note: Use len(cat_keys) here instead of num_cats so that potentially missing categories
+        % Note: Use len(ordered_cats) here instead of num_cats so that potentially missing categories
         % won't mess up the color scheme by skipping colors
-        this_cat_ix = np.argmax(cat == cat_keys)
-        this_color = cm.get_color(i * len(cat_keys) + this_cat_ix)
-        lines = draw_lines(datashaders, this_time[this_cats], this_data[this_cats], plot_func, sub_axes, Symbol='.',
+        this_cat_ix = find(cat == ordered_cats, 1, 'first');
+        this_color = cm.get_color(i * length(ordered_cats) + this_cat_ix);
+        lines = draw_lines(datashaders, this_time(this_cats), this_data(this_cats), plot_func, sub_axes, Symbol='.', ...
             MarkerSize=6, MarkerFaceColor=this_color, Color=this_color, Label=cat_label, ZOrder=3, UseDatashader=use_datashader);
         if ~isempty(lines)
-            lines(1).set_linestyle("none" if bool(datashaders) or not single_lines else "-")
+            if ~isempty(datashaders) || ~single_lines
+                lines(1).LineStyle = 'none';
+            else
+                lines(1).LineStyle = '-';
+            end
         end
     end
     xlims = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
@@ -305,8 +322,14 @@ for i = 1:min([length(times), length(datum)])
         title(this_axes, description);
     end
     if ~isempty(this_ylabel) || single_lines
-        subs = [fig_ax[i * num_cats + j][1] for j in range(num_cats)] if single_lines else [this_axes]
-        for sub in subs:
+        if single_lines
+            error('Not implemented yet.');
+            %subs = [fig_ax[i * num_cats + j][1] for j in range(num_cats)]
+        else
+            subs = this_axes;
+        end
+        for s = 1:length(subs)
+            sub = subs(s);
             ylabel(sub, this_ylabel);
             grid(sub, 'on');
             % optionally add second Y axis
@@ -315,6 +338,7 @@ for i = 1:min([length(times), length(datum)])
             if show_rms
                 vert_labels = ifelse(~use_mean, strings(1, 0), ["Mean Start Time", "Mean Stop Time"]);
                 plot_vert_lines(sub, ix.pts, ShowInLegend=label_vert_lines, Labels=vert_labels);
+            end
         end
     end
 end
@@ -327,15 +351,15 @@ end
 if ~isempty(extra_plotter)
     for i = 1:length(fig_hand)
         fig = fig_hand(i);
-        ax = axes(i);
+        ax = axes_hand(i);
         extra_plotter(fig, ax);
     end
 end
 
 % add legend at the very end once everything has been done
 if ~strcmpi(legend_loc, 'none')
-    for i = 1:length(ax)
-        this_axes = ax(1);
+    for i = 1:length(axes_hand)
+        this_axes = axes_hand(i);
         legend(this_axes, 'show', Location=legend_loc);
     end
 end

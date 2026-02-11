@@ -1,6 +1,6 @@
 function [classification, caveat] = get_classification(classify)
 
-% GET_CLASSIFICATION  gets the classification and any caveats from the text in OPTS
+% GET_CLASSIFICATION  gets the classification and any caveats from the text in opts.
 %
 % Input:
 %     classify : (row) string specifying text to put on plots for classification purposes [char]
