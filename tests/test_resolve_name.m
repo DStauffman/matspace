@@ -56,7 +56,7 @@ classdef test_resolve_name < matlab.unittest.TestCase  %#ok<*PROP>
             self.verifyEqual(new_name, char(self.exp_win));
             new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.class_name), self.exp_warning);
             self.verifyEqual(new_name, self.exp_no_class_win);
-            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.class_name, strip_classification=false), self.exp_warning);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.class_name, StripClassification=false), self.exp_warning);
             self.verifyEqual(new_name, self.exp_class_win);
         end
 
@@ -71,17 +71,17 @@ classdef test_resolve_name < matlab.unittest.TestCase  %#ok<*PROP>
             self.verifyEqual(new_name, char(self.exp_unix));
             new_name = matspace.plotting.resolve_name(self.class_name);
             self.verifyEqual(new_name, self.exp_no_class_unix);
-            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.class_name, strip_classification=false), self.exp_warning);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.class_name, StripClassification=false), self.exp_warning);
             self.verifyEqual(new_name, self.exp_class_unix);
         end
 
         function test_nominal_win(self)
-            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name, force_win=true), self.exp_warning);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name, ForceWin=true), self.exp_warning);
             self.verifyEqual(new_name, self.exp_win);
         end
 
         function test_nominal_unix(self)
-            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name, force_win=false), self.exp_warning);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(self.bad_name, ForceWin=false), self.exp_warning);
             self.verifyEqual(new_name, self.exp_unix);
         end
 
@@ -107,11 +107,11 @@ classdef test_resolve_name < matlab.unittest.TestCase  %#ok<*PROP>
 
         function test_different_replacements(self)
             bad_name = 'new <>:"/\|?*text';
-            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name, force_win=true, rep_token='X'), self.exp_warning);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name, ForceWin=true, RepToken='X'), self.exp_warning);
             self.verifyEqual(new_name, 'new XXXXXXXXXtext');
-            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name, force_win=true, rep_token=''), self.exp_warning);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(bad_name, ForceWin=true, RepToken=''), self.exp_warning);
             self.verifyEqual(new_name, 'new text');
-            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(string(bad_name), force_win=true, rep_token="YY"), self.exp_warning);
+            new_name = self.verifyWarning(@() matspace.plotting.resolve_name(string(bad_name), ForceWin=true, RepToken="YY"), self.exp_warning);
             self.verifyEqual(new_name, "new YYYYYYYYYYYYYYYYYYtext");
         end
 
