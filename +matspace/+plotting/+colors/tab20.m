@@ -11,12 +11,15 @@ function [colors] = tab20()
 % Prototype:
 %     colors = matspace.plotting.colors.tab20();
 %     assert(all(size(colors) == [20 3]));
-%     assert(min(colors, 'all') >= 0);
-%     assert(max(colors, 'all') <= 1);
+%     assert(min(colors, [], 'all') >= 0);
+%     assert(max(colors, [], 'all') <= 1);
 %     % plotting example:
-%     surf(peaks);
+%     s = surf(peaks);
 %     colormap('matspace.plotting.colors.tab20');
 %     colorbar;
+%
+%     % Close plot
+%     close(s.Parent.Parent);
 %
 % See Also:
 %     matspace.plotting.colors.get_python_colormap, colormap

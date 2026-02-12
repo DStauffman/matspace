@@ -23,6 +23,7 @@ dcs_open    = getenv('DCS_MATLAB_OPEN');
 % warning('off', 'MATLAB:dispatcher:pathWarning');
 % warning('off', 'MATLAB:ClassInstanceExists');
 warning('off', 'MATLAB:modes:InteractionOptions:UnsupportedOnLegacyModes');
+warning('off', 'matspace:pathsetPackage');
 
 %% Restore old style plot controls
 % set(groot, 'defaultFigureCreateFcn', @(fig, ~) addToolbarExplorationButtons(fig));

@@ -96,7 +96,7 @@ end
 if isempty(color_map)
     cm = ColorMap(opts.colormap);
 else
-    cm = ColorMap();
+    cm = ColorMap(color_map);
 end
 
 [new_units, scale] = get_unit_conversion(legend_scale, units);
@@ -106,12 +106,13 @@ import matspace.plotting.colors.ColorMap
 import matspace.plotting.figmenu
 import matspace.plotting.get_unit_conversion
 import matspace.plotting.Opts
+import matspace.plotting.private.create_figure
 import matspace.plotting.setup_plots
 import matspace.utils.ifelse
 
 %% Hard-coded defaults
-box_size        = 1;
-precision       = 1e-12;
+box_size  = 1;
+precision = 1e-12;
 
 %% Process data
 % get sizes
@@ -161,10 +162,10 @@ end
 %% Create plots
 this_title = [matrix_name,ifelse(~isempty(new_units), [' [',new_units,']'], '')];
 if isempty(fig_ax)
-    % create figure;
-    fig_hand = figure(Name=this_title, Visible=fig_visible);
-    % get handle to axes for use later
-    ax = axes('color', 'none');
+    fig_ax = create_figure(1, 1, 1, Description=this_title, Visible=fig_visible);
+    fig_hand = fig_ax{1}{1};
+    ax = fig_ax{1}{2};
+    ax.Color = 'none';
 else
     fig_hand = fig_ax{1}{1};
     ax = fig_ax{1}{2};

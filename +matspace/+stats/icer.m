@@ -88,7 +88,6 @@ assert(length(cost) == length(qaly), 'Cost and Qalys must have same size.');
 assert(~isempty(cost), 'Costs and Qalys cannot be empty.');
 
 %% Solve ICERs
-
 % check for identical qalys, and drop the higher cost (or keep the first if costs are the same)
 unique_qalys = unique(qaly);
 if length(unique_qalys) < length(qaly)
@@ -189,35 +188,35 @@ end
 %% Make a plot
 if make_plot
     % create a figure and axis
-    fig = figure('name', 'Cost Benefit Frontier');
-    ax = axes;
+    fig = figure(Name='Cost Benefit Frontier', Visible='on', Theme='light');
+    ax = axes(fig);
     % plot the data
-    plot(ax, qaly, cost, 'ko', 'DisplayName', 'strategies');
-    hold on;
-    plot(qaly(ix), cost(ix), 'r.', 'MarkerSize', 20, 'DisplayName', 'frontier');
+    plot(ax, qaly, cost, 'ko', DisplayName='strategies');
+    hold(ax, 'on');
+    plot(ax, qaly(ix), cost(ix), 'r.', MarkerSize=20, DisplayName='frontier');
     % get axis limits before (0,0) point is added
-    lim = axis;
+    lim = axis(ax);
     % add ICER lines
     if isnan(baseline)
-        plot([0; qaly(ix)], [0; cost(ix)], 'r-', 'DisplayName', 'ICERs');
+        plot(ax, [0; qaly(ix)], [0; cost(ix)], 'r-', DisplayName='ICERs');
     else
-        plot([0; qaly(ix(1))], [0; cost(ix(1))],'r:', 'HandleVisibility','off');
-        plot([qaly(baseline); qaly(ix)], [cost(baseline); cost(ix)], 'r-', 'DisplayName', 'ICERs');
+        plot(ax, [0; qaly(ix(1))], [0; cost(ix(1))],'r:', HandleVisibility='off');
+        plot(ax, [qaly(baseline); qaly(ix)], [cost(baseline); cost(ix)], 'r-', DisplayName='ICERs');
     end
     % Label each point
     dy = (lim(4) - lim(3)) / 100;
     for i = 1:length(names)
-        text(qaly(i), cost(i)+dy, names{i}, 'Units', 'data', 'HorizontalAlignment', 'center', ...
-            'VerticalAlignment', 'bottom', 'FontSize', 12, 'interpreter', 'none');
+        text(ax, qaly(i), cost(i)+dy, names{i}, Units='data', HorizontalAlignment='center', ...
+            VerticalAlignment='bottom', FontSize=12, Interpreter='none');
     end
     % add some labels and such
-    title(get(fig, 'name'), 'interpreter', 'none');
-    xlabel('Benefits');
-    ylabel('Costs');
-    legend('show', 'location', 'NorthWest');
-    grid on;
+    title(ax, get(fig, 'name'), Interpreter='none');
+    xlabel(ax, 'Benefits');
+    ylabel(ax, 'Costs');
+    legend(ax, 'show', Location='NorthWest');
+    grid(ax, 'on');
     % reset limits with including (0,0) point in case it skews everything too much
-    axis(lim);
+    axis(ax, lim);
     % add standard plotting features
     figmenu;
     setup_plots(fig, opts, 'dist_no_y_scale');

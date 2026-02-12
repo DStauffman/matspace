@@ -66,35 +66,36 @@ function [fig] = plot_error_bars(description, time, data, mins, maxs, varargin)
 import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
+import matspace.plotting.private.fun_is_colormap
+import matspace.plotting.private.fun_is_2nd_units
+import matspace.plotting.private.fun_is_text
 import matspace.plotting.show_zero_ylim
+import matspace.utils.ifelse
 
 %% Hard-coded values
 leg_format  = '%1.3f';
 
 %% Parser
-% Validation functions
-fun_is_num_or_cell = @(x) isnumeric(x) || iscell(x);
-fun_is_cellstr     = @(x) isstring(x) || iscell(x);
-fun_is_bound       = @(x) (isnumeric(x) || isdatetime(x)) && isscalar(x);
 % Argument parser
 p = inputParser;
-addParameter(p, 'Elements', string(0), fun_is_cellstr);
-addParameter(p, 'Units', '', @ischar);
-addParameter(p, 'TimeUnits', 'sec', @ischar);
-addParameter(p, 'LegendScale', 'unity', @ischar);
-addParameter(p, 'StartDate', '', @ischar);
-addParameter(p, 'RmsXmin', -inf, fun_is_bound);
-addParameter(p, 'RmsXmax', inf, fun_is_bound);
-addParameter(p, 'DispXmin', -inf, fun_is_bound);
-addParameter(p, 'DispXmax', inf, fun_is_bound);
+addParameter(p, 'Elements', string(0), @isstring);
+addParameter(p, 'Units', '', @fun_is_text);
+addParameter(p, 'TimeUnits', 'sec', @fun_is_text);
+addParameter(p, 'LegendScale', 'unity', @fun_is_2nd_units);
+addParameter(p, 'StartDate', '', @fun_is_text);
+addParameter(p, 'RmsXmin', -inf, @fun_is_bound);
+addParameter(p, 'RmsXmax', inf, @fun_is_bound);
+addParameter(p, 'DispXmin', -inf, @fun_is_bound);
+addParameter(p, 'DispXmax', inf, @fun_is_bound);
 addParameter(p, 'FigVisible', true, @islogical);
+addParameter(p, 'FigTheme', 'light', @fun_is_text);
 addParameter(p, 'SingleLines', false, @islogical);
-addParameter(p, 'ColorOrder', '', @isnumeric);
+addParameter(p, 'ColorOrder', '', @fun_is_colormap);
 addParameter(p, 'UseMean', false, @islogical);
 addParameter(p, 'PlotZero', false, @islogical);
 addParameter(p, 'ShowRms', true, @islogical);
 addParameter(p, 'LegendLoc', 'Best', @ischar);
-addParameter(p, 'SecondYScale', nan, fun_is_num_or_cell);
+addParameter(p, 'SecondYScale', nan, @fun_is_2nd_units);
 parse(p, varargin{:});
 elements        = p.Results.Elements;
 units           = p.Results.Units;
@@ -112,11 +113,8 @@ plot_zero       = p.Results.PlotZero;
 show_rms        = p.Results.ShowRms;
 legend_loc      = p.Results.LegendLoc;
 second_y_scale  = p.Results.SecondYScale;
-if p.Results.FigVisible
-    fig_visible = 'on';
-else
-    fig_visible = 'off';
-end
+fig_visible     = ifelse(p.Results.FigVisible, 'on', 'off');
+fig_theme       = p.Results.FigTheme;
 % determine if using datetimes
 use_datetime = isdatetime(time);
 
@@ -143,7 +141,7 @@ err_pos = maxs - data;
 
 %% Plot
 % create figure
-fig = figure('name', description, 'Visible', fig_visible);
+fig = figure(Name=description, Visible=fig_visible, Theme=fig_theme);
 % create axes
 if single_lines
     ax = gobjects(1, num_channels);

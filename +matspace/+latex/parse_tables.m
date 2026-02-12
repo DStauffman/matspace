@@ -21,7 +21,7 @@ function [tables] = parse_tables(text)
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
 arguments
-    text {mustBeText}
+    text string {mustBeVector}
 end
 text = convertCharsToStrings(text);
 

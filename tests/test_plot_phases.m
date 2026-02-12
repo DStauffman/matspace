@@ -23,7 +23,7 @@ classdef test_plot_phases < matlab.unittest.TestCase
 
     methods (TestMethodSetup)
         function initialize(self)
-            self.fig = figure('name', 'Sine Wave');
+            self.fig = figure(Name='Sine Wave', Visible='off', Theme='light');
             self.ax = axes(self.fig);
             self.time = 0:100;
             self.dates = datetime(2025, 3, 31, 12, 0, 0) + seconds(self.time);

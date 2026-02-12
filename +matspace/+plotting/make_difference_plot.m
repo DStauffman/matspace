@@ -26,7 +26,7 @@ function [fig_hand, err] = make_difference_plot(description, time_one, data_one,
 %     disp_xmax        = inf;
 %     make_subplots    = true;
 %     single_lines     = false;
-%     color_map        = get_nondeg_colorlists(2);
+%     color_map        = matspace.plotting.colors.get_nondeg_colorlists(2);
 %     use_mean         = false;
 %     plot_zero        = false;
 %     show_rms         = true;
@@ -43,7 +43,7 @@ function [fig_hand, err] = make_difference_plot(description, time_one, data_one,
 %     use_datashader   = false;
 %     fig_ax           = [];
 %     diff_type        = 'comp';
-%     fig_hand = make_difference_plot(description, time_one, data_one, time_two, data_two, ...
+%     fig_hand = matspace.plotting.make_difference_plot(description, time_one, data_one, time_two, data_two, ...
 %         NameOne=name_one, NameTwo=name_two, Elements=elements, Units=units, ...
 %         StartDate=start_date, RmsXmin=rms_xmin, RmsXmax=rms_xmax, DispXmin=disp_xmin, ...
 %         TimeUnits=time_units, DispXmax=disp_xmax, MakeSubplots=make_subplots, ...
@@ -98,7 +98,7 @@ import matspace.stats.intersect2
 import matspace.utils.ifelse
 
 %% Hard-coded values
-LEG_FORMAT  = '%1.3f';
+leg_format  = '%1.3f';
 
 %% Parser
 % Argument parser
@@ -121,6 +121,7 @@ addParameter(p, 'DispXmax', inf, @fun_is_bound);
 addParameter(p, 'MakeSubplots', true, @fun_is_bool);
 addParameter(p, 'SingleLines', false, @(x) islogical(x) & isvector(x));  % Can be more than one boolean
 addParameter(p, 'FigVisible', true, @fun_is_bool);
+addParameter(p, 'FigTheme', 'light', @fun_is_text);
 addParameter(p, 'ColorMap', [], @fun_is_colormap);
 addParameter(p, 'UseMean', false, @fun_is_bool);
 addParameter(p, 'PlotZero', false, @fun_is_bool);
@@ -175,6 +176,7 @@ fig_ax           = p.Results.FigAx;
 diff_type        = p.Results.DiffType;
 log_level        = p.Results.LogLevel;
 fig_visible      = ifelse(p.Results.FigVisible, 'on', 'off');
+fig_theme        = p.Results.FigTheme;
 
 % check if doing quaternion diffs
 is_quat_diff = startsWith(diff_type, "quat");
@@ -328,10 +330,10 @@ if isempty(fig_ax)
         if make_subplots
             if single_lines1
                 if single_lines2
-                    fig_ax = create_figure(1, num_channels, 2, Description=description, Visible=fig_visible);
+                    fig_ax = create_figure(1, num_channels, 2, Description=description, Visible=fig_visible, Theme=fig_theme);
                 else
                     fig_ax = cell(1, 2 * num_channels);
-                    fig = figure(Visible=fig_visible);
+                    fig = figure(Visible=fig_visible, Theme=fig_theme);
                     ax = gobjects(1, 2 * num_channels);
                     for i = 1:num_channels
                         ax(i) = subplot(num_channels, 2, i);
@@ -347,7 +349,7 @@ if isempty(fig_ax)
                     % fig_ax = tuple((fig, this_ax) for this_ax in ax) + num_channels * ((fig, ax2),)
                 end
             elseif single_lines2
-                fig = figure(Visible=fig_visible);
+                fig = figure(Visible=fig_visible, Theme=fig_theme);
                 ax = gobjects(1, 2 * num_channels);
                 error('Not yet implemnted.');
                 % fig = plt.figure(constrained_layout=True)
@@ -356,7 +358,7 @@ if isempty(fig_ax)
                 % ax = [fig.add_subplot(gs[i, 1], sharex=ax1) for i in range(num_channels)]
                 % fig_ax = num_channels * ((fig, ax1),) + tuple((fig, this_ax) for this_ax in ax)
             else
-                temp_fig_ax = create_figure(1, 2, 1, Description=description, Visible=fig_visible);
+                temp_fig_ax = create_figure(1, 2, 1, Description=description, Visible=fig_visible, Theme=fig_theme);
                 fig_ax = cell(1, num_channels * length(temp_fig_ax));
                 for f = 1:length(temp_fig_ax)
                     n = num_channels * f;
@@ -427,7 +429,7 @@ for i = 1:num_channels
         this_time = times1{i};
         this_data = datum1{i};
         if show_rms
-            value = num2str(leg_conv * data_func{i}, LEG_FORMAT);
+            value = num2str(leg_conv * data_func{i}, leg_format);
             if ~isempty(leg_units)
                 this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];  %#ok<AGROW>
             else
@@ -446,7 +448,7 @@ for i = 1:num_channels
         this_time2 = times2{i};
         this_data2 = datum2{i};
         if show_rms
-            value = num2str(leg_conv * data2_func{i}, LEG_FORMAT);
+            value = num2str(leg_conv * data2_func{i}, leg_format);
             if ~isempty(leg_units)
                 this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];  %#ok<AGROW>
             else
@@ -501,7 +503,7 @@ if have_both
         this_axes = fig_ax{i + num_channels}{2};
         this_label = char(diff_elems{i});
         if show_rms
-            value = num2str(leg_conv * nondeg_func{i}, LEG_FORMAT);
+            value = num2str(leg_conv * nondeg_func{i}, leg_format);
             if leg_units
                 this_label = [this_label,' (',func_name,': ',value,' ',leg_units,')'];  %#ok<AGROW>
             else

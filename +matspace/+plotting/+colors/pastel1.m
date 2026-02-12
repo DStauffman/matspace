@@ -11,12 +11,15 @@ function [colors] = pastel1()
 % Prototype:
 %     colors = matspace.plotting.colors.pastel1();
 %     assert(all(size(colors) == [9 3]));
-%     assert(min(colors, 'all') >= 0);
-%     assert(max(colors, 'all') <= 1);
+%     assert(min(colors, [], 'all') >= 0);
+%     assert(max(colors, [], 'all') <= 1);
 %     % plotting example:
-%     surf(peaks);
+%     s = surf(peaks);
 %     colormap('matspace.plotting.colors.pastel1');
 %     colorbar;
+%
+%     % Close plot
+%     close(s.Parent.Parent);
 %
 % See Also:
 %     matspace.plotting.colors.get_python_colormap, colormap

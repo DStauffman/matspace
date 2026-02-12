@@ -37,7 +37,12 @@ function [fig] = plot_population_pyramid(age_bins, male_per, fmal_per, varargin)
 import matspace.latex.bins_to_str_ranges
 import matspace.plotting.figmenu
 import matspace.plotting.Opts
+import matspace.plotting.private.fun_is_bool
+import matspace.plotting.private.fun_is_colormap
+import matspace.plotting.private.fun_is_opts
+import matspace.plotting.private.fun_is_text
 import matspace.plotting.setup_plots
+import matspace.utils.ifelse
 
 %% hard-coded values
 scale = 100;
@@ -45,16 +50,15 @@ scale = 100;
 %% Parse Inputs
 % create parser
 p = inputParser;
-% create some validation functions
-fun_is_opts = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
-fun_is_color = @(x) ischar || (isvector(x) && length(x) == 3);
 % set options
-addOptional(p, 'Opts', Opts, fun_is_opts);
-addParameter(p, 'Title', 'Population Pyramid', @ischar);
-addParameter(p, 'Name1', 'Male', @ischar);
-addParameter(p, 'Name2', 'Female', @ischar);
-addParameter(p, 'Color1', 'b', fun_is_color);
-addParameter(p, 'Color2', 'r', fun_is_color);
+addParameter(p, 'Opts', Opts(), @fun_is_opts);
+addParameter(p, 'Title', 'Population Pyramid', @fun_is_text);
+addParameter(p, 'Name1', 'Male', @fun_is_text);
+addParameter(p, 'Name2', 'Female', @fun_is_text);
+addParameter(p, 'Color1', 'b', @fun_is_color);
+addParameter(p, 'Color2', 'r', @fun_is_color);
+addParameter(p, 'FigVisible', true, @fun_is_bool);
+addParameter(p, 'FigTheme', 'light', @fun_is_text);
 % do parse
 parse(p, varargin{:});
 % create some convenient aliases
@@ -63,12 +67,17 @@ name1  = p.Results.Name1;
 name2  = p.Results.Name2;
 color1 = p.Results.Color1;
 color2 = p.Results.Color2;
+fig_visible = ifelse(p.Results.FigVisible, 'on', 'off');
+fig_theme = p.Results.FigTheme;
 
 %% Process inputs
 if isempty(p.Results.Opts)
     opts = Opts();
 else
     opts = p.Results.Opts;
+end
+if ~opts.show_plot && ismember('FigVisible', p.UsingDefaults)
+    fig_visible = 'off';
 end
 
 %% Plot data
@@ -78,30 +87,30 @@ y_values  = 1:num_pts;
 y_labels  = bins_to_str_ranges(age_bins, 1, 200);
 
 % create the figure and axis and set the title
-fig = figure('name', title_);
-ax = axes;
+fig = figure(Name=title_, Visible=fig_visible, Theme=fig_theme);
+ax = axes(fig);
 
 % set hold on
-hold on;
+hold(ax, 'on');
 
 % plot bars
-barh(ax, y_values, -scale*male_per, 0.95, 'FaceColor', color1, 'DisplayName', name1);
-barh(ax, y_values,  scale*fmal_per, 0.95, 'FaceColor', color2, 'DisplayName', name2);
+barh(ax, y_values, -scale*male_per, 0.95, FaceColor=color1, DisplayName=name1);
+barh(ax, y_values,  scale*fmal_per, 0.95, FaceColor=color2, DisplayName=name2);
 
 % make sure plot is symmetric about zero
 max_xlim = max(abs(xlim));
-xlim([-max_xlim, max_xlim]);
+xlim(ax, [-max_xlim, max_xlim]);
 
 % add labels
-xlabel('Population [%]')
-ylabel('Age [years]')
-title(title_)
-yticks(y_values);
-yticklabels(y_labels);
-legend('show');
+xlabel(ax, 'Population [%]')
+ylabel(ax, 'Age [years]')
+title(ax, title_)
+yticks(ax, y_values);
+yticklabels(ax, y_labels);
+legend(ax, 'show');
 
 %% create figure controls
 figmenu;
 
 %% setup plots
-setup_plots(fig, opts, 'dist_no_y_scale')
+setup_plots(fig, opts, 'dist_no_y_scale');
