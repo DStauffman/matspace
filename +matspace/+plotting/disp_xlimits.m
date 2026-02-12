@@ -19,7 +19,7 @@ function [] = disp_xlimits(fig_or_axis, kwargs)
 %     title(ax, 'X vs Y');
 %     xmin = 2;
 %     xmax = 5;
-%     matspace.plotting.disp_xlimits(fig, xmin, xmax);
+%     matspace.plotting.disp_xlimits(fig, XMin=xmin, XMax=xmax);
 %
 %     % close plot
 %     close(fig);

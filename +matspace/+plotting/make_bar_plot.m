@@ -135,7 +135,7 @@ fig_visible      = ifelse(p.Results.FigVisible, 'on', 'off');
 % hard-coded values
 return_err   = nargout > 1;  % TODO: remove this restriction
 legend_scale = {'%', 1.0};
-LEG_FORMAT   = '%1.3f';
+leg_format   = '%1.3f';
 
 % check for valid data
 if ignore_plot_data(data, ignore_empties)
@@ -176,8 +176,10 @@ last = zeros(size(datum{1}));
 bottoms = cell(1, length(datum) + 1);
 bottoms{1} = last;
 for i = 1:length(datum)
-    this_data = datum{i};
-    bottoms{i + 1} = last(~isnan(this_data));
+    new = datum{i};
+    new(isnan(new)) = 0;
+    last = last + new;
+    bottoms{i + 1} = last;
 end
 
 % build labels
@@ -198,7 +200,7 @@ for i = num_channels:-1:1
         this_label = [char(name),' ',this_label];  %#ok<AGROW>
     end
     if show_rms
-        value = num2str(leg_conv * data_func{i}, LEG_FORMAT);
+        value = num2str(leg_conv * data_func{i}, leg_format);
         if ~isempty(leg_units)
             this_label = [this_label, ' (',func_name,': ',value,' ',leg_units,')'];  %#ok<AGROW>
         else
@@ -206,16 +208,21 @@ for i = num_channels:-1:1
         end
     end
     if ~ignore_plot_data(datum{i}, ignore_empties)
-        % Note: The performance of ax.bar is really slow with large numbers of bars (>20), so
-        % fill_between is a better alternative
-        ax.fill_between(...
-            times{i}, ...
-            bottoms{i}, ...
-            bottoms{i + 1}, ...
-            step='mid', ...
-            label=this_label, ...
-            color=cm.get_color(i), ...
-            edgecolor='none');
+        % plot fake data to force the plot to be a datetime
+        area(ax, times{i}, nan(size(times{i})), DisplayName=this_label);
+        xlim(ax, 'auto');
+        if time_is_date
+            this_time = datenum(times{i});  %#ok<DATNM>
+        else
+            this_time = times{i};
+        end
+        this_y = [bottoms{i}; bottoms{i} + datum{i}];
+        patch_group = hggroup();
+        set(get(get(hggroup,'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
+        for j = 1:length(this_time) - 1
+            verts = [this_time(j) this_y(1, j); this_time(j+1) this_y(1, j); this_time(j+1) this_y(2, j); this_time(j) this_y(2, j)];
+            patch(ax, Faces=1:4, Vertices=verts, FaceColor=cm.get_color(i), EdgeColor='none', Parent=patch_group);
+        end
     end
     if i == 1
         label_x(ax, disp_xmin, disp_xmax, time_is_date, time_units, start_date);

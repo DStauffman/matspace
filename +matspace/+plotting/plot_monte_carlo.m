@@ -32,7 +32,7 @@ function [fig_hand] = plot_monte_carlo(time_one, data_one, varargin)
 % Prototype:
 %     time     = 1:10;
 %     data     = rand(5,length(time));
-%     fig_hand = matspace.plotting.plot_monte_carlo(time, data, [], 'Description', 'Random Data');
+%     fig_hand = matspace.plotting.plot_monte_carlo(time, data, Description='Random Data');
 %
 %     % clean up
 %     close(fig_hand);
@@ -56,7 +56,13 @@ import matspace.plotting.get_start_date
 import matspace.plotting.Opts
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
+import matspace.plotting.private.fun_is_bool
+import matspace.plotting.private.fun_is_data
+import matspace.plotting.private.fun_is_opts
+import matspace.plotting.private.fun_is_text
+import matspace.plotting.private.fun_is_time
 import matspace.plotting.setup_plots
+import matspace.utils.ifelse
 
 %% hard-coded values
 std_flag      = 1;
@@ -73,23 +79,23 @@ leg_rms_lines = false;
 % create parser
 p = inputParser;
 % create some validation functions
-fun_is_opts = @(x) isa(x, 'matspace.plotting.Opts') || isempty(x);
-fun_is_time = @(x) (isnumeric(x) || isdatetime(x)) && (isempty(x) || isvector(x));
 fun_is_bool_num = @(x) (islogical(x) || isnumeric(x));
 % set options
-addRequired(p, 'Time1', fun_is_time);
-addRequired(p, 'Data1', @isnumeric);
-addOptional(p, 'Opts', Opts, fun_is_opts);
-addParameter(p, 'TimeTwo', [], fun_is_time);
-addParameter(p, 'DataTwo', [], @isnumeric);
-addParameter(p, 'Description', '', @ischar);
-addParameter(p, 'Type', 'unity', @ischar);
-addParameter(p, 'TruthTime', [], fun_is_time);
-addParameter(p, 'TruthData', [], @isnumeric);
+addRequired(p, 'Time1', @fun_is_time);
+addRequired(p, 'Data1', @fun_is_data);
+addParameter(p, 'Opts', Opts, @fun_is_opts);
+addParameter(p, 'TimeTwo', [], @fun_is_time);
+addParameter(p, 'DataTwo', [], @fun_is_data);
+addParameter(p, 'Description', '', @fun_is_text);
+addParameter(p, 'Type', 'unity', @fun_is_text);
+addParameter(p, 'TruthTime', [], @fun_is_time);
+addParameter(p, 'TruthData', [], @fun_is_data);
 addParameter(p, 'TruthName', "Truth", @isstring);
-addParameter(p, 'SecondYScale', nan, @isnumeric);  % TODO: put into opts?
+addParameter(p, 'SecondYScale', nan, @fun_is_2nd_units);  % TODO: put into opts?
 addParameter(p, 'PlotSigmas', true, fun_is_bool_num);  % TODO: must be scalar?
 addParameter(p, 'PlotPercents', false, fun_is_bool_num);
+addParameter(p, 'FigVisible', true, @fun_is_bool);
+addParameter(p, 'FigTheme', 'light', @fun_is_text);
 % do parse
 parse(p, time_one, data_one, varargin{:});
 % create some convenient aliases
@@ -120,12 +126,17 @@ time_two    = p.Results.TimeTwo;
 data_two    = p.Results.DataTwo;
 truth_time  = p.Results.TruthTime;
 truth_data  = p.Results.TruthData;
+fig_visible = ifelse(p.Results.FigVisible, 'on', 'off');
+fig_theme   = p.Results.FigTheme;
 
 %% Process Opts
 if isempty(p.Results.Opts)
     opts = Opts();
 else
     opts = p.Results.Opts;
+end
+if ~opts.show_plot && ismember('FigVisible', p.UsingDefaults)
+    fig_visible = 'off';
 end
 
 %% determine units based on type of data
@@ -203,7 +214,7 @@ end
 % determine if using datetimes
 use_datetime = isdatetime(time_one) || isdatetime(time_two) || isdatetime(truth_time);
 % create figure
-fig_hand(1) = figure('name', [description,' vs. Time']);
+fig_hand(1) = figure(Name=[description,' vs. Time'], Visible=fig_visible, Theme=fig_theme);
 
 % set colororder
 set(fig_hand(1), 'DefaultAxesColorOrder', colors);
@@ -393,15 +404,15 @@ if comp_mode == modes.nondeg
         hold on;
         title(title_name, 'interpreter', 'none');
     else
-        fig_hand(2) = figure('name', title_name);
+        fig_hand(2) = figure(Name=title_name, Visible=fig_visible, Theme=fig_theme);
         ax2 = axes;
         hold on;
-        title(title_name, 'interpreter', 'none');
+        title(title_name, Interpreter='none');
     end
     p5 = plot(ax2, nondeg_time, scale*nondeg_data, 'r.-');
 
     % label plot
-    title(get(fig_hand(1), 'name'), 'interpreter', 'none');
+    title(get(fig_hand(1), 'name'), Interpreter='none');
     if use_datetime
         xlabel('Time');
     else

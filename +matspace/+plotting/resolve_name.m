@@ -29,14 +29,16 @@ function [new_name] = resolve_name(old_name, kwargs)
 %% Arguments
 arguments
     old_name {mustBeText}
-    kwargs.strip_classification (1,1) logical = true
-    kwargs.rep_token {mustBeTextScalar} = '_';
-    kwargs.force_win (1,1) logical
+    kwargs.StripClassification (1,1) logical = true
+    kwargs.RepToken {mustBeTextScalar} = '_';
+    kwargs.ForceWin (1,1) logical
 end
-if isfield(kwargs, 'force_win')
-    USE_WINDOWS = kwargs.force_win;
+strip_classification = kwargs.StripClassification;
+rep_token = kwargs.RepToken;
+if isfield(kwargs, 'ForceWin')
+    use_windows = kwargs.ForceWin;
 else
-    USE_WINDOWS = ispc;
+    use_windows = ispc;
 end
 
 % Initialize new name to the original and determine if processing a single string,
@@ -48,7 +50,7 @@ else
 end
 
 % strip any leading classification text
-if kwargs.strip_classification
+if strip_classification
     ix = regexp(cellstr(new_name(:)), '^\(\S*\)\s', 'end', 'once');
     strip = cellfun(@(x) ~isempty(x), ix);
     for i = 1:length(new_name)
@@ -59,7 +61,7 @@ if kwargs.strip_classification
 end
 
 % check for illegal characters and replace with underscores
-if USE_WINDOWS
+if use_windows
     bad_chars = {'<','>',':','"','/','\','|','?','*',newline};
 else
     bad_chars = {'/',newline};
@@ -68,7 +70,7 @@ bad_names = false(size(new_name));
 for i = 1:length(bad_chars)
     ix = contains(new_name, bad_chars{i});
     if any(ix)
-        new_name  = strrep(new_name, bad_chars{i}, kwargs.rep_token);
+        new_name  = strrep(new_name, bad_chars{i}, rep_token);
         bad_names = bad_names | ix;
     end
 end

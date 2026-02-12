@@ -12,7 +12,7 @@ function [new_text] = replace_tables(old_text, tables)
 % Prototype:
 %     style_guide = fullfile(matspace.paths.get_root_dir(), 'docs', 'Style_Guide', 'Style_Guide.tex');
 %     old_text = matspace.utils.read_text_file(style_guide);
-%     tables = matspace.latex.parse_tables(text);
+%     tables = matspace.latex.parse_tables(old_text);
 %     new_text = matspace.latex.replace_tables(old_text, tables);
 %
 % See Also:
@@ -23,8 +23,8 @@ function [new_text] = replace_tables(old_text, tables)
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
 
 arguments
-    old_text (1, :) {mustBeTextScalar}
-    tables {mustBeText}
+    old_text string {mustBeVector}
+    tables struct
 end
 
 % Imports

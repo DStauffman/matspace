@@ -70,7 +70,7 @@ function [fig] = makeplot(distribution, values, use_toolbox)
         this_title = [distribution,' (No toolbox)'];
         this_color = c4;
     end
-    fig = figure('Name', this_title);
+    fig = figure(Name=this_title, Visible='on', Theme='light');
     ax = axes(fig);
     histogram(ax, values, edges, 'EdgeColor', 'none', 'FaceColor', this_color);
     title(ax, this_title);

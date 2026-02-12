@@ -88,7 +88,7 @@ import matspace.plotting.zoom_ylim
 import matspace.utils.ifelse
 
 %% Hard-coded values
-LEG_FORMAT  = '%1.3f';
+leg_format  = '%1.3f';
 datashader_pts = 2000;  % Plot this many points on top of datashader plots, or skip if fewer exist
 
 %% Parser
@@ -286,7 +286,7 @@ for i = 1:min([length(times), length(datum)])
         sub_axes = fig_ax{(i - 1) * num_cats + j}{2};
         this_cat_name = char(cat_names(cat));
         if show_rms
-            value = num2str(leg_conv * data_func{cat}{i}, LEG_FORMAT);
+            value = num2str(leg_conv * data_func{cat}{i}, leg_format);
             if ~isempty(leg_units)
                 cat_label = [this_label,' ',this_cat_name,' (',func_name,': ',num2str(value),' ',leg_units,')'];
             else

@@ -62,8 +62,8 @@ function [] = plot_classification(fig_hand, classification, kwargs)
 arguments
     fig_hand (1, :) matlab.ui.Figure
     classification {mustBeMember(classification, ["", "U", "CUI" "C", "S", "T", "TS"])}
-    kwargs.caveat  = ''
-    kwargs.test (1,1) logical = false
+    kwargs.caveat = ''
+    kwargs.test (1, 1) logical = false
     kwargs.location {mustBeMember(kwargs.location, ["figure", "axes", "axis", "left", "top", "top&bottom", "outside"])} = 'figure'
     kwargs.color {mustBeColor} = ''
     kwargs.text_color {mustBeColor} = ''
@@ -95,11 +95,11 @@ for i = 1:length(fig_hand)
     % a classified figure
     if kwargs.test
         height = 0.1; % Height matters, width does not because it's determined automatically by the textbox
-        annotation(this_fig, 'textbox', 'Position', [pos(1)+pos(3)/2, pos(2)+pos(4)-height, 0, height], ...
-            'String', 'This plot classification is labeled for test purposes only', ...
-            'HorizontalAlignment', 'Center', 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
-            'FontSize', 8, 'FontWeight', 'Bold', 'Color', 'r', 'EdgeColor', 'r', 'LineWidth', 2, ...
-            'Tag', 'ClassificationTest');
+        annotation(this_fig, 'textbox', Position=[pos(1)+pos(3)/2, pos(2)+pos(4)-height, 0, height], ...
+            String='This plot classification is labeled for test purposes only', ...
+            HorizontalAlignment='Center', VerticalAlignment='Middle', FitBoxToText='on', ...
+            FontSize=8, FontWeight='Bold', Color='r', EdgeColor='r', LineWidth=2, ...
+            Tag='ClassificationTest');
     end
     % get classification default colors and strings
     switch classification
@@ -162,18 +162,18 @@ for i = 1:length(fig_hand)
         otherwise
             error('matspace:BadClassLocation', 'Bad location given: "%s"', location);
     end
-    annotation(this_fig, 'textbox', 'Position', text_pos, 'String', text_str, ...
-        'HorizontalAlignment', horz_align, 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
-        'FontSize', 8, 'FontWeight', 'Bold', 'Color', text_color, 'EdgeColor', color, ...
-        'LineWidth', 2, 'Tag', 'ClassificationText');
+    annotation(this_fig, 'textbox', Position=text_pos, String=text_str, ...
+        HorizontalAlignment=horz_align, VerticalAlignment='Middle', FitBoxToText='on', ...
+        FontSize=8, FontWeight='Bold', Color=text_color, EdgeColor=color, ...
+        LineWidth=2, Tag='ClassificationText');
     if strcmp(kwargs.location, 'top&bottom')
         % draw a second label at the second location
         text_pos2   = [0, 1-height, 0, height];
         horz_align2 = 'Left';
-        annotation(this_fig, 'textbox', 'Position', text_pos2, 'String', text_str, ...
-            'HorizontalAlignment', horz_align2, 'VerticalAlignment', 'Middle', 'FitBoxToText', 'on', ...
-            'FontSize', 8, 'FontWeight', 'Bold', 'Color', text_color, 'EdgeColor', color, ...
-            'LineWidth', 2, 'Tag', 'ClassificationText');
+        annotation(this_fig, 'textbox', Position=text_pos2, String=text_str, ...
+            HorizontalAlignment=horz_align2, VerticalAlignment='Middle', FitBoxToText='on', ...
+            FontSize=8, FontWeight='Bold', Color=text_color, EdgeColor=color, ...
+            LineWidth=2, Tag='ClassificationText');
     end
 
     if add_border
@@ -181,10 +181,10 @@ for i = 1:length(fig_hand)
         % and consequently you cannot grab and reposition things like legends after the fact.
         %annotation(this_fig, 'rectangle', 'Position', [0,0,1,1], 'Color', 'none', 'EdgeColor', color, ...
         %    'LineWidth', 2, 'Tag', 'ClassificationBorder');
-        annotation(this_fig, 'line', [0 0], [0 1], 'Color', color, 'LineWidth', 2, 'Tag', 'ClassificationBorder');
-        annotation(this_fig, 'line', [0 1], [1 1], 'Color', color, 'LineWidth', 2, 'Tag', 'ClassificationBorder');
-        annotation(this_fig, 'line', [1 1], [1 0], 'Color', color, 'LineWidth', 2, 'Tag', 'ClassificationBorder');
-        annotation(this_fig, 'line', [1 0], [0 0], 'Color', color, 'LineWidth', 2, 'Tag', 'ClassificationBorder');
+        annotation(this_fig, 'line', [0 0], [0 1], Color=color, LineWidth=2, Tag='ClassificationBorder');
+        annotation(this_fig, 'line', [0 1], [1 1], Color=color, LineWidth=2, Tag='ClassificationBorder');
+        annotation(this_fig, 'line', [1 1], [1 0], Color=color, LineWidth=2, Tag='ClassificationBorder');
+        annotation(this_fig, 'line', [1 0], [0 0], Color=color, LineWidth=2, Tag='ClassificationBorder');
     end
 end
 
@@ -195,7 +195,7 @@ function [] = remove_old_classifications(this_fig)
 %                             replaced with new ones without clashing
 
 % Find the axes that potentially contain the annotations
-ax = findall(this_fig, 'Tag', 'scribeOverlay');
+ax = findall(this_fig, Tag='scribeOverlay');
 % then find their children (which might be the actual annotations)
 anons = get(ax, 'Children');
 if iscell(anons)
@@ -203,7 +203,7 @@ if iscell(anons)
     anons = vertcat(anons{:});
 end
 % check the tags for any labeled with Classification and delete them
-ix = startsWith(arrayfun(@(x) x.Tag, anons, 'UniformOutput', false), 'Classification');
+ix = startsWith(arrayfun(@(x) x.Tag, anons, UniformOutput=false), 'Classification');
 if any(ix)
     delete(anons(ix));
 end
@@ -222,7 +222,7 @@ if isstring(x)
     msgType = 'Output must be single string colorname.';
     throwAsCaller(MException(eidType, msgType));
 end
-if ~isnumeric(x)
+if ~isnumeric(x) || size(x, 2) ~= 3
     eidType = 'ssc:plot_classification:badColor';
     msgType = 'Output must be a valid color, either a char, string or numeric value.';
     throwAsCaller(MException(eidType, msgType));

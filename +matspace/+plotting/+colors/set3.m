@@ -11,12 +11,15 @@ function [colors] = set3()
 % Prototype:
 %     colors = matspace.plotting.colors.set3();
 %     assert(all(size(colors) == [12 3]));
-%     assert(min(colors, 'all') >= 0);
-%     assert(max(colors, 'all') <= 1);
+%     assert(min(colors, [], 'all') >= 0);
+%     assert(max(colors, [], 'all') <= 1);
 %     % plotting example:
-%     surf(peaks);
+%     s = surf(peaks);
 %     colormap('matspace.plotting.colors.set3');
-%     colorbar;
+%     colorbar
+%
+%     % Close plot
+%     close(s.Parent.Parent);
 %
 % See Also:
 %     matspace.plotting.colors.get_python_colormap, colormap

@@ -77,6 +77,8 @@ import matspace.plotting.private.get_units
 import matspace.plotting.private.get_ylabels
 import matspace.plotting.private.label_x
 import matspace.plotting.private.make_time_and_data_lists
+import matspace.plotting.private.plot_linear
+import matspace.plotting.private.plot_zoh
 import matspace.plotting.plot_vert_lines
 import matspace.plotting.show_zero_ylim
 import matspace.utils.ifelse
@@ -98,6 +100,7 @@ addParameter(p, 'RmsXmin', -inf, @fun_is_bound);
 addParameter(p, 'RmsXmax', inf, @fun_is_bound);
 addParameter(p, 'DispXmin', -inf, @fun_is_bound);
 addParameter(p, 'DispXmax', inf, @fun_is_bound);
+addParameter(p, 'SingleLines', false, @fun_is_bool)
 addParameter(p, 'FigVisible', true, @fun_is_bool);
 addParameter(p, 'ColorMap', [], @fun_is_colormap);
 addParameter(p, 'UseMean', false, @fun_is_bool);
@@ -111,6 +114,7 @@ addParameter(p, 'YLabel', '', @fun_is_text);
 addParameter(p, 'YLims', [], @fun_is_lim);
 addParameter(p, 'DataAsRows', true, @fun_is_bool);
 addParameter(p, 'ExtraPlotter', [], @fun_is_extra_plotter);
+addParameter(p, 'UseZoh', false, @fun_is_bool);
 addParameter(p, 'LabelVertLines', false, @fun_is_bool);
 addParameter(p, 'FigAx', [], @fun_is_fig_ax);
 % do parse
@@ -144,6 +148,7 @@ fig_visible      = ifelse(p.Results.FigVisible, 'on', 'off');
 
 % hard-coded values
 return_err = nargout > 1;  % TODO: remove this restriction
+leg_format = '%1.3f';
 
 % build lists of time and data
 [times, datum] = make_time_and_data_lists(time, data, DataAsRows=data_as_rows);
@@ -164,7 +169,7 @@ if show_rms || return_err
 end
 
 % create a colormap
-cm = ColorMap(colormap=color_map);
+cm = ColorMap(color_map);
 
 % calculate the rms (or mean) values
 if show_rms || return_err
@@ -188,11 +193,11 @@ if isvector(mins)
     err_neg(:) = cellfun(@(x) x - mins, datum, UniformOutput=false);
 elseif data_as_rows
     for i = 1:numel(datum)
-        err_neg(i) = datum{i} - mins(i, :);
+        err_neg{i} = datum{i} - mins(i, :);
     end
 else
     for i = 1:numel(datum)
-        err_neg(i) = datum{i} - mins(:, i);
+        err_neg{i} = datum{i} - mins(:, i);
     end
 end
 err_pos = cell(size(datum));
@@ -200,11 +205,11 @@ if isvector(maxs)
     err_pos(:) = cellfun(@(x) maxs - x, datum, UniformOutput=false);
 elseif data_as_rows
     for i = 1:numel(datum)
-        err_pos(i) = maxs(i, :) - datum{i};
+        err_pos{i} = maxs(i, :) - datum{i};
     end
 else
     for i = 1:numel(datum)
-        err_pos(i) = maxs(:, i) - datum{i};
+        err_pos{i} = maxs(:, i) - datum{i};
     end
 end
 
@@ -242,7 +247,7 @@ for i = 1:num_channels
         this_label = elements{i};
     end
     if show_rms
-        value = num2str(leg_conv * data_func{i}, LEG_FORMAT);
+        value = num2str(leg_conv * data_func{i}, leg_format);
         if ~isempty(leg_units)
             this_label = [this_label, ' (',func_name,': ',value,' ',leg_units,')'];  %#ok<AGROW>
         else
@@ -255,19 +260,19 @@ for i = 1:num_channels
         this_time, ...
         this_data, ...
         symbol, ...
-        markersize=4, ...
-        markerfacecolor='none', ...
-        label=this_label, ...
-        color=this_color);  % zorder=3
+        MarkerSize=4, ...
+        MarkerFacecolor='none', ...
+        DisplayName=this_label, ...
+        Color=this_color);  % zorder=3
     % plot error bars
     this_yerr = [this_err_neg; this_err_pos];
-    this_axes.errorbar(...
+    errorbar(this_axes, ...
         this_time, ...
         this_data, ...
         yerr=this_yerr, ...
-        color="None", ...
-        ecolor=cm.get_color(i), ...
-        capsize=2);  % zorder=5
+        Color="None", ...
+        Ecolor=cm.get_color(i), ...
+        CapSize=2);  % zorder=5
     x_lim = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
     zoom_ylim(this_axes, t_start=x_lim(1), t_final=x_lim(2));
     if plot_zero

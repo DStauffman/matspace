@@ -48,7 +48,9 @@ function [fig] = make_connected_sets(description, points, innovs, varargin)
 import matspace.plotting.get_factors
 import matspace.plotting.get_unit_conversion
 import matspace.plotting.colors.get_xkcd_colors
+import matspace.plotting.private.create_figure
 import matspace.plotting.private.fun_is_colormap
+import matspace.utils.ifelse
 
 %% Hard-coded values
 colors = get_xkcd_colors();
@@ -86,11 +88,7 @@ color_map       = p.Results.ColorMap;
 add_quiver      = p.Results.AddQuiver;
 quiver_scale    = p.Results.QuiverScale;
 use_datashader  = p.Results.UseDatashader; %#ok<NASGU>  % TODO: implement?
-if p.Results.FigVisible
-    fig_visible = 'on';
-else
-    fig_visible = 'off';
-end
+fig_visible     = ifelse(p.Results.FigVisible, 'on', 'off');
 
 % calculations
 if isempty(innovs)
@@ -151,8 +149,9 @@ else
 end
 
 % create figure and axes (needs to be done before building datashader information)
-fig = figure('name', [description, extra_text], 'Visible', fig_visible);
-ax = axes(fig);
+temp = create_figure(1, 1, 1, Description=[description,extra_text], Visible=fig_visible);
+fig = temp{1}{1};
+ax = temp{1}{2};
 hold(ax, 'on');
 
 % populate the normal plot, potentially with a subset of points

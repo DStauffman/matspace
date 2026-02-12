@@ -72,12 +72,14 @@ function [fig] = plot_histogram(description, data, bins, varargin)
 %     2.  Translated into Matlab by David C. Stauffer in 2026.
 
 %% Imports
+import matspace.plotting.colors.ColorMap
 import matspace.plotting.colors.get_xkcd_colors
 import matspace.plotting.figmenu
 import matspace.plotting.get_factors
 import matspace.plotting.Opts
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
+import matspace.plotting.private.create_figure
 import matspace.plotting.private.fun_is_colormap
 import matspace.plotting.private.fun_is_fig_ax
 import matspace.plotting.private.fun_is_opts
@@ -112,6 +114,7 @@ addParameter(p, 'CdfRoundToBin', false, @islogical);
 addParameter(p, 'FigAx', [], @fun_is_fig_ax);
 addParameter(p, 'SkipSetupPlots', false, @islogical);
 addParameter(p, 'LegendLoc', '', @ischar);
+addParameter(p, 'FigVisible', true, @islogical);
 
 parse(p, varargin{:});
 counts            = p.Results.Counts;
@@ -134,11 +137,15 @@ cdf_round_to_bin  = p.Results.CdfRoundToBin;
 fig_ax            = p.Results.FigAx;
 skip_setup_plots  = p.Results.SkipSetupPlots;
 legend_loc        = p.Results.LegendLoc;
+fig_visible       = ifelse(p.Results.FigVisible, 'on', 'off');
+if ~opts.show_plot && ismember('FigVisible', p.UsingDefaults)
+    fig_visible = 'off';
+end
 
 % data checks (do before any figures are generated)
 using_cdf = show_cdf || ~isempty(cdf_x) || ~isempty(cdf_y);
-if using_cdf && ~cdf_round_to_bin && ~isempty(data)
-    raise ValueError("CDF bins must be rounded to the bin edges if you specified counts instead of data.")
+if using_cdf && ~cdf_round_to_bin && isempty(data)
+    error('CDF bins must be rounded to the bin edges if you specified counts instead of data.');
 end
 % convert inputs
 num_cdf_x = length(cdf_x);
@@ -204,26 +211,26 @@ else
 end
 % create plot
 if isempty(fig_ax)
-    fig = figure();
-    ax = axes(fig);
-else
-    fig = fig_ax{1}{1};
-    ax = fig_ax{1}{2};
+    fig_ax = create_figure(1, 1, 1, Description=description, Visible=fig_visible);
 end
+fig = fig_ax{1}{1};
+ax = fig_ax{1}{2};
 sgt_hand = findall(fig, 'Type', 'subplottext');
 if isempty(sgt_hand)
     fig.Name = description;
 else
     fig.Name = sgt_hand.String;
 end
+hold(ax, 'on');
 title(ax, description);
+patch_group = hggroup();
 for i = 1:num - 1
     verts = [plotting_bins(i) 0; plotting_bins(i+1) 0; plotting_bins(i+1) counts(i); plotting_bins(i) counts(i)];
-    patch(ax, Faces=[1 2 3 4], Vertices=verts, FaceColor=color, EdgeColor='k');
+    patch(ax, Faces=[1 2 3 4], Vertices=verts, FaceColor=color, EdgeColor='k', Parent=patch_group);
 end
 if missing > 0
     verts = [plotting_bins(end-1) 0; plotting_bins(end) 0; plotting_bins(end) counts(i); plotting_bins(end-1) counts(i)];
-    patch(ax, Faces=[1 2 3 4], Vertices=verts, FaceColor=color, EdgeColor='k');
+    patch(ax, Faces=[1 2 3 4], Vertices=verts, FaceColor=color, EdgeColor='k', Parent=patch_group);
 end
 grid(ax, 'on');
 xlabel(ax, ifelse(~isempty(units), x_label + " [" + units + "]", x_label));
@@ -264,7 +271,7 @@ if using_cdf
     end
     cm = ColorMap(cdf_colormap);
     % create fake items to add to legend
-    patch(ax, [0 0 0 0], [0 0 0 0], facecolor=color, linewidth=0, edgecolor='none', DisplayName='PDF');
+    area(ax, [0 0], [nan nan], FaceColor=color, EdgeColor='none', DisplayName='PDF');
     % create the CDF
     if cdf_round_to_bin
         cdf = [0, cumsum(counts)] ./ data_size;
@@ -277,12 +284,18 @@ end
 if show_cdf
     % plot the CDF
     if ~cdf_same_axis
-        %yyaxis(ax, 'right');  % TODO: make third axes farther right!
-        %ylim(ax, [0 100]);
-        %ax3.spines.right.set_position("axes", 1.06);
-        %ax3.yaxis.label.set_color(cm.get_color(color_ix));
-        %ylabel(ax, 'CDF Distribution [%]');
-        %ax3.tick_params(axis="y", colors=cm.get_color(color_ix));
+        ax3 = axes(fig);
+        hold(ax3, 'on');
+        linkaxes([ax ax3], 'x');
+        ax3.XTick = [];
+        ax3.YAxisLocation = 'right';
+        ax3.Position = ax.Position .* [1 1 1.06 1];
+        ylim(ax3, [0 100]);
+        ax3.Color = 'none';
+        ax3.YColor = cm.get_color(color_ix);
+        ylabel(ax3, 'CDF Distribution [%]');
+    else
+        ax3 = ax;
     end
     % Note: plot on transformed axes instead of ax3 to maintain constant pan/zoom
     if normalize_spacing
@@ -290,50 +303,46 @@ if show_cdf
         bins_temp = arrayfun(@(x) bins(x), temp, UniformOutput=false);
         bins_plus = arrayfun(@(x) bins(x + 1), temp, UniformOutput=false);  % np.array([bins[t + 1] for t in temp])
         cdf_scaled = temp + (cdf_bin - bins_temp) / (bins_plus - bins_temp);
-        step(ax, cdf_scaled, cdf, color=cm.get_color(color_ix), DisplayName='CDF');  % ZOrder=8, Transform=trans
+        stairs(ax3, cdf_scaled, 100*cdf, color=cm.get_color(color_ix), DisplayName='CDF');  % ZOrder=8, Transform=trans
     else
-        step(ax, cdf_bin, cdf, color=cm.get_color(color_ix), DisplayName='CDF');  % ZOrder=8, Transform=trans
+        stairs(ax3, cdf_bin, 100*cdf, Color=cm.get_color(color_ix), DisplayName='CDF');  % ZOrder=8, Transform=trans
     end
     color_ix = color_ix + 1;
 end
 if ~isempty(cdf_x)
     for i = 1:length(cdf_x)
         this_x = cdf_x(i);
-        this_ix = np.argmax(cdf_bin >= this_x);
+        this_ix = find(cdf_bin >= this_x, 1, 'first');
         if normalize_spacing
             this_bin = cdf_scaled(this_ix);
         else
             this_bin = cdf_bin(this_ix);
         end
-        this_cdf = cdf(this_ix);
-        this_label = format(this_x, formatter) + unit_pad + units + "=" + format(100 * this_cdf, formatter) + "%";
-        plot(ax, ...
-            [0, 1], ...
-            [this_cdf, this_cdf], ...
-            color=cm.get_color(color_ix), ...
-            label=this_label);
-            % zorder=9, ...
-            % transform=ax.transAxes, ...
-        plot(ax, ...
+        this_cdf = 100*cdf(this_ix);
+        this_label = [num2str(this_x, formatter),unit_pad,char(units),'=',num2str(this_cdf, formatter),'%'];
+        yline(ax3, this_cdf, Color=cm.get_color(color_ix), DisplayName=this_label); % zorder=9
+        plot(ax3, ...
             this_bin, ...
             this_cdf, ...
-            marker='o', ...
-            markeredgecolor=cm.get_color(color_ix), ...
-            markerfacecolor='none', ...
-            label='');
-            % zorder=10, ...
-            % transform=trans, ...
+            Marker='o', ...
+            MarkerEdgeColor=cm.get_color(color_ix), ...
+            MarkerFaceColor='none', ...
+            DisplayName=''); % zorder=10
         color_ix = color_ix + 1;
     end
 end
 if ~isempty(cdf_y)
     for i = 1:length(cdf_y)
         this_cdf = cdf_y(i);
-        this_ix = np.argmax(cdf >= this_cdf);
-        this_label = format(100 * this_cdf, formatter) + "%=" + format(cdf_bin(this_ix), formatter) + unit_pad + units;
-        this_bin = ifelse(normalize_spacing, cdf_scaled(this_ix), cdf_bin(this_ix));
-        yline(ax, this_bin, DisplayName=this_label, Color=cm.get_color(color_ix));  % zorder=9
-        plot(ax, this_bin, cdf(this_ix), Marker='x', Color=cm.get_color(color_ix), DisplayName='');  % zorder=10, transform=trans
+        this_ix = find(cdf >= this_cdf, 1, 'first');
+        this_label = [num2str(100 * this_cdf, formatter),'%=',num2str(cdf_bin(this_ix), formatter),unit_pad,char(units)];
+        if normalize_spacing
+            this_bin = cdf_scaled(this_ix);
+        else
+            this_bin = cdf_bin(this_ix);
+        end
+        xline(ax3, this_bin, DisplayName=this_label, Color=cm.get_color(color_ix));  % zorder=9
+        plot(ax3, this_bin, 100*cdf(this_ix), Marker='x', Color=cm.get_color(color_ix), DisplayName='');  % zorder=10, transform=trans
         color_ix = color_ix + 1;
     end
 end

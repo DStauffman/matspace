@@ -16,12 +16,15 @@ function map = viridis(m)
 % Prototype:
 %     map = matspace.plotting.colors.viridis(64);
 %     assert(all(size(map) == [64 3]));
-%     assert(min(min(map)) >= 0);
-%     assert(max(max(map)) <= 1);
+%     assert(min(map, [], 'all') >= 0);
+%     assert(max(map, [], 'all') <= 1);
 %     % plotting example:
-%     surf(peaks);
+%     s = surf(peaks);
 %     colormap('matspace.plotting.colors.viridis');
 %     colorbar;
+%
+%     % Close plot
+%     close(s.Parent.Parent);
 %
 % See Also:
 %     colormap, parula

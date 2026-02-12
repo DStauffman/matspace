@@ -14,7 +14,7 @@ function [] = plot_phases(ax, times, colors, labels)
 %
 % Prototype:
 %     % method 1
-%     fig = figure('name', 'Sine Wave');
+%     fig = figure(Name='Sine Wave');
 %     ax = axes(fig);
 %     time = 0:100;
 %     data = cos(time/10);

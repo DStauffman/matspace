@@ -71,7 +71,8 @@ classdef test_plot_correlation_matrix < matlab.unittest.TestCase
         end
 
         function test_type(self)
-            self.fig_hand = matspace.plotting.plot_correlation_matrix(self.data, strings(1, 0), self.units);
+            self.fig_hand = matspace.plotting.plot_correlation_matrix(self.data, strings(1, 0), self.units, ...
+                FigVisible=self.fig_visible);
         end
 
         function test_all_args(self)

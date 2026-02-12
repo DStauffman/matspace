@@ -12,14 +12,17 @@ function map = cividis(m)
 %     map : (mx3) color triple
 %
 % Prototype:
-%     map = matspace.plotting.colors.cividis();
+%     map = matspace.plotting.colors.cividis(64);
 %     assert(all(size(map) == [64 3]));
-%     assert(min(min(map)) >= 0);
-%     assert(max(max(map)) <= 1);
+%     assert(min(map, [], 'all') >= 0);
+%     assert(max(map, [], 'all') <= 1);
 %     % plotting example:
-%     surf(peaks);
+%     s = surf(peaks);
 %     colormap('matspace.plotting.colors.cividis');
-%     colorbar;
+%     colorbar
+%
+%     % Close plot
+%     close(s.Parent.Parent);
 %
 % See Also:
 %     colormap, parula, matspace.plotting.colors.get_python_colormap

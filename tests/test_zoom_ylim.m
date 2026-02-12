@@ -14,7 +14,7 @@ classdef test_zoom_ylim < matlab.unittest.TestCase
 
     methods (TestMethodSetup)
         function initialize(self)
-            self.fig = figure(Name='Figure Title');
+            self.fig = figure(Name='Figure Title', Visible='off', Theme='light');
             self.ax = axes(self.fig);
             self.time = 1:0.1:10;
             self.data = self.time.^2;
