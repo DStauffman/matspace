@@ -11,7 +11,7 @@ function [binstr] = hex2bin(hexstr, leading_zeros, kwargs)
 % Output:
 %     binstr : char of zeros and ones or spaces
 %
-% Examples:
+% Prototype:
 %     bin = matspace.utils.hex2bin('A');
 %     assert(strcmp(bin, '1010'));
 %     bin = matspace.utils.hex2bin('012', 'drop');
@@ -41,7 +41,7 @@ function [binstr] = hex2bin(hexstr, leading_zeros, kwargs)
 arguments
     hexstr {mustBeText, mustBeHexStr}
     leading_zeros {mustBeMember(leading_zeros, ["drop", "keep"])} = 'keep'
-    kwargs.group {mustBeInteger, mustBeTwoMult(kwargs.group)} = 0
+    kwargs.Group {mustBeInteger, mustBeTwoMult(kwargs.Group)} = 0
 end
 
 % check for empty case
@@ -95,8 +95,8 @@ switch lower(leading_zeros)
         error('matspace:hex2bin:BadOption', 'Unexpected option string of "%s"', leading_zeros);
 end
 
-if kwargs.group ~= 0
-    binstr = add_pad(binstr, kwargs.group);
+if kwargs.Group ~= 0
+    binstr = add_pad(binstr, kwargs.Group);
 end
 
 %% Subfunctions - get_hex

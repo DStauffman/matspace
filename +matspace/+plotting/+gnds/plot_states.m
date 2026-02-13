@@ -43,13 +43,16 @@ function [fig_hand, err] = plot_states(kf1, kf2, varargin)
 %     kf2.active = kf1.active;
 %
 %     opts = matspace.plotting.Opts();
-%     opts.case_name = 'test_plot'
+%     opts.case_name = 'test_plot';
 %     opts.sub_plots = true;
 %
 %     fig_hand = matspace.plotting.gnds.plot_states(kf1, kf2, opts=opts);
 %
 %     % Close plots
 %     close(fig_hand);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2026.
 
 %% Imports
 import matspace.plotting.Opts

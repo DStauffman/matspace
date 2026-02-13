@@ -2,31 +2,21 @@ function [] = zoom_ylim(ax, time, data, kwargs)
 
 % Zooms the Y-axis to the data for the given time bounds, with an optional pad.
 %
-% Parameters
-% ----------
-% ax : class matplotlib.axes.Axes
-%     Figure axes
-% time : (N, ) ndarray
-%     Time history
-% data : (N, ) or (N, M) ndarray
-%     Data history
-% t_start : float
-%     Starting time to zoom data to
-% t_final : float
-%     Final time to zoom data to
-% channel : int, optional
-%     Column within 2D data to look at
-% pad : float
-%     Amount of pad, as a percentage of delta range, to show around the plot bounds
-% zoom : str, from {"in", "out", "both"}
-%     Whether to zoom in only, or out only, or both.
+% Input:
+%     ax      : Figure axes
+%     time    : (N, ) Time history
+%     data    : (N, ) or (N, M) Data history
+%     kwargs  :
+%         TStart  : (scalar) Starting time to zoom data to
+%         TFinal  : (scalar) Final time to zoom data to
+%         channel : (scalar) |opt| Column within 2D data to look at
+%         pad     : (scalar) Amount of pad, as a percentage of delta range, to show around the plot bounds
+%         zoom    : str, Whether to zoom in only, or out only, or both, from {"in", "out", "both"}
 %
-% Notes
-% -----
-% #.  Written by David C. Stauffer in August 2019.
+% Output:
+%     (None)
 %
-% Examples
-% --------
+% Prototype:
 %     fig = figure(Name='Figure Title');
 %     ax = axes(fig);
 %     time = 1:0.1:10;
@@ -34,33 +24,36 @@ function [] = zoom_ylim(ax, time, data, kwargs)
 %     plot(ax, time, data);
 %     title(ax, "X vs Y");
 %
-% Zoom X-axis and show how Y doesn't rescale
+%     % Zoom X-axis and show how Y doesn't rescale
 %     t_start = 3;
 %     t_final = 5.0001;
 %     matspace.plotting.disp_xlimits(fig, t_start, t_final);
 %
-% Force Y-axis to rescale to data
-%     matspace.plotting.zoom_ylim(ax, time, data, t_start=t_start, t_final=t_final, pad=0);
+%     % Force Y-axis to rescale to data
+%     matspace.plotting.zoom_ylim(ax, time, data, TStart=t_start, TFinal=t_final, pad=0);
 %
-% Close plot
+%     % Close plot
 %     close(fig);
+%
+% Notes:
+%     1.  Written by David C. Stauffer in August 2019.
 
 arguments
     ax (1, 1) matlab.graphics.axis.Axes
     time
     data
-    kwargs.t_start (1, 1) {mustBeDoubleOrDatetime} = -inf
-    kwargs.t_final (1, 1) {mustBeDoubleOrDatetime} = inf
-    kwargs.channel (1, 1) double = 0
-    kwargs.pad (1, 1) double = 0.1
-    kwargs.zoom {mustBeTextScalar} = "both"
+    kwargs.TStart (1, 1) {mustBeDoubleOrDatetime} = -inf
+    kwargs.TFinal (1, 1) {mustBeDoubleOrDatetime} = inf
+    kwargs.Channel (1, 1) double = 0
+    kwargs.Pad (1, 1) double = 0.1
+    kwargs.Zoom {mustBeTextScalar} = "both"
 end
 
-t_start = kwargs.t_start;
-t_final = kwargs.t_final;
-channel = kwargs.channel;
-pad = kwargs.pad;
-zoom = kwargs.zoom;
+t_start = kwargs.TStart;
+t_final = kwargs.TFinal;
+channel = kwargs.Channel;
+pad     = kwargs.Pad;
+zoom    = kwargs.Zoom;
 
 if isempty(time) && isempty(data) && isempty(findobj(ax, Type='line'))
     warning("No data found on plot, so nothing was zoomed.")

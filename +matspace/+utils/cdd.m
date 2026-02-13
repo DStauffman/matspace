@@ -8,7 +8,7 @@ function [folder] = cdd(name)
 % Output:
 %     folder : (str) Location where the file was found, empty if not found.
 %
-% Examples:
+% Prototype:
 %     % switches to location of currently active file
 %     matspace.utils.cdd
 %

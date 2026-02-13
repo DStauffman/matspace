@@ -12,7 +12,7 @@ function [sent_vars] = send2base(varargin)
 % Notes:
 %     1.  Allows the use of '*' for wildcards, but otherwise does an exact (case-sensitive) match.
 %
-% Examples:
+% Prototype:
 %     % variables in current workspace (nominally do this in a function, so they aren't already in
 %     % the base workspace
 %     test     = 123;

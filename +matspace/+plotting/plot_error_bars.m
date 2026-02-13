@@ -2,7 +2,6 @@ function [fig] = plot_error_bars(description, time, data, mins, maxs, varargin)
 
 % PLOT_ERROR_BARS  is a general plotting routine to make error bars.
 %
-%
 % Input:
 %     description : (row) name of the data being plotted [char]
 %     time        : (1xN) time history [sec]
@@ -37,11 +36,11 @@ function [fig] = plot_error_bars(description, time, data, mins, maxs, varargin)
 %     data           = [3; -2; 5] + rand(3, length(time));
 %     mins           = data - 0.5 * rand(size(data));
 %     maxs           = data + 1.5 * rand(size(data));
-%     elements       = {'x', 'y', 'z'};
+%     elements       = ["x", "y", "z"];
 %     units          = 'deg';
 %     time_units     = 'datetime';
 %     legend_scale   = 'milli';
-%     start_date     = ['  t(0) = ', datestr(now)];
+%     start_date     = ['  t(0) = ',char(datetime('now'))];
 %     rms_xmin       = time(2);
 %     rms_xmax       = time(end-1);
 %     disp_xmin      = time(1) - days(2);
@@ -49,7 +48,7 @@ function [fig] = plot_error_bars(description, time, data, mins, maxs, varargin)
 %     fig_visible    = true;
 %     single_lines   = false;
 %     color_lists    = matspace.plotting.colors.get_color_lists();
-%     colororder     = cell2mat(color_lists.default(1:3));
+%     colororder     = color_lists.default(1:3, :);
 %     use_mean       = false;
 %     plot_zero      = false;
 %     show_rms       = true;
@@ -61,11 +60,17 @@ function [fig] = plot_error_bars(description, time, data, mins, maxs, varargin)
 %         'DispXmin', disp_xmin, 'DispXmax', disp_xmax, 'FigVisible', fig_visible, ...
 %         'SingleLines', single_lines, 'ColorOrder', colororder, 'UseMean', use_mean, 'PlotZero', plot_zero, ...
 %         'ShowRms', show_rms, 'LegendLoc', legend_loc, 'SecondYScale', second_y_scale);
+%
+% Change Log:
+%     1.  Updated by David C. Stauffer in February 2026.
+
+%% TODO: remove in favor of newer make_error_bar_plot??
 
 %% Imports
 import matspace.plotting.get_factors
 import matspace.plotting.plot_rms_lines
 import matspace.plotting.plot_second_yunits
+import matspace.plotting.private.fun_is_bound
 import matspace.plotting.private.fun_is_colormap
 import matspace.plotting.private.fun_is_2nd_units
 import matspace.plotting.private.fun_is_text

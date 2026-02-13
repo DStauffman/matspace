@@ -459,7 +459,7 @@ for i = 1:num_channels
             Color=cm.get_color(i + color_offset), Label=this_label, ZOrder=this_zorder + 1, UseDatashader=use_datashader);
     end
     xlims = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
-    zoom_ylim(this_axes, [], [], t_start=xlims(1), t_final=xlims(2));
+    zoom_ylim(this_axes, [], [], TStart=xlims(1), TFinal=xlims(2));
     if plot_zero
         show_zero_ylim(this_axes)
     end
@@ -539,7 +539,7 @@ if have_both
         end
         xlims = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
         if ~ignore_plot_data(diffs{i}, true)
-            zoom_ylim(this_axes, [], [], t_start=xlims(1), t_final=xlims(2));
+            zoom_ylim(this_axes, [], [], TStart=xlims(1), TFinal=xlims(2));
         end
         if plot_zero
             show_zero_ylim(this_axes)

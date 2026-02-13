@@ -54,7 +54,7 @@ classdef test_plot_classification < matlab.unittest.TestCase
         end
 
         function test_custom_colors(self)
-            matspace.plotting.plot_classification(self.fig, 'U', color=[1 0 1], text_color=[1 0 0]);
+            matspace.plotting.plot_classification(self.fig, 'U', Color=[1 0 1], TextColor=[1 0 0]);
         end
 
         function test_options(self)

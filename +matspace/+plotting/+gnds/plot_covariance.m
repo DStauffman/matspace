@@ -51,6 +51,9 @@ function [fig_hand, err] = plot_covariance(kf1, kf2, varargin)
 % 
 %     % Close plots
 %     close(fig_hand);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2026.
 
 %% Imports
 import matspace.plotting.colors.get_nondeg_colorlists
