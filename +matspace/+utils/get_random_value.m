@@ -8,9 +8,9 @@ function [value] = get_random_value(distribution, num, coeffs, minmax, kwargs)
 % Output:
 %     value : (num) a random value sampled from the given distribution
 %
-% Examples:
+% Prototype:
 %     num = [10000, 1];
-%     edges = [0:10];
+%     edges = 0:10;
 %     values = matspace.utils.get_random_value('None', num, 5);
 %     histogram(values, edges);
 %

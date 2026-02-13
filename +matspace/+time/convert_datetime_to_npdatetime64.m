@@ -1,11 +1,22 @@
 function [out] = convert_datetime_to_npdatetime64(date_time, kwargs)
 
-% CONVERT_NPDATETIME64_TO_DATETIME  converts a given numpy datetime64 to a Matlab datetime
+% CONVERT_NPDATETIME64_TO_DATETIME  converts a given numpy datetime64 to a Matlab datetime.
+%
+% Input:
+%     date_time : datetime to convert
+%     kwargs    :
+%         Units : numpy datetime64 units, default is 'ns'
+%
+% Output:
+%     out : date as np.datetime64
 %
 % Prototype:
 %     date_time = datetime(2026, 2, 4, 19, 43, 29, TimeZone='UTC');
 %     out = matspace.time.convert_datetime_to_npdatetime64(date_time);
 %     assert(out == int64(1770234209000000000));
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2026.
 
 arguments (Input)
     date_time {mustBeVector}  % double or int64

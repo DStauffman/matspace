@@ -2,6 +2,9 @@ function [fig] = make_time_plot(description, time, data, varargin)
 
 % MAKE_TIME_PLOT  plots data versus time.
 %
+% Input:
+%     (TBD)
+%
 % Output:
 %     fig_hand .. : (scalar) figure handles [num]
 %
@@ -43,6 +46,9 @@ function [fig] = make_time_plot(description, time, data, varargin)
 %
 %     % Close plots
 %     close(fig_hand);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2026.
 
 %% Imports
 import matspace.plotting.colors.ColorMap
@@ -230,7 +236,7 @@ for i = 1:min([length(times), length(datum)])
     draw_lines(datashaders, this_time, this_data, plot_func, this_axes, Symbol=symbol, MarkerSize=4, ...
         Color=cm.get_color(i), Label=this_label, ZOrder=9, UseDatashader=use_datashader);
     xlims = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
-    zoom_ylim(this_axes, [], [], t_start=xlims(1), t_final=xlims(2));
+    zoom_ylim(this_axes, [], [], TStart=xlims(1), TFinal=xlims(2));
     if plot_zero
         show_zero_ylim(this_axes)
     end

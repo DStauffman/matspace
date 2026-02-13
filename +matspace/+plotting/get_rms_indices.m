@@ -2,35 +2,19 @@ function [ix] = get_rms_indices(time_one, time_two, time_overlap, kwargs)
 
 % Gets the indices and time points for doing RMS calculations and plotting RMS lines.
 %
-% Parameters
-% ----------
-% time_one : array_like
-%     Time vector one
-% time_two : array_like
-%     Time vector two
-% time_overlap : array_like
-%     Time vector of points in both arrays
-% xmin : float
-%     Minimum time to include in calculation
-% xmax : float
-%     Maximum time to include in calculation
+% Input:
+%     time_one : Time vector one
+%     time_two : Time vector two
+%     time_overlap : Time vector of points in both arrays
+%     xmin : (scalar) Minimum time to include in calculation
+%     xmax : (scalar) Maximum time to include in calculation
 %
-% Returns
-% -------
-% ix : struct
-%     Structure of indices, with fields:
-%     pts : [2, ] float
-%         Time to start and end the RMS calculations from
-%     one : (A, ) ndarray of bool
-%         Array of indices into time_one between the rms bounds
-%     two : (B, ) ndarray of bool
-%         Array of indices into time_two between the rms bounds
-%     overlap : (C, ) ndarray of bool
-%         Array of indices into time_overlap between the rms bounds
-%
-% Changl Log:
-%     1.  Written by David C. Stauffer in May 2020 when it needed to handle datetime64 objects.
-%     2.  Translated into Matlab by David C. Stauffer in January 2026.
+% Output:
+%     ix : Structure of indices, with fields:
+%         pts : (2, ) Time to start and end the RMS calculations from
+%     one : (A, ) Array of indices into time_one between the rms bounds
+%     two : (B, ) Array of indices into time_two between the rms bounds
+%     overlap : (C, ) Array of indices into time_overlap between the rms bounds
 %
 % Prototype:
 %     time_one     = 0:10;
@@ -40,18 +24,22 @@ function [ix] = get_rms_indices(time_one, time_two, time_overlap, kwargs)
 %     xmax         = 8;
 %     ix = matspace.plotting.get_rms_indices(time_one, time_two, time_overlap, xmin=xmin, xmax=xmax);
 %     assert(all(ix.pts == [1 8]));
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in May 2020 when it needed to handle datetime64 objects.
+%     2.  Translated into Matlab by David C. Stauffer in January 2026.
 
 arguments
     time_one (1, :) {mustBeDoubleOrDatetime} = zeros(1, 0)
     time_two (1, :) {mustBeDoubleOrDatetime} = zeros(1, 0)
     time_overlap (1, :) {mustBeDoubleOrDatetime} = zeros(1, 0)
-    kwargs.xmin (1, 1) {mustBeDoubleOrDatetime} = -inf
-    kwargs.xmax (1, 1) {mustBeDoubleOrDatetime} = inf
+    kwargs.XMin (1, 1) {mustBeDoubleOrDatetime} = -inf
+    kwargs.XMax (1, 1) {mustBeDoubleOrDatetime} = inf
 end
 
 % process inputs
-xmin = kwargs.xmin;
-xmax = kwargs.xmax;
+xmin = kwargs.XMin;
+xmax = kwargs.XMax;
 
 % check consistency of inputs (if any are datetimes, then any non-empty must be datetime)
 valid_nums = true(1, 5);

@@ -13,7 +13,7 @@ function [hexstr] = bin2hex(binstr, capitalization, kwargs)
 % Output:
 %     hexstr : char of hexadecimal equivalent
 %
-% Examples:
+% Prototype:
 %     hex = matspace.utils.bin2hex('1010');
 %     assert(strcmp(hex, 'A'));
 %     hex = matspace.utils.bin2hex('0000 0001 0010 0011 0100 0101 0110 0111', 'group', 4);
@@ -43,7 +43,7 @@ function [hexstr] = bin2hex(binstr, capitalization, kwargs)
 arguments
     binstr {mustBeText, mustBeBinaryStr}
     capitalization {mustBeMember(capitalization, ["lower", "upper"])} = 'upper'
-    kwargs.group {mustBeInteger, mustBeTwoMult(kwargs.group)} = 0
+    kwargs.Group {mustBeInteger, mustBeTwoMult(kwargs.Group)} = 0
 end
 
 % check for empty case
@@ -101,8 +101,8 @@ switch lower(capitalization)
         error('matspace:bin2hex:BadOption', 'Unexpected option string of "%s"', capitalization);
 end
 
-if kwargs.group ~= 0
-    hexstr = add_pad(hexstr, kwargs.group);
+if kwargs.Group ~= 0
+    hexstr = add_pad(hexstr, kwargs.Group);
 end
 
 %% Subfunctions - get_hex

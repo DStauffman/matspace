@@ -37,14 +37,14 @@ function [fig_hand, err] = plot_attitude(kf1, kf2, varargin)
 %     kf1.att  = repmat(q1, [1 length(kf1.time)]);
 %
 %     kf2      = [];  % Kf();
-%     kf2.name = 'KF2'
+%     kf2.name = 'KF2';
 %     kf2.time = 2:12;
 %     kf2.att  = repmat(q2, [1 length(kf2.time)]);
 %     kf2.att(4, 5) = kf2.att(4, 5) + 50e-6;
 %     kf2.att = matspace.quaternions.quat_norm(kf2.att);
 %
 %     opts = matspace.plotting.Opts();
-%     opts.case_name = 'test_plot'
+%     opts.case_name = 'test_plot';
 %     opts.quat_comp = true;
 %     opts.sub_plots = true;
 %
@@ -52,6 +52,9 @@ function [fig_hand, err] = plot_attitude(kf1, kf2, varargin)
 %
 %     % Close plots
 %     close(fig_hand);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2026.
 
 %% Imports
 import matspace.plotting.figmenu

@@ -43,6 +43,9 @@ function [fig] = make_connected_sets(description, points, innovs, varargin)
 %     close(fig);
 %     close(fig2);
 %     close(fig3);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2026.
 
 %% Imports
 import matspace.plotting.get_factors

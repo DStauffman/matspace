@@ -7,20 +7,20 @@ function [] = plot_classification(fig_hand, classification, kwargs)
 %     another box for testing purposes.
 %
 % Input:
-%     fig_hand        : (1xN) vector of figure handles [num]
-%     classification  : (row) string specifying classification to use, from {'', 'U','CUI', 'C','S','TS'} [char]
-%     kwargs          :
-%         .caveat     : (row) keywstring specifying the extra caveats beyond the main classification [char]
-%         .test       : (true/false) flag to specify if this is a test or a real application [bool]
-%         .location   : (row) string specifying where to put the label, from:
-%                           'axis' or 'axes' - places it at the lower right corner of the axes
-%                           'figure' - places it at  the lower right corner of the figure
-%                           'left' - places it at  the lower left corner of the figure
-%                           'top' - places it at  the upper left corner of the figure
-%                           'top&bottom' - places it at the upper left and lower right corners of the figure
-%                           'outside' - places it at  the lower left corner, outside of the figure boundary
-%         .color      : keyword string or numeric RBG value (see plot) specifying the color to use for the border
-%         .text_color : keyword string or numeric RBG value specifying the color to use for the text
+%     fig_hand       : (1xN) vector of figure handles [num]
+%     classification : (row) string specifying classification to use, from {'', 'U','CUI', 'C','S','TS'} [char]
+%     kwargs         :
+%         .Caveat    : (row) keywstring specifying the extra caveats beyond the main classification [char]
+%         .Test      : (true/false) flag to specify if this is a test or a real application [bool]
+%         .Location  : (row) string specifying where to put the label, from:
+%                          'axis' or 'axes' - places it at the lower right corner of the axes
+%                          'figure' - places it at  the lower right corner of the figure
+%                          'left' - places it at  the lower left corner of the figure
+%                          'top' - places it at  the upper left corner of the figure
+%                          'top&bottom' - places it at the upper left and lower right corners of the figure
+%                          'outside' - places it at  the lower left corner, outside of the figure boundary
+%         .Color     : keyword string or numeric RBG value (see plot) specifying the color to use for the border
+%         .TextColor : keyword string or numeric RBG value specifying the color to use for the text
 %
 % Output:
 %     (NONE)
@@ -31,10 +31,10 @@ function [] = plot_classification(fig_hand, classification, kwargs)
 %     matspace.plotting.plot_classification(f1, 'U');
 %     f2 = figure;
 %     plot(0, 0);
-%     matspace.plotting.plot_classification(f2, "S", caveat="//MADE UP CAVEAT", test=true, location="axis");
+%     matspace.plotting.plot_classification(f2, "S", Caveat="//MADE UP CAVEAT", Test=true, Location="axis");
 %     f3 = figure;
 %     plot(0, 0);
-%     matspace.plotting.plot_classification(f3, 'C', 'test', true, 'location', 'figure', 'color', 'm');
+%     matspace.plotting.plot_classification(f3, 'C', 'Test', true, 'Location', 'figure', 'Color', 'm');
 %
 %     % clean up
 %     close([f1 f2 f3]);
@@ -46,7 +46,7 @@ function [] = plot_classification(fig_hand, classification, kwargs)
 %     1.  This function is intended to be fairly low level, and is best called via a wrapper
 %         function that would define the common defaults for your use case.
 %     2.  'TS' is the normal portion marking for Top Secret, but 'T' will also be recognized.
-%     3.  Repeated calls on the same figure will wipe out any previously added labels before applying the new ones
+%     3.  Repeated calls on the same figure will wipe out any previously added labels before applying the new ones.
 %     4.  Using an empty string for classification will remove any previously added labels.
 %
 % Change Log:
@@ -62,12 +62,16 @@ function [] = plot_classification(fig_hand, classification, kwargs)
 arguments
     fig_hand (1, :) matlab.ui.Figure
     classification {mustBeMember(classification, ["", "U", "CUI" "C", "S", "T", "TS"])}
-    kwargs.caveat = ''
-    kwargs.test (1, 1) logical = false
-    kwargs.location {mustBeMember(kwargs.location, ["figure", "axes", "axis", "left", "top", "top&bottom", "outside"])} = 'figure'
-    kwargs.color {mustBeColor} = ''
-    kwargs.text_color {mustBeColor} = ''
+    kwargs.Caveat = ''
+    kwargs.Test (1, 1) logical = false
+    kwargs.Location {mustBeMember(kwargs.Location, ["figure", "axes", "axis", "left", "top", "top&bottom", "outside"])} = 'figure'
+    kwargs.Color {mustBeColor} = ''
+    kwargs.TextColor {mustBeColor} = ''
 end
+caveat     = kwargs.Caveat;
+test       = kwargs.Test;
+location   = kwargs.Location;
+% Note: color and text_color get set and overriden further below
 
 % force conversion to newer figure objects
 if isnumeric(fig_hand)
@@ -93,7 +97,7 @@ for i = 1:length(fig_hand)
     pos = get(ax, 'Position');
     % plot warning before trying to draw the other box, so it's clear that this is not actually
     % a classified figure
-    if kwargs.test
+    if test
         height = 0.1; % Height matters, width does not because it's determined automatically by the textbox
         annotation(this_fig, 'textbox', Position=[pos(1)+pos(3)/2, pos(2)+pos(4)-height, 0, height], ...
             String='This plot classification is labeled for test purposes only', ...
@@ -126,26 +130,26 @@ for i = 1:length(fig_hand)
     end
     text_color = color;
     % allow other color options for certain caveats
-    if contains(kwargs.caveat, '//FAKE COLOR')
+    if contains(caveat, '//FAKE COLOR')
         color      = [0.0 0.8 0.0];
         text_color = [0.2 0.2 0.2];
     end
     % allow user to override via arguments
-    if ~isempty(kwargs.color)
-        color = kwargs.color;
+    if ~isempty(kwargs.Color)
+        color = kwargs.Color;
     end
-    if ~isempty(kwargs.text_color)
-        text_color = kwargs.text_color;
+    if ~isempty(kwargs.TextColor)
+        text_color = kwargs.TextColor;
     end
     % determine size of box and append any optional caveat(s)
     height = 0.05;
-    if ~isempty(kwargs.caveat)
-        text_str = strcat(text_str, kwargs.caveat); % strcat handles both char arrays and string objects
+    if ~isempty(caveat)
+        text_str = strcat(text_str, caveat); % strcat handles both char arrays and string objects
     end
     % add classification box
     add_border = true;
     horz_align = 'Right';
-    switch kwargs.location
+    switch location
         case {'axes', 'axis'}
             text_pos   = [pos(1)+pos(3), pos(2), 0, height];
             add_border = false;
@@ -166,7 +170,7 @@ for i = 1:length(fig_hand)
         HorizontalAlignment=horz_align, VerticalAlignment='Middle', FitBoxToText='on', ...
         FontSize=8, FontWeight='Bold', Color=text_color, EdgeColor=color, ...
         LineWidth=2, Tag='ClassificationText');
-    if strcmp(kwargs.location, 'top&bottom')
+    if strcmp(location, 'top&bottom')
         % draw a second label at the second location
         text_pos2   = [0, 1-height, 0, height];
         horz_align2 = 'Left';

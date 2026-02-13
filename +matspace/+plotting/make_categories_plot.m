@@ -311,7 +311,7 @@ for i = 1:min([length(times), length(datum)])
         end
     end
     xlims = label_x(this_axes, disp_xmin, disp_xmax, time_is_date, time_units, start_date);
-    zoom_ylim(this_axes, [], [], t_start=xlims(1), t_final=xlims(2));
+    zoom_ylim(this_axes, [], [], TStart=xlims(1), TFinal=xlims(2));
     if plot_zero
         show_zero_ylim(this_axes)
     end

@@ -18,6 +18,9 @@ function [] = save_zoomed_version(fig, ax, ylims, kwargs)
 % opts : class Opts, optional
 %     Additional plotting options, for this giving whether to save, where and what form
 %
+% Output:
+%     (None)
+%
 % Prototype:
 %     time = 0:29;
 %     data = rand(1, 30);
@@ -25,11 +28,14 @@ function [] = save_zoomed_version(fig, ax, ylims, kwargs)
 %     opts = matspace.plotting.Opts();
 %     fig_hand = matspace.plotting.plot_time_history('Data vs Time', time, data, Opts=opts, SecondUnits={'milli', 1e-3});
 %     ax = gca(fig_hand);
-%     ylims = [-2.0, 2.0]
+%     ylims = [-2.0, 2.0];
 %     matspace.plotting.save_zoomed_version(fig_hand, ax, ylims, opts=opts);
 %
 %     % Close plots
 %     close(fig_hand);
+%
+% Change Log:
+%     1.  Written by David C. Stauffer in February 2026.
 
 arguments
     fig

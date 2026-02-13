@@ -31,11 +31,11 @@ function [] = disp_xlimits(fig_or_axis, kwargs)
 
 arguments
     fig_or_axis
-    kwargs.xmin (1, 1) {mustBeDoubleOrDatetime} = -inf;
-    kwargs.xmax (1, 1) {mustBeDoubleOrDatetime} = inf;
+    kwargs.XMin (1, 1) {mustBeDoubleOrDatetime} = -inf;
+    kwargs.XMax (1, 1) {mustBeDoubleOrDatetime} = inf;
 end
-xmin = kwargs.xmin;
-xmax = kwargs.xmax;
+xmin = kwargs.XMin;
+xmax = kwargs.XMax;
 
 % loop through items and collect axes
 ax = gobjects(1, 0);

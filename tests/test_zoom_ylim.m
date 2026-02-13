@@ -33,9 +33,9 @@ classdef test_zoom_ylim < matlab.unittest.TestCase
 
     methods (Test)
         function test_nominal(self)
-            matspace.plotting.disp_xlimits(self.fig, xmin=self.t_start, xmax=self.t_final);
+            matspace.plotting.disp_xlimits(self.fig, XMin=self.t_start, XMax=self.t_final);
             old_ylims = ylim(self.ax);
-            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, t_start=self.t_start, t_final=self.t_final);
+            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, TStart=self.t_start, TFinal=self.t_final);
             new_ylims = ylim(self.ax);
             self.verifyGreaterThan(old_ylims(2), new_ylims(2));
             self.verifyLessThan(old_ylims(1), new_ylims(1));
@@ -43,40 +43,40 @@ classdef test_zoom_ylim < matlab.unittest.TestCase
 
         function test_no_zoom_out(self)
             old_ylims = ylim(self.ax);
-            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, pad=2.0, zoom="in")
+            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, Pad=2.0, Zoom="in");
             new_ylims = ylim(self.ax);
-            self.verifyEqual(old_ylims(2), new_ylims(2))
-            self.verifyEqual(old_ylims(1), new_ylims(1))
-            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, pad=2.0)
+            self.verifyEqual(old_ylims(2), new_ylims(2));
+            self.verifyEqual(old_ylims(1), new_ylims(1));
+            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, Pad=2.0);
             new_ylims = ylim(self.ax);
-            self.verifyLessThan(old_ylims(2), new_ylims(2))
-            self.verifyGreaterThan(old_ylims(1), new_ylims(1))
+            self.verifyLessThan(old_ylims(2), new_ylims(2));
+            self.verifyGreaterThan(old_ylims(1), new_ylims(1));
         end
 
         function test_no_zoom_in(self)
             old_ylims = ylim(self.ax);
-            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, t_start=self.t_start, t_final=self.t_final, zoom="out")
+            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, TStart=self.t_start, TFinal=self.t_final, Zoom="out");
             new_ylims = ylim(self.ax);
-            self.verifyEqual(old_ylims(2), new_ylims(2))
-            self.verifyEqual(old_ylims(1), new_ylims(1))
-            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, t_start=self.t_start, t_final=self.t_final, zoom="in")
+            self.verifyEqual(old_ylims(2), new_ylims(2));
+            self.verifyEqual(old_ylims(1), new_ylims(1));
+            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, TStart=self.t_start, TFinal=self.t_final, Zoom="in");
             new_ylims = ylim(self.ax);
-            self.verifyGreaterThan(old_ylims(2), new_ylims(2))
-            self.verifyLessThan(old_ylims(1), new_ylims(1))
+            self.verifyGreaterThan(old_ylims(2), new_ylims(2));
+            self.verifyLessThan(old_ylims(1), new_ylims(1));
         end
 
         function test_bad_pad(self)
-            self.verifyError(@() matspace.plotting.zoom_ylim(self.ax, self.time, self.data, pad=-10), '');
+            self.verifyError(@() matspace.plotting.zoom_ylim(self.ax, self.time, self.data, Pad=-10), '');
         end
 
         function test_no_pad(self)
-            matspace.plotting.disp_xlimits(self.fig, xmin=self.t_start, xmax=self.t_final)
+            matspace.plotting.disp_xlimits(self.fig, XMin=self.t_start, XMax=self.t_final);
             old_ylims = ylim(self.ax);
-            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, t_start=self.t_start, t_final=self.t_final, pad=0)
+            matspace.plotting.zoom_ylim(self.ax, self.time, self.data, TStart=self.t_start, TFinal=self.t_final, Pad=0);
             new_ylims = ylim(self.ax);
-            self.verifyGreaterThan(old_ylims(2), new_ylims(2))
-            self.verifyLessThan(old_ylims(1), new_ylims(1))
-            self.verifyEqual(new_ylims(1), self.t_start^2)
+            self.verifyGreaterThan(old_ylims(2), new_ylims(2));
+            self.verifyLessThan(old_ylims(1), new_ylims(1));
+            self.verifyEqual(new_ylims(1), self.t_start^2);
             self.verifyEqual(new_ylims(2), self.t_final^2, RelTol=0.5e-4);
         end
     end
