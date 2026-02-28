@@ -19,7 +19,7 @@ function [fig] = make_connected_sets(description, points, innovs, varargin)
 %         'Units'        : Units to label on the plot
 %         'MagRatio'     : Percentage highest innovation magnitude to use, typically 0.95-1.0, but lets
 %                          you exclude outliers that otherwise make the colorbar less useful
-%         'LegScale'     : Amount to scale the colorbar legend, default is 'micro'
+%         'LegendScale'  : Amount to scale the colorbar legend, default is 'micro'
 %         'Colormap'     : Name to use instead of the default colormaps, which depend on the mode
 %         'AddQuiver'    : Whether to add matplotlib quiver lines to the plot, default is false [bool]
 %         'QuiverScale'  : quiver line scale factor
@@ -38,7 +38,7 @@ function [fig] = make_connected_sets(description, points, innovs, varargin)
 %     fig2 = matspace.plotting.make_connected_sets(description, points2, innovs2, 'ColorBy', 'direction');
 %
 %     fig3 = make_connected_sets(description, points2, innovs2, 'ColorBy', 'magnitude', ...
-%             'LegScale', 'milli', 'Units', 'm');
+%             'LegendScale', 'milli', 'Units', 'm');
 %
 %     close(fig);
 %     close(fig2);
@@ -53,6 +53,7 @@ import matspace.plotting.get_unit_conversion
 import matspace.plotting.colors.get_xkcd_colors
 import matspace.plotting.private.create_figure
 import matspace.plotting.private.fun_is_colormap
+import matspace.plotting.private.fun_is_fig_ax
 import matspace.utils.ifelse
 
 %% Hard-coded values
@@ -74,11 +75,12 @@ addParameter(p, 'LegendLoc', 'best', @ischar);
 addParameter(p, 'FigVisible', true, @islogical);
 addParameter(p, 'Units', '', @ischar);
 addParameter(p, 'MagRatio', [], @isnumeric);
-addParameter(p, 'LegScale', 'unity', @ischar);
+addParameter(p, 'LegendScale', 'unity', @ischar);
 addParameter(p, 'ColorMap', [], @fun_is_colormap);
 addParameter(p, 'AddQuiver', false, @islogical);
 addParameter(p, 'QuiverScale', [], @isnumeric);
 addParameter(p, 'UseDatashader', false, @islogical);
+addParameter(p, 'FigAx', [], @fun_is_fig_ax);
 parse(p, description, points, innovs, varargin{:});
 color_by        = p.Results.ColorBy;
 hide_innovs     = p.Results.HideInnovs;
@@ -91,6 +93,7 @@ color_map       = p.Results.ColorMap;
 add_quiver      = p.Results.AddQuiver;
 quiver_scale    = p.Results.QuiverScale;
 use_datashader  = p.Results.UseDatashader; %#ok<NASGU>  % TODO: implement?
+fig_ax          = p.Results.FigAx;
 fig_visible     = ifelse(p.Results.FigVisible, 'on', 'off');
 
 % calculations
@@ -152,9 +155,11 @@ else
 end
 
 % create figure and axes (needs to be done before building datashader information)
-temp = create_figure(1, 1, 1, Description=[description,extra_text], Visible=fig_visible);
-fig = temp{1}{1};
-ax = temp{1}{2};
+if isempty(fig_ax) || isempty(fig_ax{1})
+    fig_ax = create_figure(1, 1, 1, Description=[description,extra_text], Visible=fig_visible);
+end
+fig = fig_ax{1}{1};
+ax = fig_ax{1}{2};
 hold(ax, 'on');
 
 % populate the normal plot, potentially with a subset of points

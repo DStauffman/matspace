@@ -56,7 +56,6 @@ function [fig_hand, err] = plot_time_difference(description, time_one, data_one,
 
 %% Imports
 import matspace.plotting.convert_time_to_date
-import matspace.plotting.figmenu
 import matspace.plotting.get_start_date
 import matspace.plotting.ignore_plot_data
 import matspace.plotting.make_difference_plot
@@ -149,7 +148,7 @@ end
 
 % print status
 if log_level >= 4
-    fprintf(1, "Plotting %s plots ...", description);
+    fprintf(1, 'Plotting %s plots ...\n', description);
 end
 
 % make plots
@@ -182,9 +181,8 @@ unmatched_args = namedargs2cell(unmatched);
     FigVisible=fig_visible);
 
 if ~skip_setup_plots
-    % create figure controls
-    figmenu;
-
-    % setup plots
     setup_plots(fig_hand, this_opts, 'time');
+end
+if log_level >= 4
+    fprintf(1, '... done.\n');
 end

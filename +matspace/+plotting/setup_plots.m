@@ -37,7 +37,6 @@ function [] = setup_plots(fig_hand, opts, form)
 %     legend('r', 'b', 'g');
 %     xlabel('something [sec]');
 %     ylabel('something [rad]');
-%     matspace.plotting.figmenu;
 %
 %     opts           = matspace.plotting.Opts();
 %     opts.case_name = 'NULL';

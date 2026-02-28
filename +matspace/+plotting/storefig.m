@@ -25,7 +25,6 @@ function storefig(fig_hand, path, format) %#ok<*MCPRT>
 %     legend(ax, 'r');
 %     xlabel(ax, 'something [sec]');
 %     ylabel(ax, 'something');
-%     matspace.plotting.figmenu;
 %
 %     f2 = figure(6);
 %     set(f2, Name='fig6');
@@ -36,7 +35,6 @@ function storefig(fig_hand, path, format) %#ok<*MCPRT>
 %     legend(ax, 'r');
 %     xlabel(ax, 'something [sec]');
 %     ylabel(ax, 'something');
-%     matspace.plotting.figmenu;
 %
 %     folder = matspace.paths.get_root_dir();
 %     matspace.plotting.storefig([f1 f2], folder, 'png');

@@ -12,8 +12,6 @@ function titleprefix(fig_hand,prefix)
 %         care to express '\' and '_' characters using
 %         appropriate string syntax which implies that
 %         special subscript chracters are unsupported
-%     4.  For compatability with figumenu tool also adds
-%         prefix to figure name and reinitializes figmenu
 %
 % Input:
 %     fig_hand : (1xN) figure handles [num]
@@ -42,7 +40,6 @@ function titleprefix(fig_hand,prefix)
 %     xlabel('something [sec]');
 %     ylabel('something');
 %     grid on;
-%     matspace.plotting.figmenu;
 %
 %     matspace.plotting.titleprefix([f1 f2],'pre\pre_');
 %
@@ -56,9 +53,6 @@ function titleprefix(fig_hand,prefix)
 % Change Log:
 %     1.  Added to matspace library from GARSE in Sept 2013.
 %     2.  Updated by David C. Stauffer in April 2020 to put into a package.
-
-%% Imports
-import matspace.plotting.figmenu
 
 %% Tests
 % confirm that handles are valid figures, and that they have at least one axis child
@@ -115,5 +109,3 @@ for i = 1:length(fig_hand)
     old_name = get(fig_hand(i),'name');
     set(fig_hand(i),'name',[prefix,old_name]);
 end
-% recall figmenu to update
-figmenu;

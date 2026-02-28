@@ -57,7 +57,6 @@ function [fig_hand, err] = plot_covariance(kf1, kf2, varargin)
 
 %% Imports
 import matspace.plotting.colors.get_nondeg_colorlists
-import matspace.plotting.figmenu
 import matspace.plotting.gnds.minimize_names
 import matspace.plotting.make_difference_plot
 import matspace.plotting.Opts
@@ -284,7 +283,6 @@ end
 
 % Setup plots
 if ~skip_setup_plots
-    figmenu;
     setup_plots(fig_hand, this_opts);
 end
 if isempty(fig_hand) && log_level >= 5

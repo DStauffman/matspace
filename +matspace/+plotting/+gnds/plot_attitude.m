@@ -57,7 +57,6 @@ function [fig_hand, err] = plot_attitude(kf1, kf2, varargin)
 %     1.  Written by David C. Stauffer in February 2026.
 
 %% Imports
-import matspace.plotting.figmenu
 import matspace.plotting.make_quaternion_plot
 import matspace.plotting.Opts
 import matspace.plotting.private.fun_is_bool
@@ -202,9 +201,8 @@ end
 
 % Setup plots
 if ~skip_setup_plots
-    figmenu;
     setup_plots(fig_hand, this_opts);
 end
 if printed && log_level >= 4
-    fprintf(1, '%s\n', '... done.');
+    fprintf(1, '... done.\n');
 end

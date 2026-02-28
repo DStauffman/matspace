@@ -36,7 +36,6 @@ function [] = yscale_plots(figs, prefix_old, prefix_new)
 %     legend('r', 'b', 'g');
 %     xlabel('something [sec]');
 %     ylabel('something [rad]');
-%     matspace.plotting.figmenu;
 %
 %     f2 = figure;
 %     hold on;
@@ -47,7 +46,6 @@ function [] = yscale_plots(figs, prefix_old, prefix_new)
 %     legend('r', 'b', 'g');
 %     xlabel('something [sec]');
 %     ylabel('something [m]');
-%     matspace.plotting.figmenu;
 %
 %     matspace.plotting.xscale_plots([f1 f2],'[sec]','[min]');
 %     matspace.plotting.yscale_plots([f1 f2],'unity','micro');
@@ -56,7 +54,7 @@ function [] = yscale_plots(figs, prefix_old, prefix_new)
 %     close([f1 f2]);
 %
 % See Also:
-%     matspace.plotting.figmenu, matspace.plotting.setup_plots, matspace.plotting.storefig,
+%     matspace.plotting.setup_plots, matspace.plotting.storefig,
 %     matspace.plotting.titleprefix, matspace.plotting.xextents, matspace.plotting.xscale_plots
 %
 % Notes:

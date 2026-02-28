@@ -51,7 +51,6 @@ function [inc_cost, inc_qaly, icer_out, order, data] = icer(cost, qaly, names, b
 %     3.  Updated by David C. Stauffer in April 2020 to put into a package.
 
 %% Imports
-import matspace.plotting.figmenu
 import matspace.plotting.Opts
 import matspace.plotting.setup_plots
 
@@ -218,6 +217,5 @@ if make_plot
     % reset limits with including (0,0) point in case it skews everything too much
     axis(ax, lim);
     % add standard plotting features
-    figmenu;
     setup_plots(fig, opts, 'dist_no_y_scale');
 end

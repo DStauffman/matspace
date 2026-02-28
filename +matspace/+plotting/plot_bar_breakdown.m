@@ -34,7 +34,6 @@ function [fig_hand] = plot_bar_breakdown(description, time, data, varargin)
 %     3.  Updated by David C. Stauffer in February 2026 for SlideBy and SubBy options.
 
 %% Imports
-import matspace.plotting.figmenu
 import matspace.plotting.make_bar_plot
 import matspace.plotting.ignore_plot_data
 import matspace.plotting.Opts
@@ -178,9 +177,5 @@ fig_hand = make_bar_plot(...
     FigVisible=fig_visible);
 
 if ~skip_setup_plots
-    % create figure controls
-    figmenu;
-
-    % setup plots
     setup_plots(fig_hand, this_opts, 'time');
 end

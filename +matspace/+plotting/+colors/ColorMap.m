@@ -63,7 +63,7 @@ classdef ColorMap
     
         function [color] = get_color(self, value)
             % Get the color based on the scalar value.
-            num_values = size(self.cmap, 2);
+            num_values = size(self.cmap, 1);
             if value > num_values
                 if self.wrap
                     value = modd(value, num_values);
