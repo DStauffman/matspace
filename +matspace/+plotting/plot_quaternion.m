@@ -1,4 +1,4 @@
-function [fig_hand, err] = plot_quaternion(description, time_one, quat_one, time_two, quat_two, varargin)
+function [fig_hand, err] = plot_quaternion(description, time_one, quat_one, varargin)  % time_two, quat_two, varargin
 
 % PLOT_QUATERNION  plots multiple metrics over time.
 %
@@ -46,14 +46,13 @@ function [fig_hand, err] = plot_quaternion(description, time_one, quat_one, time
 %     close(fig_hand);
 %
 % See Also:
-%     figmenu, setup_dir, plot_rms_lines, make_quaternion_plot
+%     make_quaternion_plot
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in March 2025 to wrap existing general_quaternion_plot.
 %     2.  Updated by David C. Stauffer in January 2026 to more closely mimic Python version.
 
 %% Imports
-import matspace.plotting.figmenu
 import matspace.plotting.make_quaternion_plot
 import matspace.plotting.Opts
 import matspace.plotting.private.fun_is_log_level
@@ -72,8 +71,8 @@ p.KeepUnmatched = true;
 addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'TimeOne', @fun_is_time);
 addRequired(p, 'QuatOne', @fun_is_quat);
-addRequired(p, 'TimeTwo', @fun_is_time);
-addRequired(p, 'QuatTwo', @fun_is_quat);
+addOptional(p, 'TimeTwo', zeros(1, 0), @fun_is_time);
+addOptional(p, 'QuatTwo', zeros(4, 0), @fun_is_quat);
 addParameter(p, 'Opts', Opts(), @fun_is_opts);
 addParameter(p, 'SkipSetupPlots', false, @fun_is_bool);
 addParameter(p, 'LogLevel', 10, @fun_is_log_level);
@@ -81,8 +80,10 @@ addParameter(p, 'LogLevel', 10, @fun_is_log_level);
 %addParameter(p, 'TruthData', zeros(4, 0, class(quat_one)), @isnumeric);
 %addParameter(p, 'TruthName', 'Truth', @fun_is_text);
 % do parse
-parse(p, description, time_one, quat_one, time_two, quat_two, varargin{:});
+parse(p, description, time_one, quat_one, varargin{:});
 % create some convenient aliases
+time_two         = p.Results.TimeTwo;
+quat_two         = p.Results.QuatTwo;
 opts             = p.Results.Opts;
 skip_setup_plots = p.Results.SkipSetupPlots;
 log_level        = p.Results.LogLevel;
@@ -134,7 +135,7 @@ end
 
 % print status
 if log_level >= 4
-    fprintf(1, "Plotting %s plots ...", description);
+    fprintf(1, 'Plotting %s plots ...\n', description);
 end
 
 % make plots
@@ -167,9 +168,9 @@ unmatched_args = namedargs2cell(unmatched);
     LogLevel=log_level);
 
 if ~skip_setup_plots
-    % create figure controls
-    figmenu;
-
     % setup plots
     setup_plots(fig_hand, opts, 'time');
+end
+if log_level >= 4
+    fprintf(1, '... done.\n')
 end

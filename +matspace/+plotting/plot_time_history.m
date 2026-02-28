@@ -57,7 +57,7 @@ function [fig_hand] = plot_time_history(description, time, data, varargin)
 %     close(fig_hand);
 %
 % See Also:
-%     matspace.plotting.figmenu, matspace.plotting.make_time_plot, matspace.plotting.setup_plots
+%     matspace.plotting.make_time_plot, matspace.plotting.setup_plots
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in September 2017.
@@ -67,7 +67,6 @@ function [fig_hand] = plot_time_history(description, time, data, varargin)
 %     4.  Rewritten by David C. Stauffer in January 2026 based on newer python version.
 
 %% Imports
-import matspace.plotting.figmenu
 import matspace.plotting.get_start_date
 import matspace.plotting.make_time_plot
 import matspace.plotting.ignore_plot_data
@@ -166,9 +165,5 @@ fig_hand = make_time_plot(...
     FigVisible=fig_visible);
 
 if ~skip_setup_plots
-    % create figure controls
-    figmenu;
-
-    % setup plots
     setup_plots(fig_hand, this_opts, 'time');
 end

@@ -45,8 +45,6 @@ function [fig_hand] = plot_correlation_matrix(data, labels, units, kwargs)
 % Notes:
 %     1.  For square symmetric matrices, only the lower half of diagonal is plotted, depending on
 %         the current settings.
-%     2.  This function is designed to run outside of the matspace library by not requiring
-%         Opts.m, setup_plots.m, or figmenu.m to exist.
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in June 2014.
@@ -103,7 +101,6 @@ end
 
 %% Imports
 import matspace.plotting.colors.ColorMap
-import matspace.plotting.figmenu
 import matspace.plotting.get_unit_conversion
 import matspace.plotting.Opts
 import matspace.plotting.private.create_figure
@@ -161,7 +158,7 @@ end
 
 %% Create plots
 this_title = [matrix_name,ifelse(~isempty(new_units), [' [',new_units,']'], '')];
-if isempty(fig_ax)
+if isempty(fig_ax) || isempty(fig_ax{1})
     fig_ax = create_figure(1, 1, 1, Description=this_title, Visible=fig_visible);
     fig_hand = fig_ax{1}{1};
     ax = fig_ax{1}{2};
@@ -189,7 +186,7 @@ for i = 1:m
     end
 end
 % set color limits and colormap and display colorbar
-clim([cmin cmax]);
+clim(scale*[cmin cmax]);
 colormap(cm.cmap);
 colorbar('location', 'EastOutside');
 % make square
@@ -216,7 +213,6 @@ ylabel(ax, y_label);
 
 %% Setup plots
 if ~skip_setup_plots
-    figmenu;
     setup_plots(fig_hand, opts, 'dist_no_y_scale');
 end
 

@@ -28,7 +28,6 @@ function [] = xextents(figs, xmin, xmax)
 %     legend('r');
 %     xlabel('something [sec]');
 %     ylabel('something');
-%     matspace.plotting.figmenu;
 %
 %     f2 = figure(6);
 %     hold on;
@@ -37,7 +36,6 @@ function [] = xextents(figs, xmin, xmax)
 %     legend('r');
 %     xlabel('something [sec]');
 %     ylabel('something');
-%     matspace.plotting.figmenu;
 %
 %     matspace.plotting.xextents([f1 f2],-500,2000);
 %
@@ -45,7 +43,7 @@ function [] = xextents(figs, xmin, xmax)
 %     close([f1 f2]);
 %
 % See Also:
-%     matspace.plotting.figmenu, matspace.plotting.setup_plots, matspace.plotting.storefig,
+%     matspace.plotting.setup_plots, matspace.plotting.storefig,
 %     matspace.plotting.titleprefix, matspace.plotting.xscale_plots
 %
 % Change Log:

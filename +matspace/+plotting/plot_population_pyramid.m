@@ -35,7 +35,6 @@ function [fig] = plot_population_pyramid(age_bins, male_per, fmal_per, varargin)
 
 %% Imports
 import matspace.latex.bins_to_str_ranges
-import matspace.plotting.figmenu
 import matspace.plotting.Opts
 import matspace.plotting.private.fun_is_bool
 import matspace.plotting.private.fun_is_colormap
@@ -108,9 +107,6 @@ title(ax, title_)
 yticks(ax, y_values);
 yticklabels(ax, y_labels);
 legend(ax, 'show');
-
-%% create figure controls
-figmenu;
 
 %% setup plots
 setup_plots(fig, opts, 'dist_no_y_scale');

@@ -187,7 +187,7 @@ end
 % get labels
 y_labels = get_ylabels(num_channels, y_label, Elements=elements, SingleLines=single_lines, Description=description, Units=units);
 
-if isempty(fig_ax)
+if isempty(fig_ax) || isempty(fig_ax{1})
     % get the number of figures and axes to make
     num_figs = 1;
     if single_lines

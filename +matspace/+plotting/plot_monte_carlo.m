@@ -38,7 +38,7 @@ function [fig_hand] = plot_monte_carlo(time_one, data_one, varargin)
 %     close(fig_hand);
 %
 % See Also:
-%     matspace.plotting.figmenu, matspace.plotting.setup_dir, matspace.plotting.plot_rms_lines
+%     matspace.plotting.plot_time_history
 %
 % Change Log:
 %     1.  Written by David C. Stauffer in May 2016.
@@ -50,7 +50,6 @@ function [fig_hand] = plot_monte_carlo(time_one, data_one, varargin)
 
 %% Imports
 import matspace.plotting.convert_time_to_date
-import matspace.plotting.figmenu
 import matspace.plotting.get_scale_and_units
 import matspace.plotting.get_start_date
 import matspace.plotting.Opts
@@ -447,9 +446,6 @@ if comp_mode == modes.nondeg
     % link to earlier plot
     linkaxes([ax1 ax2],'x');
 end
-
-% create figure controls
-figmenu;
 
 % setup plots
 setup_plots(fig_hand, opts, 'time');

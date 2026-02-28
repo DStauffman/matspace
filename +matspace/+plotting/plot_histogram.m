@@ -74,7 +74,6 @@ function [fig] = plot_histogram(description, data, bins, varargin)
 %% Imports
 import matspace.plotting.colors.ColorMap
 import matspace.plotting.colors.get_xkcd_colors
-import matspace.plotting.figmenu
 import matspace.plotting.get_factors
 import matspace.plotting.Opts
 import matspace.plotting.plot_rms_lines
@@ -210,7 +209,7 @@ else
     end
 end
 % create plot
-if isempty(fig_ax)
+if isempty(fig_ax) || isempty(fig_ax{1})
     fig_ax = create_figure(1, 1, 1, Description=description, Visible=fig_visible);
 end
 fig = fig_ax{1}{1};
@@ -354,6 +353,5 @@ if using_cdf
     legend(ax, 'show', Location=legend_loc);
 end
 if ~skip_setup_plots
-    figmenu;
     setup_plots(fig, opts);
 end
