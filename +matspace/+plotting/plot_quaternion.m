@@ -169,7 +169,7 @@ unmatched_args = namedargs2cell(unmatched);
 
 if ~skip_setup_plots
     % setup plots
-    setup_plots(fig_hand, opts, 'time');
+    setup_plots(fig_hand, opts);
 end
 if log_level >= 4
     fprintf(1, '... done.\n')

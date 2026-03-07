@@ -217,5 +217,5 @@ if make_plot
     % reset limits with including (0,0) point in case it skews everything too much
     axis(ax, lim);
     % add standard plotting features
-    setup_plots(fig, opts, 'dist_no_y_scale');
+    setup_plots(fig, opts);
 end

@@ -448,7 +448,7 @@ if comp_mode == modes.nondeg
 end
 
 % setup plots
-setup_plots(fig_hand, opts, 'time');
+setup_plots(fig_hand, opts);
 
 
 %% Subfunctions

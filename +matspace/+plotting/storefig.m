@@ -45,8 +45,7 @@ function storefig(fig_hand, path, format) %#ok<*MCPRT>
 %     delete(fullfile(folder, 'fig6.png'));
 %
 % See Also:
-%     matspace.plotting.titleprefix, matspace.plotting.xextents, matspace.plotting.xscale_plots,
-%     matspace.plotting.setup_plots
+%     matspace.plotting.resolve_name, matspace.plotting.setup_plots
 %
 % Notes:
 %     1.  "format" can also be a cell array or string to save the plots as multiple different types.

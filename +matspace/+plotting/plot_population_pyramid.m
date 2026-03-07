@@ -109,4 +109,4 @@ yticklabels(ax, y_labels);
 legend(ax, 'show');
 
 %% setup plots
-setup_plots(fig, opts, 'dist_no_y_scale');
+setup_plots(fig, opts);

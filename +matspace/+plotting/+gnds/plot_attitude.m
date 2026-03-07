@@ -27,7 +27,7 @@ function [fig_hand, err] = plot_attitude(kf1, kf2, varargin)
 %     Numerical outputs of comparison
 %
 % Prototype:
-%     q1 = matspace.quaternions.quat_norm([0.1, -0.2, 0.3, 0.4]);
+%     q1 = matspace.quaternions.quat_norm([0.1; -0.2; 0.3; 0.4]);
 %     dq = matspace.quaternions.quat_from_euler(1e-6*[-300; 100; 200], [3; 1; 2]);
 %     q2 = matspace.quaternions.quat_mult(dq, q1);
 %
