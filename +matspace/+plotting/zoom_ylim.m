@@ -27,7 +27,7 @@ function [] = zoom_ylim(ax, time, data, kwargs)
 %     % Zoom X-axis and show how Y doesn't rescale
 %     t_start = 3;
 %     t_final = 5.0001;
-%     matspace.plotting.disp_xlimits(fig, t_start, t_final);
+%     matspace.plotting.disp_xlimits(fig, XMin=t_start, XMax=t_final);
 %
 %     % Force Y-axis to rescale to data
 %     matspace.plotting.zoom_ylim(ax, time, data, TStart=t_start, TFinal=t_final, pad=0);

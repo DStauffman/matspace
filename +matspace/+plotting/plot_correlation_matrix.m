@@ -213,7 +213,7 @@ ylabel(ax, y_label);
 
 %% Setup plots
 if ~skip_setup_plots
-    setup_plots(fig_hand, opts, 'dist_no_y_scale');
+    setup_plots(fig_hand, opts);
 end
 
 

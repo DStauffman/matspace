@@ -20,5 +20,6 @@ else
     xlabel(this_axes, ['Time [',time_units,']',start_date]);
     assert(time_units ~= "datetime", 'Expected time units of "seconds" or such, not "%s".', time_units);
 end
+axis auto;
 disp_xlimits(this_axes, xmin=disp_xmin, xmax=disp_xmax);
 xlims = xlim(this_axes);

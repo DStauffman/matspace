@@ -177,5 +177,5 @@ fig_hand = make_bar_plot(...
     FigVisible=fig_visible);
 
 if ~skip_setup_plots
-    setup_plots(fig_hand, this_opts, 'time');
+    setup_plots(fig_hand, this_opts);
 end

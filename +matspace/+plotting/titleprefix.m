@@ -47,7 +47,6 @@ function titleprefix(fig_hand,prefix)
 %     close([f1 f2]);
 %
 % See Also:
-%     matspace.plotting.xextents, matspace.plotting.xscale_plots, matspace.plotting.storefig,
 %     matspace.plotting.setup_plots
 %
 % Change Log:

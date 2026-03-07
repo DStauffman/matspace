@@ -37,7 +37,7 @@ function [fig] = make_connected_sets(description, points, innovs, varargin)
 %     innovs2 = 0.1 * randn(size(points2));
 %     fig2 = matspace.plotting.make_connected_sets(description, points2, innovs2, 'ColorBy', 'direction');
 %
-%     fig3 = make_connected_sets(description, points2, innovs2, 'ColorBy', 'magnitude', ...
+%     fig3 = matspace.plotting.make_connected_sets(description, points2, innovs2, 'ColorBy', 'magnitude', ...
 %             'LegendScale', 'milli', 'Units', 'm');
 %
 %     close(fig);
