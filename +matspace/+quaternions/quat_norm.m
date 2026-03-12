@@ -11,7 +11,7 @@ function out = quat_norm(x)  %#codegen
 % Prototype:
 %     x(:, 1) = [0.1; 0; 0; 1];
 %     x(:, 2) = [0; 0; 0.2; 1];
-%     out     = matspace.quaternions.quat_norm(x)
+%     out     = matspace.quaternions.quat_norm(x);
 %
 % See Also:
 %     matspace.quaternions.quat_mult, matspace.quaternions.quat_inv, matspace.quaternions.quat_prop,

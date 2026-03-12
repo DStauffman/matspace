@@ -130,6 +130,8 @@ switch function_name
         args_ex = {multi_quat, multi_vec3};
     case 'quat_to_dcm'
         args_ex = {single_quat};
+    case 'quat_to_euler'
+        args_ex = {multi_quat, [1 2 3]};
     case 'rot'
         args_ex = {scalar, scalar};
     % case 'intersect2'

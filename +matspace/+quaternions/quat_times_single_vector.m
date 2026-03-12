@@ -15,7 +15,7 @@ function [vec] = quat_times_single_vector(q, v)  %#codegen
 %     vec : (3xN) vector [dimensionless]
 %
 % Prototype:
-%     vec = matspace.quaternions.quat_times_single_vector([[0; 0; 0; 1], [0.5; 0.5; 0.5; 0.5]], [1; 0; 0])
+%     vec = matspace.quaternions.quat_times_single_vector([[0; 0; 0; 1], [0.5; 0.5; 0.5; 0.5]], [1; 0; 0]);
 %
 % See Also:
 %     matspace.quaternions.quat_times_vector

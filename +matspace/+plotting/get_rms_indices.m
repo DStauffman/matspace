@@ -56,10 +56,10 @@ if ~isempty(time_overlap)
     valid_nums(3) = isnumeric(time_overlap);
     valid_date(3) = isdatetime(time_overlap);
 end
-valid_nums(4) = isnumeric(xmin);
-valid_date(4) = isdatetime(xmin);
-valid_nums(5) = isnumeric(xmax);
-valid_date(5) = isdatetime(xmax);
+valid_nums(4) = isnumeric(xmin) || isnat(xmin);
+valid_date(4) = isdatetime(xmin) || isinf(xmin);
+valid_nums(5) = isnumeric(xmax) || isnat(xmax);
+valid_date(5) = isdatetime(xmax) || isinf(xmax);
 
 % initialize output
 ix = struct();
