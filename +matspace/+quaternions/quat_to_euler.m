@@ -1,28 +1,27 @@
-function [euler] = quat_to_euler(q,seq)
+function [euler] = quat_to_euler(q, seq)  %#codegen
 
 % QUAT_TO_EULER  converts quaternion to Euler angles for 6 input angle sequences.
 %
 % Input:
-%     q       : (4xN) x,y,z,s quaternion     [dimensionless]
-%                     Where: 1 = X axis, or roll
-%                            2 = Y axis, or pitch
-%                            3 = Z axis, or yaw
-%     seq     : (1x3) euler angle sequence   [enumerated]
-%                     enumerated options are ([1 2 3]
-%                                            [2 3 1]
-%                                            [3 1 2]
-%                                            [1 3 2]
-%                                            [2 1 3]
-%                                            [3 2 1])
+%     q     : (4xN) x,y,z,s quaternion     [dimensionless]
+%                   Where: 1 = X axis, or roll
+%                          2 = Y axis, or pitch
+%                          3 = Z axis, or yaw
+%     seq   : (1x3) euler angle sequence   [enumerated]
+%                   enumerated options are ([1 2 3]
+%                                           [2 3 1]
+%                                           [3 1 2]
+%                                           [1 3 2]
+%                                           [2 1 3]
+%                                           [3 2 1])
 %
 % Output:
-%     euler   : (3xN) Euler angles [radians]
+%     euler : (3xN) Euler angles [radians]
 %
 % Prototype:
-%     q(:,1) = [ 0;1;0;0];
-%     q(:,2) = [ 0;0;1;0];
-%     seq    = [3 1 2];
-%     euler  = matspace.quaternions.quat_to_euler(q,seq)
+%     q     = [0 1 0 0; 0 0 1 0]';
+%     seq   = [3 1 2];
+%     euler = matspace.quaternions.quat_to_euler(q, seq);
 %
 % See Also:
 %     matspace.quaternions.quat_mult, matspace.quaternions.quat_inv, matspace.quaternions.quat_norm,
@@ -55,13 +54,13 @@ switch nargin
 end
 
 % initialize output
-n     = size(q,2);
-euler = zeros(3,n);
+n     = size(q, 2);
+euler = zeros(3, n);
 
 %% Loop through quaternions
 for i = 1:n
     % calculate DCM from quaternion
-    C = quat_to_dcm(q(:,i));
+    C = quat_to_dcm(q(:, i));
     % Find values of dir cosine matrix terms
     seq_str = [int2str(seq(1)),int2str(seq(2)),int2str(seq(3))];
     % calculate terms based on sequence order
@@ -69,70 +68,70 @@ for i = 1:n
         case '123'
             %Identical to KLL pg 423
             group                     =  1;
-            c2_c3                     =  C(1,1);
-            s1_s2_c3_plus_s3_c1       =  C(2,1);
-            minus_c1_s2_c3_plus_s3_s1 =  C(3,1);
-            minus_c2_s3               =  C(1,2);
-            minus_s1_s2_s3_plus_c3_c1 =  C(2,2);
-            c1_s2_s3_plus_c3_s1       =  C(3,2);
-            s2                        =  C(1,3);
-            s1_c2                     =  C(2,3);
-            c1_c2                     =  C(3,3);
+            c2_c3                     =  C(1, 1);
+            s1_s2_c3_plus_s3_c1       =  C(2, 1);
+            minus_c1_s2_c3_plus_s3_s1 =  C(3, 1);
+            minus_c2_s3               =  C(1, 2);
+            minus_s1_s2_s3_plus_c3_c1 =  C(2, 2);
+            c1_s2_s3_plus_c3_s1       =  C(3, 2);
+            s2                        =  C(1, 3);
+            s1_c2                     =  C(2, 3);
+            c1_c2                     =  C(3, 3);
         case '231'
             group                     =  1;
-            c1_c2                     =  C(1,1);
-            minus_c1_s2_c3_plus_s3_s1 =  C(1,2);
-            c1_s2_s3_plus_c3_s1       =  C(1,3);
-            s2                        =  C(2,1);
-            c2_c3                     =  C(2,2);
-            minus_c2_s3               =  C(2,3);
-            s1_c2                     =  C(3,1);
-            s1_s2_c3_plus_s3_c1       =  C(3,2);
-            minus_s1_s2_s3_plus_c3_c1 =  C(3,3);
+            c1_c2                     =  C(1, 1);
+            minus_c1_s2_c3_plus_s3_s1 =  C(1, 2);
+            c1_s2_s3_plus_c3_s1       =  C(1, 3);
+            s2                        =  C(2, 1);
+            c2_c3                     =  C(2, 2);
+            minus_c2_s3               =  C(2, 3);
+            s1_c2                     =  C(3, 1);
+            s1_s2_c3_plus_s3_c1       =  C(3, 2);
+            minus_s1_s2_s3_plus_c3_c1 =  C(3, 3);
         case '312'
             group                     =  1;
-            s1_s2_c3_plus_s3_c1       =  C(1,3);
-            minus_c1_s2_c3_plus_s3_s1 =  C(2,3);
-            minus_c2_s3               =  C(3,1);
-            minus_s1_s2_s3_plus_c3_c1 =  C(1,1);
-            c1_s2_s3_plus_c3_s1       =  C(2,1);
-            s2                        =  C(3,2);
-            s1_c2                     =  C(1,2);
-            c1_c2                     =  C(2,2);
-            c2_c3                     =  C(3,3);
+            s1_s2_c3_plus_s3_c1       =  C(1, 3);
+            minus_c1_s2_c3_plus_s3_s1 =  C(2, 3);
+            minus_c2_s3               =  C(3, 1);
+            minus_s1_s2_s3_plus_c3_c1 =  C(1, 1);
+            c1_s2_s3_plus_c3_s1       =  C(2, 1);
+            s2                        =  C(3, 2);
+            s1_c2                     =  C(1, 2);
+            c1_c2                     =  C(2, 2);
+            c2_c3                     =  C(3, 3);
         case '132'
             group                     =  2;
-            c2_c3                     =  C(1,1);
-            minus_c1_s2_c3_plus_s3_s1 =  C(2,1);
-            s1_s2_c3_plus_s3_c1       = -C(3,1);
-            s2                        = -C(1,2);
-            c1_c2                     =  C(2,2);
-            s1_c2                     =  C(3,2);
-            minus_c2_s3               = -C(1,3);
-            c1_s2_s3_plus_c3_s1       = -C(2,3);
-            minus_s1_s2_s3_plus_c3_c1 =  C(3,3);
+            c2_c3                     =  C(1, 1);
+            minus_c1_s2_c3_plus_s3_s1 =  C(2, 1);
+            s1_s2_c3_plus_s3_c1       = -C(3, 1);
+            s2                        = -C(1, 2);
+            c1_c2                     =  C(2, 2);
+            s1_c2                     =  C(3, 2);
+            minus_c2_s3               = -C(1, 3);
+            c1_s2_s3_plus_c3_s1       = -C(2, 3);
+            minus_s1_s2_s3_plus_c3_c1 =  C(3, 3);
         case '213'
             group                     =  2;
-            s1_s2_c3_plus_s3_c1       = -C(1,2);
-            minus_c1_s2_c3_plus_s3_s1 =  C(3,2);
-            minus_c2_s3               = -C(2,1);
-            minus_s1_s2_s3_plus_c3_c1 =  C(1,1);
-            c1_s2_s3_plus_c3_s1       = -C(3,1);
-            s2                        = -C(2,3);
-            s1_c2                     =  C(1,3);
-            c1_c2                     =  C(3,3);
-            c2_c3                     =  C(2,2);
+            s1_s2_c3_plus_s3_c1       = -C(1, 2);
+            minus_c1_s2_c3_plus_s3_s1 =  C(3, 2);
+            minus_c2_s3               = -C(2, 1);
+            minus_s1_s2_s3_plus_c3_c1 =  C(1, 1);
+            c1_s2_s3_plus_c3_s1       = -C(3, 1);
+            s2                        = -C(2, 3);
+            s1_c2                     =  C(1, 3);
+            c1_c2                     =  C(3, 3);
+            c2_c3                     =  C(2, 2);
         case '321'
             group                     =  2;
-            s1_s2_c3_plus_s3_c1       = -C(2,3);
-            minus_c1_s2_c3_plus_s3_s1 =  C(1,3);
-            minus_c2_s3               = -C(3,2);
-            minus_s1_s2_s3_plus_c3_c1 =  C(2,2);
-            c1_s2_s3_plus_c3_s1       = -C(1,2);
-            s2                        = -C(3,1);
-            s1_c2                     =  C(2,1);
-            c1_c2                     =  C(1,1);
-            c2_c3                     =  C(3,3);
+            s1_s2_c3_plus_s3_c1       = -C(2, 3);
+            minus_c1_s2_c3_plus_s3_s1 =  C(1, 3);
+            minus_c2_s3               = -C(3, 2);
+            minus_s1_s2_s3_plus_c3_c1 =  C(2, 2);
+            c1_s2_s3_plus_c3_s1       = -C(1, 2);
+            s2                        = -C(3, 1);
+            s1_c2                     =  C(2, 1);
+            c1_c2                     =  C(1, 1);
+            c2_c3                     =  C(3, 3);
         otherwise
             error('matspace:QuatBadEulerSequence', 'Invalid axis rotation sequence: "%s".', seq_str);
     end
@@ -158,5 +157,5 @@ for i = 1:n
     theta2 = atan2(s2,c2);
 
     %% Store output
-    euler(:,i) = [theta1;theta2;theta3];
+    euler(:, i) = [theta1; theta2; theta3];
 end

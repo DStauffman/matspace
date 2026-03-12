@@ -24,8 +24,8 @@ function [q_A_B, angles, rms_err] = compute_att_fit(q_A, q_B)
 %     q_A        = matspace.quaternions.quat_mult(q_A_B_true, q_B);
 %     [q_A_B_estm, angle_estm, rms_err] = matspace.quaternions.compute_att_fit(q_A, q_B);
 %     % Compare estimated to true:
-%     [q_A_B_estm, q_A_B_true, q_A_B_estm-q_A_B_true]
-%     [angle_estm, angle_true, angle_estm-angle_true]
+%     assert(all(abs(q_A_B_estm-q_A_B_true) < 1e-15));
+%     assert(all(abs(angle_estm-angle_true) < 1e-15));
 %
 % See Also:
 %     matspace.quaternions.quat_mult

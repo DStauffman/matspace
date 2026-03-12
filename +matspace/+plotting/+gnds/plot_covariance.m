@@ -237,8 +237,8 @@ for k = 1:length(all_keys)
                 this_elements = [];
                 colormap = [];
             else
-                state_names = elements;
-                this_elements = elements(this_state_nums);
+                this_elements = arrayfun(@(x) elements(x), this_state_nums);
+                state_names = this_elements;
                 colormap = get_nondeg_colorlists(length(this_elements));
             end
             this_description = description + " for State " + minimize_names(state_names);

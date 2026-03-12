@@ -200,8 +200,7 @@ for i = 1:num_cats
         insert(cat_names, this_key, "Status=" + this_key);
     end
 end
-ordered_cats = keys(cat_names);
-% cat_keys = string(keys(cat_names));  % TODO: don't need in Matlab?
+ordered_cats = values(cat_names);
 
 % calculate the rms (or mean) values
 if show_rms
@@ -278,13 +277,13 @@ for i = 1:min([length(times), length(datum)])
     this_axes = fig_ax{i * num_cats}{2};
     % plot the full underlying line once
     if ~use_datashader || numel(this_time) <= datashader_pts
-        plot_func(this_axes, this_time, this_data, ':', DisplayName='', Color=colors.slate, LineWidth=1);  % , ZOrder=2);
+        plot_func(this_axes, this_time, this_data, ':', DisplayName='', Color=colors.slate, LineWidth=1, HandleVisibility='off');  % , ZOrder=2);
     end
     % plot the data with this category value
     for j = 1:length(ordered_cats)
         cat = ordered_cats(j);
         sub_axes = fig_ax{(i - 1) * num_cats + j}{2};
-        this_cat_name = char(cat_names(cat));
+        this_cat_name = char(cat);
         if show_rms
             value = num2str(leg_conv * data_func{cat}{i}, leg_format);
             if ~isempty(leg_units)
@@ -299,9 +298,9 @@ for i = 1:min([length(times), length(datum)])
         % Note: Use len(ordered_cats) here instead of num_cats so that potentially missing categories
         % won't mess up the color scheme by skipping colors
         this_cat_ix = find(cat == ordered_cats, 1, 'first');
-        this_color = cm.get_color(i * length(ordered_cats) + this_cat_ix);
+        this_color = cm.get_color((i-1) * length(ordered_cats) + this_cat_ix);
         lines = draw_lines(datashaders, this_time(this_cats), this_data(this_cats), plot_func, sub_axes, Symbol='.', ...
-            MarkerSize=6, MarkerFaceColor=this_color, Color=this_color, Label=cat_label, ZOrder=3, UseDatashader=use_datashader);
+            MarkerSize=12, MarkerFaceColor=this_color, Color=this_color, Label=cat_label, ZOrder=3, UseDatashader=use_datashader);
         if ~isempty(lines)
             if ~isempty(datashaders) || ~single_lines
                 lines(1).LineStyle = 'none';
