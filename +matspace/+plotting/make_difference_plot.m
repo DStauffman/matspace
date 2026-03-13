@@ -334,29 +334,35 @@ if isempty(fig_ax)
                 else
                     fig_ax = cell(1, 2 * num_channels);
                     fig = figure(Visible=fig_visible, Theme=fig_theme);
-                    ax = gobjects(1, 2 * num_channels);
+                    tiledlayout(fig, num_channels, 2, TileIndexing='columnmajor');
+                    ax = gobjects(1, num_channels);
                     for i = 1:num_channels
-                        ax(i) = subplot(num_channels, 2, i);
+                        ax(i) = nexttile(i, [1 1]);
+                        hold(ax(i), 'on');
+                        fig_ax{i} = {fig, ax(i)};
                     end
-                    ax2 = subplot(num_channels, 2, num_channels + 1);
-                    error('Not yet implemented.');
-                    % gs = fig.add_gridspec(num_channels, 2)
-                    % ax = [fig.add_subplot(gs[0, 0])]
-                    % for i = 2:num_channels
-                    %     ax.append(fig.add_subplot(gs[i, 0], sharex=ax[0]))
-                    % end
-                    % ax2 = fig.add_subplot(gs[:, 1], sharex=ax[0])
-                    % fig_ax = tuple((fig, this_ax) for this_ax in ax) + num_channels * ((fig, ax2),)
+                    ax2 = nexttile(num_channels+1, [num_channels, 1]);
+                    hold(ax2, 'on');
+                    for i = 1:num_channels
+                        fig_ax{i + num_channels} = {fig, ax2};
+                    end
+                    linkaxes([ax ax2], 'x');
                 end
             elseif single_lines2
                 fig = figure(Visible=fig_visible, Theme=fig_theme);
-                ax = gobjects(1, 2 * num_channels);
-                error('Not yet implemnted.');
-                % fig = plt.figure(constrained_layout=True)
-                % gs = fig.add_gridspec(num_channels, 2)
-                % ax1 = fig.add_subplot(gs[:, 0])
-                % ax = [fig.add_subplot(gs[i, 1], sharex=ax1) for i in range(num_channels)]
-                % fig_ax = num_channels * ((fig, ax1),) + tuple((fig, this_ax) for this_ax in ax)
+                tiledlayout(fig, num_channels, 2, TileIndexing='columnmajor');
+                ax1 = nexttile(1, [num_channels, 1]);
+                hold(ax1, 'on');
+                for i = 1:num_channels
+                    fig_ax{i} = {fig, ax1};
+                end
+                ax = gobjects(1, num_channels);
+                for i = 1:num_channels
+                    ax(i) = nexttile(i + num_channels, [1 1]);
+                    hold(ax(i), 'on');
+                    fig_ax{i + num_channels} = {fig, ax(i)};
+                end
+                linkaxes([ax1, ax], 'x');
             else
                 temp_fig_ax = create_figure(1, 2, 1, Description=description, Visible=fig_visible, Theme=fig_theme);
                 fig_ax = cell(1, num_channels * length(temp_fig_ax));
@@ -371,7 +377,7 @@ if isempty(fig_ax)
                     create_figure(1, num_channels, 1, Description=[description,' Difference'], Visible=fig_visible)];
             else
                 fig_ax = [create_figure(1, num_channels, 1, Description=description, Visible=fig_visible), ...
-                    repmat(create_figure(1, 1, 1, Description=[description,' Difference']), 1, num_channels, Visible=fig_visible)];
+                    repmat(create_figure(1, 1, 1, Description=[description,' Difference'], Visible=fig_visible), 1, num_channels)];
             end
         elseif single_lines2
             fig_ax = [repmat(create_figure(1, 1, 1, Description=description, Visible=fig_visible), 1, num_channels), ...
@@ -398,7 +404,7 @@ assert(length(fig_ax) == expected_axes, "Mismatch in the number of figures and a
 
 % Get main figures and axes
 fig_hand = [];
-axes = dictionary();
+axes_dict = dictionary();
 id_figs = [];
 for f = 1:length(fig_ax)
     this_fig = fig_ax{f}{1};
@@ -407,9 +413,9 @@ for f = 1:length(fig_ax)
     if ~ismember(this_fig_id, id_figs)
         fig_hand = [fig_hand, this_fig]; %#ok<AGROW>
         id_figs = union(id_figs, this_fig_id);
-        axes{this_fig_id} = this_axes;
+        axes_dict{this_fig_id} = this_axes;
     else
-        axes{this_fig_id} = union(axes{this_fig_id}, this_axes);
+        axes_dict{this_fig_id} = union(axes_dict{this_fig_id}, this_axes);
     end
 end
 
@@ -575,7 +581,7 @@ if ~isempty(extra_plotter)
     for f = 1:length(fig_hand)
         fig = fig_hand{f};
         ax = findall(fig, type='axes');
-        ax = ax(ismember(ax, axes{fig.Number}));
+        ax = ax(ismember(ax, axes_dict{fig.Number}));
         extra_plotter(fig, ax);
     end
 end
@@ -597,7 +603,7 @@ if ~strcmpi(legend_loc, 'none')
         all_axes = findall(fig, type='Axes');
         for a = 1:length(all_axes)
             this_axes = all_axes(a);
-            if ismember(this_axes, axes{fig.Number})
+            if ismember(this_axes, axes_dict{fig.Number})
                 legend(this_axes, 'show', Location=legend_loc);
             end
         end
