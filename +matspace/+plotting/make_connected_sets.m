@@ -52,8 +52,10 @@ import matspace.plotting.get_factors
 import matspace.plotting.get_unit_conversion
 import matspace.plotting.colors.get_xkcd_colors
 import matspace.plotting.private.create_figure
+import matspace.plotting.private.fun_is_2nd_units
 import matspace.plotting.private.fun_is_colormap
 import matspace.plotting.private.fun_is_fig_ax
+import matspace.plotting.private.fun_is_text
 import matspace.utils.ifelse
 
 %% Hard-coded values
@@ -65,17 +67,17 @@ DEGREE_SIGN = char(176);
 %% Parser
 % Argument parser
 p = inputParser;
-addRequired(p, 'Description', @ischar);
+addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'Points', @isnumeric);
 addRequired(p, 'Innovs', @isnumeric);
-addParameter(p, 'ColorBy', 'none', @ischar);
+addParameter(p, 'ColorBy', 'none', @fun_is_text);
 addParameter(p, 'HideInnovs', false, @islogical);
 addParameter(p, 'CenterOrigin', false, @islogical);
-addParameter(p, 'LegendLoc', 'best', @ischar);
+addParameter(p, 'LegendLoc', 'best', @fun_is_text);
 addParameter(p, 'FigVisible', true, @islogical);
-addParameter(p, 'Units', '', @ischar);
+addParameter(p, 'Units', '', @fun_is_text);
 addParameter(p, 'MagRatio', [], @isnumeric);
-addParameter(p, 'LegendScale', 'unity', @ischar);
+addParameter(p, 'LegendScale', 'unity', @fun_is_2nd_units);
 addParameter(p, 'ColorMap', [], @fun_is_colormap);
 addParameter(p, 'AddQuiver', false, @islogical);
 addParameter(p, 'QuiverScale', [], @isnumeric);

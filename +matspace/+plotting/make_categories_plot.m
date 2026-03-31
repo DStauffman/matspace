@@ -74,6 +74,7 @@ import matspace.plotting.private.fun_is_colormap
 import matspace.plotting.private.fun_is_data
 import matspace.plotting.private.fun_is_extra_plotter
 import matspace.plotting.private.fun_is_fig_ax
+import matspace.plotting.private.fun_is_lim
 import matspace.plotting.private.fun_is_text
 import matspace.plotting.private.fun_is_time
 import matspace.plotting.private.get_units
@@ -98,7 +99,7 @@ addRequired(p, 'Description', @fun_is_text);
 addRequired(p, 'Time', @fun_is_time);
 addRequired(p, 'Data', @fun_is_data);
 addRequired(p, 'Cats', @fun_is_data);  % TODO: any further restrictions or let-ups?
-addParameter(p, 'CatNames', dictionary(), @(x) isa(x, 'dictionary'));
+addParameter(p, 'CatNames', configureDictionary("string", "string"), @(x) isa(x, 'dictionary'));
 addParameter(p, 'Name', '', @fun_is_text);
 addParameter(p, 'Elements', strings(0), @isstring);
 addParameter(p, 'Units', '', @fun_is_text);

@@ -64,6 +64,7 @@ import matspace.plotting.private.fun_is_colormap
 import matspace.plotting.private.fun_is_data
 import matspace.plotting.private.fun_is_extra_plotter
 import matspace.plotting.private.fun_is_fig_ax
+import matspace.plotting.private.fun_is_lim
 import matspace.plotting.private.fun_is_text
 import matspace.plotting.private.fun_is_time
 import matspace.plotting.private.get_units
@@ -140,6 +141,9 @@ leg_format   = '%1.3f';
 % check for valid data
 if ignore_plot_data(data, ignore_empties)
     error('You must have some data to plot.');
+elseif isempty(data)
+    fig_hand = gobjects(1, 0);
+    return
 end
 
 % build lists of time and data
@@ -216,7 +220,7 @@ for i = num_channels:-1:1
         else
             this_time = times{i};
         end
-        this_y = [bottoms{i}; bottoms{i} + datum{i}];
+        this_y = [bottoms{i}(:), bottoms{i}(:) + datum{i}(:)]';
         patch_group = hggroup();
         set(get(get(hggroup,'Annotation'), 'LegendInformation'), 'IconDisplayStyle', 'off');
         for j = 1:length(this_time) - 1

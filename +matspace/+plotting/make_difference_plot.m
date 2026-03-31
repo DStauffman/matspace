@@ -80,6 +80,7 @@ import matspace.plotting.private.fun_is_data
 import matspace.plotting.private.fun_is_dt
 import matspace.plotting.private.fun_is_extra_plotter
 import matspace.plotting.private.fun_is_fig_ax
+import matspace.plotting.private.fun_is_lim
 import matspace.plotting.private.fun_is_log_level
 import matspace.plotting.private.fun_is_quat
 import matspace.plotting.private.fun_is_text
@@ -296,7 +297,7 @@ if show_rms || nargout > 1
     end
     % output errors
     if is_quat_diff
-        err = struct(one=[data_func{:}], two=[data2_func{:}], diff=[nondeg_func{1:3}], mag=horzcat(nondeg_func(3:end)));
+        err = struct(one=[data_func{:}], two=[data2_func{:}], diff=[nondeg_func{1:3}], mag=[nondeg_func{3:end}]);
     else
         err = struct(one=[data_func{:}], two=[data2_func{:}], diff=[nondeg_func{:}]);
     end

@@ -77,5 +77,25 @@ classdef test_get_rms_indices < matlab.unittest.TestCase  %#ok<*PROP>
                 self.verifyEqual(ix.(field), self.exp.(field), sprintf('Failed for field %s', field));
             end
         end
+
+        function test_bad_timezones(self)
+            date_zero = datetime(2026, 1, 15, 10, 0, 0, TimeZone='UTC');
+            time_one = date_zero + seconds(self.time_one);
+            time_two = datetime('NaT', TimeZone='UTC');
+            time_overlap = datetime('NaT', TimeZone='UTC');
+            xmin = date_zero + seconds(self.xmin);
+            xmax = date_zero + seconds(self.xmax);
+            self.verifyError(@() matspace.plotting.get_rms_indices(time_one, datetime('NaT'), time_overlap, ...
+                xmin=xmin, xmax=xmax), 'matspace:getRmsIndices:TimeZone');
+            ix = matspace.plotting.get_rms_indices(time_one, time_two, time_overlap, xmin=xmin, xmax=xmax);
+            self.exp.pts = date_zero + seconds(self.exp.pts);
+            self.exp.two = false;
+            self.exp.overlap = false;
+            fields = fieldnames(ix);
+            for f = 1:length(fields)
+                field = fields{f};
+                self.verifyEqual(ix.(field), self.exp.(field), sprintf('Failed for field %s', field));
+            end
+        end
     end
 end

@@ -71,6 +71,7 @@ import matspace.plotting.private.fun_is_colormap
 import matspace.plotting.private.fun_is_data
 import matspace.plotting.private.fun_is_extra_plotter
 import matspace.plotting.private.fun_is_fig_ax
+import matspace.plotting.private.fun_is_lim
 import matspace.plotting.private.fun_is_text
 import matspace.plotting.private.fun_is_time
 import matspace.plotting.private.get_units

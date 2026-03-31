@@ -14,8 +14,8 @@ function [fig_hand, err] = make_quaternion_plot(description, time_one, quat_one,
 % Prototype:
 %     description      = 'example';
 %     time_one         = 0:10;
-%     time_two         = 2:12;
 %     quat_one         = matspace.quaternions.quat_norm(rand(4, 11));
+%     time_two         = 2:12;
 %     quat_two         = matspace.quaternions.quat_norm(quat_one(:, [3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2]) + 1e-5 * rand(4, 11));
 %     name_one         = 'test1';
 %     name_two         = 'test2';

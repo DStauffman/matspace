@@ -162,15 +162,14 @@ if isempty(counts)
     assert(~isempty(data));
     data_size = numel(data);
     if use_exact_counts
-        counts = nans(size(bins));
+        counts = nan(size(bins));
         for i = 1:length(bins)
             this_bin = bins(i);
             counts(i) = nnz(data == this_bin);
         end
     else
-        % TODO: optionally allow this to not include 100% of the data by disabling some error
-        % checks in np_digitize?
-        counts = histcounts(data, bins);  % TODO: check this function name
+        % TODO: optionally make this error if not including 100% of the data (to match python code)?
+        counts = histcounts(data, bins);
     end
     missing = data_size - sum(counts, 'All');
 else
@@ -181,16 +180,19 @@ end
 assert(~isempty(counts), 'counts should always be set from this point forward.');
 num = numel(bins);
 if normalize_spacing || use_exact_counts
-    xlab = cellfun(@num2str, bins, 'UniformOutput', false);
+    xlab = string(arrayfun(@num2str, bins, UniformOutput=false));
     if use_exact_counts
         num = num + 1;
     end
     if missing > 0
-        xlab(end+1) = 'Unbinned Data';
+        xlab(end+1) = "Unbinned Data";
     end
     plotting_bins = 1:num;
 else
     plotting_bins = bins;
+    if isdatetime(plotting_bins)
+        plotting_bins = datenum(plotting_bins);  %#ok<DATNM>
+    end
     ix_pinf = isinf(plotting_bins) & (sign(plotting_bins) > 0);
     ix_ninf = isinf(plotting_bins) & (sign(plotting_bins) < 0);
     if any(ix_pinf)

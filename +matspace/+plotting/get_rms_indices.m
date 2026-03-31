@@ -66,7 +66,12 @@ ix = struct();
 if all(valid_nums)
     ix.pts = zeros(1, 0);
 elseif all(valid_date)
-    ix.pts = NaT(1, 0);
+    time_zone = unique([string(time_one.TimeZone), string(time_two.TimeZone), string(time_overlap.TimeZone), ...
+        string(xmin.TimeZone), string(xmax.TimeZone)]);
+    if ~isscalar(time_zone)
+        error('matspace:getRmsIndices:TimeZone', 'All times must be in the same time zone.');
+    end
+    ix.pts = NaT(1, 0, TimeZone=time_zone(1));
 else
     error('All inputs must be numeric or datetime, but you cannot mix and match');
 end
