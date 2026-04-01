@@ -66,8 +66,23 @@ ix = struct();
 if all(valid_nums)
     ix.pts = zeros(1, 0);
 elseif all(valid_date)
-    time_zone = unique([string(time_one.TimeZone), string(time_two.TimeZone), string(time_overlap.TimeZone), ...
-        string(xmin.TimeZone), string(xmax.TimeZone)]);
+    time_zones = strings(1, 0);
+    if ~isempty(time_one)
+        time_zones(end + 1) = string(time_one.TimeZone);
+    end
+    if ~isempty(time_two)
+        time_zones(end + 1) = string(time_two.TimeZone);
+    end
+    if ~isempty(time_overlap)
+        time_zones(end + 1) = string(time_overlap.TimeZone);
+    end
+    if isfinite(xmin)
+        time_zones(end + 1) = string(xmin.TimeZone);
+    end
+    if isfinite(xmax)
+        time_zones(end + 1) = string(xmax.TimeZone);
+    end
+    time_zone = unique(time_zones);
     if ~isscalar(time_zone)
         error('matspace:getRmsIndices:TimeZone', 'All times must be in the same time zone.');
     end

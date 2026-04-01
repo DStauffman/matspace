@@ -126,10 +126,9 @@ classdef test_plot_time_history < matlab.unittest.TestCase  %#ok<*PROP>
 
         function test_datetime(self)
             dates = datetime(2020, 01, 11, 12, 00, 00) + milliseconds(0:10:1000);
-            % TODO: convert opts instead
             self.opts.rms_xmin = NaT;
-            self.opts.rms_xmax = NaT;
-            self.opts.disp_xmin = NaT;
+            self.opts.rms_xmax = datetime('nat', TimeZone='UTC');
+            self.opts.disp_xmin = datetime('nat', TimeZone='UTC');
             self.opts.disp_xmax = NaT;
             self.fig_hand = matspace.plotting.plot_time_history(self.description, dates, self.col_data, ...
                 Opts=self.opts, TimeUnits='datetime');
