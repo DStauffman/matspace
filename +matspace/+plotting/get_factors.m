@@ -38,14 +38,12 @@ arguments (Output)
     label (1, :) char
 end
 
-% hard-coded values
-ONE_MINUTE = 60;
-ONE_HOUR   = 3600;
-DEG2RAD    = pi/180;
-RAD2DEG    = 180/pi;
-ARCSEC2RAD = 1 / ONE_HOUR * DEG2RAD;
-RAD2ARCSEC = ONE_HOUR * RAD2DEG;
-MICRO_SIGN = char(181);
+% imports
+import matspace.const.ARCSEC2RAD
+import matspace.const.DEG2RAD
+import matspace.const.MICRO_SIGN
+import matspace.const.ONE_MINUTE
+import matspace.const.RAD2ARCSEC
 
 % find the desired units and label prefix
 switch prefix
@@ -235,7 +233,7 @@ switch prefix
         else
             mult = 1e-6 * RAD2ARCSEC;
         end
-        label = MICRO_SIGN + 'as';
+        label = [MICRO_SIGN, 'as'];
     otherwise
         error('matspace:plotting:InvalidPrefix', 'Unexpected value for units prefix: "%s".', prefix);
 end

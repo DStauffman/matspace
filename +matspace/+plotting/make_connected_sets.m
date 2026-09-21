@@ -48,6 +48,8 @@ function [fig] = make_connected_sets(description, points, innovs, varargin)
 %     1.  Written by David C. Stauffer in February 2026.
 
 %% Imports
+import matspace.const.DEGREE_SIGN
+import matspace.const.RAD2DEG
 import matspace.plotting.get_factors
 import matspace.plotting.get_unit_conversion
 import matspace.plotting.colors.get_xkcd_colors
@@ -61,8 +63,6 @@ import matspace.utils.ifelse
 %% Hard-coded values
 colors = get_xkcd_colors();
 colors_meas = colors.black;
-RAD2DEG = 180/pi;
-DEGREE_SIGN = char(176);
 
 %% Parser
 % Argument parser
